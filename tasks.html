@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>معيار | المهام</title>
+
+    <link rel="stylesheet" href="tasks.css">
+</head>
+
+<body>
+
+<div class="tasks-page">
+
+    <!-- القائمة الجانبية -->
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+            <img src="assets/logo.png" alt="معيار">
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="dashboard.html" class="nav-link">
+                لوحة التحكم
+            </a>
+
+            <a href="employees.html" class="nav-link">
+                الموظفون
+            </a>
+
+            <a href="projects.html" class="nav-link">
+                المشاريع
+            </a>
+
+            <a href="tasks.html" class="nav-link active">
+                المهام
+            </a>
+
+            <a href="matching.html" class="nav-link">
+                المطابقة والترشيح
+            </a>
+
+            <a href="evaluations.html" class="nav-link">
+                التقييمات
+            </a>
+
+            <a href="decisions.html" class="nav-link">
+                القرارات
+            </a>
+
+            <a href="reports.html" class="nav-link">
+                التقارير
+            </a>
+
+        </nav>
+
+        <button class="logout-btn" onclick="logout()">
+            تسجيل الخروج
+        </button>
+
+    </aside>
+
+
+    <!-- المحتوى الرئيسي -->
+    <main class="main-content">
+
+        <!-- رأس الصفحة -->
+        <header class="topbar">
+
+            <div>
+
+                <span class="page-badge">
+                    إدارة المهام
+                </span>
+
+                <h1>
+                    المهام
+                </h1>
+
+                <p>
+                    إنشاء المهام وتحديد متطلباتها ومتابعة حالتها
+                </p>
+
+            </div>
+
+        </header>
+
+
+        <!-- شريط الأدوات -->
+        <section class="toolbar">
+
+            <div class="search-box">
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="ابحث باسم المهمة أو المشروع..."
+                    oninput="filterTasks()"
+                >
+
+            </div>
+
+
+            <div class="filters">
+
+                <select
+                    id="statusFilter"
+                    onchange="filterTasks()"
+                >
+                    <option value="">
+                        جميع الحالات
+                    </option>
+
+                    <option value="جديدة">
+                        جديدة
+                    </option>
+
+                    <option value="قيد التنفيذ">
+                        قيد التنفيذ
+                    </option>
+
+                    <option value="مكتملة">
+                        مكتملة
+                    </option>
+
+                    <option value="متوقفة">
+                        متوقفة
+                    </option>
+
+                </select>
+
+
+                <select
+                    id="priorityFilter"
+                    onchange="filterTasks()"
+                >
+                    <option value="">
+                        جميع الأولويات
+                    </option>
+
+                    <option value="عالية">
+                        عالية
+                    </option>
+
+                    <option value="متوسطة">
+                        متوسطة
+                    </option>
+
+                    <option value="منخفضة">
+                        منخفضة
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <button
+                class="add-btn"
+                onclick="openTaskModal()"
+            >
+                + إضافة مهمة
+            </button>
+
+        </section>
+
+
+        <!-- قائمة المهام -->
+        <section class="tasks-container">
+
+            <div class="section-title">
+
+                <div>
+
+                    <h2>
+                        قائمة المهام
+                    </h2>
+
+                    <p>
+                        ستظهر المهام هنا بعد إضافتها
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="tasks-grid"
+                id="tasksGrid"
+            >
+
+                <div class="empty-state">
+                    لا توجد مهام حالياً
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+
+<!-- نافذة إضافة / تعديل مهمة -->
+<div
+    class="modal"
+    id="taskModal"
+>
+
+    <div
+        class="modal-overlay"
+        onclick="closeTaskModal()"
+    ></div>
+
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2 id="modalTitle">
+                    إضافة مهمة
+                </h2>
+
+                <p>
+                    أدخل بيانات المهمة ومتطلباتها
+                </p>
+
+            </div>
+
+
+            <button
+                class="close-btn"
+                onclick="closeTaskModal()"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <form
+            id="taskForm"
+            onsubmit="saveTask(event)"
+        >
+
+            <input
+                type="hidden"
+                id="editTaskId"
+            >
+
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label>
+                        اسم المهمة
+                    </label>
+
+                    <input
+                        type="text"
+                        id="taskName"
+                        placeholder="اكتب اسم المهمة"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        المشروع المرتبط
+                    </label>
+
+                    <input
+                        type="text"
+                        id="taskProject"
+                        placeholder="اكتب اسم المشروع"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        الأولوية
+                    </label>
+
+                    <select id="taskPriority">
+
+                        <option value="متوسطة">
+                            متوسطة
+                        </option>
+
+                        <option value="عالية">
+                            عالية
+                        </option>
+
+                        <option value="منخفضة">
+                            منخفضة
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        حالة المهمة
+                    </label>
+
+                    <select id="taskStatus">
+
+                        <option value="جديدة">
+                            جديدة
+                        </option>
+
+                        <option value="قيد التنفيذ">
+                            قيد التنفيذ
+                        </option>
+
+                        <option value="مكتملة">
+                            مكتملة
+                        </option>
+
+                        <option value="متوقفة">
+                            متوقفة
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        تاريخ البداية
+                    </label>
+
+                    <input
+                        type="date"
+                        id="taskStart"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        تاريخ النهاية
+                    </label>
+
+                    <input
+                        type="date"
+                        id="taskEnd"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        مستوى الخبرة المطلوب
+                    </label>
+
+                    <select id="taskExperience">
+
+                        <option value="مبتدئ">
+                            مبتدئ
+                        </option>
+
+                        <option value="متوسط">
+                            متوسط
+                        </option>
+
+                        <option value="متقدم">
+                            متقدم
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        عدد المهارات المطلوبة
+                    </label>
+
+                    <input
+                        type="number"
+                        id="taskSkillsCount"
+                        min="0"
+                        placeholder="0"
+                    >
+
+                </div>
+
+
+                <div class="form-group full-width">
+
+                    <label>
+                        المهارات المطلوبة
+                    </label>
+
+                    <textarea
+                        id="taskSkills"
+                        placeholder="مثال: تحليل البيانات، التواصل، إدارة المشاريع"
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-group full-width">
+
+                    <label>
+                        وصف المهمة
+                    </label>
+
+                    <textarea
+                        id="taskDescription"
+                        placeholder="اكتب وصفاً واضحاً للمهمة"
+                        required
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    class="cancel-btn"
+                    onclick="closeTaskModal()"
+                >
+                    إلغاء
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="save-btn"
+                >
+                    حفظ المهمة
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+
+<!-- نافذة عرض التفاصيل -->
+<div
+    class="modal"
+    id="detailsModal"
+>
+
+    <div
+        class="modal-overlay"
+        onclick="closeDetailsModal()"
+    ></div>
+
+
+    <div class="modal-box details-box">
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2>
+                    تفاصيل المهمة
+                </h2>
+
+                <p>
+                    عرض بيانات ومتطلبات المهمة
+                </p>
+
+            </div>
+
+
+            <button
+                class="close-btn"
+                onclick="closeDetailsModal()"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div
+            id="taskDetails"
+            class="details-grid"
+        ></div>
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+    /* حماية واجهة المسؤول */
+
+    const role = localStorage.getItem("miyarRole");
+
+    if (role !== "admin") {
+
+        alert("غير مصرح لك بالدخول إلى صفحة المهام");
+
+        window.location.href = "login.html";
+    }
+
+
+    /*
+        بيانات مؤقتة للواجهة فقط
+        الربط الحقيقي يكون لاحقاً مع قاعدة البيانات
+    */
+
+    let tasks = [];
+
+
+    function openTaskModal() {
+
+        document
+            .getElementById("taskForm")
+            .reset();
+
+        document
+            .getElementById("editTaskId")
+            .value = "";
+
+        document
+            .getElementById("modalTitle")
+            .textContent = "إضافة مهمة";
+
+        document
+            .getElementById("taskModal")
+            .classList.add("show");
+    }
+
+
+    function closeTaskModal() {
+
+        document
+            .getElementById("taskModal")
+            .classList.remove("show");
+    }
+
+
+    function closeDetailsModal() {
+
+        document
+            .getElementById("detailsModal")
+            .classList.remove("show");
+    }
+
+
+    function saveTask(event) {
+
+        event.preventDefault();
+
+
+        const editId =
+            document
+                .getElementById("editTaskId")
+                .value;
+
+
+        const taskData = {
+
+            id:
+                editId
+                    ? Number(editId)
+                    : Date.now(),
+
+            name:
+                document
+                    .getElementById("taskName")
+                    .value,
+
+            project:
+                document
+                    .getElementById("taskProject")
+                    .value,
+
+            priority:
+                document
+                    .getElementById("taskPriority")
+                    .value,
+
+            status:
+                document
+                    .getElementById("taskStatus")
+                    .value,
+
+            start:
+                document
+                    .getElementById("taskStart")
+                    .value,
+
+            end:
+                document
+                    .getElementById("taskEnd")
+                    .value,
+
+            experience:
+                document
+                    .getElementById("taskExperience")
+                    .value,
+
+            skillsCount:
+                document
+                    .getElementById("taskSkillsCount")
+                    .value || 0,
+
+            skills:
+                document
+                    .getElementById("taskSkills")
+                    .value,
+
+            description:
+                document
+                    .getElementById("taskDescription")
+                    .value
+        };
+
+
+        if (editId) {
+
+            tasks =
+                tasks.map(function(task) {
+
+                    if (task.id === Number(editId)) {
+
+                        return taskData;
+                    }
+
+                    return task;
+
+                });
+
+        } else {
+
+            tasks.push(taskData);
+        }
+
+
+        renderTasks(tasks);
+
+        closeTaskModal();
+    }
+
+
+    function renderTasks(list) {
+
+        const grid =
+            document
+                .getElementById("tasksGrid");
+
+
+        grid.innerHTML = "";
+
+
+        if (list.length === 0) {
+
+            grid.innerHTML = `
+
+                <div class="empty-state">
+                    لا توجد مهام حالياً
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+        list.forEach(function(task) {
+
+            const card =
+                document.createElement("article");
+
+
+            card.className =
+                "task-card";
+
+
+            card.innerHTML = `
+
+                <div class="task-card-top">
+
+                    <div>
+
+                        <span class="task-label">
+                            ${task.project}
+                        </span>
+
+                        <h3>
+                            ${task.name}
+                        </h3>
+
+                    </div>
+
+
+                    <span class="
+                        priority-badge
+                        ${getPriorityClass(task.priority)}
+                    ">
+                        ${task.priority}
+                    </span>
+
+                </div>
+
+
+                <p class="task-description">
+                    ${task.description}
+                </p>
+
+
+                <div class="task-info">
+
+                    <div class="info-item">
+
+                        <span>
+                            الحالة
+                        </span>
+
+                        <strong>
+                            ${task.status}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <span>
+                            مستوى الخبرة
+                        </span>
+
+                        <strong>
+                            ${task.experience}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <span>
+                            تاريخ البداية
+                        </span>
+
+                        <strong>
+                            ${task.start || "-"}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <span>
+                            تاريخ النهاية
+                        </span>
+
+                        <strong>
+                            ${task.end || "غير محدد"}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="task-actions">
+
+                    <button
+                        class="view-btn"
+                        onclick="viewTask(${task.id})"
+                    >
+                        عرض
+                    </button>
+
+
+                    <button
+                        class="edit-btn"
+                        onclick="editTask(${task.id})"
+                    >
+                        تعديل
+                    </button>
+
+
+                    <button
+                        class="matching-btn"
+                        onclick="requestMatching(${task.id})"
+                    >
+                        طلب مطابقة
+                    </button>
+
+
+                    <button
+                        class="delete-btn"
+                        onclick="deleteTask(${task.id})"
+                    >
+                        حذف
+                    </button>
+
+                </div>
+
+            `;
+
+
+            grid.appendChild(card);
+        });
+
+    }
+
+
+    function getPriorityClass(priority) {
+
+        if (priority === "عالية") {
+            return "high";
+        }
+
+        if (priority === "منخفضة") {
+            return "low";
+        }
+
+        return "medium";
+    }
+
+
+    function editTask(id) {
+
+        const task =
+            tasks.find(
+                item => item.id === id
+            );
+
+
+        if (!task) {
+            return;
+        }
+
+
+        document
+            .getElementById("editTaskId")
+            .value = task.id;
+
+        document
+            .getElementById("taskName")
+            .value = task.name;
+
+        document
+            .getElementById("taskProject")
+            .value = task.project;
+
+        document
+            .getElementById("taskPriority")
+            .value = task.priority;
+
+        document
+            .getElementById("taskStatus")
+            .value = task.status;
+
+        document
+            .getElementById("taskStart")
+            .value = task.start;
+
+        document
+            .getElementById("taskEnd")
+            .value = task.end;
+
+        document
+            .getElementById("taskExperience")
+            .value = task.experience;
+
+        document
+            .getElementById("taskSkillsCount")
+            .value = task.skillsCount;
+
+        document
+            .getElementById("taskSkills")
+            .value = task.skills;
+
+        document
+            .getElementById("taskDescription")
+            .value = task.description;
+
+
+        document
+            .getElementById("modalTitle")
+            .textContent = "تعديل المهمة";
+
+
+        document
+            .getElementById("taskModal")
+            .classList.add("show");
+    }
+
+
+    function deleteTask(id) {
+
+        const confirmed =
+            confirm("هل تريد حذف هذه المهمة؟");
+
+
+        if (!confirmed) {
+            return;
+        }
+
+
+        tasks =
+            tasks.filter(
+                task => task.id !== id
+            );
+
+
+        renderTasks(tasks);
+    }
+
+
+    function viewTask(id) {
+
+        const task =
+            tasks.find(
+                item => item.id === id
+            );
+
+
+        if (!task) {
+            return;
+        }
+
+
+        document
+            .getElementById("taskDetails")
+            .innerHTML = `
+
+                <div class="detail-item">
+
+                    <span>
+                        اسم المهمة
+                    </span>
+
+                    <strong>
+                        ${task.name}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span>
+                        المشروع المرتبط
+                    </span>
+
+                    <strong>
+                        ${task.project}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span>
+                        الأولوية
+                    </span>
+
+                    <strong>
+                        ${task.priority}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span>
+                        الحالة
+                    </span>
+
+                    <strong>
+                        ${task.status}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span>
+                        تاريخ البداية
+                    </span>
+
+                    <strong>
+                        ${task.start || "-"}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span>
+                        تاريخ النهاية
+                    </span>
+
+                    <strong>
+                        ${task.end || "غير محدد"}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span>
+                        مستوى الخبرة المطلوب
+                    </span>
+
+                    <strong>
+                        ${task.experience}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span>
+                        عدد المهارات المطلوبة
+                    </span>
+
+                    <strong>
+                        ${task.skillsCount}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item full-detail">
+
+                    <span>
+                        المهارات المطلوبة
+                    </span>
+
+                    <strong>
+                        ${task.skills || "لم تتم إضافة مهارات"}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item full-detail">
+
+                    <span>
+                        وصف المهمة
+                    </span>
+
+                    <strong>
+                        ${task.description}
+                    </strong>
+
+                </div>
+
+            `;
+
+
+        document
+            .getElementById("detailsModal")
+            .classList.add("show");
+    }
+
+
+    function requestMatching(id) {
+
+        /*
+            لاحقاً نرسل رقم المهمة إلى صفحة المطابقة
+            بعد ربط النظام بقاعدة البيانات
+        */
+
+        window.location.href =
+            "matching.html";
+    }
+
+
+    function filterTasks() {
+
+        const search =
+            document
+                .getElementById("searchInput")
+                .value
+                .toLowerCase();
+
+
+        const status =
+            document
+                .getElementById("statusFilter")
+                .value;
+
+
+        const priority =
+            document
+                .getElementById("priorityFilter")
+                .value;
+
+
+        const filtered =
+            tasks.filter(function(task) {
+
+                const matchSearch =
+
+                    task.name
+                        .toLowerCase()
+                        .includes(search)
+
+                    ||
+
+                    task.project
+                        .toLowerCase()
+                        .includes(search);
+
+
+                const matchStatus =
+
+                    !status
+
+                    ||
+
+                    task.status === status;
+
+
+                const matchPriority =
+
+                    !priority
+
+                    ||
+
+                    task.priority === priority;
+
+
+                return (
+                    matchSearch
+                    &&
+                    matchStatus
+                    &&
+                    matchPriority
+                );
+
+            });
+
+
+        renderTasks(filtered);
+    }
+
+
+    function logout() {
+
+        localStorage.removeItem("miyarRole");
+
+        localStorage.removeItem("miyarEmail");
+
+        window.location.href =
+            "login.html";
+    }
+
+</script>
+
+</body>
+</html>
