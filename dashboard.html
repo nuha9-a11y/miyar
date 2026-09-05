@@ -14,8 +14,17 @@
 
 <div class="dashboard-page">
 
+    <!-- زر القائمة للجوال -->
+    <button class="mobile-menu-btn" id="mobileMenuBtn">
+        ☰
+    </button>
+
+    <!-- تغطية خلفية عند فتح القائمة -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+
     <!-- القائمة الجانبية -->
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
 
         <div class="sidebar-logo">
             <img src="assets/logo.png" alt="معيار">
@@ -87,7 +96,20 @@
         </header>
 
 
-       
+        <!-- ملخص النظام -->
+        <section class="summary-section">
+
+            <div class="section-heading">
+
+                <h2>
+                    ملخص النظام
+                </h2>
+
+                <p>
+                    نظرة عامة على الموظفين والمشاريع والمهام
+                </p>
+
+            </div>
 
 
             <div class="summary-grid">
@@ -232,6 +254,53 @@
     }
 
 
+    /* فتح وإغلاق القائمة في الجوال */
+
+    const mobileMenuBtn =
+        document.getElementById("mobileMenuBtn");
+
+    const sidebar =
+        document.getElementById("sidebar");
+
+    const sidebarOverlay =
+        document.getElementById("sidebarOverlay");
+
+
+    mobileMenuBtn.addEventListener("click", function () {
+
+        sidebar.classList.toggle("show");
+
+        sidebarOverlay.classList.toggle("show");
+
+    });
+
+
+    sidebarOverlay.addEventListener("click", function () {
+
+        sidebar.classList.remove("show");
+
+        sidebarOverlay.classList.remove("show");
+
+    });
+
+
+    /* عند الضغط على رابط بالجوال اقفل القائمة */
+
+    document
+        .querySelectorAll(".nav-link")
+        .forEach(function(link) {
+
+            link.addEventListener("click", function() {
+
+                sidebar.classList.remove("show");
+
+                sidebarOverlay.classList.remove("show");
+
+            });
+
+        });
+
+
     /* تسجيل الخروج */
 
     function logout() {
@@ -241,12 +310,6 @@
 
         window.location.href = "login.html";
     }
-
-
-    /*
-        لاحقاً عند ربط قاعدة البيانات
-        سنجلب الأرقام الحقيقية هنا
-    */
 
 </script>
 
