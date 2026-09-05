@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>معيار | التقارير</title>
+
+    <link rel="stylesheet" href="reports.css">
+</head>
+
+<body>
+
+<div class="reports-page">
+
+    <!-- القائمة الجانبية -->
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+            <img src="assets/logo.png" alt="معيار">
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="dashboard.html" class="nav-link">
+                لوحة التحكم
+            </a>
+
+            <a href="employees.html" class="nav-link">
+                الموظفون
+            </a>
+
+            <a href="projects.html" class="nav-link">
+                المشاريع
+            </a>
+
+            <a href="tasks.html" class="nav-link">
+                المهام
+            </a>
+
+            <a href="matching.html" class="nav-link">
+                المطابقة والترشيح
+            </a>
+
+            <a href="evaluations.html" class="nav-link">
+                التقييمات
+            </a>
+
+            <a href="decisions.html" class="nav-link">
+                القرارات
+            </a>
+
+            <a href="reports.html" class="nav-link active">
+                التقارير
+            </a>
+
+        </nav>
+
+
+        <button class="logout-btn" onclick="logout()">
+            تسجيل الخروج
+        </button>
+
+    </aside>
+
+
+    <!-- المحتوى -->
+    <main class="main-content">
+
+        <!-- رأس الصفحة -->
+        <header class="topbar">
+
+            <div>
+
+                <span class="page-badge">
+                    تقارير وتحليلات
+                </span>
+
+                <h1>
+                    التقارير
+                </h1>
+
+                <p>
+                    عرض ملخصات تساعد المسؤول على متابعة توزيع المهام والأداء والضغط التشغيلي
+                </p>
+
+            </div>
+
+        </header>
+
+
+        <!-- أدوات التقرير -->
+        <section class="report-tools">
+
+            <div class="filter-group">
+
+                <label>
+                    الفترة
+                </label>
+
+                <select id="periodFilter"
+                        onchange="applyFilters()">
+
+                    <option value="all">
+                        جميع الفترات
+                    </option>
+
+                    <option value="week">
+                        هذا الأسبوع
+                    </option>
+
+                    <option value="month">
+                        هذا الشهر
+                    </option>
+
+                    <option value="year">
+                        هذه السنة
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="filter-group">
+
+                <label>
+                    المشروع
+                </label>
+
+                <select id="projectFilter"
+                        onchange="applyFilters()">
+
+                    <option value="all">
+                        جميع المشاريع
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <button
+                class="refresh-btn"
+                onclick="refreshReports()"
+            >
+                تحديث التقارير
+            </button>
+
+        </section>
+
+
+        <!-- ملخص سريع -->
+        <section class="summary-grid">
+
+            <article class="summary-card">
+
+                <span class="card-title">
+                    توزيع المهام
+                </span>
+
+                <strong id="tasksDistribution">
+                    —
+                </strong>
+
+                <p>
+                    توزيع المهام الحالية على الموظفين
+                </p>
+
+            </article>
+
+
+            <article class="summary-card">
+
+                <span class="card-title">
+                    ضغط العمل
+                </span>
+
+                <strong id="workloadSummary">
+                    —
+                </strong>
+
+                <p>
+                    مستوى ضغط العمل العام على الفريق
+                </p>
+
+            </article>
+
+
+            <article class="summary-card">
+
+                <span class="card-title">
+                    أداء الموظفين
+                </span>
+
+                <strong id="performanceSummary">
+                    —
+                </strong>
+
+                <p>
+                    متوسط نتائج التقييمات المسجلة
+                </p>
+
+            </article>
+
+
+            <article class="summary-card">
+
+                <span class="card-title">
+                    نتائج المطابقة
+                </span>
+
+                <strong id="matchingSummary">
+                    —
+                </strong>
+
+                <p>
+                    ملخص نتائج المطابقة والترشيحات
+                </p>
+
+            </article>
+
+        </section>
+
+
+        <!-- التقارير التفصيلية -->
+        <section class="reports-grid">
+
+            <!-- توزيع المهام -->
+            <article class="report-card">
+
+                <div class="report-card-header">
+
+                    <div>
+
+                        <span class="report-number">
+                            01
+                        </span>
+
+                        <h2>
+                            توزيع المهام على الموظفين
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="report-content"
+                    id="taskDistributionList"
+                >
+
+                    <div class="empty-report">
+                        لا توجد بيانات متاحة حالياً
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <!-- ضغط العمل -->
+            <article class="report-card">
+
+                <div class="report-card-header">
+
+                    <div>
+
+                        <span class="report-number">
+                            02
+                        </span>
+
+                        <h2>
+                            ضغط العمل
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="report-content"
+                    id="workloadList"
+                >
+
+                    <div class="empty-report">
+                        لا توجد بيانات متاحة حالياً
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <!-- أداء الموظفين -->
+            <article class="report-card">
+
+                <div class="report-card-header">
+
+                    <div>
+
+                        <span class="report-number">
+                            03
+                        </span>
+
+                        <h2>
+                            أداء الموظفين
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="report-content"
+                    id="performanceList"
+                >
+
+                    <div class="empty-report">
+                        لا توجد تقييمات مسجلة حالياً
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <!-- نتائج المطابقة -->
+            <article class="report-card">
+
+                <div class="report-card-header">
+
+                    <div>
+
+                        <span class="report-number">
+                            04
+                        </span>
+
+                        <h2>
+                            نتائج المطابقة
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="report-content"
+                    id="matchingList"
+                >
+
+                    <div class="empty-report">
+                        لا توجد نتائج مطابقة حالياً
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <!-- المهارات -->
+            <article class="report-card">
+
+                <div class="report-card-header">
+
+                    <div>
+
+                        <span class="report-number">
+                            05
+                        </span>
+
+                        <h2>
+                            أكثر المهارات المطلوبة
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="report-content"
+                    id="skillsList"
+                >
+
+                    <div class="empty-report">
+                        لا توجد بيانات مهارات حالياً
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <!-- المشاريع الحالية -->
+            <article class="report-card">
+
+                <div class="report-card-header">
+
+                    <div>
+
+                        <span class="report-number">
+                            06
+                        </span>
+
+                        <h2>
+                            المشاريع والمهام الحالية
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="report-content"
+                    id="currentWorkList"
+                >
+
+                    <div class="empty-report">
+                        لا توجد مشاريع أو مهام حالياً
+                    </div>
+
+                </div>
+
+            </article>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script>
+
+    /* حماية صفحة المسؤول */
+
+    const role =
+        localStorage.getItem("miyarRole");
+
+
+    if (role !== "admin") {
+
+        alert(
+            "غير مصرح لك بالدخول إلى صفحة التقارير"
+        );
+
+        window.location.href =
+            "login.html";
+    }
+
+
+
+    /*
+        بيانات مؤقتة للواجهة فقط.
+        لاحقاً راح تجي من قاعدة البيانات.
+    */
+
+    const reportsData = {
+
+        taskDistribution: [],
+
+        workload: [],
+
+        performance: [],
+
+        matching: [],
+
+        skills: [],
+
+        currentWork: []
+
+    };
+
+
+    function refreshReports() {
+
+        /*
+            لاحقاً هنا نجلب البيانات من قاعدة البيانات
+        */
+
+        renderReports();
+    }
+
+
+    function applyFilters() {
+
+        const period =
+            document
+                .getElementById("periodFilter")
+                .value;
+
+
+        const project =
+            document
+                .getElementById("projectFilter")
+                .value;
+
+
+        /*
+            لاحقاً نفلتر البيانات الحقيقية
+            حسب الفترة والمشروع
+        */
+
+        renderReports();
+    }
+
+
+    function renderReports() {
+
+        renderTaskDistribution();
+
+        renderWorkload();
+
+        renderPerformance();
+
+        renderMatching();
+
+        renderSkills();
+
+        renderCurrentWork();
+
+        updateSummary();
+    }
+
+
+    /* توزيع المهام */
+
+    function renderTaskDistribution() {
+
+        const container =
+            document
+                .getElementById("taskDistributionList");
+
+
+        container.innerHTML = "";
+
+
+        if (
+            reportsData.taskDistribution.length === 0
+        ) {
+
+            container.innerHTML = `
+
+                <div class="empty-report">
+                    لا توجد بيانات متاحة حالياً
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+        reportsData.taskDistribution
+            .forEach(function(item) {
+
+                const row =
+                    document.createElement("div");
+
+
+                row.className =
+                    "report-row";
+
+
+                row.innerHTML = `
+
+                    <div>
+
+                        <strong>
+                            ${item.employee}
+                        </strong>
+
+                        <span>
+                            ${item.task}
+                        </span>
+
+                    </div>
+
+
+                    <span class="status-badge">
+                        ${item.status}
+                    </span>
+
+                `;
+
+
+                container.appendChild(row);
+
+            });
+
+    }
+
+
+    /* ضغط العمل */
+
+    function renderWorkload() {
+
+        const container =
+            document
+                .getElementById("workloadList");
+
+
+        container.innerHTML = "";
+
+
+        if (
+            reportsData.workload.length === 0
+        ) {
+
+            container.innerHTML = `
+
+                <div class="empty-report">
+                    لا توجد بيانات متاحة حالياً
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+        reportsData.workload
+            .forEach(function(item) {
+
+                const row =
+                    document.createElement("div");
+
+
+                row.className =
+                    "report-row";
+
+
+                row.innerHTML = `
+
+                    <div>
+
+                        <strong>
+                            ${item.employee}
+                        </strong>
+
+                        <span>
+                            ضغط العمل
+                        </span>
+
+                    </div>
+
+
+                    <span class="value-badge">
+                        ${item.level}
+                    </span>
+
+                `;
+
+
+                container.appendChild(row);
+
+            });
+
+    }
+
+
+    /* الأداء */
+
+    function renderPerformance() {
+
+        const container =
+            document
+                .getElementById("performanceList");
+
+
+        container.innerHTML = "";
+
+
+        if (
+            reportsData.performance.length === 0
+        ) {
+
+            container.innerHTML = `
+
+                <div class="empty-report">
+                    لا توجد تقييمات مسجلة حالياً
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+        reportsData.performance
+            .forEach(function(item) {
+
+                const row =
+                    document.createElement("div");
+
+
+                row.className =
+                    "report-row";
+
+
+                row.innerHTML = `
+
+                    <div>
+
+                        <strong>
+                            ${item.employee}
+                        </strong>
+
+                        <span>
+                            ${item.task}
+                        </span>
+
+                    </div>
+
+
+                    <span class="value-badge">
+                        ${item.rating}
+                    </span>
+
+                `;
+
+
+                container.appendChild(row);
+
+            });
+
+    }
+
+
+    /* المطابقة */
+
+    function renderMatching() {
+
+        const container =
+            document
+                .getElementById("matchingList");
+
+
+        container.innerHTML = "";
+
+
+        if (
+            reportsData.matching.length === 0
+        ) {
+
+            container.innerHTML = `
+
+                <div class="empty-report">
+                    لا توجد نتائج مطابقة حالياً
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+        reportsData.matching
+            .forEach(function(item) {
+
+                const row =
+                    document.createElement("div");
+
+
+                row.className =
+                    "report-row";
+
+
+                row.innerHTML = `
+
+                    <div>
+
+                        <strong>
+                            ${item.employee}
+                        </strong>
+
+                        <span>
+                            ${item.task}
+                        </span>
+
+                    </div>
+
+
+                    <span class="match-badge">
+                        ${item.match}%
+                    </span>
+
+                `;
+
+
+                container.appendChild(row);
+
+            });
+
+    }
+
+
+    /* المهارات */
+
+    function renderSkills() {
+
+        const container =
+            document
+                .getElementById("skillsList");
+
+
+        container.innerHTML = "";
+
+
+        if (
+            reportsData.skills.length === 0
+        ) {
+
+            container.innerHTML = `
+
+                <div class="empty-report">
+                    لا توجد بيانات مهارات حالياً
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+        reportsData.skills
+            .forEach(function(item) {
+
+                const row =
+                    document.createElement("div");
+
+
+                row.className =
+                    "report-row";
+
+
+                row.innerHTML = `
+
+                    <strong>
+                        ${item.skill}
+                    </strong>
+
+
+                    <span class="value-badge">
+                        ${item.count}
+                    </span>
+
+                `;
+
+
+                container.appendChild(row);
+
+            });
+
+    }
+
+
+    /* المشاريع والمهام الحالية */
+
+    function renderCurrentWork() {
+
+        const container =
+            document
+                .getElementById("currentWorkList");
+
+
+        container.innerHTML = "";
+
+
+        if (
+            reportsData.currentWork.length === 0
+        ) {
+
+            container.innerHTML = `
+
+                <div class="empty-report">
+                    لا توجد مشاريع أو مهام حالياً
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+        reportsData.currentWork
+            .forEach(function(item) {
+
+                const row =
+                    document.createElement("div");
+
+
+                row.className =
+                    "report-row";
+
+
+                row.innerHTML = `
+
+                    <div>
+
+                        <strong>
+                            ${item.project}
+                        </strong>
+
+                        <span>
+                            ${item.task}
+                        </span>
+
+                    </div>
+
+
+                    <span class="status-badge">
+                        ${item.status}
+                    </span>
+
+                `;
+
+
+                container.appendChild(row);
+
+            });
+
+    }
+
+
+    /* الملخص العلوي */
+
+    function updateSummary() {
+
+        const taskDistribution =
+            reportsData
+                .taskDistribution
+                .length;
+
+
+        const workload =
+            reportsData
+                .workload
+                .length;
+
+
+        const performance =
+            reportsData
+                .performance
+                .length;
+
+
+        const matching =
+            reportsData
+                .matching
+                .length;
+
+
+        document
+            .getElementById("tasksDistribution")
+            .textContent =
+            taskDistribution === 0
+                ? "—"
+                : taskDistribution;
+
+
+        document
+            .getElementById("workloadSummary")
+            .textContent =
+            workload === 0
+                ? "—"
+                : workload;
+
+
+        document
+            .getElementById("performanceSummary")
+            .textContent =
+            performance === 0
+                ? "—"
+                : performance;
+
+
+        document
+            .getElementById("matchingSummary")
+            .textContent =
+            matching === 0
+                ? "—"
+                : matching;
+
+    }
+
+
+    function logout() {
+
+        localStorage.removeItem(
+            "miyarRole"
+        );
+
+        localStorage.removeItem(
+            "miyarEmail"
+        );
+
+
+        window.location.href =
+            "login.html";
+    }
+
+
+    renderReports();
+
+</script>
+
+</body>
+</html>
