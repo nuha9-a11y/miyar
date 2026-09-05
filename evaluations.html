@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>معيار | التقييمات</title>
+
+    <link rel="stylesheet" href="evaluations.css">
+</head>
+
+<body>
+
+<div class="evaluations-page">
+
+    <!-- القائمة الجانبية -->
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+            <img src="assets/logo.png" alt="معيار">
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="dashboard.html" class="nav-link">
+                لوحة التحكم
+            </a>
+
+            <a href="employees.html" class="nav-link">
+                الموظفون
+            </a>
+
+            <a href="projects.html" class="nav-link">
+                المشاريع
+            </a>
+
+            <a href="tasks.html" class="nav-link">
+                المهام
+            </a>
+
+            <a href="matching.html" class="nav-link">
+                المطابقة والترشيح
+            </a>
+
+            <a href="evaluations.html" class="nav-link active">
+                التقييمات
+            </a>
+
+            <a href="decisions.html" class="nav-link">
+                القرارات
+            </a>
+
+            <a href="reports.html" class="nav-link">
+                التقارير
+            </a>
+
+        </nav>
+
+        <button class="logout-btn" onclick="logout()">
+            تسجيل الخروج
+        </button>
+
+    </aside>
+
+
+    <!-- المحتوى -->
+    <main class="main-content">
+
+        <!-- رأس الصفحة -->
+        <header class="topbar">
+
+            <div>
+
+                <span class="page-badge">
+                    تقييم الأداء
+                </span>
+
+                <h1>
+                    التقييمات
+                </h1>
+
+                <p>
+                    تقييم الموظفين بعد تنفيذ المهام وتوثيق مستوى الأداء والإنجاز
+                </p>
+
+            </div>
+
+        </header>
+
+
+        <!-- الأدوات -->
+        <section class="toolbar">
+
+            <div class="search-box">
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="ابحث باسم الموظف أو المهمة..."
+                    oninput="filterEvaluations()"
+                >
+
+            </div>
+
+
+            <button
+                class="add-btn"
+                onclick="openEvaluationModal()"
+            >
+                + إضافة تقييم
+            </button>
+
+        </section>
+
+
+        <!-- التقييمات -->
+        <section class="evaluations-container">
+
+            <div class="section-title">
+
+                <div>
+
+                    <h2>
+                        سجل التقييمات
+                    </h2>
+
+                    <p>
+                        ستظهر تقييمات الموظفين هنا بعد إضافتها
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="evaluations-grid"
+                id="evaluationsGrid"
+            >
+
+                <div class="empty-state">
+                    لا توجد تقييمات حالياً
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+
+<!-- نافذة إضافة / تعديل تقييم -->
+<div
+    class="modal"
+    id="evaluationModal"
+>
+
+    <div
+        class="modal-overlay"
+        onclick="closeEvaluationModal()"
+    ></div>
+
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2 id="modalTitle">
+                    إضافة تقييم
+                </h2>
+
+                <p>
+                    قيّم أداء الموظف بعد تنفيذ المهمة
+                </p>
+
+            </div>
+
+
+            <button
+                class="close-btn"
+                onclick="closeEvaluationModal()"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <form
+            id="evaluationForm"
+            onsubmit="saveEvaluation(event)"
+        >
+
+            <input
+                type="hidden"
+                id="editEvaluationId"
+            >
+
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label>
+                        اسم الموظف
+                    </label>
+
+                    <input
+                        type="text"
+                        id="employeeName"
+                        placeholder="اكتب اسم الموظف"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        اسم المهمة
+                    </label>
+
+                    <input
+                        type="text"
+                        id="taskName"
+                        placeholder="اكتب اسم المهمة"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        مستوى الإنجاز
+                    </label>
+
+                    <select
+                        id="achievementLevel"
+                        required
+                    >
+
+                        <option value="">
+                            اختر مستوى الإنجاز
+                        </option>
+
+                        <option value="ممتاز">
+                            ممتاز
+                        </option>
+
+                        <option value="جيد جداً">
+                            جيد جداً
+                        </option>
+
+                        <option value="جيد">
+                            جيد
+                        </option>
+
+                        <option value="مقبول">
+                            مقبول
+                        </option>
+
+                        <option value="يحتاج تحسين">
+                            يحتاج تحسين
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        تقييم الأداء
+                    </label>
+
+                    <select
+                        id="performanceRating"
+                        required
+                    >
+
+                        <option value="">
+                            اختر التقييم
+                        </option>
+
+                        <option value="5">
+                            5 - ممتاز
+                        </option>
+
+                        <option value="4">
+                            4 - جيد جداً
+                        </option>
+
+                        <option value="3">
+                            3 - جيد
+                        </option>
+
+                        <option value="2">
+                            2 - مقبول
+                        </option>
+
+                        <option value="1">
+                            1 - يحتاج تحسين
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group full-width">
+
+                    <label>
+                        ملاحظات المسؤول
+                    </label>
+
+                    <textarea
+                        id="evaluationNotes"
+                        placeholder="اكتب ملاحظاتك عن أداء الموظف"
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        تاريخ التقييم
+                    </label>
+
+                    <input
+                        type="date"
+                        id="evaluationDate"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    class="cancel-btn"
+                    onclick="closeEvaluationModal()"
+                >
+                    إلغاء
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="save-btn"
+                >
+                    حفظ التقييم
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+
+<!-- نافذة عرض التفاصيل -->
+<div
+    class="modal"
+    id="detailsModal"
+>
+
+    <div
+        class="modal-overlay"
+        onclick="closeDetailsModal()"
+    ></div>
+
+
+    <div class="modal-box details-box">
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2>
+                    تفاصيل التقييم
+                </h2>
+
+                <p>
+                    عرض تقييم الموظف والملاحظات
+                </p>
+
+            </div>
+
+
+            <button
+                class="close-btn"
+                onclick="closeDetailsModal()"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div
+            class="details-grid"
+            id="evaluationDetails"
+        >
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+    /* حماية صفحة المسؤول */
+
+    const role = localStorage.getItem("miyarRole");
+
+    if (role !== "admin") {
+
+        alert("غير مصرح لك بالدخول إلى صفحة التقييمات");
+
+        window.location.href = "login.html";
+    }
+
+
+    /*
+        بيانات مؤقتة للواجهة فقط
+        الربط بقاعدة البيانات يكون لاحقاً
+    */
+
+    let evaluations = [];
+
+
+    function openEvaluationModal() {
+
+        document
+            .getElementById("evaluationForm")
+            .reset();
+
+        document
+            .getElementById("editEvaluationId")
+            .value = "";
+
+        document
+            .getElementById("modalTitle")
+            .textContent = "إضافة تقييم";
+
+        document
+            .getElementById("evaluationModal")
+            .classList.add("show");
+    }
+
+
+    function closeEvaluationModal() {
+
+        document
+            .getElementById("evaluationModal")
+            .classList.remove("show");
+    }
+
+
+    function closeDetailsModal() {
+
+        document
+            .getElementById("detailsModal")
+            .classList.remove("show");
+    }
+
+
+    function saveEvaluation(event) {
+
+        event.preventDefault();
+
+
+        const editId =
+            document
+                .getElementById("editEvaluationId")
+                .value;
+
+
+        const evaluationData = {
+
+            id:
+                editId
+                    ? Number(editId)
+                    : Date.now(),
+
+            employee:
+                document
+                    .getElementById("employeeName")
+                    .value,
+
+            task:
+                document
+                    .getElementById("taskName")
+                    .value,
+
+            achievement:
+                document
+                    .getElementById("achievementLevel")
+                    .value,
+
+            rating:
+                document
+                    .getElementById("performanceRating")
+                    .value,
+
+            notes:
+                document
+                    .getElementById("evaluationNotes")
+                    .value,
+
+            date:
+                document
+                    .getElementById("evaluationDate")
+                    .value
+        };
+
+
+        if (editId) {
+
+            evaluations =
+                evaluations.map(function(item) {
+
+                    if (item.id === Number(editId)) {
+
+                        return evaluationData;
+                    }
+
+                    return item;
+
+                });
+
+        } else {
+
+            evaluations.push(evaluationData);
+        }
+
+
+        renderEvaluations(evaluations);
+
+        closeEvaluationModal();
+    }
+
+
+    function renderEvaluations(list) {
+
+        const grid =
+            document
+                .getElementById("evaluationsGrid");
+
+
+        grid.innerHTML = "";
+
+
+        if (list.length === 0) {
+
+            grid.innerHTML = `
+
+                <div class="empty-state">
+                    لا توجد تقييمات حالياً
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+        list.forEach(function(evaluation) {
+
+            const card =
+                document.createElement("article");
+
+
+            card.className =
+                "evaluation-card";
+
+
+            card.innerHTML = `
+
+                <div class="card-top">
+
+                    <div>
+
+                        <span class="evaluation-label">
+                            تقييم موظف
+                        </span>
+
+                        <h3>
+                            ${evaluation.employee}
+                        </h3>
+
+                        <p class="task-name">
+                            ${evaluation.task}
+                        </p>
+
+                    </div>
+
+
+                    <div class="rating-badge">
+
+                        <span>
+                            التقييم
+                        </span>
+
+                        <strong>
+                            ${evaluation.rating}/5
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="evaluation-info">
+
+                    <div class="info-item">
+
+                        <span>
+                            مستوى الإنجاز
+                        </span>
+
+                        <strong>
+                            ${evaluation.achievement}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <span>
+                            تاريخ التقييم
+                        </span>
+
+                        <strong>
+                            ${evaluation.date}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="notes-preview">
+
+                    <span>
+                        ملاحظات المسؤول
+                    </span>
+
+                    <p>
+                        ${evaluation.notes || "لا توجد ملاحظات"}
+                    </p>
+
+                </div>
+
+
+                <div class="evaluation-actions">
+
+                    <button
+                        class="view-btn"
+                        onclick="viewEvaluation(${evaluation.id})"
+                    >
+                        عرض
+                    </button>
+
+
+                    <button
+                        class="edit-btn"
+                        onclick="editEvaluation(${evaluation.id})"
+                    >
+                        تعديل
+                    </button>
+
+
+                    <button
+                        class="delete-btn"
+                        onclick="deleteEvaluation(${evaluation.id})"
+                    >
+                        حذف
+                    </button>
+
+                </div>
+
+            `;
+
+
+            grid.appendChild(card);
+
+        });
+
+    }
+
+
+    function editEvaluation(id) {
+
+        const evaluation =
+            evaluations.find(
+                item => item.id === id
+            );
+
+
+        if (!evaluation) {
+            return;
+        }
+
+
+        document
+            .getElementById("editEvaluationId")
+            .value = evaluation.id;
+
+
+        document
+            .getElementById("employeeName")
+            .value = evaluation.employee;
+
+
+        document
+            .getElementById("taskName")
+            .value = evaluation.task;
+
+
+        document
+            .getElementById("achievementLevel")
+            .value = evaluation.achievement;
+
+
+        document
+            .getElementById("performanceRating")
+            .value = evaluation.rating;
+
+
+        document
+            .getElementById("evaluationNotes")
+            .value = evaluation.notes;
+
+
+        document
+            .getElementById("evaluationDate")
+            .value = evaluation.date;
+
+
+        document
+            .getElementById("modalTitle")
+            .textContent = "تعديل التقييم";
+
+
+        document
+            .getElementById("evaluationModal")
+            .classList.add("show");
+    }
+
+
+    function deleteEvaluation(id) {
+
+        const confirmed =
+            confirm("هل تريد حذف هذا التقييم؟");
+
+
+        if (!confirmed) {
+            return;
+        }
+
+
+        evaluations =
+            evaluations.filter(
+                item => item.id !== id
+            );
+
+
+        renderEvaluations(evaluations);
+    }
+
+
+    function viewEvaluation(id) {
+
+        const evaluation =
+            evaluations.find(
+                item => item.id === id
+            );
+
+
+        if (!evaluation) {
+            return;
+        }
+
+
+        document
+            .getElementById("evaluationDetails")
+            .innerHTML = `
+
+                <div class="detail-item">
+
+                    <span>
+                        اسم الموظف
+                    </span>
+
+                    <strong>
+                        ${evaluation.employee}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span>
+                        اسم المهمة
+                    </span>
+
+                    <strong>
+                        ${evaluation.task}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span>
+                        مستوى الإنجاز
+                    </span>
+
+                    <strong>
+                        ${evaluation.achievement}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span>
+                        تقييم الأداء
+                    </span>
+
+                    <strong>
+                        ${evaluation.rating} من 5
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span>
+                        تاريخ التقييم
+                    </span>
+
+                    <strong>
+                        ${evaluation.date}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item full-detail">
+
+                    <span>
+                        ملاحظات المسؤول
+                    </span>
+
+                    <strong>
+                        ${evaluation.notes || "لا توجد ملاحظات"}
+                    </strong>
+
+                </div>
+
+            `;
+
+
+        document
+            .getElementById("detailsModal")
+            .classList.add("show");
+    }
+
+
+    function filterEvaluations() {
+
+        const search =
+            document
+                .getElementById("searchInput")
+                .value
+                .toLowerCase();
+
+
+        const filtered =
+            evaluations.filter(function(item) {
+
+                return (
+
+                    item.employee
+                        .toLowerCase()
+                        .includes(search)
+
+                    ||
+
+                    item.task
+                        .toLowerCase()
+                        .includes(search)
+
+                );
+
+            });
+
+
+        renderEvaluations(filtered);
+    }
+
+
+    function logout() {
+
+        localStorage.removeItem("miyarRole");
+        localStorage.removeItem("miyarEmail");
+
+        window.location.href =
+            "login.html";
+    }
+
+</script>
+
+</body>
+</html>
