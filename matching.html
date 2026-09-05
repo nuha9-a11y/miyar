@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>معيار | المطابقة والترشيح</title>
+
+    <link rel="stylesheet" href="matching.css">
+</head>
+
+<body>
+
+<div class="matching-page">
+
+    <!-- القائمة الجانبية -->
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+            <img src="assets/logo.png" alt="معيار">
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="dashboard.html" class="nav-link">
+                لوحة التحكم
+            </a>
+
+            <a href="employees.html" class="nav-link">
+                الموظفون
+            </a>
+
+            <a href="projects.html" class="nav-link">
+                المشاريع
+            </a>
+
+            <a href="tasks.html" class="nav-link">
+                المهام
+            </a>
+
+            <a href="matching.html" class="nav-link active">
+                المطابقة والترشيح
+            </a>
+
+            <a href="evaluations.html" class="nav-link">
+                التقييمات
+            </a>
+
+            <a href="decisions.html" class="nav-link">
+                القرارات
+            </a>
+
+            <a href="reports.html" class="nav-link">
+                التقارير
+            </a>
+
+        </nav>
+
+        <button class="logout-btn" onclick="logout()">
+            تسجيل الخروج
+        </button>
+
+    </aside>
+
+
+    <!-- المحتوى -->
+    <main class="main-content">
+
+        <!-- رأس الصفحة -->
+        <header class="topbar">
+
+            <div>
+
+                <span class="page-badge">
+                    المطابقة الذكية
+                </span>
+
+                <h1>
+                    المطابقة والترشيح
+                </h1>
+
+                <p>
+                    مقارنة متطلبات المهمة مع بيانات الموظفين للوصول إلى المرشح الأنسب
+                </p>
+
+            </div>
+
+        </header>
+
+
+        <!-- اختيار المهمة -->
+        <section class="task-selection">
+
+            <div class="section-heading">
+
+                <h2>
+                    اختر المهمة
+                </h2>
+
+                <p>
+                    حدد المهمة التي تريد إيجاد الموظف الأنسب لها
+                </p>
+
+            </div>
+
+
+            <div class="selection-row">
+
+                <select id="taskSelect">
+
+                    <option value="">
+                        اختر مهمة
+                    </option>
+
+                </select>
+
+                <button
+                    class="analyse-btn"
+                    onclick="startMatching()"
+                >
+                    بدء المطابقة
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- ملخص المهمة -->
+        <section
+            class="task-summary hidden"
+            id="taskSummary"
+        >
+
+            <div class="summary-title">
+
+                <div>
+
+                    <span>
+                        المهمة المختارة
+                    </span>
+
+                    <h2 id="summaryTaskName">
+                        -
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div class="summary-grid">
+
+                <div class="summary-item">
+
+                    <span>
+                        المشروع
+                    </span>
+
+                    <strong id="summaryProject">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-item">
+
+                    <span>
+                        الأولوية
+                    </span>
+
+                    <strong id="summaryPriority">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-item">
+
+                    <span>
+                        مستوى الخبرة المطلوب
+                    </span>
+
+                    <strong id="summaryExperience">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-item">
+
+                    <span>
+                        المهارات المطلوبة
+                    </span>
+
+                    <strong id="summarySkills">
+                        -
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- نتائج المطابقة -->
+        <section
+            class="results-section hidden"
+            id="resultsSection"
+        >
+
+            <div class="section-heading">
+
+                <h2>
+                    نتائج المطابقة
+                </h2>
+
+                <p>
+                    ترتيب المرشحين حسب درجة التوافق مع متطلبات المهمة
+                </p>
+
+            </div>
+
+
+            <div
+                class="candidates-list"
+                id="candidatesList"
+            >
+            </div>
+
+        </section>
+
+
+        <!-- الحالة الفارغة -->
+        <section
+            class="empty-matching"
+            id="emptyMatching"
+        >
+
+            <div class="empty-box">
+
+                <h3>
+                    لم يتم تشغيل المطابقة بعد
+                </h3>
+
+                <p>
+                    اختر مهمة ثم اضغط على بدء المطابقة لعرض المرشحين
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+
+<!-- نافذة تفاصيل المرشح -->
+<div
+    class="modal"
+    id="candidateModal"
+>
+
+    <div
+        class="modal-overlay"
+        onclick="closeCandidateModal()"
+    ></div>
+
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2>
+                    تفاصيل المرشح
+                </h2>
+
+                <p>
+                    تفاصيل المطابقة بين الموظف والمهمة
+                </p>
+
+            </div>
+
+
+            <button
+                class="close-btn"
+                onclick="closeCandidateModal()"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div
+            class="candidate-details"
+            id="candidateDetails"
+        >
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+    /* حماية صفحة المسؤول */
+
+    const role = localStorage.getItem("miyarRole");
+
+    if (role !== "admin") {
+
+        alert("غير مصرح لك بالدخول إلى صفحة المطابقة والترشيح");
+
+        window.location.href = "login.html";
+    }
+
+
+    /*
+        هذه بيانات واجهة مؤقتة فقط
+        لاحقاً ستأتي من قاعدة البيانات
+    */
+
+    const tasks = [];
+
+    const candidates = [];
+
+
+    /* تحميل المهام */
+
+    function loadTasks() {
+
+        const taskSelect =
+            document.getElementById("taskSelect");
+
+
+        taskSelect.innerHTML =
+            `<option value="">اختر مهمة</option>`;
+
+
+        tasks.forEach(function(task) {
+
+            const option =
+                document.createElement("option");
+
+
+            option.value = task.id;
+
+            option.textContent = task.name;
+
+            taskSelect.appendChild(option);
+
+        });
+
+    }
+
+
+    /* بدء المطابقة */
+
+    function startMatching() {
+
+        const taskId =
+            document.getElementById("taskSelect").value;
+
+
+        if (!taskId) {
+
+            alert("اختر مهمة أولاً");
+
+            return;
+        }
+
+
+        const task =
+            tasks.find(
+                item => item.id == taskId
+            );
+
+
+        if (!task) {
+            return;
+        }
+
+
+        /* عرض ملخص المهمة */
+
+        document
+            .getElementById("summaryTaskName")
+            .textContent = task.name;
+
+
+        document
+            .getElementById("summaryProject")
+            .textContent = task.project || "-";
+
+
+        document
+            .getElementById("summaryPriority")
+            .textContent = task.priority || "-";
+
+
+        document
+            .getElementById("summaryExperience")
+            .textContent = task.experience || "-";
+
+
+        document
+            .getElementById("summarySkills")
+            .textContent = task.skills || "-";
+
+
+        document
+            .getElementById("taskSummary")
+            .classList.remove("hidden");
+
+
+        document
+            .getElementById("emptyMatching")
+            .classList.add("hidden");
+
+
+        document
+            .getElementById("resultsSection")
+            .classList.remove("hidden");
+
+
+        renderCandidates();
+    }
+
+
+    /* عرض المرشحين */
+
+    function renderCandidates() {
+
+        const container =
+            document.getElementById("candidatesList");
+
+
+        container.innerHTML = "";
+
+
+        if (candidates.length === 0) {
+
+            container.innerHTML = `
+
+                <div class="no-candidates">
+
+                    لا توجد نتائج مطابقة حالياً
+
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+        candidates.forEach(function(candidate, index) {
+
+            const card =
+                document.createElement("div");
+
+
+            card.className = "candidate-card";
+
+
+            card.innerHTML = `
+
+                <div class="candidate-rank">
+
+                    ${index + 1}
+
+                </div>
+
+
+                <div class="candidate-main">
+
+                    <div class="candidate-name-row">
+
+                        <div>
+
+                            <span class="candidate-label">
+                                مرشح
+                            </span>
+
+                            <h3>
+                                ${candidate.name}
+                            </h3>
+
+                            <p>
+                                ${candidate.title || ""}
+                            </p>
+
+                        </div>
+
+
+                        <div class="match-score">
+
+                            <span>
+                                نسبة التوافق
+                            </span>
+
+                            <strong>
+                                ${candidate.score}%
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="candidate-info-grid">
+
+                        <div class="candidate-info">
+
+                            <span>
+                                المهارات المطابقة
+                            </span>
+
+                            <strong>
+                                ${candidate.skills || "-"}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="candidate-info">
+
+                            <span>
+                                الخبرة
+                            </span>
+
+                            <strong>
+                                ${candidate.experience || "-"}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="candidate-info">
+
+                            <span>
+                                ضغط العمل
+                            </span>
+
+                            <strong>
+                                ${candidate.workload || "-"}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="candidate-info">
+
+                            <span>
+                                الحالة
+                            </span>
+
+                            <strong>
+                                ${candidate.status || "-"}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="reason-box">
+
+                        <span>
+                            سبب التوصية
+                        </span>
+
+                        <p>
+                            ${candidate.reason || "-"}
+                        </p>
+
+                    </div>
+
+
+                    <div class="candidate-actions">
+
+                        <button
+                            class="details-btn"
+                            onclick="viewCandidate(${candidate.id})"
+                        >
+                            عرض التفاصيل
+                        </button>
+
+
+                        <button
+                            class="approve-btn"
+                            onclick="approveCandidate(${candidate.id})"
+                        >
+                            اعتماد الترشيح
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `;
+
+
+            container.appendChild(card);
+
+        });
+
+    }
+
+
+    /* عرض تفاصيل الموظف */
+
+    function viewCandidate(id) {
+
+        const candidate =
+            candidates.find(
+                item => item.id === id
+            );
+
+
+        if (!candidate) {
+            return;
+        }
+
+
+        document
+            .getElementById("candidateDetails")
+            .innerHTML = `
+
+                <div class="details-grid">
+
+                    <div class="detail-item">
+
+                        <span>
+                            اسم الموظف
+                        </span>
+
+                        <strong>
+                            ${candidate.name}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <span>
+                            المسمى الوظيفي
+                        </span>
+
+                        <strong>
+                            ${candidate.title || "-"}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <span>
+                            نسبة التوافق
+                        </span>
+
+                        <strong>
+                            ${candidate.score}%
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <span>
+                            الخبرة
+                        </span>
+
+                        <strong>
+                            ${candidate.experience || "-"}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <span>
+                            ضغط العمل
+                        </span>
+
+                        <strong>
+                            ${candidate.workload || "-"}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <span>
+                            الحالة
+                        </span>
+
+                        <strong>
+                            ${candidate.status || "-"}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-item full-detail">
+
+                        <span>
+                            المهارات المطابقة
+                        </span>
+
+                        <strong>
+                            ${candidate.skills || "-"}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-item full-detail">
+
+                        <span>
+                            سبب التوصية
+                        </span>
+
+                        <strong>
+                            ${candidate.reason || "-"}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            `;
+
+
+        document
+            .getElementById("candidateModal")
+            .classList.add("show");
+
+    }
+
+
+    function closeCandidateModal() {
+
+        document
+            .getElementById("candidateModal")
+            .classList.remove("show");
+    }
+
+
+    /* اعتماد الترشيح */
+
+    function approveCandidate(id) {
+
+        const candidate =
+            candidates.find(
+                item => item.id === id
+            );
+
+
+        if (!candidate) {
+            return;
+        }
+
+
+        const confirmed =
+            confirm(
+                "هل تريد اعتماد ترشيح هذا الموظف للمهمة؟"
+            );
+
+
+        if (!confirmed) {
+            return;
+        }
+
+
+        alert(
+            "تم اعتماد الترشيح مبدئياً"
+        );
+
+        /*
+            لاحقاً:
+            نحفظ القرار في قاعدة البيانات
+            ونرسله إلى صفحة القرارات
+        */
+    }
+
+
+    function logout() {
+
+        localStorage.removeItem("miyarRole");
+
+        localStorage.removeItem("miyarEmail");
+
+        window.location.href = "login.html";
+    }
+
+
+    loadTasks();
+
+</script>
+
+</body>
+</html>
