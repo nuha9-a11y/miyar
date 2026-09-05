@@ -4,17 +4,16 @@
     box-sizing: border-box;
 }
 
-
 html,
 body {
     width: 100%;
     min-height: 100%;
 }
 
-
 body {
     font-family: "Segoe UI", Tahoma, Arial, sans-serif;
     color: #263f4f;
+    overflow-x: hidden;
 }
 
 
@@ -24,6 +23,20 @@ body {
     width: 100%;
     min-height: 100vh;
     display: flex;
+}
+
+
+/* زر القائمة للجوال */
+
+.mobile-menu-btn {
+    display: none;
+}
+
+
+/* تغطية خلفية */
+
+.sidebar-overlay {
+    display: none;
 }
 
 
@@ -37,7 +50,7 @@ body {
     top: 0;
     right: 0;
 
-    z-index: 100;
+    z-index: 1000;
 
     padding: 25px 17px;
 
@@ -52,8 +65,9 @@ body {
         );
 
     box-shadow:
-        -8px 0 28px
-        rgba(38, 59, 70, 0.10);
+        -8px 0 28px rgba(38, 59, 70, 0.10);
+
+    transition: right 0.3s ease;
 }
 
 
@@ -66,7 +80,6 @@ body {
 
     margin-bottom: 28px;
 }
-
 
 .sidebar-logo img {
     width: 92px;
@@ -82,7 +95,6 @@ body {
     flex-direction: column;
     gap: 6px;
 }
-
 
 .nav-link {
     display: block;
@@ -100,12 +112,10 @@ body {
     transition: 0.25s ease;
 }
 
-
 .nav-link:hover {
     background: rgba(255, 255, 255, 0.09);
     color: white;
 }
-
 
 .nav-link.active {
     background: rgba(255, 255, 255, 0.14);
@@ -145,7 +155,6 @@ body {
     transition: 0.25s ease;
 }
 
-
 .logout-btn:hover {
     background: #b98a4d;
     border-color: #b98a4d;
@@ -183,7 +192,6 @@ body {
     margin-bottom: 28px;
 }
 
-
 .page-badge {
     display: inline-block;
 
@@ -202,7 +210,6 @@ body {
     font-weight: 600;
 }
 
-
 .topbar h1 {
     color: #263f4f;
 
@@ -211,7 +218,6 @@ body {
 
     margin-bottom: 5px;
 }
-
 
 .topbar p {
     color: #71828c;
@@ -225,7 +231,6 @@ body {
     margin-bottom: 18px;
 }
 
-
 .section-heading h2 {
     color: #263f4f;
 
@@ -233,7 +238,6 @@ body {
 
     margin-bottom: 5px;
 }
-
 
 .section-heading p {
     color: #798991;
@@ -247,7 +251,6 @@ body {
     margin-top: 5px;
 }
 
-
 .summary-grid {
     display: grid;
 
@@ -256,7 +259,6 @@ body {
 
     gap: 17px;
 }
-
 
 .summary-card {
     min-height: 125px;
@@ -293,7 +295,6 @@ body {
     transition: 0.25s ease;
 }
 
-
 .summary-card:hover {
     transform: translateY(-3px);
 
@@ -301,7 +302,6 @@ body {
         0 12px 28px
         rgba(40, 61, 73, 0.09);
 }
-
 
 .summary-card span {
     display: block;
@@ -312,7 +312,6 @@ body {
 
     margin-bottom: 14px;
 }
-
 
 .summary-card strong {
     display: block;
@@ -330,7 +329,6 @@ body {
     margin-top: 25px;
 }
 
-
 .activity-grid {
     display: grid;
 
@@ -339,7 +337,6 @@ body {
 
     gap: 17px;
 }
-
 
 .activity-card {
     min-height: 175px;
@@ -374,7 +371,6 @@ body {
         rgba(40, 61, 73, 0.05);
 }
 
-
 .activity-header h3 {
     color: #31576b;
 
@@ -382,7 +378,6 @@ body {
 
     margin-bottom: 18px;
 }
-
 
 .empty-state {
     min-height: 100px;
@@ -412,55 +407,226 @@ body {
 }
 
 
-/* جوال */
+/* الجوال */
 
 @media (max-width: 700px) {
 
-    .sidebar {
-        width: 76px;
-        padding: 18px 7px;
+    body {
+        overflow-x: hidden;
     }
 
 
+    /* زر القائمة */
+
+    .mobile-menu-btn {
+        display: flex;
+
+        position: fixed;
+
+        top: 16px;
+        right: 16px;
+
+        z-index: 1200;
+
+        width: 46px;
+        height: 46px;
+
+        align-items: center;
+        justify-content: center;
+
+        border: none;
+
+        border-radius: 12px;
+
+        background: #31586c;
+
+        color: white;
+
+        font-size: 24px;
+
+        cursor: pointer;
+
+        box-shadow:
+            0 6px 18px
+            rgba(34, 58, 71, 0.18);
+    }
+
+
+    /* السايد بار يختفي */
+
+    .sidebar {
+        width: 245px;
+
+        right: -260px;
+
+        padding: 25px 17px;
+
+        box-shadow:
+            -10px 0 30px
+            rgba(34, 52, 63, 0.22);
+    }
+
+
+    /* عند الفتح */
+
+    .sidebar.show {
+        right: 0;
+    }
+
+
+    /* الخلفية السوداء */
+
+    .sidebar-overlay {
+        display: block;
+
+        position: fixed;
+
+        inset: 0;
+
+        z-index: 900;
+
+        background:
+            rgba(28, 44, 53, 0.35);
+
+        opacity: 0;
+
+        visibility: hidden;
+
+        transition: 0.25s ease;
+    }
+
+
+    .sidebar-overlay.show {
+        opacity: 1;
+        visibility: visible;
+    }
+
+
+    /* الشعار داخل القائمة */
+
     .sidebar-logo img {
-        width: 55px;
+        width: 82px;
     }
 
 
     .nav-link {
-        padding: 10px 4px;
-        text-align: center;
-        font-size: 9px;
+        padding: 12px 14px;
+
+        text-align: right;
+
+        font-size: 12px;
     }
 
 
     .logout-btn {
-        font-size: 9px;
+        font-size: 11px;
     }
 
 
+    /* المحتوى يأخذ الشاشة كاملة */
+
     .main-content {
-        width: calc(100% - 76px);
+        width: 100%;
 
-        margin-right: 76px;
+        margin-right: 0;
 
-        padding: 24px 15px 35px;
+        padding:
+            85px
+            18px
+            35px;
+
+        background-attachment: scroll;
+    }
+
+
+    /* العناوين */
+
+    .topbar {
+        margin-bottom: 24px;
     }
 
 
     .topbar h1 {
-        font-size: 21px;
+        font-size: 25px;
     }
 
+
+    .topbar p {
+        font-size: 12px;
+        line-height: 1.8;
+    }
+
+
+    .section-heading h2 {
+        font-size: 18px;
+    }
+
+
+    .section-heading p {
+        font-size: 11px;
+    }
+
+
+    /* الكروت */
 
     .summary-grid,
     .activity-grid {
         grid-template-columns: 1fr;
+
+        gap: 14px;
     }
 
 
     .summary-card {
-        min-height: 110px;
+        min-height: 100px;
+
+        padding: 17px;
+    }
+
+
+    .summary-card span {
+        margin-bottom: 8px;
+
+        font-size: 12px;
+    }
+
+
+    .summary-card strong {
+        font-size: 27px;
+    }
+
+
+    .activity-card {
+        min-height: 150px;
+
+        padding: 17px;
+    }
+
+}
+
+
+/* الجوال الصغير */
+
+@media (max-width: 420px) {
+
+    .main-content {
+        padding:
+            82px
+            14px
+            30px;
+    }
+
+
+    .mobile-menu-btn {
+        width: 43px;
+        height: 43px;
+
+        font-size: 21px;
+    }
+
+
+    .topbar h1 {
+        font-size: 23px;
     }
 
 }
