@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>معيار | القرارات</title>
+
+    <link rel="stylesheet" href="decisions.css">
+</head>
+
+<body>
+
+<div class="decisions-page">
+
+    <!-- القائمة الجانبية -->
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+            <img src="assets/logo.png" alt="معيار">
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="dashboard.html" class="nav-link">
+                لوحة التحكم
+            </a>
+
+            <a href="employees.html" class="nav-link">
+                الموظفون
+            </a>
+
+            <a href="projects.html" class="nav-link">
+                المشاريع
+            </a>
+
+            <a href="tasks.html" class="nav-link">
+                المهام
+            </a>
+
+            <a href="matching.html" class="nav-link">
+                المطابقة والترشيح
+            </a>
+
+            <a href="evaluations.html" class="nav-link">
+                التقييمات
+            </a>
+
+            <a href="decisions.html" class="nav-link active">
+                القرارات
+            </a>
+
+            <a href="reports.html" class="nav-link">
+                التقارير
+            </a>
+
+        </nav>
+
+
+        <button class="logout-btn" onclick="logout()">
+            تسجيل الخروج
+        </button>
+
+    </aside>
+
+
+    <!-- المحتوى الرئيسي -->
+    <main class="main-content">
+
+        <!-- رأس الصفحة -->
+        <header class="topbar">
+
+            <div>
+
+                <span class="page-badge">
+                    القرار النهائي
+                </span>
+
+                <h1>
+                    القرارات
+                </h1>
+
+                <p>
+                    تسجيل ومراجعة قرارات إسناد المهام للموظفين
+                </p>
+
+            </div>
+
+        </header>
+
+
+        <!-- الأدوات -->
+        <section class="toolbar">
+
+            <div class="search-box">
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="ابحث باسم المهمة أو الموظف..."
+                    oninput="filterDecisions()"
+                >
+
+            </div>
+
+
+            <button
+                class="add-btn"
+                onclick="openDecisionModal()"
+            >
+                + تسجيل قرار
+            </button>
+
+        </section>
+
+
+        <!-- سجل القرارات -->
+        <section class="decisions-container">
+
+            <div class="section-title">
+
+                <div>
+
+                    <h2>
+                        سجل القرارات
+                    </h2>
+
+                    <p>
+                        ستظهر القرارات المعتمدة هنا بعد تسجيلها
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="decisions-grid"
+                id="decisionsGrid"
+            >
+
+                <div class="empty-state">
+                    لا توجد قرارات مسجلة حالياً
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+
+<!-- نافذة إضافة أو تعديل قرار -->
+<div
+    class="modal"
+    id="decisionModal"
+>
+
+    <div
+        class="modal-overlay"
+        onclick="closeDecisionModal()"
+    ></div>
+
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2 id="modalTitle">
+                    تسجيل قرار
+                </h2>
+
+                <p>
+                    أدخل القرار النهائي الخاص بإسناد المهمة
+                </p>
+
+            </div>
+
+
+            <button
+                class="close-btn"
+                onclick="closeDecisionModal()"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <form
+            id="decisionForm"
+            onsubmit="saveDecision(event)"
+        >
+
+            <input
+                type="hidden"
+                id="editDecisionId"
+            >
+
+
+            <div class="form-grid">
+
+                <!-- المهمة -->
+                <div class="form-group">
+
+                    <label>
+                        المهمة
+                    </label>
+
+                    <input
+                        type="text"
+                        id="taskName"
+                        placeholder="اكتب اسم المهمة"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- مرشح النظام -->
+                <div class="form-group">
+
+                    <label>
+                        الموظف الذي رشحه النظام
+                    </label>
+
+                    <input
+                        type="text"
+                        id="systemCandidate"
+                        placeholder="اسم الموظف المرشح"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- نسبة التوافق -->
+                <div class="form-group">
+
+                    <label>
+                        نسبة التوافق
+                    </label>
+
+                    <input
+                        type="number"
+                        id="matchRate"
+                        min="0"
+                        max="100"
+                        placeholder="مثال: 90"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- اختيار المسؤول -->
+                <div class="form-group">
+
+                    <label>
+                        الموظف الذي اختاره المسؤول
+                    </label>
+
+                    <input
+                        type="text"
+                        id="selectedEmployee"
+                        placeholder="اسم الموظف المختار"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- سبب الاختيار -->
+                <div class="form-group full-width">
+
+                    <label>
+                        سبب الاختيار
+                    </label>
+
+                    <textarea
+                        id="decisionReason"
+                        placeholder="اكتب سبب اختيار هذا الموظف للمهمة"
+                        required
+                    ></textarea>
+
+                </div>
+
+
+                <!-- تاريخ القرار -->
+                <div class="form-group">
+
+                    <label>
+                        تاريخ القرار
+                    </label>
+
+                    <input
+                        type="date"
+                        id="decisionDate"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    class="cancel-btn"
+                    onclick="closeDecisionModal()"
+                >
+                    إلغاء
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="save-btn"
+                >
+                    حفظ القرار
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+
+<!-- نافذة تفاصيل القرار -->
+<div
+    class="modal"
+    id="detailsModal"
+>
+
+    <div
+        class="modal-overlay"
+        onclick="closeDetailsModal()"
+    ></div>
+
+
+    <div class="modal-box details-box">
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2>
+                    تفاصيل القرار
+                </h2>
+
+                <p>
+                    عرض القرار النهائي للمهمة
+                </p>
+
+            </div>
+
+
+            <button
+                class="close-btn"
+                onclick="closeDetailsModal()"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div
+            class="details-grid"
+            id="decisionDetails"
+        >
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+    /*
+        حماية صفحة المسؤول
+    */
+
+    const role =
+        localStorage.getItem("miyarRole");
+
+
+    if (role !== "admin") {
+
+        alert(
+            "غير مصرح لك بالدخول إلى صفحة القرارات"
+        );
+
+        window.location.href =
+            "login.html";
+    }
+
+
+    /*
+        بيانات مؤقتة للواجهة فقط
+        لاحقاً تأتي من قاعدة البيانات
+    */
+
+    let decisions = [];
+
+
+    function openDecisionModal() {
+
+        document
+            .getElementById("decisionForm")
+            .reset();
+
+
+        document
+            .getElementById("editDecisionId")
+            .value = "";
+
+
+        document
+            .getElementById("modalTitle")
+            .textContent = "تسجيل قرار";
+
+
+        document
+            .getElementById("decisionModal")
+            .classList.add("show");
+    }
+
+
+    function closeDecisionModal() {
+
+        document
+            .getElementById("decisionModal")
+            .classList.remove("show");
+    }
+
+
+    function closeDetailsModal() {
+
+        document
+            .getElementById("detailsModal")
+            .classList.remove("show");
+    }
+
+
+    function saveDecision(event) {
+
+        event.preventDefault();
+
+
+        const editId =
+            document
+                .getElementById("editDecisionId")
+                .value;
+
+
+        const decisionData = {
+
+            id:
+                editId
+                    ? Number(editId)
+                    : Date.now(),
+
+            task:
+                document
+                    .getElementById("taskName")
+                    .value,
+
+            systemCandidate:
+                document
+                    .getElementById("systemCandidate")
+                    .value,
+
+            matchRate:
+                document
+                    .getElementById("matchRate")
+                    .value,
+
+            selectedEmployee:
+                document
+                    .getElementById("selectedEmployee")
+                    .value,
+
+            reason:
+                document
+                    .getElementById("decisionReason")
+                    .value,
+
+            date:
+                document
+                    .getElementById("decisionDate")
+                    .value
+
+        };
+
+
+        if (editId) {
+
+            decisions =
+                decisions.map(function(item) {
+
+                    if (
+                        item.id === Number(editId)
+                    ) {
+
+                        return decisionData;
+                    }
+
+                    return item;
+
+                });
+
+        }
+
+        else {
+
+            decisions.push(decisionData);
+        }
+
+
+        renderDecisions(decisions);
+
+        closeDecisionModal();
+    }
+
+
+    function renderDecisions(list) {
+
+        const grid =
+            document
+                .getElementById("decisionsGrid");
+
+
+        grid.innerHTML = "";
+
+
+        if (list.length === 0) {
+
+            grid.innerHTML = `
+
+                <div class="empty-state">
+                    لا توجد قرارات مسجلة حالياً
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+        list.forEach(function(decision) {
+
+            const card =
+                document.createElement("article");
+
+
+            card.className =
+                "decision-card";
+
+
+            card.innerHTML = `
+
+                <div class="decision-top">
+
+                    <div>
+
+                        <span class="decision-label">
+                            قرار إسناد
+                        </span>
+
+                        <h3>
+                            ${decision.task}
+                        </h3>
+
+                    </div>
+
+
+                    <div class="match-badge">
+
+                        <span>
+                            نسبة التوافق
+                        </span>
+
+                        <strong>
+                            ${decision.matchRate}%
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="decision-info">
+
+                    <div class="info-item">
+
+                        <span>
+                            ترشيح النظام
+                        </span>
+
+                        <strong>
+                            ${decision.systemCandidate}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="info-item selected">
+
+                        <span>
+                            اختيار المسؤول
+                        </span>
+
+                        <strong>
+                            ${decision.selectedEmployee}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <span>
+                            تاريخ القرار
+                        </span>
+
+                        <strong>
+                            ${decision.date}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="reason-preview">
+
+                    <span>
+                        سبب الاختيار
+                    </span>
+
+                    <p>
+                        ${decision.reason}
+                    </p>
+
+                </div>
+
+
+                <div class="decision-actions">
+
+                    <button
+                        class="view-btn"
+                        onclick="viewDecision(${decision.id})"
+                    >
+                        عرض
+                    </button>
+
+
+                    <button
+                        class="edit-btn"
+                        onclick="editDecision(${decision.id})"
+                    >
+                        تعديل
+                    </button>
+
+
+                    <button
+                        class="delete-btn"
+                        onclick="deleteDecision(${decision.id})"
+                    >
+                        حذف
+                    </button>
+
+                </div>
+
+            `;
+
+
+            grid.appendChild(card);
+
+        });
+
+    }
+
+
+    function editDecision(id) {
+
+        const decision =
+            decisions.find(
+                item => item.id === id
+            );
+
+
+        if (!decision) {
+            return;
+        }
+
+
+        document
+            .getElementById("editDecisionId")
+            .value = decision.id;
+
+
+        document
+            .getElementById("taskName")
+            .value = decision.task;
+
+
+        document
+            .getElementById("systemCandidate")
+            .value =
+            decision.systemCandidate;
+
+
+        document
+            .getElementById("matchRate")
+            .value =
+            decision.matchRate;
+
+
+        document
+            .getElementById("selectedEmployee")
+            .value =
+            decision.selectedEmployee;
+
+
+        document
+            .getElementById("decisionReason")
+            .value =
+            decision.reason;
+
+
+        document
+            .getElementById("decisionDate")
+            .value =
+            decision.date;
+
+
+        document
+            .getElementById("modalTitle")
+            .textContent =
+            "تعديل القرار";
+
+
+        document
+            .getElementById("decisionModal")
+            .classList.add("show");
+
+    }
+
+
+    function deleteDecision(id) {
+
+        const confirmed =
+            confirm(
+                "هل تريد حذف هذا القرار؟"
+            );
+
+
+        if (!confirmed) {
+            return;
+        }
+
+
+        decisions =
+            decisions.filter(
+                item => item.id !== id
+            );
+
+
+        renderDecisions(decisions);
+    }
+
+
+    function viewDecision(id) {
+
+        const decision =
+            decisions.find(
+                item => item.id === id
+            );
+
+
+        if (!decision) {
+            return;
+        }
+
+
+        document
+            .getElementById("decisionDetails")
+            .innerHTML = `
+
+                <div class="detail-item">
+
+                    <span>
+                        المهمة
+                    </span>
+
+                    <strong>
+                        ${decision.task}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span>
+                        الموظف الذي رشحه النظام
+                    </span>
+
+                    <strong>
+                        ${decision.systemCandidate}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span>
+                        نسبة التوافق
+                    </span>
+
+                    <strong>
+                        ${decision.matchRate}%
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span>
+                        الموظف الذي اختاره المسؤول
+                    </span>
+
+                    <strong>
+                        ${decision.selectedEmployee}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span>
+                        تاريخ القرار
+                    </span>
+
+                    <strong>
+                        ${decision.date}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item full-detail">
+
+                    <span>
+                        سبب الاختيار
+                    </span>
+
+                    <strong>
+                        ${decision.reason}
+                    </strong>
+
+                </div>
+
+            `;
+
+
+        document
+            .getElementById("detailsModal")
+            .classList.add("show");
+
+    }
+
+
+    function filterDecisions() {
+
+        const search =
+            document
+                .getElementById("searchInput")
+                .value
+                .toLowerCase();
+
+
+        const filtered =
+            decisions.filter(function(item) {
+
+                return (
+
+                    item.task
+                        .toLowerCase()
+                        .includes(search)
+
+                    ||
+
+                    item.systemCandidate
+                        .toLowerCase()
+                        .includes(search)
+
+                    ||
+
+                    item.selectedEmployee
+                        .toLowerCase()
+                        .includes(search)
+
+                );
+
+            });
+
+
+        renderDecisions(filtered);
+    }
+
+
+    function logout() {
+
+        localStorage.removeItem("miyarRole");
+
+        localStorage.removeItem("miyarEmail");
+
+
+        window.location.href =
+            "login.html";
+    }
+
+</script>
+
+</body>
+</html>
