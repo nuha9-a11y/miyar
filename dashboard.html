@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>معيار | لوحة التحكم</title>
+
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+
+<body>
+
+<div class="dashboard-page">
+
+    <!-- القائمة الجانبية -->
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+            <img src="assets/logo.png" alt="معيار">
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="dashboard.html" class="nav-link active">
+                لوحة التحكم
+            </a>
+
+            <a href="employees.html" class="nav-link">
+                الموظفون
+            </a>
+
+            <a href="projects.html" class="nav-link">
+                المشاريع
+            </a>
+
+            <a href="tasks.html" class="nav-link">
+                المهام
+            </a>
+
+            <a href="matching.html" class="nav-link">
+                المطابقة والترشيح
+            </a>
+
+            <a href="evaluations.html" class="nav-link">
+                التقييمات
+            </a>
+
+            <a href="decisions.html" class="nav-link">
+                القرارات
+            </a>
+
+            <a href="reports.html" class="nav-link">
+                التقارير
+            </a>
+
+        </nav>
+
+        <button class="logout-btn" onclick="logout()">
+            تسجيل الخروج
+        </button>
+
+    </aside>
+
+
+    <!-- المحتوى -->
+    <main class="main-content">
+
+        <!-- رأس الصفحة -->
+        <header class="topbar">
+
+            <div>
+                <span class="page-badge">
+                    لوحة المسؤول
+                </span>
+
+                <h1>
+                    لوحة التحكم
+                </h1>
+
+                <p>
+                    عرض ملخص عام لأهم بيانات النظام
+                </p>
+            </div>
+
+        </header>
+
+
+       
+
+
+            <div class="summary-grid">
+
+                <div class="summary-card">
+
+                    <span>
+                        عدد الموظفين
+                    </span>
+
+                    <strong id="employeesCount">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <span>
+                        عدد المشاريع
+                    </span>
+
+                    <strong id="projectsCount">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <span>
+                        عدد المهام
+                    </span>
+
+                    <strong id="tasksCount">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <span>
+                        موظفون متاحون
+                    </span>
+
+                    <strong id="availableCount">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <span>
+                        موظفون مشغولون
+                    </span>
+
+                    <strong id="busyCount">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <span>
+                        مهام غير مسندة
+                    </span>
+
+                    <strong id="unassignedCount">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- آخر الترشيحات والقرارات -->
+        <section class="activity-section">
+
+            <div class="activity-grid">
+
+                <div class="activity-card">
+
+                    <div class="activity-header">
+                        <h3>
+                            آخر الترشيحات
+                        </h3>
+                    </div>
+
+                    <div class="empty-state">
+                        لا توجد ترشيحات حالياً
+                    </div>
+
+                </div>
+
+
+                <div class="activity-card">
+
+                    <div class="activity-header">
+                        <h3>
+                            آخر القرارات
+                        </h3>
+                    </div>
+
+                    <div class="empty-state">
+                        لا توجد قرارات حالياً
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script>
+
+    /* حماية مؤقتة لواجهة المسؤول */
+
+    const role = localStorage.getItem("miyarRole");
+
+    if (role !== "admin") {
+
+        alert("غير مصرح لك بالدخول إلى لوحة المسؤول");
+
+        window.location.href = "login.html";
+
+    }
+
+
+    /* تسجيل الخروج */
+
+    function logout() {
+
+        localStorage.removeItem("miyarRole");
+        localStorage.removeItem("miyarEmail");
+
+        window.location.href = "login.html";
+    }
+
+
+    /*
+        لاحقاً عند ربط قاعدة البيانات
+        سنجلب الأرقام الحقيقية هنا
+    */
+
+</script>
+
+</body>
+</html>
