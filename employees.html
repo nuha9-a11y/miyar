@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>معيار | الموظفون</title>
+
+    <link rel="stylesheet" href="employees.css">
+</head>
+
+<body>
+
+<div class="employees-page">
+
+
+    <!-- القائمة الجانبية -->
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+            <img src="assets/logo.png" alt="معيار">
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="dashboard.html" class="nav-link">
+                لوحة التحكم
+            </a>
+
+            <a href="employees.html" class="nav-link active">
+                الموظفون
+            </a>
+
+            <a href="projects.html" class="nav-link">
+                المشاريع
+            </a>
+
+            <a href="tasks.html" class="nav-link">
+                المهام
+            </a>
+
+            <a href="matching.html" class="nav-link">
+                المطابقة والترشيح
+            </a>
+
+            <a href="evaluations.html" class="nav-link">
+                التقييمات
+            </a>
+
+            <a href="decisions.html" class="nav-link">
+                القرارات
+            </a>
+
+            <a href="reports.html" class="nav-link">
+                التقارير
+            </a>
+
+        </nav>
+
+        <button class="logout-btn" onclick="logout()">
+            تسجيل الخروج
+        </button>
+
+    </aside>
+
+
+    <!-- المحتوى الرئيسي -->
+    <main class="main-content">
+
+
+        <!-- رأس الصفحة -->
+        <header class="topbar">
+
+            <div>
+
+                <span class="page-badge">
+                    إدارة الموظفين
+                </span>
+
+                <h1>
+                    الموظفون
+                </h1>
+
+                <p>
+                    إدارة بيانات الموظفين ومهاراتهم وحالتهم الحالية
+                </p>
+
+            </div>
+
+        </header>
+
+
+        <!-- أدوات الصفحة -->
+        <section class="toolbar">
+
+            <div class="search-box">
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="ابحث باسم الموظف أو الرقم الوظيفي..."
+                    oninput="filterEmployees()"
+                >
+
+            </div>
+
+
+            <div class="filters">
+
+                <select
+                    id="departmentFilter"
+                    onchange="filterEmployees()"
+                >
+                    <option value="">
+                        جميع الأقسام
+                    </option>
+
+                    <option value="تقنية المعلومات">
+                        تقنية المعلومات
+                    </option>
+
+                    <option value="الموارد البشرية">
+                        الموارد البشرية
+                    </option>
+
+                    <option value="إدارة المشاريع">
+                        إدارة المشاريع
+                    </option>
+                </select>
+
+
+                <select
+                    id="statusFilter"
+                    onchange="filterEmployees()"
+                >
+                    <option value="">
+                        جميع الحالات
+                    </option>
+
+                    <option value="متاح">
+                        متاح
+                    </option>
+
+                    <option value="مشغول">
+                        مشغول
+                    </option>
+                </select>
+
+            </div>
+
+
+            <div class="toolbar-actions">
+
+                <label class="excel-btn">
+
+                    استيراد Excel
+
+                    <input
+                        type="file"
+                        id="excelInput"
+                        accept=".xlsx,.xls,.csv"
+                        hidden
+                    >
+
+                </label>
+
+
+                <button
+                    class="add-btn"
+                    onclick="openAddModal()"
+                >
+                    + إضافة موظف
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- الجدول -->
+        <section class="table-card">
+
+            <div class="table-header">
+
+                <div>
+                    <h2>
+                        قائمة الموظفين
+                    </h2>
+
+                    <p>
+                        سيتم عرض بيانات الموظفين هنا بعد إضافتها أو ربط قاعدة البيانات
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                الموظف
+                            </th>
+
+                            <th>
+                                الرقم الوظيفي
+                            </th>
+
+                            <th>
+                                القسم
+                            </th>
+
+                            <th>
+                                المسمى الوظيفي
+                            </th>
+
+                            <th>
+                                سنوات الخبرة
+                            </th>
+
+                            <th>
+                                الحالة
+                            </th>
+
+                            <th>
+                                الإجراءات
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="employeesTable">
+
+                        <tr id="emptyRow">
+
+                            <td colspan="7">
+
+                                <div class="empty-table">
+
+                                    لا توجد بيانات موظفين حالياً
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+
+<!-- نافذة إضافة موظف -->
+<div
+    class="modal"
+    id="employeeModal"
+>
+
+    <div class="modal-overlay"
+         onclick="closeAddModal()">
+    </div>
+
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <div>
+                <h2>
+                    إضافة موظف
+                </h2>
+
+                <p>
+                    أدخل بيانات الموظف الأساسية
+                </p>
+            </div>
+
+            <button
+                class="close-btn"
+                onclick="closeAddModal()"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <form
+            id="employeeForm"
+            onsubmit="addEmployee(event)"
+        >
+
+            <div class="form-grid">
+
+
+                <div class="form-group">
+
+                    <label>
+                        اسم الموظف
+                    </label>
+
+                    <input
+                        type="text"
+                        id="employeeName"
+                        placeholder="اكتب اسم الموظف"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        الرقم الوظيفي
+                    </label>
+
+                    <input
+                        type="text"
+                        id="employeeNumber"
+                        placeholder="مثال: 1001"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        القسم
+                    </label>
+
+                    <input
+                        type="text"
+                        id="employeeDepartment"
+                        placeholder="اكتب القسم"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        المسمى الوظيفي
+                    </label>
+
+                    <input
+                        type="text"
+                        id="employeeTitle"
+                        placeholder="اكتب المسمى الوظيفي"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        سنوات الخبرة
+                    </label>
+
+                    <input
+                        type="number"
+                        id="employeeExperience"
+                        min="0"
+                        placeholder="عدد سنوات الخبرة"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        حالة الموظف
+                    </label>
+
+                    <select id="employeeStatus">
+
+                        <option value="متاح">
+                            متاح
+                        </option>
+
+                        <option value="مشغول">
+                            مشغول
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group full-width">
+
+                    <label>
+                        المهارات
+                    </label>
+
+                    <textarea
+                        id="employeeSkills"
+                        placeholder="مثال: إدارة المشاريع، تحليل البيانات، التواصل"
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-group full-width">
+
+                    <label>
+                        المهام الحالية
+                    </label>
+
+                    <textarea
+                        id="employeeTasks"
+                        placeholder="اكتب المهام الحالية إن وجدت"
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    class="cancel-btn"
+                    onclick="closeAddModal()"
+                >
+                    إلغاء
+                </button>
+
+                <button
+                    type="submit"
+                    class="save-btn"
+                >
+                    حفظ الموظف
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+
+<!-- نافذة عرض التفاصيل -->
+<div
+    class="modal"
+    id="detailsModal"
+>
+
+    <div class="modal-overlay"
+         onclick="closeDetailsModal()">
+    </div>
+
+
+    <div class="modal-box details-box">
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2>
+                    تفاصيل الموظف
+                </h2>
+
+                <p>
+                    عرض البيانات الكاملة للموظف
+                </p>
+
+            </div>
+
+            <button
+                class="close-btn"
+                onclick="closeDetailsModal()"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div
+            class="details-content"
+            id="detailsContent"
+        >
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+    /* حماية مؤقتة لواجهة المسؤول */
+
+    const role = localStorage.getItem("miyarRole");
+
+    if (role !== "admin") {
+
+        alert("غير مصرح لك بالدخول إلى صفحة الموظفين");
+
+        window.location.href = "login.html";
+
+    }
+
+
+    /* بيانات مؤقتة للواجهة فقط */
+    let employees = [];
+
+
+    function openAddModal() {
+
+        document
+            .getElementById("employeeModal")
+            .classList.add("show");
+
+    }
+
+
+    function closeAddModal() {
+
+        document
+            .getElementById("employeeModal")
+            .classList.remove("show");
+
+        document
+            .getElementById("employeeForm")
+            .reset();
+
+    }
+
+
+    function closeDetailsModal() {
+
+        document
+            .getElementById("detailsModal")
+            .classList.remove("show");
+
+    }
+
+
+    function addEmployee(event) {
+
+        event.preventDefault();
+
+
+        const employee = {
+
+            id: Date.now(),
+
+            name:
+                document
+                    .getElementById("employeeName")
+                    .value,
+
+            number:
+                document
+                    .getElementById("employeeNumber")
+                    .value,
+
+            department:
+                document
+                    .getElementById("employeeDepartment")
+                    .value,
+
+            title:
+                document
+                    .getElementById("employeeTitle")
+                    .value,
+
+            experience:
+                document
+                    .getElementById("employeeExperience")
+                    .value,
+
+            status:
+                document
+                    .getElementById("employeeStatus")
+                    .value,
+
+            skills:
+                document
+                    .getElementById("employeeSkills")
+                    .value,
+
+            tasks:
+                document
+                    .getElementById("employeeTasks")
+                    .value
+
+        };
+
+
+        employees.push(employee);
+
+        renderEmployees(employees);
+
+        closeAddModal();
+
+    }
+
+
+    function renderEmployees(list) {
+
+        const table =
+            document
+                .getElementById("employeesTable");
+
+
+        table.innerHTML = "";
+
+
+        if (list.length === 0) {
+
+            table.innerHTML = `
+
+                <tr>
+
+                    <td colspan="7">
+
+                        <div class="empty-table">
+                            لا توجد بيانات موظفين حالياً
+                        </div>
+
+                    </td>
+
+                </tr>
+
+            `;
+
+            return;
+
+        }
+
+
+        list.forEach(function(employee) {
+
+            const row =
+                document.createElement("tr");
+
+
+            row.innerHTML = `
+
+                <td>
+
+                    <div class="employee-name">
+
+                        <div class="avatar">
+                            ${employee.name.charAt(0)}
+                        </div>
+
+                        <span>
+                            ${employee.name}
+                        </span>
+
+                    </div>
+
+                </td>
+
+
+                <td>
+                    ${employee.number}
+                </td>
+
+
+                <td>
+                    ${employee.department}
+                </td>
+
+
+                <td>
+                    ${employee.title}
+                </td>
+
+
+                <td>
+                    ${employee.experience} سنوات
+                </td>
+
+
+                <td>
+
+                    <span class="
+                        status-badge
+                        ${employee.status === "متاح"
+                        ? "available"
+                        : "busy"}
+                    ">
+
+                        ${employee.status}
+
+                    </span>
+
+                </td>
+
+
+                <td>
+
+                    <div class="actions">
+
+                        <button
+                            onclick="showEmployee(${employee.id})"
+                            class="view-btn"
+                        >
+                            عرض
+                        </button>
+
+
+                        <button
+                            onclick="deleteEmployee(${employee.id})"
+                            class="delete-btn"
+                        >
+                            حذف
+                        </button>
+
+                    </div>
+
+                </td>
+
+            `;
+
+
+            table.appendChild(row);
+
+        });
+
+    }
+
+
+    function showEmployee(id) {
+
+        const employee =
+            employees.find(
+                item => item.id === id
+            );
+
+
+        if (!employee) {
+            return;
+        }
+
+
+        document
+            .getElementById("detailsContent")
+            .innerHTML = `
+
+                <div class="details-grid">
+
+                    <div class="detail-item">
+                        <span>اسم الموظف</span>
+                        <strong>${employee.name}</strong>
+                    </div>
+
+
+                    <div class="detail-item">
+                        <span>الرقم الوظيفي</span>
+                        <strong>${employee.number}</strong>
+                    </div>
+
+
+                    <div class="detail-item">
+                        <span>القسم</span>
+                        <strong>${employee.department}</strong>
+                    </div>
+
+
+                    <div class="detail-item">
+                        <span>المسمى الوظيفي</span>
+                        <strong>${employee.title}</strong>
+                    </div>
+
+
+                    <div class="detail-item">
+                        <span>سنوات الخبرة</span>
+                        <strong>${employee.experience}</strong>
+                    </div>
+
+
+                    <div class="detail-item">
+                        <span>الحالة</span>
+                        <strong>${employee.status}</strong>
+                    </div>
+
+
+                    <div class="detail-item full-detail">
+                        <span>المهارات</span>
+                        <strong>
+                            ${employee.skills || "لا توجد مهارات مضافة"}
+                        </strong>
+                    </div>
+
+
+                    <div class="detail-item full-detail">
+                        <span>المهام الحالية</span>
+                        <strong>
+                            ${employee.tasks || "لا توجد مهام حالية"}
+                        </strong>
+                    </div>
+
+                </div>
+
+            `;
+
+
+        document
+            .getElementById("detailsModal")
+            .classList.add("show");
+
+    }
+
+
+    function deleteEmployee(id) {
+
+        const confirmed =
+            confirm("هل تريد حذف هذا الموظف؟");
+
+
+        if (!confirmed) {
+            return;
+        }
+
+
+        employees =
+            employees.filter(
+                employee =>
+                    employee.id !== id
+            );
+
+
+        renderEmployees(employees);
+
+    }
+
+
+    function filterEmployees() {
+
+        const search =
+            document
+                .getElementById("searchInput")
+                .value
+                .toLowerCase();
+
+
+        const department =
+            document
+                .getElementById("departmentFilter")
+                .value;
+
+
+        const status =
+            document
+                .getElementById("statusFilter")
+                .value;
+
+
+        const filtered =
+            employees.filter(function(employee) {
+
+
+                const matchSearch =
+
+                    employee.name
+                        .toLowerCase()
+                        .includes(search)
+
+                    ||
+
+                    employee.number
+                        .toLowerCase()
+                        .includes(search);
+
+
+                const matchDepartment =
+
+                    !department
+
+                    ||
+
+                    employee.department
+                        === department;
+
+
+                const matchStatus =
+
+                    !status
+
+                    ||
+
+                    employee.status
+                        === status;
+
+
+                return (
+                    matchSearch
+                    &&
+                    matchDepartment
+                    &&
+                    matchStatus
+                );
+
+            });
+
+
+        renderEmployees(filtered);
+
+    }
+
+
+    /* حالياً فقط تنبيه
+       ربط Excel الحقيقي لاحقاً مع قاعدة البيانات */
+
+    document
+        .getElementById("excelInput")
+        .addEventListener(
+            "change",
+            function() {
+
+                if (this.files.length > 0) {
+
+                    alert(
+                        "تم اختيار ملف Excel. سنربط الاستيراد الفعلي لاحقاً مع قاعدة البيانات."
+                    );
+
+                }
+
+            }
+        );
+
+
+    function logout() {
+
+        localStorage.removeItem("miyarRole");
+        localStorage.removeItem("miyarEmail");
+
+        window.location.href = "login.html";
+
+    }
+
+</script>
+
+
+</body>
+
+</html>
