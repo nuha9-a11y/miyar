@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>معيار | مهامي</title>
+
+    <link
+        rel="stylesheet"
+        href="employee-tasks.css"
+    >
+
+</head>
+
+<body>
+
+
+<div class="employee-page">
+
+
+    <!-- ===============================
+         هيدر الجوال
+    ================================ -->
+
+    <header class="mobile-header">
+
+        <button
+            class="mobile-menu-btn"
+            id="mobileMenuBtn"
+            type="button"
+            aria-label="فتح القائمة"
+        >
+            ☰
+        </button>
+
+
+        <div class="mobile-header-title">
+
+            <h2>
+                مهامي
+            </h2>
+
+            <span>
+                معيار
+            </span>
+
+        </div>
+
+
+        <img
+            src="assets/logo.png"
+            alt="معيار"
+            class="mobile-logo"
+        >
+
+    </header>
+
+
+
+    <!-- ===============================
+         خلفية السايد بار
+    ================================ -->
+
+    <div
+        class="sidebar-overlay"
+        id="sidebarOverlay"
+    ></div>
+
+
+
+    <!-- ===============================
+         السايد بار
+    ================================ -->
+
+    <aside
+        class="sidebar"
+        id="sidebar"
+    >
+
+
+        <div class="sidebar-logo">
+
+            <img
+                src="assets/logo.png"
+                alt="معيار"
+            >
+
+        </div>
+
+
+
+        <nav class="sidebar-nav">
+
+
+            <a
+                href="employee-home.html"
+                class="nav-link"
+            >
+                الرئيسية
+            </a>
+
+
+            <a
+                href="employee-tasks.html"
+                class="nav-link active"
+            >
+                مهامي
+            </a>
+
+
+            <a
+                href="employee-projects.html"
+                class="nav-link"
+            >
+                مشاريعي
+            </a>
+
+
+            <a
+                href="employee-profile.html"
+                class="nav-link"
+            >
+                ملفي الشخصي
+            </a>
+
+
+            <a
+                href="employee-evaluations.html"
+                class="nav-link"
+            >
+                تقييمي
+            </a>
+
+
+        </nav>
+
+
+
+        <button
+            class="logout-btn"
+            type="button"
+            onclick="logout()"
+        >
+            تسجيل الخروج
+        </button>
+
+
+    </aside>
+
+
+
+    <!-- ===============================
+         المحتوى الرئيسي
+    ================================ -->
+
+    <main class="main-content">
+
+
+        <!-- رأس الصفحة -->
+
+        <header class="topbar">
+
+            <span class="page-badge">
+                مهام الموظف
+            </span>
+
+            <h1>
+                مهامي
+            </h1>
+
+            <p>
+                عرض المهام المسندة لك ومتابعة حالتها ومواعيد تسليمها
+            </p>
+
+        </header>
+
+
+
+        <!-- ===============================
+             البحث والتصفية
+        ================================ -->
+
+        <section class="toolbar">
+
+
+            <div class="search-box">
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="ابحث باسم المهمة أو المشروع..."
+                    oninput="filterTasks()"
+                >
+
+            </div>
+
+
+
+            <div class="filters">
+
+
+                <select
+                    id="statusFilter"
+                    onchange="filterTasks()"
+                >
+
+                    <option value="">
+                        جميع الحالات
+                    </option>
+
+                    <option value="جديدة">
+                        جديدة
+                    </option>
+
+                    <option value="قيد التنفيذ">
+                        قيد التنفيذ
+                    </option>
+
+                    <option value="مكتملة">
+                        مكتملة
+                    </option>
+
+                </select>
+
+
+
+                <select
+                    id="priorityFilter"
+                    onchange="filterTasks()"
+                >
+
+                    <option value="">
+                        جميع الأولويات
+                    </option>
+
+                    <option value="عالية">
+                        عالية
+                    </option>
+
+                    <option value="متوسطة">
+                        متوسطة
+                    </option>
+
+                    <option value="منخفضة">
+                        منخفضة
+                    </option>
+
+                </select>
+
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- ===============================
+             قائمة المهام
+        ================================ -->
+
+        <section class="tasks-container">
+
+
+            <div class="section-title">
+
+                <div>
+
+                    <h2>
+                        قائمة مهامي
+                    </h2>
+
+                    <p>
+                        المهام الحالية والمكتملة المسندة لك
+                    </p>
+
+                </div>
+
+
+                <span
+                    class="tasks-count"
+                    id="tasksCount"
+                >
+                    0 مهام
+                </span>
+
+            </div>
+
+
+
+            <div
+                class="tasks-grid"
+                id="tasksGrid"
+            >
+
+                <div class="empty-state">
+
+                    لا توجد مهام مسندة لك حالياً
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+</div>
+
+
+
+<!-- ===============================
+     نافذة تفاصيل المهمة
+================================ -->
+
+<div
+    class="modal"
+    id="detailsModal"
+>
+
+
+    <div
+        class="modal-overlay"
+        onclick="closeDetailsModal()"
+    ></div>
+
+
+    <div class="modal-box">
+
+
+        <div class="modal-header">
+
+
+            <div>
+
+                <h2>
+                    تفاصيل المهمة
+                </h2>
+
+                <p>
+                    عرض المعلومات الكاملة للمهمة
+                </p>
+
+            </div>
+
+
+            <button
+                class="close-btn"
+                type="button"
+                onclick="closeDetailsModal()"
+            >
+                ×
+            </button>
+
+
+        </div>
+
+
+        <div
+            class="details-grid"
+            id="taskDetails"
+        ></div>
+
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+
+    /* ===============================
+       حماية واجهة الموظف
+    ================================ */
+
+    const role =
+        localStorage.getItem(
+            "miyarRole"
+        );
+
+
+    /*
+       إذا كان تسجيل الدخول عندك
+       يخزن employee استخدميه.
+
+       لو القيمة مختلفة نعدلها
+       لما نربط تسجيل الدخول.
+    */
+
+
+    /* ===============================
+       السايد بار
+    ================================ */
+
+    const mobileMenuBtn =
+        document.getElementById(
+            "mobileMenuBtn"
+        );
+
+
+    const sidebar =
+        document.getElementById(
+            "sidebar"
+        );
+
+
+    const sidebarOverlay =
+        document.getElementById(
+            "sidebarOverlay"
+        );
+
+
+    function openSidebar() {
+
+        sidebar.classList.add(
+            "show"
+        );
+
+        sidebarOverlay.classList.add(
+            "show"
+        );
+
+        document.body.classList.add(
+            "menu-open"
+        );
+
+    }
+
+
+    function closeSidebar() {
+
+        sidebar.classList.remove(
+            "show"
+        );
+
+        sidebarOverlay.classList.remove(
+            "show"
+        );
+
+        document.body.classList.remove(
+            "menu-open"
+        );
+
+    }
+
+
+    mobileMenuBtn.addEventListener(
+        "click",
+        openSidebar
+    );
+
+
+    sidebarOverlay.addEventListener(
+        "click",
+        closeSidebar
+    );
+
+
+    document
+        .querySelectorAll(
+            ".nav-link"
+        )
+        .forEach(
+            function(link) {
+
+                link.addEventListener(
+                    "click",
+                    closeSidebar
+                );
+
+            }
+        );
+
+
+
+    /* ===============================
+       بيانات مؤقتة
+    ================================
+
+       حالياً فاضية.
+
+       بعد قاعدة البيانات راح تجي
+       المهام الحقيقية المسندة
+       للموظف المسجل دخوله.
+
+    ================================= */
+
+    let tasks = [];
+
+
+
+    /* ===============================
+       عرض المهام
+    ================================ */
+
+    function renderTasks(list) {
+
+
+        const grid =
+            document.getElementById(
+                "tasksGrid"
+            );
+
+
+        const count =
+            document.getElementById(
+                "tasksCount"
+            );
+
+
+        grid.innerHTML = "";
+
+
+        count.textContent =
+            list.length + " مهام";
+
+
+        if (
+            list.length === 0
+        ) {
+
+            grid.innerHTML = `
+
+                <div class="empty-state">
+
+                    لا توجد مهام مسندة لك حالياً
+
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+
+        list.forEach(
+            function(task) {
+
+
+                const card =
+                    document.createElement(
+                        "article"
+                    );
+
+
+                card.className =
+                    "task-card";
+
+
+                card.innerHTML = `
+
+
+                    <div class="task-card-top">
+
+
+                        <div>
+
+                            <span class="task-label">
+
+                                ${task.project}
+
+                            </span>
+
+
+                            <h3>
+
+                                ${task.name}
+
+                            </h3>
+
+                        </div>
+
+
+
+                        <span class="
+                            priority-badge
+                            ${getPriorityClass(task.priority)}
+                        ">
+
+                            ${task.priority}
+
+                        </span>
+
+
+                    </div>
+
+
+
+                    <p class="task-description">
+
+                        ${task.description}
+
+                    </p>
+
+
+
+                    <div class="task-info">
+
+
+                        <div class="info-item">
+
+                            <span>
+                                المشروع
+                            </span>
+
+                            <strong>
+
+                                ${task.project}
+
+                            </strong>
+
+                        </div>
+
+
+
+                        <div class="info-item">
+
+                            <span>
+                                الأولوية
+                            </span>
+
+                            <strong>
+
+                                ${task.priority}
+
+                            </strong>
+
+                        </div>
+
+
+
+                        <div class="info-item">
+
+                            <span>
+                                تاريخ التسليم
+                            </span>
+
+                            <strong>
+
+                                ${task.dueDate || "غير محدد"}
+
+                            </strong>
+
+                        </div>
+
+
+
+                        <div class="info-item">
+
+                            <span>
+                                الحالة
+                            </span>
+
+                            <strong>
+
+                                ${task.status}
+
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <div class="task-footer">
+
+
+                        <span class="
+                            status-badge
+                            ${getStatusClass(task.status)}
+                        ">
+
+                            ${task.status}
+
+                        </span>
+
+
+
+                        <button
+                            class="details-btn"
+                            type="button"
+                            onclick="viewTask(${task.id})"
+                        >
+
+                            عرض التفاصيل
+
+                        </button>
+
+
+                    </div>
+
+
+                `;
+
+
+                grid.appendChild(
+                    card
+                );
+
+
+            }
+        );
+
+    }
+
+
+
+    /* ===============================
+       ألوان الأولوية
+    ================================ */
+
+    function getPriorityClass(
+        priority
+    ) {
+
+
+        if (
+            priority === "عالية"
+        ) {
+
+            return "high";
+
+        }
+
+
+        if (
+            priority === "منخفضة"
+        ) {
+
+            return "low";
+
+        }
+
+
+        return "medium";
+
+    }
+
+
+
+    /* ===============================
+       ألوان الحالة
+    ================================ */
+
+    function getStatusClass(
+        status
+    ) {
+
+
+        if (
+            status === "مكتملة"
+        ) {
+
+            return "completed";
+
+        }
+
+
+        if (
+            status === "قيد التنفيذ"
+        ) {
+
+            return "running";
+
+        }
+
+
+        return "new";
+
+    }
+
+
+
+    /* ===============================
+       عرض تفاصيل المهمة
+    ================================ */
+
+    function viewTask(id) {
+
+
+        const task =
+            tasks.find(
+                item =>
+                    item.id === id
+            );
+
+
+        if (!task) {
+            return;
+        }
+
+
+        document
+            .getElementById(
+                "taskDetails"
+            )
+            .innerHTML = `
+
+
+                <div class="detail-item">
+
+                    <span>
+                        اسم المهمة
+                    </span>
+
+                    <strong>
+
+                        ${task.name}
+
+                    </strong>
+
+                </div>
+
+
+
+                <div class="detail-item">
+
+                    <span>
+                        المشروع
+                    </span>
+
+                    <strong>
+
+                        ${task.project}
+
+                    </strong>
+
+                </div>
+
+
+
+                <div class="detail-item">
+
+                    <span>
+                        الأولوية
+                    </span>
+
+                    <strong>
+
+                        ${task.priority}
+
+                    </strong>
+
+                </div>
+
+
+
+                <div class="detail-item">
+
+                    <span>
+                        تاريخ التسليم
+                    </span>
+
+                    <strong>
+
+                        ${task.dueDate || "غير محدد"}
+
+                    </strong>
+
+                </div>
+
+
+
+                <div class="detail-item">
+
+                    <span>
+                        الحالة
+                    </span>
+
+                    <strong>
+
+                        ${task.status}
+
+                    </strong>
+
+                </div>
+
+
+
+                <div class="
+                    detail-item
+                    full-detail
+                ">
+
+                    <span>
+                        وصف المهمة
+                    </span>
+
+                    <strong>
+
+                        ${task.description}
+
+                    </strong>
+
+                </div>
+
+
+            `;
+
+
+        document
+            .getElementById(
+                "detailsModal"
+            )
+            .classList.add(
+                "show"
+            );
+
+    }
+
+
+
+    function closeDetailsModal() {
+
+        document
+            .getElementById(
+                "detailsModal"
+            )
+            .classList.remove(
+                "show"
+            );
+
+    }
+
+
+
+    /* ===============================
+       البحث والتصفية
+    ================================ */
+
+    function filterTasks() {
+
+
+        const search =
+            document
+                .getElementById(
+                    "searchInput"
+                )
+                .value
+                .toLowerCase();
+
+
+        const status =
+            document
+                .getElementById(
+                    "statusFilter"
+                )
+                .value;
+
+
+        const priority =
+            document
+                .getElementById(
+                    "priorityFilter"
+                )
+                .value;
+
+
+
+        const filtered =
+            tasks.filter(
+                function(task) {
+
+
+                    const matchSearch =
+
+                        task.name
+                            .toLowerCase()
+                            .includes(search)
+
+                        ||
+
+                        task.project
+                            .toLowerCase()
+                            .includes(search);
+
+
+
+                    const matchStatus =
+
+                        !status
+
+                        ||
+
+                        task.status
+                            === status;
+
+
+
+                    const matchPriority =
+
+                        !priority
+
+                        ||
+
+                        task.priority
+                            === priority;
+
+
+
+                    return (
+
+                        matchSearch
+
+                        &&
+
+                        matchStatus
+
+                        &&
+
+                        matchPriority
+
+                    );
+
+
+                }
+            );
+
+
+        renderTasks(
+            filtered
+        );
+
+    }
+
+
+
+    /* ===============================
+       تسجيل الخروج
+    ================================ */
+
+    function logout() {
+
+
+        localStorage.removeItem(
+            "miyarRole"
+        );
+
+
+        localStorage.removeItem(
+            "miyarEmail"
+        );
+
+
+        localStorage.removeItem(
+            "miyarName"
+        );
+
+
+        window.location.href =
+            "login.html";
+
+    }
+
+
+
+    renderTasks(
+        tasks
+    );
+
+
+</script>
+
+
+</body>
+
+</html>
