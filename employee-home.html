@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>معيار | الرئيسية</title>
+
+    <link
+        rel="stylesheet"
+        href="employee-home.css"
+    >
+
+</head>
+
+<body>
+
+
+<div class="employee-page">
+
+
+    <!-- ==================================
+         هيدر الجوال
+    =================================== -->
+
+    <header class="mobile-header">
+
+        <button
+            class="mobile-menu-btn"
+            id="mobileMenuBtn"
+            type="button"
+            aria-label="فتح القائمة"
+        >
+            ☰
+        </button>
+
+
+        <div class="mobile-header-title">
+
+            <h2>
+                الرئيسية
+            </h2>
+
+            <span>
+                معيار
+            </span>
+
+        </div>
+
+
+        <img
+            src="assets/logo.png"
+            alt="معيار"
+            class="mobile-logo"
+        >
+
+    </header>
+
+
+
+    <!-- ==================================
+         خلفية السايد بار في الجوال
+    =================================== -->
+
+    <div
+        class="sidebar-overlay"
+        id="sidebarOverlay"
+    ></div>
+
+
+
+    <!-- ==================================
+         السايد بار
+    =================================== -->
+
+    <aside
+        class="sidebar"
+        id="sidebar"
+    >
+
+
+        <div class="sidebar-logo">
+
+            <img
+                src="assets/logo.png"
+                alt="معيار"
+            >
+
+        </div>
+
+
+
+        <nav class="sidebar-nav">
+
+
+            <a
+                href="employee-home.html"
+                class="nav-link active"
+            >
+                الرئيسية
+            </a>
+
+
+            <a
+                href="employee-tasks.html"
+                class="nav-link"
+            >
+                مهامي
+            </a>
+
+
+            <a
+                href="employee-projects.html"
+                class="nav-link"
+            >
+                مشاريعي
+            </a>
+
+
+            <a
+                href="employee-profile.html"
+                class="nav-link"
+            >
+                ملفي الشخصي
+            </a>
+
+
+            <a
+                href="employee-evaluations.html"
+                class="nav-link"
+            >
+                تقييمي
+            </a>
+
+
+        </nav>
+
+
+
+        <button
+            class="logout-btn"
+            type="button"
+            onclick="logout()"
+        >
+            تسجيل الخروج
+        </button>
+
+
+    </aside>
+
+
+
+    <!-- ==================================
+         المحتوى الرئيسي
+    =================================== -->
+
+    <main class="main-content">
+
+
+        <!-- ==================================
+             الترحيب
+        =================================== -->
+
+        <section class="welcome-section">
+
+            <span class="page-badge">
+                لوحة الموظف
+            </span>
+
+            <h1>
+                أهلاً بك،
+                <span id="employeeName">
+                    الموظف
+                </span>
+            </h1>
+
+            <p>
+                هنا يمكنك متابعة مهامك ومشاريعك وتقييماتك الحالية.
+            </p>
+
+        </section>
+
+
+
+        <!-- ==================================
+             الملخص
+        =================================== -->
+
+        <section class="summary-section">
+
+
+            <div class="section-heading">
+
+                <h2>
+                    ملخص عملي
+                </h2>
+
+                <p>
+                    نظرة سريعة على المهام والمشاريع الحالية
+                </p>
+
+            </div>
+
+
+
+            <div class="summary-grid">
+
+
+                <div class="summary-card">
+
+                    <span>
+                        مهام حالية
+                    </span>
+
+                    <strong
+                        id="currentTasksCount"
+                    >
+                        0
+                    </strong>
+
+                </div>
+
+
+
+                <div class="summary-card">
+
+                    <span>
+                        مهام مكتملة
+                    </span>
+
+                    <strong
+                        id="completedTasksCount"
+                    >
+                        0
+                    </strong>
+
+                </div>
+
+
+
+                <div class="summary-card">
+
+                    <span>
+                        مشاريع أعمل عليها
+                    </span>
+
+                    <strong
+                        id="projectsCount"
+                    >
+                        0
+                    </strong>
+
+                </div>
+
+
+
+                <div class="summary-card">
+
+                    <span>
+                        نسبة إنجاز المهام
+                    </span>
+
+                    <strong
+                        id="completionRate"
+                    >
+                        0%
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- ==================================
+             المهام الحالية
+        =================================== -->
+
+        <section class="content-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <h2>
+                        المهام الحالية
+                    </h2>
+
+                    <p>
+                        أحدث المهام المسندة لك
+                    </p>
+
+                </div>
+
+
+                <a
+                    href="employee-tasks.html"
+                    class="view-all-link"
+                >
+                    عرض الكل
+                </a>
+
+            </div>
+
+
+            <div
+                class="tasks-preview"
+                id="tasksPreview"
+            >
+
+                <div class="empty-state">
+
+                    لا توجد مهام حالية
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ==================================
+             المشاريع الحالية
+        =================================== -->
+
+        <section class="content-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <h2>
+                        مشاريعي الحالية
+                    </h2>
+
+                    <p>
+                        المشاريع التي تشارك فيها حالياً
+                    </p>
+
+                </div>
+
+
+                <a
+                    href="employee-projects.html"
+                    class="view-all-link"
+                >
+                    عرض الكل
+                </a>
+
+            </div>
+
+
+            <div
+                class="projects-preview"
+                id="projectsPreview"
+            >
+
+                <div class="empty-state">
+
+                    لا توجد مشاريع حالياً
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+</div>
+
+
+
+<script>
+
+
+    /* ==================================
+       حماية واجهة الموظف
+    =================================== */
+
+    const role =
+        localStorage.getItem(
+            "miyarRole"
+        );
+
+
+    if (
+        role !== "employee"
+        &&
+        role !== "staff"
+    ) {
+
+        /*
+        حالياً إذا تسجيل الدخول عندك
+        يخزن كلمة مختلفة للموظف،
+        عدليها لاحقاً حسب قيمة الدور.
+        */
+
+    }
+
+
+
+    /* ==================================
+       اسم الموظف
+    =================================== */
+
+    const savedName =
+        localStorage.getItem(
+            "miyarName"
+        );
+
+
+    if (savedName) {
+
+        document
+            .getElementById(
+                "employeeName"
+            )
+            .textContent =
+            savedName;
+
+    }
+
+
+
+    /* ==================================
+       السايد بار
+    =================================== */
+
+    const mobileMenuBtn =
+        document.getElementById(
+            "mobileMenuBtn"
+        );
+
+
+    const sidebar =
+        document.getElementById(
+            "sidebar"
+        );
+
+
+    const sidebarOverlay =
+        document.getElementById(
+            "sidebarOverlay"
+        );
+
+
+
+    function openSidebar() {
+
+        sidebar.classList.add(
+            "show"
+        );
+
+        sidebarOverlay.classList.add(
+            "show"
+        );
+
+        document.body.classList.add(
+            "menu-open"
+        );
+
+    }
+
+
+
+    function closeSidebar() {
+
+        sidebar.classList.remove(
+            "show"
+        );
+
+        sidebarOverlay.classList.remove(
+            "show"
+        );
+
+        document.body.classList.remove(
+            "menu-open"
+        );
+
+    }
+
+
+
+    mobileMenuBtn.addEventListener(
+        "click",
+        openSidebar
+    );
+
+
+    sidebarOverlay.addEventListener(
+        "click",
+        closeSidebar
+    );
+
+
+
+    document
+        .querySelectorAll(
+            ".nav-link"
+        )
+        .forEach(
+            function(link) {
+
+                link.addEventListener(
+                    "click",
+                    closeSidebar
+                );
+
+            }
+        );
+
+
+
+    /* ==================================
+       تسجيل الخروج
+    =================================== */
+
+    function logout() {
+
+        localStorage.removeItem(
+            "miyarRole"
+        );
+
+        localStorage.removeItem(
+            "miyarEmail"
+        );
+
+        localStorage.removeItem(
+            "miyarName"
+        );
+
+        window.location.href =
+            "login.html";
+
+    }
+
+
+</script>
+
+
+</body>
+
+</html>
