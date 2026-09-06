@@ -20,6 +20,15 @@ body {
         sans-serif;
 
     color: #263f4f;
+
+    background: #f5f2ec;
+
+    overflow-x: hidden;
+}
+
+
+body.menu-open {
+    overflow: hidden;
 }
 
 
@@ -33,44 +42,60 @@ body {
 }
 
 
-/* القائمة الجانبية */
+/* عناصر الجوال */
+
+.mobile-header,
+.mobile-menu-btn,
+.sidebar-overlay {
+    display: none;
+}
+
+
+/* =========================
+   السايد بار
+========================= */
 
 .sidebar {
     width: 245px;
 
-    min-height: 100vh;
+    height: 100vh;
 
     position: fixed;
 
     top: 0;
     right: 0;
 
-    z-index: 100;
+    z-index: 1000;
 
-    padding: 25px 17px;
+    padding:
+        25px
+        17px;
 
     display: flex;
+
     flex-direction: column;
+
+    overflow-y: auto;
 
     background:
         linear-gradient(
             180deg,
-            rgba(43, 77, 95, 0.98),
-            rgba(54, 93, 113, 0.98)
+            #31586c 0%,
+            #3c667a 52%,
+            #456f82 100%
         );
 
     box-shadow:
         -8px 0 28px
-        rgba(38, 59, 70, 0.10);
+        rgba(38,59,70,0.10);
 }
 
-
-/* الشعار */
 
 .sidebar-logo {
     display: flex;
 
     justify-content: center;
+
     align-items: center;
 
     margin-bottom: 28px;
@@ -86,26 +111,28 @@ body {
 }
 
 
-/* القائمة */
-
 .sidebar-nav {
     display: flex;
 
     flex-direction: column;
 
-    gap: 6px;
+    gap: 7px;
 }
 
 
 .nav-link {
+    width: 100%;
+
     display: block;
 
-    padding: 12px 14px;
+    padding:
+        12px
+        14px;
 
     border-radius: 10px;
 
     color:
-        rgba(255, 255, 255, 0.74);
+        rgba(255,255,255,0.78);
 
     text-decoration: none;
 
@@ -117,7 +144,7 @@ body {
 
 .nav-link:hover {
     background:
-        rgba(255, 255, 255, 0.09);
+        rgba(255,255,255,0.09);
 
     color: white;
 }
@@ -125,24 +152,21 @@ body {
 
 .nav-link.active {
     background:
-        rgba(255, 255, 255, 0.14);
+        rgba(255,255,255,0.14);
 
     color: white;
 
     font-weight: 600;
 
     border-right:
-        3px solid
-        #c69a5a;
+        3px solid #c69a5a;
 }
 
-
-/* تسجيل الخروج */
 
 .logout-btn {
     width: 100%;
 
-    height: 43px;
+    min-height: 44px;
 
     margin-top: auto;
 
@@ -150,10 +174,10 @@ body {
 
     border:
         1px solid
-        rgba(255, 255, 255, 0.22);
+        rgba(255,255,255,0.24);
 
     background:
-        rgba(255, 255, 255, 0.04);
+        rgba(255,255,255,0.05);
 
     color: white;
 
@@ -162,19 +186,12 @@ body {
     font-size: 12px;
 
     cursor: pointer;
-
-    transition: 0.25s ease;
 }
 
 
-.logout-btn:hover {
-    background: #b98a4d;
-
-    border-color: #b98a4d;
-}
-
-
-/* المحتوى */
+/* =========================
+   المحتوى
+========================= */
 
 .main-content {
     width:
@@ -189,20 +206,27 @@ body {
         42px
         50px;
 
+    background-color:
+        #f5f2ec;
+
     background-image:
         linear-gradient(
-            rgba(245, 244, 239, 0.18),
-            rgba(245, 244, 239, 0.24)
+            rgba(249,247,242,0.14),
+            rgba(249,247,242,0.14)
         ),
         url("assets/background.jpeg");
 
-    background-size: cover;
+    background-size:
+        cover;
 
-    background-position: center;
+    background-position:
+        center center;
 
-    background-repeat: no-repeat;
+    background-repeat:
+        no-repeat;
 
-    background-attachment: fixed;
+    background-attachment:
+        fixed;
 }
 
 
@@ -217,15 +241,15 @@ body {
     display: inline-block;
 
     padding:
-        6px
-        12px;
+        7px
+        14px;
 
-    margin-bottom: 8px;
+    margin-bottom: 9px;
 
     border-radius: 30px;
 
     background:
-        rgba(196, 154, 92, 0.13);
+        rgba(196,154,92,0.13);
 
     color: #a77b42;
 
@@ -236,11 +260,13 @@ body {
 
 
 .topbar h1 {
+    margin-bottom: 6px;
+
     color: #263f4f;
 
-    font-size: 26px;
+    font-size: 27px;
 
-    margin-bottom: 5px;
+    font-weight: 700;
 }
 
 
@@ -248,21 +274,30 @@ body {
     color: #71828c;
 
     font-size: 12px;
+
+    line-height: 1.8;
 }
 
 
-/* شريط الأدوات */
+/* =========================
+   شريط الأدوات
+========================= */
 
 .toolbar {
-    display: flex;
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(280px,1fr)
+        auto
+        auto;
 
     align-items: center;
 
-    gap: 12px;
+    gap: 10px;
 
-    flex-wrap: wrap;
-
-    padding: 15px;
+    padding: 14px;
 
     margin-bottom: 20px;
 
@@ -270,24 +305,27 @@ body {
 
     border:
         1px solid
-        rgba(60, 85, 98, 0.12);
+        rgba(60,85,98,0.12);
 
     background:
-        rgba(246, 245, 240, 0.56);
+        rgba(246,245,240,0.62);
 
-    backdrop-filter: blur(6px);
+    backdrop-filter:
+        blur(6px);
+
+    -webkit-backdrop-filter:
+        blur(6px);
 }
 
 
 .search-box {
-    flex: 1;
+    width: 100%;
 
-    min-width: 250px;
+    min-width: 0;
 }
 
 
-.search-box input,
-.filters select {
+.search-box input {
     width: 100%;
 
     height: 42px;
@@ -298,16 +336,18 @@ body {
 
     border:
         1px solid
-        rgba(63, 87, 100, 0.16);
+        rgba(63,87,100,0.16);
 
     border-radius: 10px;
 
     background:
-        rgba(255, 255, 255, 0.52);
+        rgba(255,255,255,0.65);
 
     color: #385365;
 
     font-family: inherit;
+
+    font-size: 11px;
 
     outline: none;
 }
@@ -316,40 +356,66 @@ body {
 .filters {
     display: flex;
 
-    gap: 9px;
+    gap: 8px;
 }
 
 
 .filters select {
-    min-width: 145px;
+    width: 145px;
+
+    height: 42px;
+
+    padding:
+        0
+        12px;
+
+    border:
+        1px solid
+        rgba(63,87,100,0.16);
+
+    border-radius: 10px;
+
+    background:
+        rgba(255,255,255,0.65);
+
+    color: #385365;
+
+    font-family: inherit;
+
+    font-size: 11px;
+
+    outline: none;
 }
 
 
 .search-box input:focus,
 .filters select:focus {
     border-color:
-        rgba(190, 144, 79, 0.75);
+        rgba(190,144,79,0.75);
 
     box-shadow:
         0 0 0 3px
-        rgba(190, 144, 79, 0.08);
+        rgba(190,144,79,0.08);
 }
 
 
-/* زر الإضافة */
+/* زر إضافة المهمة */
 
 .add-btn {
+    min-width: 120px;
+
     height: 42px;
 
     padding:
         0
-        20px;
+        16px;
 
     border: none;
 
     border-radius: 10px;
 
-    background: #31586c;
+    background:
+        #315f74;
 
     color: white;
 
@@ -357,46 +423,56 @@ body {
 
     font-size: 11px;
 
-    cursor: pointer;
+    font-weight: 600;
 
-    transition: 0.2s ease;
+    white-space: nowrap;
+
+    cursor: pointer;
 }
 
 
 .add-btn:hover {
-    background: #27495b;
-
-    transform: translateY(-1px);
+    background:
+        #294f62;
 }
 
 
-/* حاوية المهام */
+/* =========================
+   حاوية المهام
+========================= */
 
 .tasks-container {
     padding: 20px;
 
-    border-radius: 16px;
+    border-radius: 17px;
 
     border-top:
-        3px solid #c49a5c;
+        4px solid #c49a5c;
 
     border-right:
-        1px solid rgba(60, 85, 98, 0.13);
+        1px solid
+        rgba(60,85,98,0.13);
 
     border-left:
-        1px solid rgba(60, 85, 98, 0.13);
+        1px solid
+        rgba(60,85,98,0.13);
 
     border-bottom:
-        1px solid rgba(60, 85, 98, 0.13);
+        1px solid
+        rgba(60,85,98,0.13);
 
     background:
-        rgba(246, 245, 240, 0.55);
+        rgba(246,245,240,0.70);
 
-    backdrop-filter: blur(7px);
+    backdrop-filter:
+        blur(7px);
+
+    -webkit-backdrop-filter:
+        blur(7px);
 
     box-shadow:
         0 8px 25px
-        rgba(40, 61, 73, 0.05);
+        rgba(40,61,73,0.05);
 }
 
 
@@ -406,11 +482,11 @@ body {
 
 
 .section-title h2 {
+    margin-bottom: 5px;
+
     color: #31576b;
 
-    font-size: 16px;
-
-    margin-bottom: 4px;
+    font-size: 18px;
 }
 
 
@@ -427,7 +503,7 @@ body {
     display: grid;
 
     grid-template-columns:
-        repeat(3, 1fr);
+        repeat(3,1fr);
 
     gap: 16px;
 }
@@ -436,22 +512,25 @@ body {
 /* بطاقة المهمة */
 
 .task-card {
+    min-width: 0;
+
     padding: 18px;
 
     border-radius: 14px;
 
     border:
         1px solid
-        rgba(60, 85, 98, 0.12);
+        rgba(60,85,98,0.12);
 
     background:
-        rgba(255, 255, 255, 0.45);
+        rgba(255,255,255,0.48);
 
     box-shadow:
         0 7px 20px
-        rgba(37, 59, 70, 0.04);
+        rgba(37,59,70,0.04);
 
-    transition: 0.25s ease;
+    transition:
+        0.25s ease;
 }
 
 
@@ -461,7 +540,7 @@ body {
 
     box-shadow:
         0 11px 24px
-        rgba(37, 59, 70, 0.08);
+        rgba(37,59,70,0.08);
 }
 
 
@@ -470,7 +549,8 @@ body {
 
     align-items: flex-start;
 
-    justify-content: space-between;
+    justify-content:
+        space-between;
 
     gap: 10px;
 
@@ -481,11 +561,11 @@ body {
 .task-label {
     display: block;
 
+    margin-bottom: 4px;
+
     color: #b18650;
 
     font-size: 9px;
-
-    margin-bottom: 4px;
 }
 
 
@@ -499,13 +579,13 @@ body {
 .task-description {
     min-height: 45px;
 
+    margin-bottom: 15px;
+
     color: #71838c;
 
     font-size: 10px;
 
     line-height: 1.8;
-
-    margin-bottom: 15px;
 }
 
 
@@ -528,7 +608,7 @@ body {
 
 .priority-badge.high {
     background:
-        rgba(157, 78, 78, 0.11);
+        rgba(157,78,78,0.11);
 
     color: #995555;
 }
@@ -536,7 +616,7 @@ body {
 
 .priority-badge.medium {
     background:
-        rgba(190, 144, 79, 0.13);
+        rgba(190,144,79,0.13);
 
     color: #a8793f;
 }
@@ -544,7 +624,7 @@ body {
 
 .priority-badge.low {
     background:
-        rgba(70, 126, 97, 0.11);
+        rgba(70,126,97,0.11);
 
     color: #497e65;
 }
@@ -556,7 +636,7 @@ body {
     display: grid;
 
     grid-template-columns:
-        repeat(2, 1fr);
+        repeat(2,1fr);
 
     gap: 9px;
 
@@ -570,18 +650,18 @@ body {
     border-radius: 9px;
 
     background:
-        rgba(239, 239, 234, 0.65);
+        rgba(239,239,234,0.65);
 }
 
 
 .info-item span {
     display: block;
 
+    margin-bottom: 4px;
+
     color: #8a979d;
 
     font-size: 8px;
-
-    margin-bottom: 4px;
 }
 
 
@@ -597,7 +677,10 @@ body {
 /* أزرار المهمة */
 
 .task-actions {
-    display: flex;
+    display: grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
 
     gap: 6px;
 
@@ -605,14 +688,14 @@ body {
 
     border-top:
         1px solid
-        rgba(60, 85, 98, 0.09);
+        rgba(60,85,98,0.09);
 }
 
 
 .task-actions button {
-    flex: 1;
+    min-width: 0;
 
-    min-height: 34px;
+    height: 34px;
 
     border: none;
 
@@ -623,14 +706,12 @@ body {
     font-size: 8px;
 
     cursor: pointer;
-
-    transition: 0.2s ease;
 }
 
 
 .view-btn {
     background:
-        rgba(49, 88, 108, 0.10);
+        rgba(49,88,108,0.10);
 
     color: #31586c;
 }
@@ -638,7 +719,7 @@ body {
 
 .edit-btn {
     background:
-        rgba(190, 144, 79, 0.11);
+        rgba(190,144,79,0.11);
 
     color: #a27640;
 }
@@ -654,14 +735,9 @@ body {
 
 .delete-btn {
     background:
-        rgba(151, 77, 77, 0.09);
+        rgba(151,77,77,0.09);
 
     color: #985454;
-}
-
-
-.task-actions button:hover {
-    transform: translateY(-1px);
 }
 
 
@@ -682,10 +758,14 @@ body {
     color: #87959c;
 
     font-size: 11px;
+
+    text-align: center;
 }
 
 
-/* النافذة */
+/* =========================
+   النوافذ
+========================= */
 
 .modal {
     display: none;
@@ -694,7 +774,7 @@ body {
 
     inset: 0;
 
-    z-index: 500;
+    z-index: 7000;
 
     align-items: center;
 
@@ -715,9 +795,13 @@ body {
     inset: 0;
 
     background:
-        rgba(37, 56, 66, 0.34);
+        rgba(37,56,66,0.34);
 
-    backdrop-filter: blur(4px);
+    backdrop-filter:
+        blur(4px);
+
+    -webkit-backdrop-filter:
+        blur(4px);
 }
 
 
@@ -727,7 +811,7 @@ body {
     z-index: 2;
 
     width:
-        min(720px, 100%);
+        min(720px,100%);
 
     max-height: 90vh;
 
@@ -741,31 +825,33 @@ body {
         3px solid #c49a5c;
 
     background:
-        rgba(242, 242, 237, 0.97);
+        rgba(242,242,237,0.98);
 
     box-shadow:
         0 22px 55px
-        rgba(38, 57, 68, 0.18);
+        rgba(38,57,68,0.18);
 }
 
 
 .modal-header {
     display: flex;
 
-    justify-content: space-between;
+    justify-content:
+        space-between;
 
-    align-items: flex-start;
+    align-items:
+        flex-start;
 
     margin-bottom: 22px;
 }
 
 
 .modal-header h2 {
+    margin-bottom: 4px;
+
     color: #2f5367;
 
     font-size: 19px;
-
-    margin-bottom: 4px;
 }
 
 
@@ -777,15 +863,15 @@ body {
 
 
 .close-btn {
-    width: 32px;
-    height: 32px;
+    width: 34px;
+    height: 34px;
 
     border: none;
 
     border-radius: 50%;
 
     background:
-        rgba(49, 88, 108, 0.07);
+        rgba(49,88,108,0.07);
 
     color: #3b5b6c;
 
@@ -801,7 +887,7 @@ body {
     display: grid;
 
     grid-template-columns:
-        repeat(2, 1fr);
+        repeat(2,1fr);
 
     gap: 15px;
 }
@@ -838,12 +924,12 @@ body {
 
     border:
         1px solid
-        rgba(60, 85, 98, 0.16);
+        rgba(60,85,98,0.16);
 
     border-radius: 10px;
 
     background:
-        rgba(255, 255, 255, 0.64);
+        rgba(255,255,255,0.72);
 
     color: #3d5968;
 
@@ -855,7 +941,7 @@ body {
 
 .form-group input,
 .form-group select {
-    height: 43px;
+    height: 45px;
 
     padding:
         0
@@ -866,9 +952,9 @@ body {
 .form-group textarea {
     min-height: 95px;
 
-    resize: vertical;
-
     padding: 12px;
+
+    resize: vertical;
 }
 
 
@@ -876,20 +962,21 @@ body {
 .form-group select:focus,
 .form-group textarea:focus {
     border-color:
-        rgba(190, 144, 79, 0.75);
+        #c49a5c;
 
     box-shadow:
         0 0 0 3px
-        rgba(190, 144, 79, 0.08);
+        rgba(196,154,92,0.08);
 }
 
 
-/* أزرار النافذة */
+/* أزرار المودال */
 
 .modal-actions {
     display: flex;
 
-    justify-content: flex-end;
+    justify-content:
+        flex-end;
 
     gap: 9px;
 
@@ -900,7 +987,7 @@ body {
 .modal-actions button {
     min-width: 110px;
 
-    height: 41px;
+    height: 43px;
 
     border-radius: 9px;
 
@@ -915,7 +1002,7 @@ body {
 .cancel-btn {
     border:
         1px solid
-        rgba(49, 88, 108, 0.18);
+        rgba(49,88,108,0.18);
 
     background: transparent;
 
@@ -926,7 +1013,8 @@ body {
 .save-btn {
     border: none;
 
-    background: #31586c;
+    background:
+        #31586c;
 
     color: white;
 }
@@ -936,7 +1024,7 @@ body {
 
 .details-box {
     width:
-        min(680px, 100%);
+        min(680px,100%);
 }
 
 
@@ -944,7 +1032,7 @@ body {
     display: grid;
 
     grid-template-columns:
-        repeat(2, 1fr);
+        repeat(2,1fr);
 
     gap: 13px;
 }
@@ -956,22 +1044,22 @@ body {
     border-radius: 11px;
 
     background:
-        rgba(255, 255, 255, 0.44);
+        rgba(255,255,255,0.50);
 
     border:
         1px solid
-        rgba(60, 85, 98, 0.09);
+        rgba(60,85,98,0.09);
 }
 
 
 .detail-item span {
     display: block;
 
+    margin-bottom: 6px;
+
     color: #839098;
 
     font-size: 9px;
-
-    margin-bottom: 6px;
 }
 
 
@@ -979,8 +1067,6 @@ body {
     color: #405e6e;
 
     font-size: 12px;
-
-    font-weight: 600;
 }
 
 
@@ -990,100 +1076,508 @@ body {
 }
 
 
-/* تابلت */
+/* =========================
+   تابلت
+========================= */
 
-@media (max-width: 1050px) {
+@media
+(max-width: 1050px)
+and
+(min-width: 701px) {
+
+    .toolbar {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .filters {
+        width: 100%;
+    }
+
+
+    .filters select {
+        flex: 1;
+
+        width: auto;
+    }
+
+
+    .add-btn {
+        width: fit-content;
+    }
+
 
     .tasks-grid {
         grid-template-columns:
-            repeat(2, 1fr);
+            repeat(2,1fr);
     }
 
 }
 
 
-/* جوال */
+/* =========================
+   الجوال
+========================= */
 
 @media (max-width: 700px) {
 
-    .sidebar {
-        width: 76px;
+    .tasks-page {
+        display: block;
+    }
+
+
+    /* هيدر الجوال */
+
+    .mobile-header {
+        width: 100%;
+
+        height: 76px;
+
+        position: fixed;
+
+        top: 0;
+        right: 0;
+        left: 0;
+
+        z-index: 3000;
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 10px;
 
         padding:
-            18px
-            7px;
+            10px
+            14px;
+
+        background:
+            linear-gradient(
+                90deg,
+                #5f7c8b 0%,
+                #3c6276 48%,
+                #274f65 100%
+            );
+
+        border-bottom:
+            1px solid
+            rgba(198,154,90,0.20);
+
+        box-shadow:
+            0 4px 17px
+            rgba(40,61,73,0.10);
+    }
+
+
+    .mobile-menu-btn {
+        width: 46px;
+
+        height: 46px;
+
+        flex:
+            0 0 46px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        border:
+            1px solid
+            rgba(255,255,255,0.50);
+
+        border-radius: 14px;
+
+        background:
+            rgba(249,247,242,0.97);
+
+        color: #31586c;
+
+        font-family: inherit;
+
+        font-size: 22px;
+
+        font-weight: 700;
+
+        cursor: pointer;
+    }
+
+
+    .mobile-header-title {
+        flex:
+            0 0 auto;
+
+        text-align: right;
+    }
+
+
+    .mobile-header-title h2 {
+        margin:
+            0 0 2px;
+
+        color: white;
+
+        font-size: 18px;
+
+        white-space: nowrap;
+    }
+
+
+    .mobile-header-title span {
+        display: block;
+
+        color:
+            rgba(255,255,255,0.65);
+
+        font-size: 9px;
+    }
+
+
+    .mobile-logo {
+        width: 54px;
+
+        height: 54px;
+
+        object-fit: contain;
+
+        margin-right: auto;
+    }
+
+
+    /* السايد بار */
+
+    .sidebar {
+        width: 275px;
+
+        max-width: 83vw;
+
+        height: 100dvh;
+
+        min-height: 100dvh;
+
+        position: fixed;
+
+        top: 0;
+
+        right: -300px;
+
+        z-index: 5000;
+
+        padding:
+            23px
+            18px;
+
+        background:
+            linear-gradient(
+                180deg,
+                #536f7e 0%,
+                #45687a 48%,
+                #355a6d 100%
+            );
+
+        border-left:
+            1px solid
+            rgba(198,154,90,0.22);
+
+        box-shadow:
+            -12px 0 32px
+            rgba(30,48,58,0.22);
+
+        transition:
+            right
+            0.30s
+            ease;
+    }
+
+
+    .sidebar.show {
+        right: 0;
+    }
+
+
+    .sidebar-logo {
+        margin-bottom: 24px;
     }
 
 
     .sidebar-logo img {
-        width: 55px;
+        width: 88px;
     }
 
 
     .nav-link {
+        position: relative;
+
+        z-index: 20;
+
+        width: 100%;
+
         padding:
-            10px
-            4px;
+            13px
+            14px;
 
-        text-align: center;
+        text-align: right;
 
-        font-size: 9px;
+        font-size: 13px;
+
+        pointer-events: auto;
     }
 
 
     .logout-btn {
-        font-size: 9px;
+        position: relative;
+
+        z-index: 20;
+
+        min-height: 46px;
+
+        font-size: 12px;
     }
 
 
-    .main-content {
-        width:
-            calc(100% - 76px);
+    .sidebar-overlay {
+        display: block;
 
-        margin-right: 76px;
+        position: fixed;
+
+        inset: 0;
+
+        z-index: 4000;
+
+        background:
+            rgba(22,36,44,0.42);
+
+        opacity: 0;
+
+        visibility: hidden;
+
+        pointer-events: none;
+
+        transition:
+            0.25s ease;
+    }
+
+
+    .sidebar-overlay.show {
+        opacity: 1;
+
+        visibility: visible;
+
+        pointer-events: auto;
+    }
+
+
+    /* المحتوى */
+
+    .main-content {
+        width: 100%;
+
+        min-height: 100vh;
+
+        margin-right: 0;
 
         padding:
-            24px
-            14px
-            35px;
+            102px
+            16px
+            40px;
+
+        background-color:
+            #f5f2ec;
+
+        background-image:
+            linear-gradient(
+                rgba(250,248,244,0.12),
+                rgba(250,248,244,0.12)
+            ),
+            url("assets/background.jpeg");
+
+        background-size:
+            auto 100%;
+
+        background-position:
+            center top;
+
+        background-repeat:
+            no-repeat;
+
+        background-attachment:
+            scroll;
+    }
+
+
+    .topbar {
+        margin-bottom: 24px;
     }
 
 
     .topbar h1 {
-        font-size: 21px;
+        font-size: 25px;
     }
 
+
+    .topbar p {
+        font-size: 12px;
+
+        line-height: 1.8;
+    }
+
+
+    /* الأدوات بالجوال */
 
     .toolbar {
+        width: 100%;
+
+        display: flex;
+
+        flex-direction: column;
+
         align-items: stretch;
+
+        gap: 10px;
+
+        padding: 13px;
+
+        height: auto;
+
+        min-height: 0;
+
+        border-radius: 17px;
     }
 
 
-    .search-box,
-    .filters,
-    .add-btn {
+    .search-box {
         width: 100%;
+
+        min-width: 0;
+
+        flex:
+            0 0 auto;
+    }
+
+
+    .search-box input {
+        width: 100%;
+
+        height: 48px;
+
+        min-height: 48px;
+
+        padding:
+            0
+            14px;
+
+        font-size: 12px;
+
+        border-radius: 12px;
     }
 
 
     .filters {
-        flex-direction: column;
+        width: 100%;
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0,1fr)
+            );
+
+        gap: 9px;
     }
 
 
     .filters select {
         width: 100%;
+
+        min-width: 0;
+
+        height: 48px;
+
+        min-height: 48px;
+
+        font-size: 12px;
+
+        border-radius: 12px;
+    }
+
+
+    .add-btn {
+        width: 100%;
+
+        min-width: 0;
+
+        height: 48px;
+
+        min-height: 48px;
+
+        padding:
+            0
+            12px;
+
+        border-radius: 11px;
+
+        font-size: 12px;
+    }
+
+
+    /* المهام */
+
+    .tasks-container {
+        width: 100%;
+
+        padding: 17px;
+
+        border-radius: 17px;
     }
 
 
     .tasks-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns:
+            1fr;
+
+        gap: 13px;
+    }
+
+
+    .task-card {
+        padding: 16px;
+    }
+
+
+    .task-actions {
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+
+    .task-actions button {
+        height: 38px;
+
+        font-size: 9px;
+    }
+
+
+    /* المودال */
+
+    .modal {
+        padding: 12px;
+    }
+
+
+    .modal-box {
+        padding: 18px;
+
+        max-height: 88dvh;
     }
 
 
     .form-grid,
     .details-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns:
+            1fr;
     }
 
 
@@ -1093,14 +1587,115 @@ body {
     }
 
 
-    .task-actions {
-        flex-wrap: wrap;
+    .modal-actions {
+        display: grid;
+
+        grid-template-columns:
+            1fr
+            1fr;
     }
 
 
-    .task-actions button {
-        flex:
-            1 1 45%;
+    .modal-actions button {
+        width: 100%;
+
+        min-width: 0;
+    }
+
+}
+
+
+/* =========================
+   الجوال الصغير
+========================= */
+
+@media (max-width: 430px) {
+
+    .mobile-header {
+        height: 70px;
+
+        padding:
+            8px
+            12px;
+    }
+
+
+    .mobile-menu-btn {
+        width: 43px;
+
+        height: 43px;
+
+        flex-basis: 43px;
+
+        font-size: 20px;
+    }
+
+
+    .mobile-header-title h2 {
+        font-size: 16px;
+    }
+
+
+    .mobile-header-title span {
+        font-size: 8px;
+    }
+
+
+    .mobile-logo {
+        width: 49px;
+
+        height: 49px;
+    }
+
+
+    .sidebar {
+        width: 265px;
+
+        max-width: 84vw;
+    }
+
+
+    .main-content {
+        padding:
+            92px
+            13px
+            35px;
+    }
+
+
+    .page-badge {
+        font-size: 9px;
+    }
+
+
+    .topbar h1 {
+        font-size: 23px;
+    }
+
+
+    .filters {
+        grid-template-columns: 1fr;
+    }
+
+
+    .search-box input,
+    .filters select,
+    .add-btn {
+        height: 46px;
+
+        min-height: 46px;
+    }
+
+
+    .task-info {
+        grid-template-columns: 1fr;
+    }
+
+
+    .task-actions {
+        grid-template-columns:
+            1fr
+            1fr;
     }
 
 }
