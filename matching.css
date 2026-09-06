@@ -20,6 +20,15 @@ body {
         sans-serif;
 
     color: #263f4f;
+
+    background: #f5f2ec;
+
+    overflow-x: hidden;
+}
+
+
+body.menu-open {
+    overflow: hidden;
 }
 
 
@@ -33,29 +42,41 @@ body {
 }
 
 
-/* القائمة الجانبية */
+/* هيدر الجوال */
+
+.mobile-header,
+.mobile-menu-btn,
+.sidebar-overlay {
+    display: none;
+}
+
+
+/* السايد بار */
 
 .sidebar {
     width: 245px;
-    min-height: 100vh;
+    height: 100vh;
 
     position: fixed;
 
     top: 0;
     right: 0;
 
-    z-index: 100;
+    z-index: 1000;
 
     padding: 25px 17px;
 
     display: flex;
     flex-direction: column;
 
+    overflow-y: auto;
+
     background:
         linear-gradient(
             180deg,
-            rgba(43, 77, 95, 0.98),
-            rgba(54, 93, 113, 0.98)
+            #31586c 0%,
+            #3c667a 52%,
+            #456f82 100%
         );
 
     box-shadow:
@@ -63,8 +84,6 @@ body {
         rgba(38, 59, 70, 0.10);
 }
 
-
-/* الشعار */
 
 .sidebar-logo {
     display: flex;
@@ -85,18 +104,18 @@ body {
 }
 
 
-/* الروابط */
-
 .sidebar-nav {
     display: flex;
 
     flex-direction: column;
 
-    gap: 6px;
+    gap: 7px;
 }
 
 
 .nav-link {
+    width: 100%;
+
     display: block;
 
     padding: 12px 14px;
@@ -104,13 +123,14 @@ body {
     border-radius: 10px;
 
     color:
-        rgba(255, 255, 255, 0.74);
+        rgba(255, 255, 255, 0.78);
 
     text-decoration: none;
 
     font-size: 13px;
 
-    transition: 0.25s ease;
+    transition:
+        0.25s ease;
 }
 
 
@@ -135,11 +155,10 @@ body {
 }
 
 
-/* تسجيل الخروج */
-
 .logout-btn {
     width: 100%;
-    height: 43px;
+
+    min-height: 44px;
 
     margin-top: auto;
 
@@ -147,10 +166,10 @@ body {
 
     border:
         1px solid
-        rgba(255, 255, 255, 0.22);
+        rgba(255, 255, 255, 0.24);
 
     background:
-        rgba(255, 255, 255, 0.04);
+        rgba(255, 255, 255, 0.05);
 
     color: white;
 
@@ -159,15 +178,6 @@ body {
     font-size: 12px;
 
     cursor: pointer;
-
-    transition: 0.25s ease;
-}
-
-
-.logout-btn:hover {
-    background: #b98a4d;
-
-    border-color: #b98a4d;
 }
 
 
@@ -186,24 +196,30 @@ body {
         42px
         50px;
 
+    background-color:
+        #f5f2ec;
+
     background-image:
         linear-gradient(
-            rgba(245, 244, 239, 0.18),
-            rgba(245, 244, 239, 0.24)
+            rgba(249, 247, 242, 0.14),
+            rgba(249, 247, 242, 0.14)
         ),
         url("assets/background.jpeg");
 
     background-size: cover;
 
-    background-position: center;
+    background-position:
+        center center;
 
-    background-repeat: no-repeat;
+    background-repeat:
+        no-repeat;
 
-    background-attachment: fixed;
+    background-attachment:
+        fixed;
 }
 
 
-/* الرأس */
+/* رأس الصفحة */
 
 .topbar {
     margin-bottom: 25px;
@@ -213,9 +229,11 @@ body {
 .page-badge {
     display: inline-block;
 
-    padding: 6px 12px;
+    padding:
+        7px
+        14px;
 
-    margin-bottom: 8px;
+    margin-bottom: 9px;
 
     border-radius: 30px;
 
@@ -231,11 +249,11 @@ body {
 
 
 .topbar h1 {
+    margin-bottom: 6px;
+
     color: #263f4f;
 
-    font-size: 26px;
-
-    margin-bottom: 5px;
+    font-size: 27px;
 }
 
 
@@ -243,6 +261,8 @@ body {
     color: #71828c;
 
     font-size: 12px;
+
+    line-height: 1.8;
 }
 
 
@@ -259,22 +279,25 @@ body {
         3px solid #c49a5c;
 
     border-right:
-        1px solid rgba(60, 85, 98, 0.13);
+        1px solid
+        rgba(60, 85, 98, 0.13);
 
     border-left:
-        1px solid rgba(60, 85, 98, 0.13);
+        1px solid
+        rgba(60, 85, 98, 0.13);
 
     border-bottom:
-        1px solid rgba(60, 85, 98, 0.13);
+        1px solid
+        rgba(60, 85, 98, 0.13);
 
     background:
-        rgba(246, 245, 240, 0.58);
+        rgba(246, 245, 240, 0.64);
 
-    backdrop-filter: blur(7px);
+    backdrop-filter:
+        blur(7px);
 
-    box-shadow:
-        0 8px 25px
-        rgba(40, 61, 73, 0.05);
+    -webkit-backdrop-filter:
+        blur(7px);
 }
 
 
@@ -284,11 +307,11 @@ body {
 
 
 .section-heading h2 {
+    margin-bottom: 5px;
+
     color: #31576b;
 
-    font-size: 16px;
-
-    margin-bottom: 4px;
+    font-size: 17px;
 }
 
 
@@ -303,15 +326,19 @@ body {
     display: flex;
 
     gap: 10px;
+
+    align-items: center;
 }
 
 
 .selection-row select {
     flex: 1;
 
-    height: 43px;
+    height: 44px;
 
-    padding: 0 13px;
+    padding:
+        0
+        13px;
 
     border:
         1px solid
@@ -320,7 +347,7 @@ body {
     border-radius: 10px;
 
     background:
-        rgba(255, 255, 255, 0.55);
+        rgba(255, 255, 255, 0.68);
 
     color: #45606f;
 
@@ -330,20 +357,14 @@ body {
 }
 
 
-.selection-row select:focus {
-    border-color:
-        rgba(190, 144, 79, 0.75);
-
-    box-shadow:
-        0 0 0 3px
-        rgba(190, 144, 79, 0.08);
-}
-
-
 .analyse-btn {
     min-width: 145px;
 
-    height: 43px;
+    height: 44px;
+
+    padding:
+        0
+        18px;
 
     border: none;
 
@@ -358,15 +379,6 @@ body {
     font-size: 11px;
 
     cursor: pointer;
-
-    transition: 0.2s ease;
-}
-
-
-.analyse-btn:hover {
-    background: #27495b;
-
-    transform: translateY(-1px);
 }
 
 
@@ -384,9 +396,10 @@ body {
         rgba(60, 85, 98, 0.12);
 
     background:
-        rgba(246, 245, 240, 0.58);
+        rgba(246, 245, 240, 0.64);
 
-    backdrop-filter: blur(7px);
+    backdrop-filter:
+        blur(7px);
 }
 
 
@@ -398,11 +411,11 @@ body {
 .summary-title span {
     display: block;
 
+    margin-bottom: 4px;
+
     color: #a67d48;
 
     font-size: 9px;
-
-    margin-bottom: 4px;
 }
 
 
@@ -429,18 +442,18 @@ body {
     border-radius: 10px;
 
     background:
-        rgba(255, 255, 255, 0.45);
+        rgba(255, 255, 255, 0.52);
 }
 
 
 .summary-item span {
     display: block;
 
+    margin-bottom: 5px;
+
     color: #8b989f;
 
     font-size: 8px;
-
-    margin-bottom: 5px;
 }
 
 
@@ -462,18 +475,22 @@ body {
         3px solid #c49a5c;
 
     border-right:
-        1px solid rgba(60, 85, 98, 0.13);
+        1px solid
+        rgba(60, 85, 98, 0.13);
 
     border-left:
-        1px solid rgba(60, 85, 98, 0.13);
+        1px solid
+        rgba(60, 85, 98, 0.13);
 
     border-bottom:
-        1px solid rgba(60, 85, 98, 0.13);
+        1px solid
+        rgba(60, 85, 98, 0.13);
 
     background:
-        rgba(246, 245, 240, 0.55);
+        rgba(246, 245, 240, 0.62);
 
-    backdrop-filter: blur(7px);
+    backdrop-filter:
+        blur(7px);
 }
 
 
@@ -486,7 +503,7 @@ body {
 }
 
 
-/* بطاقة المرشح */
+/* المرشح */
 
 .candidate-card {
     display: flex;
@@ -502,18 +519,7 @@ body {
         rgba(60, 85, 98, 0.11);
 
     background:
-        rgba(255, 255, 255, 0.44);
-
-    transition: 0.25s ease;
-}
-
-
-.candidate-card:hover {
-    transform: translateY(-2px);
-
-    box-shadow:
-        0 10px 23px
-        rgba(39, 58, 69, 0.06);
+        rgba(255, 255, 255, 0.50);
 }
 
 
@@ -526,6 +532,7 @@ body {
     display: flex;
 
     align-items: center;
+
     justify-content: center;
 
     border-radius: 50%;
@@ -549,9 +556,11 @@ body {
 .candidate-name-row {
     display: flex;
 
-    justify-content: space-between;
+    justify-content:
+        space-between;
 
-    align-items: flex-start;
+    align-items:
+        flex-start;
 
     gap: 15px;
 
@@ -562,20 +571,20 @@ body {
 .candidate-label {
     display: block;
 
+    margin-bottom: 3px;
+
     color: #a77b42;
 
     font-size: 8px;
-
-    margin-bottom: 3px;
 }
 
 
 .candidate-name-row h3 {
+    margin-bottom: 3px;
+
     color: #31586c;
 
     font-size: 15px;
-
-    margin-bottom: 3px;
 }
 
 
@@ -586,12 +595,12 @@ body {
 }
 
 
-/* نسبة التوافق */
-
 .match-score {
     min-width: 95px;
 
-    padding: 10px 13px;
+    padding:
+        10px
+        13px;
 
     text-align: center;
 
@@ -605,11 +614,11 @@ body {
 .match-score span {
     display: block;
 
+    margin-bottom: 3px;
+
     color: #8f8c80;
 
     font-size: 8px;
-
-    margin-bottom: 3px;
 }
 
 
@@ -619,8 +628,6 @@ body {
     font-size: 19px;
 }
 
-
-/* المعلومات */
 
 .candidate-info-grid {
     display: grid;
@@ -647,11 +654,11 @@ body {
 .candidate-info span {
     display: block;
 
+    margin-bottom: 4px;
+
     color: #929da2;
 
     font-size: 7px;
-
-    margin-bottom: 4px;
 }
 
 
@@ -661,8 +668,6 @@ body {
     font-size: 9px;
 }
 
-
-/* سبب التوصية */
 
 .reason-box {
     padding: 11px;
@@ -682,11 +687,11 @@ body {
 .reason-box span {
     display: block;
 
+    margin-bottom: 4px;
+
     color: #a47b47;
 
     font-size: 8px;
-
-    margin-bottom: 4px;
 }
 
 
@@ -699,8 +704,6 @@ body {
 }
 
 
-/* الأزرار */
-
 .candidate-actions {
     display: flex;
 
@@ -709,9 +712,11 @@ body {
 
 
 .candidate-actions button {
-    height: 35px;
+    min-height: 36px;
 
-    padding: 0 14px;
+    padding:
+        0
+        14px;
 
     border-radius: 8px;
 
@@ -720,8 +725,6 @@ body {
     font-size: 9px;
 
     cursor: pointer;
-
-    transition: 0.2s ease;
 }
 
 
@@ -740,18 +743,14 @@ body {
 .approve-btn {
     border: none;
 
-    background: #31586c;
+    background:
+        #31586c;
 
     color: white;
 }
 
 
-.candidate-actions button:hover {
-    transform: translateY(-1px);
-}
-
-
-/* الحالة الفارغة */
+/* الفارغ */
 
 .empty-matching {
     min-height: 300px;
@@ -765,7 +764,8 @@ body {
 
 
 .empty-box {
-    width: min(430px, 100%);
+    width:
+        min(430px, 100%);
 
     padding: 35px;
 
@@ -778,16 +778,16 @@ body {
         rgba(60, 85, 98, 0.10);
 
     background:
-        rgba(246, 245, 240, 0.45);
+        rgba(246, 245, 240, 0.52);
 }
 
 
 .empty-box h3 {
+    margin-bottom: 7px;
+
     color: #486573;
 
     font-size: 14px;
-
-    margin-bottom: 7px;
 }
 
 
@@ -804,6 +804,7 @@ body {
     display: flex;
 
     align-items: center;
+
     justify-content: center;
 
     color: #87959c;
@@ -812,14 +813,12 @@ body {
 }
 
 
-/* إخفاء */
-
 .hidden {
     display: none;
 }
 
 
-/* النافذة */
+/* المودال */
 
 .modal {
     display: none;
@@ -828,7 +827,7 @@ body {
 
     inset: 0;
 
-    z-index: 500;
+    z-index: 7000;
 
     align-items: center;
 
@@ -851,7 +850,8 @@ body {
     background:
         rgba(37, 56, 66, 0.34);
 
-    backdrop-filter: blur(4px);
+    backdrop-filter:
+        blur(4px);
 }
 
 
@@ -863,7 +863,8 @@ body {
     width:
         min(680px, 100%);
 
-    max-height: 90vh;
+    max-height:
+        90vh;
 
     overflow-y: auto;
 
@@ -875,31 +876,29 @@ body {
         3px solid #c49a5c;
 
     background:
-        rgba(242, 242, 237, 0.97);
-
-    box-shadow:
-        0 22px 55px
-        rgba(38, 57, 68, 0.18);
+        rgba(242, 242, 237, 0.98);
 }
 
 
 .modal-header {
     display: flex;
 
-    justify-content: space-between;
+    justify-content:
+        space-between;
 
-    align-items: flex-start;
+    align-items:
+        flex-start;
 
     margin-bottom: 22px;
 }
 
 
 .modal-header h2 {
+    margin-bottom: 4px;
+
     color: #2f5367;
 
     font-size: 19px;
-
-    margin-bottom: 4px;
 }
 
 
@@ -911,8 +910,9 @@ body {
 
 
 .close-btn {
-    width: 32px;
-    height: 32px;
+    width: 34px;
+
+    height: 34px;
 
     border: none;
 
@@ -928,8 +928,6 @@ body {
     cursor: pointer;
 }
 
-
-/* تفاصيل المرشح */
 
 .details-grid {
     display: grid;
@@ -947,7 +945,7 @@ body {
     border-radius: 11px;
 
     background:
-        rgba(255, 255, 255, 0.44);
+        rgba(255, 255, 255, 0.50);
 
     border:
         1px solid
@@ -958,11 +956,11 @@ body {
 .detail-item span {
     display: block;
 
+    margin-bottom: 6px;
+
     color: #839098;
 
     font-size: 9px;
-
-    margin-bottom: 6px;
 }
 
 
@@ -981,7 +979,10 @@ body {
 
 /* تابلت */
 
-@media (max-width: 1050px) {
+@media
+(max-width: 1050px)
+and
+(min-width: 701px) {
 
     .summary-grid,
     .candidate-info-grid {
@@ -992,102 +993,510 @@ body {
 }
 
 
-/* جوال */
+/* =========================
+   الجوال
+========================= */
 
 @media (max-width: 700px) {
 
-    .sidebar {
-        width: 76px;
+    .matching-page {
+        display: block;
+    }
+
+
+    /* الهيدر */
+
+    .mobile-header {
+        width: 100%;
+
+        height: 76px;
+
+        position: fixed;
+
+        top: 0;
+        right: 0;
+        left: 0;
+
+        z-index: 3000;
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 10px;
 
         padding:
-            18px
-            7px;
+            10px
+            14px;
+
+        background:
+            linear-gradient(
+                90deg,
+                #5f7c8b 0%,
+                #3c6276 48%,
+                #274f65 100%
+            );
+
+        box-shadow:
+            0 4px 17px
+            rgba(40, 61, 73, 0.10);
+    }
+
+
+    .mobile-menu-btn {
+        width: 46px;
+
+        height: 46px;
+
+        flex:
+            0 0 46px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        border:
+            1px solid
+            rgba(255, 255, 255, 0.50);
+
+        border-radius: 14px;
+
+        background:
+            rgba(249, 247, 242, 0.97);
+
+        color: #31586c;
+
+        font-size: 22px;
+
+        font-weight: 700;
+
+        cursor: pointer;
+    }
+
+
+    .mobile-header-title {
+        flex:
+            0 0 auto;
+
+        text-align: right;
+    }
+
+
+    .mobile-header-title h2 {
+        margin:
+            0
+            0
+            2px;
+
+        color: white;
+
+        font-size: 16px;
+
+        white-space: nowrap;
+    }
+
+
+    .mobile-header-title span {
+        display: block;
+
+        color:
+            rgba(255, 255, 255, 0.65);
+
+        font-size: 9px;
+    }
+
+
+    .mobile-logo {
+        width: 52px;
+
+        height: 52px;
+
+        object-fit: contain;
+
+        margin-right: auto;
+    }
+
+
+    /* السايد بار */
+
+    .sidebar {
+        width: 275px;
+
+        max-width: 83vw;
+
+        height: 100dvh;
+
+        min-height: 100dvh;
+
+        position: fixed;
+
+        top: 0;
+
+        right: -300px;
+
+        z-index: 5000;
+
+        padding:
+            23px
+            18px;
+
+        background:
+            linear-gradient(
+                180deg,
+                #536f7e 0%,
+                #45687a 48%,
+                #355a6d 100%
+            );
+
+        transition:
+            right
+            0.30s
+            ease;
+    }
+
+
+    .sidebar.show {
+        right: 0;
     }
 
 
     .sidebar-logo img {
-        width: 55px;
+        width: 88px;
+    }
+
+
+    .sidebar-nav {
+        position: relative;
+
+        z-index: 10;
     }
 
 
     .nav-link {
+        position: relative;
+
+        z-index: 20;
+
         padding:
-            10px
-            4px;
+            13px
+            14px;
 
-        text-align: center;
+        text-align: right;
 
-        font-size: 9px;
+        font-size: 13px;
+
+        pointer-events: auto;
     }
 
 
     .logout-btn {
-        font-size: 9px;
+        position: relative;
+
+        z-index: 20;
+
+        min-height: 46px;
     }
 
 
-    .main-content {
-        width:
-            calc(100% - 76px);
+    .sidebar-overlay {
+        display: block;
 
-        margin-right: 76px;
+        position: fixed;
+
+        inset: 0;
+
+        z-index: 4000;
+
+        background:
+            rgba(22, 36, 44, 0.42);
+
+        opacity: 0;
+
+        visibility: hidden;
+
+        pointer-events: none;
+
+        transition:
+            0.25s ease;
+    }
+
+
+    .sidebar-overlay.show {
+        opacity: 1;
+
+        visibility: visible;
+
+        pointer-events: auto;
+    }
+
+
+    /* المحتوى */
+
+    .main-content {
+        width: 100%;
+
+        min-height: 100vh;
+
+        margin-right: 0;
 
         padding:
-            24px
-            14px
-            35px;
+            102px
+            16px
+            40px;
+
+        background-color:
+            #f5f2ec;
+
+        background-image:
+            linear-gradient(
+                rgba(250, 248, 244, 0.12),
+                rgba(250, 248, 244, 0.12)
+            ),
+            url("assets/background.jpeg");
+
+        background-size:
+            auto 100%;
+
+        background-position:
+            center top;
+
+        background-repeat:
+            no-repeat;
+
+        background-attachment:
+            scroll;
     }
 
 
     .topbar h1 {
-        font-size: 21px;
+        font-size: 24px;
+    }
+
+
+    .topbar p {
+        font-size: 11px;
+
+        line-height: 1.8;
+    }
+
+
+    /* اختيار المهمة */
+
+    .task-selection {
+        padding: 15px;
+
+        border-radius: 16px;
     }
 
 
     .selection-row {
+        display: flex;
+
         flex-direction: column;
+
+        gap: 11px;
+    }
+
+
+    .selection-row select {
+        width: 100%;
+
+        height: 50px;
+
+        flex: none;
+
+        font-size: 13px;
+
+        border-radius: 12px;
     }
 
 
     .analyse-btn {
         width: 100%;
+
+        min-width: 0;
+
+        height: 50px;
+
+        font-size: 13px;
+
+        border-radius: 12px;
     }
 
 
-    .summary-grid,
-    .candidate-info-grid,
-    .details-grid {
-        grid-template-columns: 1fr;
+    /* الملخص */
+
+    .summary-grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+
+        gap: 9px;
     }
 
+
+    .summary-item {
+        min-height: 75px;
+    }
+
+
+    /* المرشحين */
 
     .candidate-card {
         flex-direction: column;
     }
 
 
+    .candidate-rank {
+        width: 34px;
+
+        height: 34px;
+    }
+
+
     .candidate-name-row {
         flex-direction: column;
+
+        gap: 10px;
     }
 
 
     .match-score {
         width: 100%;
+
+        min-width: 0;
+    }
+
+
+    .candidate-info-grid {
+        grid-template-columns:
+            repeat(2, 1fr);
     }
 
 
     .candidate-actions {
-        flex-direction: column;
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, 1fr);
     }
 
 
     .candidate-actions button {
         width: 100%;
+
+        min-height: 42px;
+    }
+
+
+    .details-grid {
+        grid-template-columns:
+            1fr;
     }
 
 
     .full-detail {
         grid-column: auto;
+    }
+
+
+    .empty-matching {
+        min-height: 230px;
+    }
+
+
+    .empty-box {
+        padding: 25px 18px;
+    }
+
+
+    .modal {
+        padding: 12px;
+    }
+
+
+    .modal-box {
+        padding: 18px;
+
+        max-height:
+            88dvh;
+    }
+
+}
+
+
+/* الجوال الصغير */
+
+@media (max-width: 430px) {
+
+    .mobile-header {
+        height: 70px;
+
+        padding:
+            8px
+            12px;
+    }
+
+
+    .mobile-menu-btn {
+        width: 43px;
+
+        height: 43px;
+
+        flex-basis: 43px;
+
+        font-size: 20px;
+    }
+
+
+    .mobile-header-title h2 {
+        font-size: 14px;
+    }
+
+
+    .mobile-header-title span {
+        font-size: 8px;
+    }
+
+
+    .mobile-logo {
+        width: 49px;
+
+        height: 49px;
+    }
+
+
+    .main-content {
+        padding:
+            92px
+            13px
+            35px;
+    }
+
+
+    .sidebar {
+        width: 265px;
+
+        max-width: 84vw;
+    }
+
+
+    .summary-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .candidate-info-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .candidate-actions {
+        grid-template-columns:
+            1fr;
     }
 
 }
