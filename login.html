@@ -4,36 +4,54 @@
 <head>
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>معيار | تسجيل الدخول</title>
 
-    <link rel="stylesheet" href="login.css">
+    <link
+        rel="stylesheet"
+        href="login.css"
+    >
 </head>
 
 <body>
 
 <main class="login-page">
 
-    <!-- الشعار -->
+    <!-- =========================
+         الشعار
+    ========================== -->
+
     <header class="header">
+
         <img
             src="assets/logo.png"
             alt="معيار"
             class="logo"
         >
+
     </header>
 
 
-    <!-- تسجيل الدخول -->
+    <!-- =========================
+         تسجيل الدخول
+    ========================== -->
+
     <section class="login-section">
 
         <div class="login-card">
 
+
+            <!-- رأس البطاقة -->
+
             <div class="card-header">
 
-                <h1>تسجيل الدخول</h1>
+                <h1>
+                    تسجيل الدخول
+                </h1>
 
                 <p>
                     اختر نوع المستخدم ثم أدخل بياناتك
@@ -42,12 +60,19 @@
             </div>
 
 
-            <!-- نوع المستخدم -->
+            <!-- =========================
+                 نوع المستخدم
+            ========================== -->
+
             <div class="role-title">
                 نوع المستخدم
             </div>
 
+
             <div class="role-options">
+
+
+                <!-- موظف -->
 
                 <button
                     type="button"
@@ -55,10 +80,15 @@
                     id="employeeBtn"
                     onclick="selectRole('employee')"
                 >
+
                     <span class="radio-circle"></span>
+
                     موظف
+
                 </button>
 
+
+                <!-- مسؤول -->
 
                 <button
                     type="button"
@@ -66,16 +96,25 @@
                     id="adminBtn"
                     onclick="selectRole('admin')"
                 >
+
                     <span class="radio-circle"></span>
+
                     مسؤول
+
                 </button>
 
             </div>
 
 
+            <!-- =========================
+                 نموذج تسجيل الدخول
+            ========================== -->
+
             <form id="loginForm">
 
+
                 <!-- البريد -->
+
                 <div class="input-group">
 
                     <label for="email">
@@ -93,6 +132,7 @@
 
 
                 <!-- كلمة المرور -->
+
                 <div class="input-group">
 
                     <label for="password">
@@ -109,11 +149,15 @@
                 </div>
 
 
+                <!-- رسالة الخطأ -->
+
                 <p
                     class="error-message"
                     id="errorMessage"
                 ></p>
 
+
+                <!-- تسجيل الدخول -->
 
                 <button
                     type="submit"
@@ -123,6 +167,8 @@
                 </button>
 
 
+                <!-- الرجوع -->
+
                 <button
                     type="button"
                     class="back-btn"
@@ -130,6 +176,7 @@
                 >
                     العودة إلى الصفحة الرئيسية
                 </button>
+
 
             </form>
 
@@ -142,172 +189,228 @@
 
 <script>
 
-    /* ==============================
+
+    /* ===================================
        نوع المستخدم الافتراضي
-    ============================== */
+    ==================================== */
 
     let selectedRole = "employee";
 
 
-    /* ==============================
-       إيميل المسؤول
+    /* ===================================
+       بريد المسؤول المؤقت
+    ==================================== */
 
-       غيري هذا لاحقاً إلى
-       إيميل المسؤول الحقيقي
-    ============================== */
-
-    const ADMIN_EMAIL = "admin@gmail.com";
+    const ADMIN_EMAIL =
+        "admin@gmail.com";
 
 
-    /* ==============================
-       اختيار موظف أو مسؤول
-    ============================== */
+    /* ===================================
+       اختيار نوع المستخدم
+    ==================================== */
 
     function selectRole(role) {
 
         selectedRole = role;
 
+
         const employeeBtn =
-            document.getElementById("employeeBtn");
+            document.getElementById(
+                "employeeBtn"
+            );
+
 
         const adminBtn =
-            document.getElementById("adminBtn");
+            document.getElementById(
+                "adminBtn"
+            );
 
 
-        employeeBtn.classList.remove("active");
-        adminBtn.classList.remove("active");
+        employeeBtn.classList.remove(
+            "active"
+        );
+
+
+        adminBtn.classList.remove(
+            "active"
+        );
 
 
         if (role === "employee") {
 
-            employeeBtn.classList.add("active");
+            employeeBtn.classList.add(
+                "active"
+            );
 
-        } else {
+        }
 
-            adminBtn.classList.add("active");
+        else {
+
+            adminBtn.classList.add(
+                "active"
+            );
 
         }
 
     }
 
 
-    /* ==============================
+    /* ===================================
        تسجيل الدخول
-    ============================== */
+    ==================================== */
 
     document
-        .getElementById("loginForm")
-        .addEventListener("submit", function(event) {
-
-            event.preventDefault();
-
-
-            const email =
-                document
-                    .getElementById("email")
-                    .value
-                    .trim()
-                    .toLowerCase();
+        .getElementById(
+            "loginForm"
+        )
+        .addEventListener(
+            "submit",
+            function(event) {
 
 
-            const password =
-                document
-                    .getElementById("password")
-                    .value
-                    .trim();
+                event.preventDefault();
 
 
-            const errorMessage =
-                document
-                    .getElementById("errorMessage");
+                const email =
+                    document
+                        .getElementById(
+                            "email"
+                        )
+                        .value
+                        .trim()
+                        .toLowerCase();
 
 
-            /* التحقق من الحقول */
-
-            if (email === "" || password === "") {
-
-                errorMessage.textContent =
-                    "يرجى إدخال البريد الإلكتروني وكلمة المرور";
-
-                return;
-
-            }
+                const password =
+                    document
+                        .getElementById(
+                            "password"
+                        )
+                        .value
+                        .trim();
 
 
-            /* ==============================
-               إذا اختار مسؤول
-            ============================== */
+                const errorMessage =
+                    document
+                        .getElementById(
+                            "errorMessage"
+                        );
 
-            if (selectedRole === "admin") {
 
-                if (email !== ADMIN_EMAIL.toLowerCase()) {
+                /* =========================
+                   التحقق من الحقول
+                ========================== */
+
+                if (
+                    email === ""
+                    ||
+                    password === ""
+                ) {
 
                     errorMessage.textContent =
-                        "هذا البريد غير مصرح له بالدخول كمسؤول";
+                        "يرجى إدخال البريد الإلكتروني وكلمة المرور";
 
                     return;
 
                 }
 
 
-                errorMessage.textContent = "";
+                /* =========================
+                   إذا اختار مسؤول
+                ========================== */
+
+                if (
+                    selectedRole === "admin"
+                ) {
 
 
-                /* حفظ الدخول مؤقتاً */
+                    if (
+                        email !==
+                        ADMIN_EMAIL.toLowerCase()
+                    ) {
 
-                localStorage.setItem(
-                    "miyarRole",
-                    "admin"
-                );
+                        errorMessage.textContent =
+                            "هذا البريد غير مصرح له بالدخول كمسؤول";
 
-                localStorage.setItem(
-                    "miyarEmail",
-                    email
-                );
+                        return;
+
+                    }
 
 
-                /* الذهاب للوحة المسؤول */
+                    errorMessage.textContent =
+                        "";
 
-                window.location.href =
-                    "dashboard.html";
 
-                return;
+                    /* حفظ نوع المستخدم */
+
+                    localStorage.setItem(
+                        "miyarRole",
+                        "admin"
+                    );
+
+
+                    localStorage.setItem(
+                        "miyarEmail",
+                        email
+                    );
+
+
+                    /* الانتقال للوحة المسؤول */
+
+                    window.location.href =
+                        "dashboard.html";
+
+
+                    return;
+
+                }
+
+
+                /* =========================
+                   إذا اختار موظف
+                ========================== */
+
+                if (
+                    selectedRole === "employee"
+                ) {
+
+
+                    errorMessage.textContent =
+                        "";
+
+
+                    /* حفظ نوع المستخدم */
+
+                    localStorage.setItem(
+                        "miyarRole",
+                        "employee"
+                    );
+
+
+                    localStorage.setItem(
+                        "miyarEmail",
+                        email
+                    );
+
+
+                    /* الانتقال لواجهة الموظف */
+
+                    window.location.href =
+                        "employee-home.html";
+
+
+                    return;
+
+                }
+
 
             }
+        );
 
 
-            /* ==============================
-               إذا اختار موظف
-            ============================== */
-
-            errorMessage.textContent = "";
-
-
-            localStorage.setItem(
-                "miyarRole",
-                "employee"
-            );
-
-            localStorage.setItem(
-                "miyarEmail",
-                email
-            );
-
-
-            /*
-               صفحة الموظف سنسويها لاحقاً
-            */
-
-            alert(
-                "واجهة الموظف سيتم إعدادها بعد الانتهاء من واجهات المسؤول"
-            );
-
-        });
-
-
-    /* ==============================
-       الرجوع للرئيسية
-    ============================== */
+    /* ===================================
+       الرجوع للصفحة الرئيسية
+    ==================================== */
 
     function goHome() {
 
@@ -315,6 +418,7 @@
             "home.html";
 
     }
+
 
 </script>
 
