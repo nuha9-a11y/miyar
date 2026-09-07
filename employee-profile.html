@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>معيار | ملفي الشخصي</title>
+
+    <link
+        rel="stylesheet"
+        href="employee-profile.css"
+    >
+</head>
+
+<body>
+
+<div class="employee-page">
+
+    <!-- هيدر الجوال -->
+    <header class="mobile-header">
+
+        <button
+            type="button"
+            class="mobile-menu-btn"
+            id="mobileMenuBtn"
+            aria-label="فتح القائمة"
+        >
+            ☰
+        </button>
+
+        <div class="mobile-header-title">
+            <h2>ملفي الشخصي</h2>
+            <span>معيار</span>
+        </div>
+
+        <img
+            src="assets/logo.png"
+            alt="معيار"
+            class="mobile-logo"
+        >
+
+    </header>
+
+
+    <!-- خلفية السايد بار -->
+    <div
+        class="sidebar-overlay"
+        id="sidebarOverlay"
+    ></div>
+
+
+    <!-- السايد بار -->
+    <aside
+        class="sidebar"
+        id="sidebar"
+    >
+
+        <div class="sidebar-logo">
+            <img
+                src="assets/logo.png"
+                alt="معيار"
+            >
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <a
+                href="employee-home.html"
+                class="nav-link"
+            >
+                الرئيسية
+            </a>
+
+            <a
+                href="employee-tasks.html"
+                class="nav-link"
+            >
+                مهامي
+            </a>
+
+            <a
+                href="employee-projects.html"
+                class="nav-link"
+            >
+                مشاريعي
+            </a>
+
+            <a
+                href="employee-profile.html"
+                class="nav-link active"
+            >
+                ملفي الشخصي
+            </a>
+
+            <a
+                href="employee-evaluations.html"
+                class="nav-link"
+            >
+                تقييماتي
+            </a>
+
+        </nav>
+
+
+        <button
+            type="button"
+            class="logout-btn"
+            onclick="logout()"
+        >
+            تسجيل الخروج
+        </button>
+
+    </aside>
+
+
+    <!-- المحتوى -->
+    <main class="main-content">
+
+        <header class="topbar">
+
+            <span class="page-badge">
+                بيانات الموظف
+            </span>
+
+            <h1>
+                ملفي الشخصي
+            </h1>
+
+            <p>
+                عرض بياناتك الوظيفية ومهاراتك
+            </p>
+
+        </header>
+
+
+        <!-- بطاقة البيانات -->
+        <section class="profile-card">
+
+            <div class="profile-top">
+
+                <div class="profile-avatar">
+                    <span id="profileInitial">—</span>
+                </div>
+
+                <div class="profile-heading">
+
+                    <span class="employee-badge">
+                        موظف
+                    </span>
+
+                    <h2 id="profileName">
+                        —
+                    </h2>
+
+                    <p id="profileTitle">
+                        —
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="profile-info-grid">
+
+                <div class="info-card">
+                    <span>البريد الإلكتروني</span>
+                    <strong id="profileEmail">—</strong>
+                </div>
+
+
+                <div class="info-card">
+                    <span>المسمى الوظيفي</span>
+                    <strong id="jobTitle">—</strong>
+                </div>
+
+
+                <div class="info-card">
+                    <span>القسم</span>
+                    <strong id="department">—</strong>
+                </div>
+
+
+                <div class="info-card">
+                    <span>سنوات الخبرة</span>
+                    <strong id="experienceYears">—</strong>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- المهارات -->
+        <section class="skills-card">
+
+            <div class="section-heading">
+
+                <h2>
+                    المهارات
+                </h2>
+
+                <p>
+                    المهارات المسجلة للموظف
+                </p>
+
+            </div>
+
+
+            <div
+                class="skills-list"
+                id="skillsList"
+            >
+
+                <div class="empty-state">
+                    لا توجد مهارات مسجلة حالياً
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script>
+
+    /* =========================
+       السايد بار
+    ========================== */
+
+    const mobileMenuBtn =
+        document.getElementById("mobileMenuBtn");
+
+    const sidebar =
+        document.getElementById("sidebar");
+
+    const sidebarOverlay =
+        document.getElementById("sidebarOverlay");
+
+
+    function openSidebar() {
+
+        sidebar.classList.add("show");
+
+        sidebarOverlay.classList.add("show");
+
+        document.body.classList.add("menu-open");
+    }
+
+
+    function closeSidebar() {
+
+        sidebar.classList.remove("show");
+
+        sidebarOverlay.classList.remove("show");
+
+        document.body.classList.remove("menu-open");
+    }
+
+
+    mobileMenuBtn.addEventListener(
+        "click",
+        openSidebar
+    );
+
+
+    sidebarOverlay.addEventListener(
+        "click",
+        closeSidebar
+    );
+
+
+    document
+        .querySelectorAll(".nav-link")
+        .forEach(function(link) {
+
+            link.addEventListener(
+                "click",
+                closeSidebar
+            );
+
+        });
+
+
+    /* =========================
+       تحميل البيانات الحالية
+    ========================== */
+
+    function loadProfile() {
+
+        const email =
+            localStorage.getItem("miyarEmail");
+
+        document
+            .getElementById("profileEmail")
+            .textContent =
+            email || "—";
+
+        /*
+            باقي البيانات ستأتي لاحقاً
+            من قاعدة البيانات
+        */
+
+    }
+
+
+    /* =========================
+       تسجيل الخروج
+    ========================== */
+
+    function logout() {
+
+        localStorage.removeItem("miyarRole");
+
+        localStorage.removeItem("miyarEmail");
+
+        window.location.href =
+            "login.html";
+    }
+
+
+    loadProfile();
+
+</script>
+
+</body>
+
+</html>
