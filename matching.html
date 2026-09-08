@@ -17,6 +17,8 @@
         href="matching.css"
     >
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 </head>
 
 
@@ -64,8 +66,6 @@
     </header>
 
 
-
-    <!-- خلف السايد بار -->
 
     <div
         class="sidebar-overlay"
@@ -163,8 +163,8 @@
 
         <button
             class="logout-btn"
-            type="button"
             onclick="logout()"
+            type="button"
         >
             تسجيل الخروج
         </button>
@@ -224,7 +224,7 @@
                 <select id="taskSelect">
 
                     <option value="">
-                        جاري تحميل المهام...
+                        جارٍ تحميل المهام...
                     </option>
 
                 </select>
@@ -232,8 +232,9 @@
 
                 <button
                     class="analyse-btn"
-                    type="button"
                     onclick="startMatching()"
+                    type="button"
+                    id="matchingButton"
                 >
                     بدء المطابقة
                 </button>
@@ -298,7 +299,7 @@
                 <div class="summary-item">
 
                     <span>
-                        مستوى الخبرة المطلوب
+                        الخبرة المطلوبة
                     </span>
 
                     <strong id="summaryExperience">
@@ -343,7 +344,7 @@
                 </h2>
 
                 <p>
-                    ترتيب المرشحين حسب درجة التوافق مع متطلبات المهمة
+                    ترتيب الموظفين حسب درجة التوافق مع متطلبات المهمة
                 </p>
 
             </div>
@@ -359,7 +360,7 @@
 
 
         <!-- =========================
-             الحالة قبل المطابقة
+             قبل تشغيل المطابقة
         ========================== -->
 
         <section
@@ -424,8 +425,8 @@
 
             <button
                 class="close-btn"
-                type="button"
                 onclick="closeCandidateModal()"
+                type="button"
             >
                 ×
             </button>
@@ -438,50 +439,47 @@
             id="candidateDetails"
         ></div>
 
-
     </div>
 
 </div>
 
 
 
-<script type="module">
+<script>
 
 
-/* ===============================
+/* =====================================================
    Supabase
-================================ */
+===================================================== */
 
-import { supabase } from "./supabase.js";
+const SUPABASE_URL =
+    "https://avooyglxacytrfhvotsl.supabase.co";
 
 
+const SUPABASE_KEY =
+    "sb_publishable_NVlWEnA_w4KbSse_-70zdA_J9ut0Kyo";
 
-/* ===============================
-   حماية الصفحة
-================================ */
 
-const role =
-    localStorage.getItem(
-        "miyarRole"
+const supabaseClient =
+    supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
     );
 
 
-if (role !== "admin") {
 
-    alert(
-        "غير مصرح لك بالدخول إلى صفحة المطابقة والترشيح"
-    );
+/* =====================================================
+   المسؤول
+===================================================== */
 
-    window.location.href =
-        "login.html";
-
-}
+const ADMIN_EMAIL =
+    "admin@gmail.com";
 
 
 
-/* ===============================
+/* =====================================================
    البيانات
-================================ */
+===================================================== */
 
 let tasks = [];
 
@@ -499,94 +497,163 @@ let candidates = [];
 
 let selectedTask = null;
 
+let selectedRequirements = [];
 
 
-/* ===============================
-   السايد بار
-================================ */
 
-const mobileMenuBtn =
-    document.getElementById(
-        "mobileMenuBtn"
-    );
+/* =====================================================
+   حماية الصفحة
+===================================================== */
+
+async function protectPage() {
 
 
-const sidebar =
-    document.getElementById(
-        "sidebar"
-    );
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .auth
+        .getSession();
 
 
-const sidebarOverlay =
-    document.getElementById(
-        "sidebarOverlay"
-    );
+
+    if (
+        error
+        ||
+        !data.session
+    ) {
 
 
-function openSidebar() {
-
-    sidebar.classList.add(
-        "show"
-    );
-
-    sidebarOverlay.classList.add(
-        "show"
-    );
-
-    document.body.classList.add(
-        "menu-open"
-    );
-
-}
-
-
-function closeSidebar() {
-
-    sidebar.classList.remove(
-        "show"
-    );
-
-    sidebarOverlay.classList.remove(
-        "show"
-    );
-
-    document.body.classList.remove(
-        "menu-open"
-    );
-
-}
-
-
-mobileMenuBtn.addEventListener(
-    "click",
-    openSidebar
-);
-
-
-sidebarOverlay.addEventListener(
-    "click",
-    closeSidebar
-);
-
-
-document
-    .querySelectorAll(".nav-link")
-    .forEach(function(link) {
-
-        link.addEventListener(
-            "click",
-            closeSidebar
+        localStorage.removeItem(
+            "miyarRole"
         );
 
-    });
+
+        localStorage.removeItem(
+            "miyarEmail"
+        );
+
+
+        window.location.href =
+            "login.html";
+
+
+        return false;
+
+    }
 
 
 
-/* ===============================
-   تحميل البيانات
-================================ */
+    const email =
+        String(
+            data.session.user.email
+            ||
+            ""
+        )
+        .trim()
+        .toLowerCase();
 
-async function loadData() {
+
+
+    if (
+        email !==
+        ADMIN_EMAIL.toLowerCase()
+    ) {
+
+
+        await supabaseClient
+            .auth
+            .signOut();
+
+
+        localStorage.clear();
+
+
+        alert(
+            "غير مصرح لك بالدخول إلى صفحة المطابقة والترشيح"
+        );
+
+
+        window.location.href =
+            "login.html";
+
+
+        return false;
+
+    }
+
+
+
+    localStorage.setItem(
+        "miyarRole",
+        "admin"
+    );
+
+
+    localStorage.setItem(
+        "miyarEmail",
+        email
+    );
+
+
+    return true;
+
+}
+
+
+
+/* =====================================================
+   تحميل المشاريع
+===================================================== */
+
+async function loadProjects() {
+
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("projects")
+        .select(`
+            id,
+            project_name
+        `);
+
+
+
+    if (error) {
+
+
+        console.error(
+            "خطأ تحميل المشاريع:",
+            error
+        );
+
+
+        projects = [];
+
+
+        return;
+
+    }
+
+
+
+    projects =
+        data || [];
+
+}
+
+
+
+/* =====================================================
+   تحميل المهام
+===================================================== */
+
+async function loadTasks() {
+
 
     const taskSelect =
         document.getElementById(
@@ -594,133 +661,47 @@ async function loadData() {
         );
 
 
+
     taskSelect.innerHTML = `
 
         <option value="">
-            جاري تحميل المهام...
+            جارٍ تحميل المهام...
         </option>
 
     `;
 
 
-    try {
 
-
-        const [
-            tasksResult,
-            projectsResult,
-            employeesResult,
-            skillsResult,
-            employeeSkillsResult,
-            requirementsResult
-        ] = await Promise.all([
-
-
-            supabase
-                .from("tasks")
-                .select("*")
-                .order(
-                    "id",
-                    {
-                        ascending: false
-                    }
-                ),
-
-
-            supabase
-                .from("projects")
-                .select("*"),
-
-
-            supabase
-                .from("employees")
-                .select("*"),
-
-
-            supabase
-                .from("skills")
-                .select("*"),
-
-
-            supabase
-                .from("employee_skills")
-                .select("*"),
-
-
-            supabase
-                .from("task_requirements")
-                .select("*")
-
-
-        ]);
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("tasks")
+        .select(`
+            id,
+            project_id,
+            task_name,
+            description,
+            priority,
+            due_date,
+            status,
+            assigned_employee_id
+        `)
+        .order(
+            "id",
+            {
+                ascending: false
+            }
+        );
 
 
 
-        if (tasksResult.error) {
-            throw tasksResult.error;
-        }
-
-
-        if (projectsResult.error) {
-            throw projectsResult.error;
-        }
-
-
-        if (employeesResult.error) {
-            throw employeesResult.error;
-        }
-
-
-        if (skillsResult.error) {
-            throw skillsResult.error;
-        }
-
-
-        if (employeeSkillsResult.error) {
-            throw employeeSkillsResult.error;
-        }
-
-
-        if (requirementsResult.error) {
-            throw requirementsResult.error;
-        }
-
-
-
-        tasks =
-            tasksResult.data || [];
-
-
-        projects =
-            projectsResult.data || [];
-
-
-        employees =
-            employeesResult.data || [];
-
-
-        skills =
-            skillsResult.data || [];
-
-
-        employeeSkills =
-            employeeSkillsResult.data || [];
-
-
-        taskRequirements =
-            requirementsResult.data || [];
-
-
-        loadTasks();
-
-
-    }
-
-    catch (error) {
+    if (error) {
 
 
         console.error(
-            "Matching load error:",
+            "خطأ تحميل المهام:",
             error
         );
 
@@ -734,26 +715,15 @@ async function loadData() {
         `;
 
 
-        alert(
-            "تعذر تحميل بيانات المطابقة"
-        );
+        return;
 
     }
 
-}
 
 
+    tasks =
+        data || [];
 
-/* ===============================
-   عرض المهام
-================================ */
-
-function loadTasks() {
-
-    const taskSelect =
-        document.getElementById(
-            "taskSelect"
-        );
 
 
     taskSelect.innerHTML = `
@@ -765,19 +735,25 @@ function loadTasks() {
     `;
 
 
-    if (tasks.length === 0) {
+
+    if (
+        tasks.length === 0
+    ) {
+
 
         taskSelect.innerHTML = `
 
             <option value="">
-                لا توجد مهام
+                لا توجد مهام حالياً
             </option>
 
         `;
 
+
         return;
 
     }
+
 
 
     tasks.forEach(
@@ -795,12 +771,15 @@ function loadTasks() {
 
 
             option.textContent =
-                task.task_name || "مهمة";
+                task.task_name
+                ||
+                "مهمة بدون اسم";
 
 
             taskSelect.appendChild(
                 option
             );
+
 
         }
     );
@@ -809,27 +788,234 @@ function loadTasks() {
 
 
 
-/* ===============================
-   بدء المطابقة
-================================ */
+/* =====================================================
+   تحميل الموظفين
+===================================================== */
 
-function startMatching() {
+async function loadEmployees() {
+
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("employees")
+        .select(`
+            id,
+            name,
+            email,
+            job_title,
+            department,
+            experience_years,
+            job_level,
+            availability,
+            workload,
+            status,
+            employee_number
+        `);
+
+
+
+    if (error) {
+
+
+        console.error(
+            "خطأ تحميل الموظفين:",
+            error
+        );
+
+
+        employees = [];
+
+
+        throw new Error(
+            "تعذر تحميل بيانات الموظفين"
+        );
+
+    }
+
+
+
+    employees =
+        data || [];
+
+}
+
+
+
+/* =====================================================
+   تحميل جدول المهارات
+===================================================== */
+
+async function loadSkills() {
+
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("skills")
+        .select(`
+            id,
+            skill_name,
+            description
+        `);
+
+
+
+    if (error) {
+
+
+        console.error(
+            "خطأ تحميل المهارات:",
+            error
+        );
+
+
+        skills = [];
+
+
+        throw new Error(
+            "تعذر تحميل المهارات"
+        );
+
+    }
+
+
+
+    skills =
+        data || [];
+
+}
+
+
+
+/* =====================================================
+   تحميل مهارات الموظفين
+===================================================== */
+
+async function loadEmployeeSkills() {
+
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("employee_skills")
+        .select(`
+            id,
+            employee_id,
+            skill_id,
+            skill_level
+        `);
+
+
+
+    if (error) {
+
+
+        console.error(
+            "خطأ تحميل مهارات الموظفين:",
+            error
+        );
+
+
+        employeeSkills = [];
+
+
+        throw new Error(
+            "تعذر تحميل مهارات الموظفين"
+        );
+
+    }
+
+
+
+    employeeSkills =
+        data || [];
+
+}
+
+
+
+/* =====================================================
+   تحميل متطلبات المهام
+===================================================== */
+
+async function loadTaskRequirements() {
+
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("task_requirements")
+        .select(`
+            id,
+            task_id,
+            skill_id,
+            required_level,
+            experience_required,
+            availability_required,
+            skill_weight
+        `);
+
+
+
+    if (error) {
+
+
+        console.error(
+            "خطأ تحميل متطلبات المهام:",
+            error
+        );
+
+
+        taskRequirements = [];
+
+
+        throw new Error(
+            "تعذر تحميل متطلبات المهام"
+        );
+
+    }
+
+
+
+    taskRequirements =
+        data || [];
+
+}
+
+
+
+/* =====================================================
+   تشغيل المطابقة
+===================================================== */
+
+async function startMatching() {
+
 
     const taskId =
-        Number(
-            document
-                .getElementById(
-                    "taskSelect"
-                )
-                .value
-        );
+        document
+            .getElementById(
+                "taskSelect"
+            )
+            .value;
+
 
 
     if (!taskId) {
 
+
         alert(
             "اختر مهمة أولاً"
         );
+
 
         return;
 
@@ -841,52 +1027,26 @@ function startMatching() {
         tasks.find(
             function(task) {
 
+
                 return (
                     Number(task.id)
                     ===
-                    taskId
+                    Number(taskId)
                 );
+
 
             }
         );
 
 
+
     if (!selectedTask) {
+
 
         alert(
             "تعذر العثور على المهمة"
         );
 
-        return;
-
-    }
-
-
-
-    const requirements =
-        taskRequirements.filter(
-            function(requirement) {
-
-                return (
-                    Number(
-                        requirement.task_id
-                    )
-                    ===
-                    Number(
-                        selectedTask.id
-                    )
-                );
-
-            }
-        );
-
-
-
-    if (requirements.length === 0) {
-
-        alert(
-            "هذه المهمة لا تحتوي على متطلبات مطابقة حتى الآن"
-        );
 
         return;
 
@@ -894,147 +1054,235 @@ function startMatching() {
 
 
 
-    showTaskSummary(
-        selectedTask,
-        requirements
-    );
+    const button =
+        document.getElementById(
+            "matchingButton"
+        );
 
 
 
-    candidates =
-        employees
-            .map(
-                function(employee) {
+    button.disabled =
+        true;
 
-                    return calculateCandidate(
-                        employee,
-                        requirements
-                    );
 
-                }
-            )
-            .sort(
-                function(a, b) {
+    button.textContent =
+        "جارٍ المطابقة...";
+
+
+
+    try {
+
+
+        await Promise.all([
+
+            loadEmployees(),
+
+            loadSkills(),
+
+            loadEmployeeSkills(),
+
+            loadTaskRequirements()
+
+        ]);
+
+
+
+        if (
+            employees.length === 0
+        ) {
+
+
+            alert(
+                "لا توجد بيانات موظفين لإجراء المطابقة"
+            );
+
+
+            return;
+
+        }
+
+
+
+        selectedRequirements =
+            taskRequirements.filter(
+                function(requirement) {
+
 
                     return (
-                        b.score
-                        -
-                        a.score
+                        Number(requirement.task_id)
+                        ===
+                        Number(selectedTask.id)
                     );
+
 
                 }
             );
 
 
 
-    document
-        .getElementById(
-            "emptyMatching"
-        )
-        .classList.add(
-            "hidden"
+        if (
+            selectedRequirements.length === 0
+        ) {
+
+
+            alert(
+                "هذه المهمة لا تحتوي على متطلبات مطابقة حتى الآن"
+            );
+
+
+            return;
+
+        }
+
+
+
+        showTaskSummary();
+
+
+
+        candidates =
+            employees
+                .map(
+                    function(employee) {
+
+
+                        return calculateEmployeeMatch(
+                            employee
+                        );
+
+
+                    }
+                )
+                .sort(
+                    function(a, b) {
+
+
+                        return (
+                            b.score
+                            -
+                            a.score
+                        );
+
+
+                    }
+                );
+
+
+
+        document
+            .getElementById(
+                "emptyMatching"
+            )
+            .classList
+            .add(
+                "hidden"
+            );
+
+
+
+        document
+            .getElementById(
+                "resultsSection"
+            )
+            .classList
+            .remove(
+                "hidden"
+            );
+
+
+
+        renderCandidates();
+
+
+    }
+
+    catch(error) {
+
+
+        console.error(
+            "خطأ المطابقة:",
+            error
         );
 
 
-    document
-        .getElementById(
-            "taskSummary"
-        )
-        .classList.remove(
-            "hidden"
+        alert(
+            "تعذر تشغيل المطابقة.\n\n"
+            +
+            (
+                error.message
+                ||
+                "حدث خطأ غير معروف"
+            )
         );
 
 
-    document
-        .getElementById(
-            "resultsSection"
-        )
-        .classList.remove(
-            "hidden"
-        );
+    }
+
+    finally {
 
 
-    renderCandidates();
+        button.disabled =
+            false;
+
+
+        button.textContent =
+            "بدء المطابقة";
+
+
+    }
 
 }
 
 
 
-/* ===============================
-   ملخص المهمة
-================================ */
+/* =====================================================
+   عرض ملخص المهمة
+===================================================== */
 
-function showTaskSummary(
-    task,
-    requirements
-) {
+function showTaskSummary() {
 
 
     const project =
         projects.find(
             function(item) {
 
+
                 return (
                     Number(item.id)
                     ===
-                    Number(task.project_id)
+                    Number(selectedTask.project_id)
                 );
+
 
             }
         );
 
 
 
+    const requiredExperience =
+        getRequiredExperience();
+
+
+
     const requiredSkills =
-        requirements
-            .map(
-                function(requirement) {
+        selectedRequirements.map(
+            function(requirement) {
 
 
-                    const skill =
-                        skills.find(
-                            function(item) {
-
-                                return (
-                                    Number(item.id)
-                                    ===
-                                    Number(
-                                        requirement.skill_id
-                                    )
-                                );
-
-                            }
-                        );
-
-
-                    if (!skill) {
-                        return "";
-                    }
-
-
-                    return (
-                        skill.skill_name
+                const skill =
+                    getSkillById(
+                        requirement.skill_id
                     );
 
-                }
-            )
-            .filter(Boolean);
+
+                return skill
+                    ?
+                    skill.skill_name
+                    :
+                    "مهارة غير محددة";
 
 
-
-    const experienceRequired =
-        Math.max(
-            0,
-            ...requirements.map(
-                function(item) {
-
-                    return Number(
-                        item.experience_required
-                        || 0
-                    );
-
-                }
-            )
+            }
         );
 
 
@@ -1044,7 +1292,10 @@ function showTaskSummary(
             "summaryTaskName"
         )
         .textContent =
-        task.task_name || "-";
+        selectedTask.task_name
+        ||
+        "-";
+
 
 
     document
@@ -1052,14 +1303,10 @@ function showTaskSummary(
             "summaryProject"
         )
         .textContent =
-        project
-        ?
-        (
-            project.project_name
-            || "-"
-        )
-        :
+        project?.project_name
+        ||
         "-";
+
 
 
     document
@@ -1067,7 +1314,10 @@ function showTaskSummary(
             "summaryPriority"
         )
         .textContent =
-        task.priority || "-";
+        selectedTask.priority
+        ||
+        "-";
+
 
 
     document
@@ -1075,11 +1325,14 @@ function showTaskSummary(
             "summaryExperience"
         )
         .textContent =
-        experienceRequired > 0
+        requiredExperience > 0
         ?
-        experienceRequired + " سنوات"
+        requiredExperience
+        +
+        " سنوات"
         :
         "غير محدد";
+
 
 
     document
@@ -1087,91 +1340,119 @@ function showTaskSummary(
             "summarySkills"
         )
         .textContent =
-        requiredSkills.length
+        requiredSkills.length > 0
         ?
         requiredSkills.join("، ")
         :
-        "غير محددة";
+        "-";
+
+
+
+    document
+        .getElementById(
+            "taskSummary"
+        )
+        .classList
+        .remove(
+            "hidden"
+        );
 
 }
 
 
 
-/* ===============================
-   حساب المطابقة
-================================ */
+/* =====================================================
+   حساب مطابقة الموظف
+===================================================== */
 
-function calculateCandidate(
-    employee,
-    requirements
+function calculateEmployeeMatch(
+    employee
 ) {
+
+
+    const employeeId =
+        Number(
+            employee.id
+        );
+
 
 
     const employeeSkillRows =
         employeeSkills.filter(
-            function(item) {
+            function(row) {
+
 
                 return (
-                    Number(
-                        item.employee_id
-                    )
+                    Number(row.employee_id)
                     ===
-                    Number(
-                        employee.id
-                    )
+                    employeeId
                 );
+
 
             }
         );
 
 
 
-    let totalWeight = 0;
+    /* =====================================
+       1- المهارات = 60%
+    ===================================== */
 
-    let achievedWeight = 0;
-
-    let matchedSkills = [];
-
-    let missingSkills = [];
-
+    let totalSkillWeight =
+        0;
 
 
-    requirements.forEach(
+    let achievedSkillWeight =
+        0;
+
+
+    let matchedSkillNames =
+        [];
+
+
+    let skillDetails =
+        [];
+
+
+
+    selectedRequirements.forEach(
         function(requirement) {
 
 
-            const weight =
+            const skillWeight =
                 Number(
                     requirement.skill_weight
-                    || 1
+                    ||
+                    1
                 );
+
 
 
             const requiredLevel =
                 Number(
                     requirement.required_level
-                    || 1
+                    ||
+                    1
                 );
 
 
-            totalWeight +=
-                weight;
+
+            totalSkillWeight +=
+                skillWeight;
 
 
 
             const employeeSkill =
                 employeeSkillRows.find(
-                    function(item) {
+                    function(row) {
+
 
                         return (
-                            Number(
-                                item.skill_id
-                            )
+                            Number(row.skill_id)
                             ===
-                            Number(
-                                requirement.skill_id
-                            )
+                            Number(requirement.skill_id)
                         );
+
 
                     }
                 );
@@ -1179,35 +1460,30 @@ function calculateCandidate(
 
 
             const skill =
-                skills.find(
-                    function(item) {
-
-                        return (
-                            Number(item.id)
-                            ===
-                            Number(
-                                requirement.skill_id
-                            )
-                        );
-
-                    }
+                getSkillById(
+                    requirement.skill_id
                 );
 
 
+
             const skillName =
-                skill
-                ?
-                skill.skill_name
-                :
-                "مهارة";
+                skill?.skill_name
+                ||
+                "مهارة غير محددة";
 
 
 
             if (!employeeSkill) {
 
-                missingSkills.push(
+
+                skillDetails.push(
+
                     skillName
+                    +
+                    ": غير متوفرة"
+
                 );
+
 
                 return;
 
@@ -1218,271 +1494,439 @@ function calculateCandidate(
             const employeeLevel =
                 Number(
                     employeeSkill.skill_level
-                    || 0
+                    ||
+                    0
                 );
 
 
 
-            const ratio =
-                Math.min(
-                    employeeLevel
-                    /
-                    Math.max(
-                        requiredLevel,
-                        1
-                    ),
+            let levelRatio =
+                requiredLevel > 0
+                ?
+                employeeLevel
+                /
+                requiredLevel
+                :
+                1;
+
+
+
+            levelRatio =
+                clamp(
+                    levelRatio,
+                    0,
                     1
                 );
 
 
-            achievedWeight +=
-                weight * ratio;
+
+            achievedSkillWeight +=
+
+                skillWeight
+                *
+                levelRatio;
 
 
 
             if (
-                employeeLevel
-                >=
+                employeeLevel >=
                 requiredLevel
             ) {
 
-                matchedSkills.push(
+
+                matchedSkillNames.push(
                     skillName
                 );
+
+
+                skillDetails.push(
+
+                    skillName
+                    +
+                    ": مطابق"
+
+                );
+
 
             }
 
             else {
 
-                matchedSkills.push(
+
+                skillDetails.push(
+
                     skillName
                     +
-                    " جزئياً"
+                    ": المستوى أقل من المطلوب"
+
                 );
 
+
             }
+
 
         }
     );
 
 
 
-    const skillsScore =
-        totalWeight > 0
-        ?
-        (
-            achievedWeight
-            /
-            totalWeight
-        )
-        *
-        100
-        :
+    let skillsPercentage =
         0;
 
 
 
-    /* =========================
-       الخبرة
-    ========================== */
+    if (
+        totalSkillWeight > 0
+    ) {
+
+
+        skillsPercentage =
+
+            (
+                achievedSkillWeight
+                /
+                totalSkillWeight
+            )
+
+            *
+            100;
+
+
+    }
+
+
+
+    const skillsScore =
+        (
+            skillsPercentage
+            /
+            100
+        )
+        *
+        60;
+
+
+
+    /* =====================================
+       2- الخبرة = 15%
+    ===================================== */
 
     const requiredExperience =
-        Math.max(
-            0,
-            ...requirements.map(
-                function(item) {
+        getRequiredExperience();
 
-                    return Number(
-                        item.experience_required
-                        || 0
-                    );
-
-                }
-            )
-        );
 
 
     const employeeExperience =
         Number(
             employee.experience_years
-            || 0
+            ||
+            0
         );
 
 
-    let experienceScore =
-        100;
+
+    let experienceRatio =
+        1;
+
 
 
     if (
         requiredExperience > 0
     ) {
 
-        experienceScore =
-            Math.min(
-                employeeExperience
-                /
-                requiredExperience,
+
+        experienceRatio =
+
+            employeeExperience
+            /
+            requiredExperience;
+
+
+
+        experienceRatio =
+            clamp(
+                experienceRatio,
+                0,
                 1
-            )
-            *
-            100;
+            );
+
 
     }
 
 
 
-    /* =========================
-       التفرغ
-    ========================== */
+    const experienceScore =
+        experienceRatio
+        *
+        15;
+
+
+
+    /* =====================================
+       3- التفرغ = 15%
+    ===================================== */
 
     const requiredAvailability =
-        Math.max(
-            0,
-            ...requirements.map(
-                function(item) {
+        getRequiredAvailability();
 
-                    return Number(
-                        item.availability_required
-                        || 0
-                    );
-
-                }
-            )
-        );
 
 
     const employeeAvailability =
-        Number(
-            employee.availability
-            || 0
+        clamp(
+            Number(
+                employee.availability
+                ||
+                0
+            ),
+            0,
+            100
         );
 
 
-    let availabilityScore =
-        100;
+
+    let availabilityRatio =
+        1;
+
 
 
     if (
         requiredAvailability > 0
     ) {
 
-        availabilityScore =
-            Math.min(
-                employeeAvailability
-                /
-                requiredAvailability,
+
+        availabilityRatio =
+
+            employeeAvailability
+            /
+            requiredAvailability;
+
+
+
+        availabilityRatio =
+            clamp(
+                availabilityRatio,
+                0,
                 1
-            )
-            *
-            100;
+            );
+
 
     }
 
 
 
-    /* =========================
-       النتيجة النهائية
+    const availabilityScore =
+        availabilityRatio
+        *
+        15;
 
-       المهارات 60%
-       الخبرة 20%
-       التفرغ 20%
-    ========================== */
 
-    const finalScore =
-        Math.round(
 
-            skillsScore * 0.60
+    /* =====================================
+       4- ضغط العمل = 5%
+    ===================================== */
 
-            +
-
-            experienceScore * 0.20
-
-            +
-
-            availabilityScore * 0.20
-
+    const workload =
+        clamp(
+            Number(
+                employee.workload
+                ||
+                0
+            ),
+            0,
+            100
         );
 
 
 
-    /* =========================
-       سبب الترشيح
-    ========================== */
+    const workloadScore =
 
-    let reasons = [];
+        (
+            100
+            -
+            workload
+        )
+
+        /
+        100
+
+        *
+        5;
+
+
+
+    /* =====================================
+       5- الحالة = 5%
+    ===================================== */
+
+    let statusScore =
+        0;
+
 
 
     if (
-        matchedSkills.length > 0
+        employee.status ===
+        "متاح"
     ) {
+
+
+        statusScore =
+            5;
+
+
+    }
+
+    else if (
+        employee.status ===
+        "مشغول"
+    ) {
+
+
+        statusScore =
+            1;
+
+
+    }
+
+
+
+    /* =====================================
+       النتيجة النهائية
+    ===================================== */
+
+    let finalScore =
+
+        skillsScore
+
+        +
+
+        experienceScore
+
+        +
+
+        availabilityScore
+
+        +
+
+        workloadScore
+
+        +
+
+        statusScore;
+
+
+
+    finalScore =
+        Math.round(
+            clamp(
+                finalScore,
+                0,
+                100
+            )
+        );
+
+
+
+    /* =====================================
+       سبب التوصية
+    ===================================== */
+
+    const reasons =
+        [];
+
+
+
+    if (
+        matchedSkillNames.length > 0
+    ) {
+
 
         reasons.push(
 
-            "لديه "
+            "يطابق "
             +
-            matchedSkills.length
+            matchedSkillNames.length
             +
             " من المهارات المطلوبة"
 
         );
 
+
     }
 
 
+
     if (
-        requiredExperience > 0
-        &&
-        employeeExperience
-        >=
+        requiredExperience === 0
+        ||
+        employeeExperience >=
         requiredExperience
     ) {
 
+
         reasons.push(
-            "يحقق الخبرة المطلوبة"
+            "خبرته مناسبة للمهمة"
         );
+
 
     }
 
 
+
     if (
-        requiredAvailability > 0
-        &&
-        employeeAvailability
-        >=
+        requiredAvailability === 0
+        ||
+        employeeAvailability >=
         requiredAvailability
     ) {
 
+
         reasons.push(
-            "يحقق نسبة التفرغ المطلوبة"
+            "نسبة التفرغ مناسبة"
         );
 
+
     }
+
 
 
     if (
-        missingSkills.length > 0
+        workload <= 40
     ) {
 
+
         reasons.push(
-
-            "تنقصه "
-            +
-            missingSkills.length
-            +
-            " من المهارات المطلوبة"
-
+            "ضغط العمل منخفض"
         );
 
+
     }
+
+
+
+    if (
+        employee.status ===
+        "متاح"
+    ) {
+
+
+        reasons.push(
+            "الموظف متاح حالياً"
+        );
+
+
+    }
+
 
 
     if (
         reasons.length === 0
     ) {
 
+
         reasons.push(
-            "تم احتساب النتيجة وفق البيانات المسجلة"
+            "درجة التوافق محدودة مقارنة بباقي المرشحين"
         );
+
 
     }
 
@@ -1496,70 +1940,77 @@ function calculateCandidate(
 
 
         name:
-            employee.name || "موظف",
+            employee.name
+            ||
+            "-",
 
 
         title:
-            employee.job_title || "-",
+            employee.job_title
+            ||
+            "-",
 
 
-        experience:
-            employeeExperience
-            +
-            " سنوات",
+        department:
+            employee.department
+            ||
+            "-",
 
 
-        availability:
+        employeeNumber:
+            employee.employee_number
+            ||
+            "-",
+
+
+        experienceYears:
+            employeeExperience,
+
+
+        jobLevel:
+            employee.job_level
+            ||
+            "-",
+
+
+        availabilityValue:
             employeeAvailability,
 
 
-        workload:
-            Number(
-                employee.workload
-                || 0
-            ),
+        workloadValue:
+            workload,
 
 
         status:
-            employee.status || "-",
+            employee.status
+            ||
+            "-",
 
 
         score:
             finalScore,
 
 
-        skills:
-            matchedSkills.length
+        skillsScore:
+            Math.round(
+                skillsPercentage
+            ),
+
+
+        matchedSkills:
+            matchedSkillNames.length > 0
             ?
-            matchedSkills.join("، ")
+            matchedSkillNames.join("، ")
             :
-            "لا توجد مهارات مطابقة",
+            "لا توجد مهارات مكتملة المطابقة",
 
 
-        missingSkills:
-            missingSkills,
+        skillDetails:
+            skillDetails.join("، "),
 
 
         reason:
-            reasons.join("، "),
-
-
-        skillsScore:
-            Math.round(
-                skillsScore
-            ),
-
-
-        experienceScore:
-            Math.round(
-                experienceScore
-            ),
-
-
-        availabilityScore:
-            Math.round(
-                availabilityScore
-            )
+            reasons.join("، ")
 
 
     };
@@ -1568,11 +2019,127 @@ function calculateCandidate(
 
 
 
-/* ===============================
+/* =====================================================
+   الخبرة المطلوبة
+===================================================== */
+
+function getRequiredExperience() {
+
+
+    if (
+        selectedRequirements.length === 0
+    ) {
+
+
+        return 0;
+
+    }
+
+
+
+    const values =
+        selectedRequirements
+            .map(
+                function(requirement) {
+
+
+                    return Number(
+                        requirement.experience_required
+                        ||
+                        0
+                    );
+
+
+                }
+            );
+
+
+
+    return Math.max(
+        ...values,
+        0
+    );
+
+}
+
+
+
+/* =====================================================
+   التفرغ المطلوب
+===================================================== */
+
+function getRequiredAvailability() {
+
+
+    if (
+        selectedRequirements.length === 0
+    ) {
+
+
+        return 0;
+
+    }
+
+
+
+    const values =
+        selectedRequirements
+            .map(
+                function(requirement) {
+
+
+                    return Number(
+                        requirement.availability_required
+                        ||
+                        0
+                    );
+
+
+                }
+            );
+
+
+
+    return Math.max(
+        ...values,
+        0
+    );
+
+}
+
+
+
+/* =====================================================
+   البحث عن المهارة
+===================================================== */
+
+function getSkillById(id) {
+
+
+    return skills.find(
+        function(skill) {
+
+
+            return (
+                Number(skill.id)
+                ===
+                Number(id)
+            );
+
+
+        }
+    );
+
+}
+
+
+
+/* =====================================================
    عرض المرشحين
-================================ */
+===================================================== */
 
 function renderCandidates() {
+
 
     const container =
         document.getElementById(
@@ -1580,21 +2147,27 @@ function renderCandidates() {
         );
 
 
+
     container.innerHTML =
         "";
+
 
 
     if (
         candidates.length === 0
     ) {
 
+
         container.innerHTML = `
 
             <div class="no-candidates">
+
                 لا توجد نتائج مطابقة حالياً
+
             </div>
 
         `;
+
 
         return;
 
@@ -1614,6 +2187,7 @@ function renderCandidates() {
 
             card.className =
                 "candidate-card";
+
 
 
             card.innerHTML = `
@@ -1639,9 +2213,11 @@ function renderCandidates() {
                                 مرشح
                             </span>
 
+
                             <h3>
                                 ${escapeHtml(candidate.name)}
                             </h3>
+
 
                             <p>
                                 ${escapeHtml(candidate.title)}
@@ -1678,7 +2254,7 @@ function renderCandidates() {
                             </span>
 
                             <strong>
-                                ${escapeHtml(candidate.skills)}
+                                ${escapeHtml(candidate.matchedSkills)}
                             </strong>
 
                         </div>
@@ -1692,7 +2268,11 @@ function renderCandidates() {
                             </span>
 
                             <strong>
-                                ${escapeHtml(candidate.experience)}
+
+                                ${candidate.experienceYears}
+
+                                سنوات
+
                             </strong>
 
                         </div>
@@ -1706,7 +2286,7 @@ function renderCandidates() {
                             </span>
 
                             <strong>
-                                ${candidate.workload}%
+                                ${candidate.workloadValue}%
                             </strong>
 
                         </div>
@@ -1749,17 +2329,18 @@ function renderCandidates() {
 
                         <button
                             class="details-btn"
-                            type="button"
                             onclick="viewCandidate(${candidate.id})"
+                            type="button"
                         >
                             عرض التفاصيل
                         </button>
 
 
+
                         <button
                             class="approve-btn"
-                            type="button"
                             onclick="approveCandidate(${candidate.id})"
+                            type="button"
                         >
                             اعتماد الترشيح
                         </button>
@@ -1774,9 +2355,11 @@ function renderCandidates() {
             `;
 
 
+
             container.appendChild(
                 card
             );
+
 
         }
     );
@@ -1785,15 +2368,17 @@ function renderCandidates() {
 
 
 
-/* ===============================
+/* =====================================================
    تفاصيل المرشح
-================================ */
+===================================================== */
 
 function viewCandidate(id) {
+
 
     const candidate =
         candidates.find(
             function(item) {
+
 
                 return (
                     Number(item.id)
@@ -1801,11 +2386,14 @@ function viewCandidate(id) {
                     Number(id)
                 );
 
+
             }
         );
 
 
+
     if (!candidate) {
+
 
         return;
 
@@ -1840,11 +2428,39 @@ function viewCandidate(id) {
                 <div class="detail-item">
 
                     <span>
+                        الرقم الوظيفي
+                    </span>
+
+                    <strong>
+                        ${escapeHtml(candidate.employeeNumber)}
+                    </strong>
+
+                </div>
+
+
+
+                <div class="detail-item">
+
+                    <span>
                         المسمى الوظيفي
                     </span>
 
                     <strong>
                         ${escapeHtml(candidate.title)}
+                    </strong>
+
+                </div>
+
+
+
+                <div class="detail-item">
+
+                    <span>
+                        القسم
+                    </span>
+
+                    <strong>
+                        ${escapeHtml(candidate.department)}
                     </strong>
 
                 </div>
@@ -1882,11 +2498,15 @@ function viewCandidate(id) {
                 <div class="detail-item">
 
                     <span>
-                        توافق الخبرة
+                        سنوات الخبرة
                     </span>
 
                     <strong>
-                        ${candidate.experienceScore}%
+
+                        ${candidate.experienceYears}
+
+                        سنوات
+
                     </strong>
 
                 </div>
@@ -1896,11 +2516,11 @@ function viewCandidate(id) {
                 <div class="detail-item">
 
                     <span>
-                        توافق التفرغ
+                        المستوى الوظيفي
                     </span>
 
                     <strong>
-                        ${candidate.availabilityScore}%
+                        ${escapeHtml(candidate.jobLevel)}
                     </strong>
 
                 </div>
@@ -1910,11 +2530,11 @@ function viewCandidate(id) {
                 <div class="detail-item">
 
                     <span>
-                        الخبرة
+                        نسبة التفرغ
                     </span>
 
                     <strong>
-                        ${escapeHtml(candidate.experience)}
+                        ${candidate.availabilityValue}%
                     </strong>
 
                 </div>
@@ -1928,34 +2548,56 @@ function viewCandidate(id) {
                     </span>
 
                     <strong>
-                        ${candidate.workload}%
+                        ${candidate.workloadValue}%
                     </strong>
 
                 </div>
 
 
 
-                <div class="
-                    detail-item
-                    full-detail
-                ">
+                <div class="detail-item">
+
+                    <span>
+                        الحالة
+                    </span>
+
+                    <strong>
+                        ${escapeHtml(candidate.status)}
+                    </strong>
+
+                </div>
+
+
+
+                <div class="detail-item full-detail">
 
                     <span>
                         المهارات المطابقة
                     </span>
 
                     <strong>
-                        ${escapeHtml(candidate.skills)}
+                        ${escapeHtml(candidate.matchedSkills)}
                     </strong>
 
                 </div>
 
 
 
-                <div class="
-                    detail-item
-                    full-detail
-                ">
+                <div class="detail-item full-detail">
+
+                    <span>
+                        تفاصيل المهارات
+                    </span>
+
+                    <strong>
+                        ${escapeHtml(candidate.skillDetails)}
+                    </strong>
+
+                </div>
+
+
+
+                <div class="detail-item full-detail">
 
                     <span>
                         سبب التوصية
@@ -1970,7 +2612,6 @@ function viewCandidate(id) {
 
             </div>
 
-
         `;
 
 
@@ -1979,7 +2620,8 @@ function viewCandidate(id) {
         .getElementById(
             "candidateModal"
         )
-        .classList.add(
+        .classList
+        .add(
             "show"
         );
 
@@ -1987,17 +2629,19 @@ function viewCandidate(id) {
 
 
 
-/* ===============================
-   إغلاق تفاصيل المرشح
-================================ */
+/* =====================================================
+   إغلاق التفاصيل
+===================================================== */
 
 function closeCandidateModal() {
+
 
     document
         .getElementById(
             "candidateModal"
         )
-        .classList.remove(
+        .classList
+        .remove(
             "show"
         );
 
@@ -2005,28 +2649,17 @@ function closeCandidateModal() {
 
 
 
-/* ===============================
+/* =====================================================
    اعتماد الترشيح
-================================ */
+===================================================== */
 
 async function approveCandidate(id) {
-
-
-    if (!selectedTask) {
-
-        alert(
-            "اختر مهمة أولاً"
-        );
-
-        return;
-
-    }
-
 
 
     const candidate =
         candidates.find(
             function(item) {
+
 
                 return (
                     Number(item.id)
@@ -2034,11 +2667,18 @@ async function approveCandidate(id) {
                     Number(id)
                 );
 
+
             }
         );
 
 
-    if (!candidate) {
+
+    if (
+        !candidate
+        ||
+        !selectedTask
+    ) {
+
 
         return;
 
@@ -2048,17 +2688,21 @@ async function approveCandidate(id) {
 
     const confirmed =
         confirm(
-
-            "هل تريد اعتماد ترشيح "
+            "هل تريد اعتماد "
             +
             candidate.name
             +
-            " لهذه المهمة؟"
-
+            " للمهمة "
+            +
+            selectedTask.task_name
+            +
+            "؟"
         );
 
 
+
     if (!confirmed) {
+
 
         return;
 
@@ -2068,15 +2712,13 @@ async function approveCandidate(id) {
 
     const {
         error
-    } = await supabase
+    } =
+    await supabaseClient
         .from("tasks")
         .update({
 
             assigned_employee_id:
-                Number(candidate.id),
-
-            status:
-                "قيد التنفيذ"
+                Number(candidate.id)
 
         })
         .eq(
@@ -2090,14 +2732,17 @@ async function approveCandidate(id) {
 
 
         console.error(
-            "Approve error:",
+            "خطأ اعتماد الترشيح:",
             error
         );
 
 
         alert(
-            "تعذر اعتماد الترشيح"
+            "تعذر اعتماد الترشيح.\n\n"
+            +
+            error.message
         );
+
 
         return;
 
@@ -2109,24 +2754,56 @@ async function approveCandidate(id) {
         Number(candidate.id);
 
 
-    selectedTask.status =
-        "قيد التنفيذ";
-
-
 
     alert(
-        "تم اعتماد ترشيح الموظف للمهمة بنجاح"
+
+        "تم اعتماد "
+        +
+        candidate.name
+        +
+        " للمهمة بنجاح.\n"
+        +
+        "نسبة التوافق: "
+        +
+        candidate.score
+        +
+        "%"
+
     );
 
 }
 
 
 
-/* ===============================
+/* =====================================================
+   حدود الأرقام
+===================================================== */
+
+function clamp(
+    value,
+    min,
+    max
+) {
+
+
+    return Math.min(
+        Math.max(
+            Number(value),
+            min
+        ),
+        max
+    );
+
+}
+
+
+
+/* =====================================================
    حماية النصوص
-================================ */
+===================================================== */
 
 function escapeHtml(value) {
+
 
     return String(
         value ?? ""
@@ -2161,14 +2838,114 @@ function escapeHtml(value) {
 
 
 
-/* ===============================
+/* =====================================================
+   سايد بار الجوال
+===================================================== */
+
+const mobileMenuBtn =
+    document.getElementById(
+        "mobileMenuBtn"
+    );
+
+
+const sidebar =
+    document.getElementById(
+        "sidebar"
+    );
+
+
+const sidebarOverlay =
+    document.getElementById(
+        "sidebarOverlay"
+    );
+
+
+
+function openSidebar() {
+
+
+    sidebar.classList.add(
+        "show"
+    );
+
+
+    sidebarOverlay.classList.add(
+        "show"
+    );
+
+
+    document.body.classList.add(
+        "menu-open"
+    );
+
+}
+
+
+
+function closeSidebar() {
+
+
+    sidebar.classList.remove(
+        "show"
+    );
+
+
+    sidebarOverlay.classList.remove(
+        "show"
+    );
+
+
+    document.body.classList.remove(
+        "menu-open"
+    );
+
+}
+
+
+
+mobileMenuBtn.addEventListener(
+    "click",
+    openSidebar
+);
+
+
+
+sidebarOverlay.addEventListener(
+    "click",
+    closeSidebar
+);
+
+
+
+document
+    .querySelectorAll(
+        ".nav-link"
+    )
+    .forEach(
+        function(link) {
+
+
+            link.addEventListener(
+                "click",
+                closeSidebar
+            );
+
+
+        }
+    );
+
+
+
+/* =====================================================
    تسجيل الخروج
-================================ */
+===================================================== */
 
 async function logout() {
 
 
-    await supabase.auth.signOut();
+    await supabaseClient
+        .auth
+        .signOut();
 
 
     localStorage.removeItem(
@@ -2188,36 +2965,37 @@ async function logout() {
 
 
 
-/* ===============================
-   ربط الدوال بالأزرار
-================================ */
-
-window.startMatching =
-    startMatching;
-
-
-window.viewCandidate =
-    viewCandidate;
-
-
-window.closeCandidateModal =
-    closeCandidateModal;
-
-
-window.approveCandidate =
-    approveCandidate;
-
-
-window.logout =
-    logout;
-
-
-
-/* ===============================
+/* =====================================================
    تشغيل الصفحة
-================================ */
+===================================================== */
 
-loadData();
+async function startPage() {
+
+
+    const allowed =
+        await protectPage();
+
+
+
+    if (!allowed) {
+
+
+        return;
+
+    }
+
+
+
+    await loadProjects();
+
+
+    await loadTasks();
+
+}
+
+
+
+startPage();
 
 
 </script>
