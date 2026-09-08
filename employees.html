@@ -12,6 +12,9 @@
     <title>معيار | الموظفون</title>
 
     <link rel="stylesheet" href="employees.css">
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
@@ -44,7 +47,6 @@
     </header>
 
 
-    <!-- خلفية السايد بار في الجوال -->
     <div
         class="sidebar-overlay"
         id="sidebarOverlay"
@@ -118,7 +120,6 @@
     <!-- المحتوى -->
     <main class="main-content">
 
-        <!-- رأس الصفحة -->
         <header class="topbar">
 
             <span class="page-badge">
@@ -130,13 +131,13 @@
             </h1>
 
             <p>
-                إدارة بيانات الموظفين ومهاراتهم وحالتهم الحالية
+                إدارة بيانات الموظفين وحالتهم الحالية
             </p>
 
         </header>
 
 
-        <!-- أدوات الصفحة -->
+        <!-- الأدوات -->
         <section class="toolbar">
 
             <div class="search-box">
@@ -238,7 +239,7 @@
                 </h2>
 
                 <p>
-                    سيتم عرض بيانات الموظفين هنا بعد إضافتها أو ربط قاعدة البيانات
+                    البيانات المعروضة هنا مرتبطة بقاعدة البيانات
                 </p>
 
             </div>
@@ -270,7 +271,7 @@
                             <td colspan="7">
 
                                 <div class="empty-table">
-                                    لا توجد بيانات موظفين حالياً
+                                    جارٍ تحميل البيانات...
                                 </div>
 
                             </td>
@@ -337,6 +338,7 @@
 
             <div class="form-grid">
 
+
                 <div class="form-group">
 
                     <label for="employeeName">
@@ -346,7 +348,6 @@
                     <input
                         type="text"
                         id="employeeName"
-                        placeholder="اكتب اسم الموظف"
                         required
                     >
 
@@ -362,7 +363,21 @@
                     <input
                         type="text"
                         id="employeeNumber"
-                        placeholder="مثال: 1001"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="employeeEmail">
+                        البريد الإلكتروني
+                    </label>
+
+                    <input
+                        type="email"
+                        id="employeeEmail"
                         required
                     >
 
@@ -378,7 +393,6 @@
                     <input
                         type="text"
                         id="employeeDepartment"
-                        placeholder="اكتب القسم"
                         required
                     >
 
@@ -394,7 +408,6 @@
                     <input
                         type="text"
                         id="employeeTitle"
-                        placeholder="اكتب المسمى الوظيفي"
                         required
                     >
 
@@ -411,9 +424,33 @@
                         type="number"
                         id="employeeExperience"
                         min="0"
-                        placeholder="عدد سنوات الخبرة"
                         required
                     >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="employeeLevel">
+                        المستوى الوظيفي
+                    </label>
+
+                    <select id="employeeLevel">
+
+                        <option value="مبتدئ">
+                            مبتدئ
+                        </option>
+
+                        <option value="متوسط">
+                            متوسط
+                        </option>
+
+                        <option value="متقدم">
+                            متقدم
+                        </option>
+
+                    </select>
 
                 </div>
 
@@ -439,30 +476,36 @@
                 </div>
 
 
-                <div class="form-group full-width">
+                <div class="form-group">
 
-                    <label for="employeeSkills">
-                        المهارات
+                    <label for="employeeAvailability">
+                        نسبة التفرغ %
                     </label>
 
-                    <textarea
-                        id="employeeSkills"
-                        placeholder="مثال: إدارة المشاريع، تحليل البيانات، التواصل"
-                    ></textarea>
+                    <input
+                        type="number"
+                        id="employeeAvailability"
+                        min="0"
+                        max="100"
+                        value="100"
+                    >
 
                 </div>
 
 
-                <div class="form-group full-width">
+                <div class="form-group">
 
-                    <label for="employeeTasks">
-                        المهام الحالية
+                    <label for="employeeWorkload">
+                        ضغط العمل %
                     </label>
 
-                    <textarea
-                        id="employeeTasks"
-                        placeholder="اكتب المهام الحالية إن وجدت"
-                    ></textarea>
+                    <input
+                        type="number"
+                        id="employeeWorkload"
+                        min="0"
+                        max="100"
+                        value="0"
+                    >
 
                 </div>
 
@@ -482,6 +525,7 @@
                 <button
                     type="submit"
                     class="save-btn"
+                    id="saveEmployeeBtn"
                 >
                     حفظ الموظف
                 </button>
@@ -495,7 +539,7 @@
 </div>
 
 
-<!-- نافذة التفاصيل -->
+<!-- التفاصيل -->
 <div
     class="modal"
     id="detailsModal"
@@ -546,178 +590,320 @@
 
 <script>
 
-    const role =
-        localStorage.getItem("miyarRole");
+    /* =========================================
+       Supabase
+    ========================================= */
+
+    const SUPABASE_URL =
+        "https://avooyglxacytrfhvotsl.supabase.co";
 
 
-    if (role !== "admin") {
-
-        alert(
-            "غير مصرح لك بالدخول إلى صفحة الموظفين"
-        );
-
-        window.location.href =
-            "login.html";
-
-    }
+    const SUPABASE_KEY =
+        "sb_publishable_NVlWEnA_w4KbSse_-70zdA_J9ut0Kyo";
 
 
-    const mobileMenuBtn =
-        document.getElementById(
-            "mobileMenuBtn"
-        );
-
-    const sidebar =
-        document.getElementById(
-            "sidebar"
-        );
-
-    const sidebarOverlay =
-        document.getElementById(
-            "sidebarOverlay"
+    const supabaseClient =
+        supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
         );
 
 
-    function openSidebar() {
-
-        sidebar.classList.add("show");
-
-        sidebarOverlay.classList.add("show");
-
-        document.body.classList.add("menu-open");
-
-    }
-
-
-    function closeSidebar() {
-
-        sidebar.classList.remove("show");
-
-        sidebarOverlay.classList.remove("show");
-
-        document.body.classList.remove("menu-open");
-
-    }
-
-
-    mobileMenuBtn.addEventListener(
-        "click",
-        openSidebar
-    );
-
-
-    sidebarOverlay.addEventListener(
-        "click",
-        closeSidebar
-    );
-
-
-    document
-        .querySelectorAll(".nav-link")
-        .forEach(function(link) {
-
-            link.addEventListener(
-                "click",
-                closeSidebar
-            );
-
-        });
+    const ADMIN_EMAIL =
+        "admin@gmail.com";
 
 
     let employees = [];
 
 
-    function openAddModal() {
+    /* =========================================
+       حماية صفحة المسؤول
+    ========================================= */
 
-        document
-            .getElementById("employeeModal")
-            .classList.add("show");
+    async function protectPage() {
+
+        const {
+            data,
+            error
+        } =
+        await supabaseClient
+            .auth
+            .getSession();
+
+
+        if (
+            error
+            ||
+            !data.session
+        ) {
+
+            window.location.href =
+                "login.html";
+
+            return false;
+
+        }
+
+
+        const email =
+            data.session.user.email
+                .toLowerCase();
+
+
+        if (
+            email !==
+            ADMIN_EMAIL.toLowerCase()
+        ) {
+
+            await supabaseClient
+                .auth
+                .signOut();
+
+
+            window.location.href =
+                "login.html";
+
+            return false;
+
+        }
+
+
+        return true;
 
     }
 
 
-    function closeAddModal() {
+    /* =========================================
+       تحميل الموظفين من Supabase
+    ========================================= */
 
-        document
-            .getElementById("employeeModal")
-            .classList.remove("show");
+    async function loadEmployees() {
 
-        document
-            .getElementById("employeeForm")
-            .reset();
+        const table =
+            document.getElementById(
+                "employeesTable"
+            );
+
+
+        table.innerHTML = `
+
+            <tr>
+                <td colspan="7">
+                    <div class="empty-table">
+                        جارٍ تحميل البيانات...
+                    </div>
+                </td>
+            </tr>
+
+        `;
+
+
+        const {
+            data,
+            error
+        } =
+        await supabaseClient
+            .from("employees")
+            .select("*")
+            .order("id", {
+                ascending: false
+            });
+
+
+        if (error) {
+
+            console.error(
+                "خطأ تحميل الموظفين:",
+                error
+            );
+
+
+            table.innerHTML = `
+
+                <tr>
+                    <td colspan="7">
+                        <div class="empty-table">
+                            تعذر تحميل بيانات الموظفين
+                        </div>
+                    </td>
+                </tr>
+
+            `;
+
+            return;
+
+        }
+
+
+        employees =
+            data || [];
+
+
+        renderEmployees(
+            employees
+        );
 
     }
 
 
-    function closeDetailsModal() {
+    /* =========================================
+       إضافة موظف
+    ========================================= */
 
-        document
-            .getElementById("detailsModal")
-            .classList.remove("show");
-
-    }
-
-
-    function addEmployee(event) {
+    async function addEmployee(event) {
 
         event.preventDefault();
 
 
-        const employee = {
+        const saveButton =
+            document.getElementById(
+                "saveEmployeeBtn"
+            );
 
-            id: Date.now(),
+
+        saveButton.disabled = true;
+
+        saveButton.textContent =
+            "جارٍ الحفظ...";
+
+
+        const employeeData = {
 
             name:
                 document
-                    .getElementById("employeeName")
-                    .value,
+                    .getElementById(
+                        "employeeName"
+                    )
+                    .value
+                    .trim(),
 
-            number:
+            employee_number:
                 document
-                    .getElementById("employeeNumber")
-                    .value,
+                    .getElementById(
+                        "employeeNumber"
+                    )
+                    .value
+                    .trim(),
+
+            email:
+                document
+                    .getElementById(
+                        "employeeEmail"
+                    )
+                    .value
+                    .trim()
+                    .toLowerCase(),
 
             department:
                 document
-                    .getElementById("employeeDepartment")
+                    .getElementById(
+                        "employeeDepartment"
+                    )
+                    .value
+                    .trim(),
+
+            job_title:
+                document
+                    .getElementById(
+                        "employeeTitle"
+                    )
+                    .value
+                    .trim(),
+
+            experience_years:
+                Number(
+                    document
+                        .getElementById(
+                            "employeeExperience"
+                        )
+                        .value
+                ),
+
+            job_level:
+                document
+                    .getElementById(
+                        "employeeLevel"
+                    )
                     .value,
 
-            title:
-                document
-                    .getElementById("employeeTitle")
-                    .value,
+            availability:
+                Number(
+                    document
+                        .getElementById(
+                            "employeeAvailability"
+                        )
+                        .value
+                ),
 
-            experience:
-                document
-                    .getElementById("employeeExperience")
-                    .value,
+            workload:
+                Number(
+                    document
+                        .getElementById(
+                            "employeeWorkload"
+                        )
+                        .value
+                ),
 
             status:
                 document
-                    .getElementById("employeeStatus")
-                    .value,
-
-            skills:
-                document
-                    .getElementById("employeeSkills")
-                    .value,
-
-            tasks:
-                document
-                    .getElementById("employeeTasks")
+                    .getElementById(
+                        "employeeStatus"
+                    )
                     .value
 
         };
 
 
-        employees.push(employee);
+        const {
+            error
+        } =
+        await supabaseClient
+            .from("employees")
+            .insert([
+                employeeData
+            ]);
 
-        renderEmployees(employees);
+
+        if (error) {
+
+            console.error(
+                "خطأ إضافة الموظف:",
+                error
+            );
+
+
+            alert(
+                "تعذر إضافة الموظف. تأكدي من إعدادات قاعدة البيانات."
+            );
+
+
+            saveButton.disabled = false;
+
+            saveButton.textContent =
+                "حفظ الموظف";
+
+            return;
+
+        }
+
 
         closeAddModal();
 
+
+        await loadEmployees();
+
+
+        saveButton.disabled = false;
+
+        saveButton.textContent =
+            "حفظ الموظف";
+
     }
 
+
+    /* =========================================
+       عرض الموظفين
+    ========================================= */
 
     function renderEmployees(list) {
 
@@ -753,167 +939,228 @@
         }
 
 
-        list.forEach(function(employee) {
+        list.forEach(
+            function(employee) {
 
-            const row =
-                document.createElement("tr");
+                const row =
+                    document.createElement(
+                        "tr"
+                    );
 
 
-            row.innerHTML = `
+                const status =
+                    employee.status || "-";
 
-                <td>
 
-                    <div class="employee-name">
+                row.innerHTML = `
 
-                        <div class="avatar">
-                            ${employee.name.charAt(0)}
+                    <td>
+
+                        <div class="employee-name">
+
+                            <div class="avatar">
+
+                                ${
+                                    employee.name
+                                    ? employee.name.charAt(0)
+                                    : "م"
+                                }
+
+                            </div>
+
+                            <span>
+                                ${employee.name || "-"}
+                            </span>
+
                         </div>
 
-                        <span>
-                            ${employee.name}
+                    </td>
+
+
+                    <td>
+                        ${employee.employee_number || "-"}
+                    </td>
+
+
+                    <td>
+                        ${employee.department || "-"}
+                    </td>
+
+
+                    <td>
+                        ${employee.job_title || "-"}
+                    </td>
+
+
+                    <td>
+                        ${
+                            employee.experience_years ?? 0
+                        } سنوات
+                    </td>
+
+
+                    <td>
+
+                        <span class="
+                            status-badge
+                            ${
+                                status === "متاح"
+                                ? "available"
+                                : "busy"
+                            }
+                        ">
+
+                            ${status}
+
                         </span>
 
-                    </div>
-
-                </td>
-
-                <td>${employee.number}</td>
-
-                <td>${employee.department}</td>
-
-                <td>${employee.title}</td>
-
-                <td>${employee.experience} سنوات</td>
-
-                <td>
-
-                    <span class="
-                        status-badge
-                        ${
-                            employee.status === "متاح"
-                            ? "available"
-                            : "busy"
-                        }
-                    ">
-                        ${employee.status}
-                    </span>
-
-                </td>
-
-                <td>
-
-                    <div class="actions">
-
-                        <button
-                            type="button"
-                            class="view-btn"
-                            onclick="showEmployee(${employee.id})"
-                        >
-                            عرض
-                        </button>
-
-                        <button
-                            type="button"
-                            class="delete-btn"
-                            onclick="deleteEmployee(${employee.id})"
-                        >
-                            حذف
-                        </button>
-
-                    </div>
-
-                </td>
-
-            `;
+                    </td>
 
 
-            table.appendChild(row);
+                    <td>
 
-        });
+                        <div class="actions">
+
+                            <button
+                                type="button"
+                                class="view-btn"
+                                onclick="showEmployee(${employee.id})"
+                            >
+                                عرض
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="delete-btn"
+                                onclick="deleteEmployee(${employee.id})"
+                            >
+                                حذف
+                            </button>
+
+                        </div>
+
+                    </td>
+
+                `;
+
+
+                table.appendChild(
+                    row
+                );
+
+            }
+        );
 
     }
 
+
+    /* =========================================
+       تفاصيل الموظف
+    ========================================= */
 
     function showEmployee(id) {
 
         const employee =
             employees.find(
                 item =>
-                    item.id === id
+                    Number(item.id) ===
+                    Number(id)
             );
 
 
         if (!employee) {
+
             return;
+
         }
 
 
         document
-            .getElementById("detailsContent")
+            .getElementById(
+                "detailsContent"
+            )
             .innerHTML = `
 
                 <div class="details-grid">
 
                     <div class="detail-item">
                         <span>اسم الموظف</span>
-                        <strong>${employee.name}</strong>
+                        <strong>
+                            ${employee.name || "-"}
+                        </strong>
                     </div>
+
 
                     <div class="detail-item">
                         <span>الرقم الوظيفي</span>
-                        <strong>${employee.number}</strong>
+                        <strong>
+                            ${employee.employee_number || "-"}
+                        </strong>
                     </div>
+
+
+                    <div class="detail-item">
+                        <span>البريد الإلكتروني</span>
+                        <strong>
+                            ${employee.email || "-"}
+                        </strong>
+                    </div>
+
 
                     <div class="detail-item">
                         <span>القسم</span>
-                        <strong>${employee.department}</strong>
+                        <strong>
+                            ${employee.department || "-"}
+                        </strong>
                     </div>
+
 
                     <div class="detail-item">
                         <span>المسمى الوظيفي</span>
-                        <strong>${employee.title}</strong>
+                        <strong>
+                            ${employee.job_title || "-"}
+                        </strong>
                     </div>
+
 
                     <div class="detail-item">
                         <span>سنوات الخبرة</span>
-                        <strong>${employee.experience}</strong>
+                        <strong>
+                            ${employee.experience_years ?? 0}
+                        </strong>
                     </div>
+
+
+                    <div class="detail-item">
+                        <span>المستوى الوظيفي</span>
+                        <strong>
+                            ${employee.job_level || "-"}
+                        </strong>
+                    </div>
+
 
                     <div class="detail-item">
                         <span>الحالة</span>
-                        <strong>${employee.status}</strong>
+                        <strong>
+                            ${employee.status || "-"}
+                        </strong>
                     </div>
 
-                    <div class="detail-item full-detail">
 
-                        <span>
-                            المهارات
-                        </span>
-
+                    <div class="detail-item">
+                        <span>نسبة التفرغ</span>
                         <strong>
-                            ${
-                                employee.skills
-                                ||
-                                "لا توجد مهارات مضافة"
-                            }
+                            ${employee.availability ?? 0}%
                         </strong>
-
                     </div>
 
-                    <div class="detail-item full-detail">
 
-                        <span>
-                            المهام الحالية
-                        </span>
-
+                    <div class="detail-item">
+                        <span>ضغط العمل</span>
                         <strong>
-                            ${
-                                employee.tasks
-                                ||
-                                "لا توجد مهام حالية"
-                            }
+                            ${employee.workload ?? 0}%
                         </strong>
-
                     </div>
 
                 </div>
@@ -922,13 +1169,20 @@
 
 
         document
-            .getElementById("detailsModal")
-            .classList.add("show");
+            .getElementById(
+                "detailsModal"
+            )
+            .classList
+            .add("show");
 
     }
 
 
-    function deleteEmployee(id) {
+    /* =========================================
+       حذف الموظف
+    ========================================= */
+
+    async function deleteEmployee(id) {
 
         const confirmed =
             confirm(
@@ -937,40 +1191,72 @@
 
 
         if (!confirmed) {
+
             return;
+
         }
 
 
-        employees =
-            employees.filter(
-                employee =>
-                    employee.id !== id
+        const {
+            error
+        } =
+        await supabaseClient
+            .from("employees")
+            .delete()
+            .eq("id", id);
+
+
+        if (error) {
+
+            console.error(
+                "خطأ حذف الموظف:",
+                error
             );
 
 
-        renderEmployees(employees);
+            alert(
+                "تعذر حذف الموظف"
+            );
+
+            return;
+
+        }
+
+
+        await loadEmployees();
 
     }
 
+
+    /* =========================================
+       البحث والتصفية
+    ========================================= */
 
     function filterEmployees() {
 
         const search =
             document
-                .getElementById("searchInput")
+                .getElementById(
+                    "searchInput"
+                )
                 .value
+                .trim()
                 .toLowerCase();
 
 
         const department =
             document
-                .getElementById("departmentFilter")
+                .getElementById(
+                    "departmentFilter"
+                )
                 .value;
 
 
         const status =
             document
-                .getElementById("statusFilter")
+                .getElementById(
+                    "statusFilter"
+                )
                 .value;
 
 
@@ -978,37 +1264,38 @@
             employees.filter(
                 function(employee) {
 
+                    const name =
+                        (
+                            employee.name || ""
+                        )
+                        .toLowerCase();
+
+
+                    const number =
+                        (
+                            employee.employee_number || ""
+                        )
+                        .toLowerCase();
+
+
                     const matchSearch =
-
-                        employee.name
-                            .toLowerCase()
-                            .includes(search)
-
+                        name.includes(search)
                         ||
-
-                        employee.number
-                            .toLowerCase()
-                            .includes(search);
+                        number.includes(search);
 
 
                     const matchDepartment =
-
                         !department
-
                         ||
-
-                        employee.department
-                            === department;
+                        employee.department ===
+                        department;
 
 
                     const matchStatus =
-
                         !status
-
                         ||
-
-                        employee.status
-                            === status;
+                        employee.status ===
+                        status;
 
 
                     return (
@@ -1023,21 +1310,146 @@
             );
 
 
-        renderEmployees(filtered);
+        renderEmployees(
+            filtered
+        );
 
     }
 
 
+    /* =========================================
+       النوافذ
+    ========================================= */
+
+    function openAddModal() {
+
+        document
+            .getElementById(
+                "employeeModal"
+            )
+            .classList
+            .add("show");
+
+    }
+
+
+    function closeAddModal() {
+
+        document
+            .getElementById(
+                "employeeModal"
+            )
+            .classList
+            .remove("show");
+
+
+        document
+            .getElementById(
+                "employeeForm"
+            )
+            .reset();
+
+    }
+
+
+    function closeDetailsModal() {
+
+        document
+            .getElementById(
+                "detailsModal"
+            )
+            .classList
+            .remove("show");
+
+    }
+
+
+    /* =========================================
+       السايد بار
+    ========================================= */
+
+    const mobileMenuBtn =
+        document.getElementById(
+            "mobileMenuBtn"
+        );
+
+
+    const sidebar =
+        document.getElementById(
+            "sidebar"
+        );
+
+
+    const sidebarOverlay =
+        document.getElementById(
+            "sidebarOverlay"
+        );
+
+
+    function openSidebar() {
+
+        sidebar.classList.add(
+            "show"
+        );
+
+        sidebarOverlay.classList.add(
+            "show"
+        );
+
+        document.body.classList.add(
+            "menu-open"
+        );
+
+    }
+
+
+    function closeSidebar() {
+
+        sidebar.classList.remove(
+            "show"
+        );
+
+        sidebarOverlay.classList.remove(
+            "show"
+        );
+
+        document.body.classList.remove(
+            "menu-open"
+        );
+
+    }
+
+
+    mobileMenuBtn.addEventListener(
+        "click",
+        openSidebar
+    );
+
+
+    sidebarOverlay.addEventListener(
+        "click",
+        closeSidebar
+    );
+
+
+    /* =========================================
+       Excel
+    ========================================= */
+
     document
-        .getElementById("excelInput")
+        .getElementById(
+            "excelInput"
+        )
         .addEventListener(
             "change",
             function() {
 
-                if (this.files.length > 0) {
+                if (
+                    this.files.length > 0
+                ) {
 
                     alert(
-                        "تم اختيار ملف Excel. سيتم ربط الاستيراد لاحقاً مع قاعدة البيانات."
+                        "استيراد Excel بنربطه بعد ما نكمل الربط الأساسي."
                     );
 
                 }
@@ -1046,16 +1458,49 @@
         );
 
 
-    function logout() {
+    /* =========================================
+       تسجيل الخروج
+    ========================================= */
 
-        localStorage.removeItem("miyarRole");
+    async function logout() {
 
-        localStorage.removeItem("miyarEmail");
+        await supabaseClient
+            .auth
+            .signOut();
+
+
+        localStorage.clear();
+
 
         window.location.href =
             "login.html";
 
     }
+
+
+    /* =========================================
+       تشغيل الصفحة
+    ========================================= */
+
+    async function startPage() {
+
+        const allowed =
+            await protectPage();
+
+
+        if (!allowed) {
+
+            return;
+
+        }
+
+
+        await loadEmployees();
+
+    }
+
+
+    startPage();
 
 </script>
 
