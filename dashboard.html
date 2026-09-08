@@ -17,6 +17,9 @@
         href="dashboard.css"
     >
 
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 </head>
 
 
@@ -409,10 +412,11 @@
                     </div>
 
 
-                    <div class="empty-state">
-
+                    <div
+                        class="empty-state"
+                        id="matchingActivity"
+                    >
                         لا توجد ترشيحات حالياً
-
                     </div>
 
                 </div>
@@ -449,10 +453,11 @@
                     </div>
 
 
-                    <div class="empty-state">
-
+                    <div
+                        class="empty-state"
+                        id="decisionsActivity"
+                    >
                         لا توجد قرارات حالياً
-
                     </div>
 
                 </div>
@@ -474,32 +479,400 @@
 <script>
 
 
-    /* =========================
-       حماية صفحة المسؤول
-    ========================== */
+    /* =========================================
+       بيانات Supabase
+    ========================================= */
 
-    const role =
-        localStorage.getItem(
-            "miyarRole"
+    const SUPABASE_URL =
+        "https://avooyglxacytrfhvotsl.supabase.co";
+
+
+    const SUPABASE_KEY =
+        "sb_publishable_NVlWEnA_w4KbSse_-70zdA_J9ut0Kyo";
+
+
+    const supabaseClient =
+        supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
         );
 
 
-    if (role !== "admin") {
+    /* =========================================
+       بريد المسؤول
+    ========================================= */
 
-        alert(
-            "غير مصرح لك بالدخول إلى لوحة المسؤول"
+    const ADMIN_EMAIL =
+        "admin@gmail.com";
+
+
+    /* =========================================
+       حماية الصفحة
+    ========================================= */
+
+    async function protectAdminPage() {
+
+        const {
+            data,
+            error
+        } =
+        await supabaseClient
+            .auth
+            .getSession();
+
+
+        if (
+            error
+            ||
+            !data.session
+        ) {
+
+            localStorage.clear();
+
+            window.location.href =
+                "login.html";
+
+            return false;
+
+        }
+
+
+        const userEmail =
+            data.session.user.email
+                .toLowerCase();
+
+
+        if (
+            userEmail !==
+            ADMIN_EMAIL.toLowerCase()
+        ) {
+
+            await supabaseClient
+                .auth
+                .signOut();
+
+
+            localStorage.clear();
+
+
+            alert(
+                "غير مصرح لك بالدخول إلى لوحة المسؤول"
+            );
+
+
+            window.location.href =
+                "login.html";
+
+
+            return false;
+
+        }
+
+
+        localStorage.setItem(
+            "miyarRole",
+            "admin"
         );
 
-        window.location.href =
-            "login.html";
+
+        localStorage.setItem(
+            "miyarEmail",
+            userEmail
+        );
+
+
+        return true;
 
     }
 
 
 
-    /* =========================
+    /* =========================================
+       تحميل بيانات لوحة التحكم
+    ========================================= */
+
+    async function loadDashboardData() {
+
+
+        try {
+
+
+            /* =============================
+               الموظفون
+            ============================== */
+
+            const {
+                data: employees,
+                error: employeesError
+            } =
+            await supabaseClient
+                .from("employees")
+                .select("*");
+
+
+            if (employeesError) {
+
+                console.error(
+                    "خطأ employees:",
+                    employeesError
+                );
+
+            }
+
+
+            const employeesList =
+                employees || [];
+
+
+            document
+                .getElementById(
+                    "employeesCount"
+                )
+                .textContent =
+                employeesList.length;
+
+
+
+            /* =============================
+               الموظفون المتاحون والمشغولون
+            ============================== */
+
+            let availableCount = 0;
+
+            let busyCount = 0;
+
+
+            employeesList.forEach(
+                function(employee) {
+
+
+                    /*
+                        يدعم status
+                        وكذلك ststus لو كان الاسم
+                        مكتوب بالخطأ في الجدول
+                    */
+
+                    const employeeStatus =
+                        (
+                            employee.status
+                            ??
+                            employee.ststus
+                            ??
+                            ""
+                        )
+                        .toString()
+                        .trim()
+                        .toLowerCase();
+
+
+                    if (
+                        employeeStatus === "متاح"
+                        ||
+                        employeeStatus === "available"
+                    ) {
+
+                        availableCount++;
+
+                    }
+
+
+                    if (
+                        employeeStatus === "مشغول"
+                        ||
+                        employeeStatus === "busy"
+                    ) {
+
+                        busyCount++;
+
+                    }
+
+                }
+            );
+
+
+            document
+                .getElementById(
+                    "availableCount"
+                )
+                .textContent =
+                availableCount;
+
+
+            document
+                .getElementById(
+                    "busyCount"
+                )
+                .textContent =
+                busyCount;
+
+
+
+            /* =============================
+               المشاريع
+            ============================== */
+
+            const {
+                data: projects,
+                error: projectsError
+            } =
+            await supabaseClient
+                .from("projects")
+                .select("*");
+
+
+            if (projectsError) {
+
+                console.error(
+                    "خطأ projects:",
+                    projectsError
+                );
+
+            }
+
+
+            const projectsList =
+                projects || [];
+
+
+            document
+                .getElementById(
+                    "projectsCount"
+                )
+                .textContent =
+                projectsList.length;
+
+
+
+            /* =============================
+               المهام
+            ============================== */
+
+            const {
+                data: tasks,
+                error: tasksError
+            } =
+            await supabaseClient
+                .from("tasks")
+                .select("*");
+
+
+            if (tasksError) {
+
+                console.error(
+                    "خطأ tasks:",
+                    tasksError
+                );
+
+            }
+
+
+            const tasksList =
+                tasks || [];
+
+
+            document
+                .getElementById(
+                    "tasksCount"
+                )
+                .textContent =
+                tasksList.length;
+
+
+
+            /* =============================
+               المهام غير المسندة
+            ============================== */
+
+            let unassignedCount = 0;
+
+
+            tasksList.forEach(
+                function(task) {
+
+
+                    /*
+                        نحاول قراءة اسم العمود
+                        بعدة احتمالات
+                    */
+
+                    const assignedEmployee =
+                        task.assigned_employee_id
+                        ??
+                        task.assigned_employee
+                        ??
+                        task.assigned_employc
+                        ??
+                        task.assigned_emplc
+                        ??
+                        null;
+
+
+                    if (
+                        assignedEmployee === null
+                        ||
+                        assignedEmployee === ""
+                        ||
+                        assignedEmployee === undefined
+                    ) {
+
+                        unassignedCount++;
+
+                    }
+
+                }
+            );
+
+
+            document
+                .getElementById(
+                    "unassignedCount"
+                )
+                .textContent =
+                unassignedCount;
+
+
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "حدث خطأ أثناء تحميل لوحة التحكم:",
+                error
+            );
+
+        }
+
+    }
+
+
+
+    /* =========================================
+       تشغيل الصفحة
+    ========================================= */
+
+    async function startDashboard() {
+
+        const allowed =
+            await protectAdminPage();
+
+
+        if (!allowed) {
+
+            return;
+
+        }
+
+
+        await loadDashboardData();
+
+    }
+
+
+
+    /* =========================================
        عناصر السايد بار
-    ========================== */
+    ========================================= */
 
     const mobileMenuBtn =
         document.getElementById(
@@ -520,9 +893,9 @@
 
 
 
-    /* =========================
+    /* =========================================
        فتح السايد بار
-    ========================== */
+    ========================================= */
 
     mobileMenuBtn.addEventListener(
         "click",
@@ -545,9 +918,9 @@
 
 
 
-    /* =========================
+    /* =========================================
        إغلاق السايد بار
-    ========================== */
+    ========================================= */
 
     function closeSidebar() {
 
@@ -573,9 +946,9 @@
 
 
 
-    /* =========================
-       التنقل من الكروت
-    ========================== */
+    /* =========================================
+       التنقل
+    ========================================= */
 
     function goToPage(page) {
 
@@ -586,8 +959,9 @@
 
 
 
-    /* دعم لوحة المفاتيح
-       للنشاطات القابلة للضغط */
+    /* =========================================
+       لوحة المفاتيح
+    ========================================= */
 
     document
         .querySelectorAll(
@@ -620,19 +994,37 @@
 
 
 
-    /* =========================
-       تسجيل الخروج
-    ========================== */
+    /* =========================================
+       تسجيل الخروج الحقيقي
+    ========================================= */
 
-    function logout() {
+    async function logout() {
+
+
+        await supabaseClient
+            .auth
+            .signOut();
+
 
         localStorage.removeItem(
             "miyarRole"
         );
 
+
         localStorage.removeItem(
             "miyarEmail"
         );
+
+
+        localStorage.removeItem(
+            "miyarEmployeeId"
+        );
+
+
+        localStorage.removeItem(
+            "miyarEmployeeName"
+        );
+
 
         window.location.href =
             "login.html";
@@ -640,10 +1032,12 @@
     }
 
 
-    /*
-        الأرقام حالياً تظل صفر
-        لأننا لم نربط قاعدة البيانات.
-    */
+
+    /* =========================================
+       تشغيل لوحة التحكم
+    ========================================= */
+
+    startDashboard();
 
 
 </script>
