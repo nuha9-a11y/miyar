@@ -20,7 +20,7 @@
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <!-- قراءة Excel -->
+    <!-- Excel -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
 </head>
@@ -92,59 +92,35 @@
 
         <nav class="sidebar-nav">
 
-            <a
-                href="dashboard.html"
-                class="nav-link"
-            >
+            <a href="dashboard.html" class="nav-link">
                 لوحة التحكم
             </a>
 
-            <a
-                href="employees.html"
-                class="nav-link active"
-            >
+            <a href="employees.html" class="nav-link active">
                 الموظفون
             </a>
 
-            <a
-                href="projects.html"
-                class="nav-link"
-            >
+            <a href="projects.html" class="nav-link">
                 المشاريع
             </a>
 
-            <a
-                href="tasks.html"
-                class="nav-link"
-            >
+            <a href="tasks.html" class="nav-link">
                 المهام
             </a>
 
-            <a
-                href="matching.html"
-                class="nav-link"
-            >
+            <a href="matching.html" class="nav-link">
                 المطابقة والترشيح
             </a>
 
-            <a
-                href="evaluations.html"
-                class="nav-link"
-            >
+            <a href="evaluations.html" class="nav-link">
                 التقييمات
             </a>
 
-            <a
-                href="decisions.html"
-                class="nav-link"
-            >
+            <a href="decisions.html" class="nav-link">
                 القرارات
             </a>
 
-            <a
-                href="reports.html"
-                class="nav-link"
-            >
+            <a href="reports.html" class="nav-link">
                 التقارير
             </a>
 
@@ -330,33 +306,19 @@
 
                         <tr>
 
-                            <th>
-                                الموظف
-                            </th>
+                            <th>الموظف</th>
 
-                            <th>
-                                الرقم الوظيفي
-                            </th>
+                            <th>الرقم الوظيفي</th>
 
-                            <th>
-                                القسم
-                            </th>
+                            <th>القسم</th>
 
-                            <th>
-                                المسمى الوظيفي
-                            </th>
+                            <th>المسمى الوظيفي</th>
 
-                            <th>
-                                سنوات الخبرة
-                            </th>
+                            <th>سنوات الخبرة</th>
 
-                            <th>
-                                الحالة
-                            </th>
+                            <th>الحالة</th>
 
-                            <th>
-                                الإجراءات
-                            </th>
+                            <th>الإجراءات</th>
 
                         </tr>
 
@@ -397,7 +359,7 @@
 
 
 
-<!-- نافذة إضافة موظف -->
+<!-- نافذة إضافة / تعديل موظف -->
 <div
     class="modal"
     id="employeeModal"
@@ -419,11 +381,11 @@
 
             <div>
 
-                <h2>
+                <h2 id="employeeModalTitle">
                     إضافة موظف
                 </h2>
 
-                <p>
+                <p id="employeeModalDescription">
                     أدخل بيانات الموظف الأساسية
                 </p>
 
@@ -445,8 +407,14 @@
 
         <form
             id="employeeForm"
-            onsubmit="addEmployee(event)"
+            onsubmit="saveEmployee(event)"
         >
+
+
+            <input
+                type="hidden"
+                id="editEmployeeId"
+            >
 
 
             <div class="form-grid">
@@ -688,7 +656,7 @@
 
 
 
-<!-- نافذة التفاصيل -->
+<!-- نافذة تفاصيل الموظف -->
 <div
     class="modal"
     id="detailsModal"
@@ -809,23 +777,18 @@ async function protectPage() {
         !data.session
     ) {
 
-
         localStorage.removeItem(
             "miyarRole"
         );
-
 
         localStorage.removeItem(
             "miyarEmail"
         );
 
-
         window.location.href =
             "login.html";
 
-
         return false;
-
     }
 
 
@@ -845,26 +808,20 @@ async function protectPage() {
         ADMIN_EMAIL.toLowerCase()
     ) {
 
-
         await supabaseClient
             .auth
             .signOut();
 
-
         localStorage.clear();
-
 
         alert(
             "غير مصرح لك بالدخول إلى صفحة الموظفين"
         );
 
-
         window.location.href =
             "login.html";
 
-
         return false;
-
     }
 
 
@@ -873,7 +830,6 @@ async function protectPage() {
         "miyarRole",
         "admin"
     );
-
 
     localStorage.setItem(
         "miyarEmail",
@@ -904,9 +860,11 @@ async function loadEmployees() {
 
         <tr>
             <td colspan="7">
+
                 <div class="empty-table">
                     جارٍ تحميل بيانات الموظفين...
                 </div>
+
             </td>
         </tr>
 
@@ -944,28 +902,26 @@ async function loadEmployees() {
 
     if (error) {
 
-
         console.error(
             "خطأ تحميل الموظفين:",
             error
         );
 
-
         table.innerHTML = `
 
             <tr>
                 <td colspan="7">
+
                     <div class="empty-table">
                         تعذر تحميل الموظفين
                     </div>
+
                 </td>
             </tr>
 
         `;
 
-
         return;
-
     }
 
 
@@ -983,13 +939,250 @@ async function loadEmployees() {
 
 
 /* =========================================
-   إضافة موظف يدويًا
+   فتح إضافة موظف
 ========================================= */
 
-async function addEmployee(event) {
+function openAddModal() {
+
+
+    document
+        .getElementById(
+            "employeeForm"
+        )
+        .reset();
+
+
+    document
+        .getElementById(
+            "editEmployeeId"
+        )
+        .value =
+        "";
+
+
+    document
+        .getElementById(
+            "employeeAvailability"
+        )
+        .value =
+        100;
+
+
+    document
+        .getElementById(
+            "employeeWorkload"
+        )
+        .value =
+        0;
+
+
+    document
+        .getElementById(
+            "employeeModalTitle"
+        )
+        .textContent =
+        "إضافة موظف";
+
+
+    document
+        .getElementById(
+            "employeeModalDescription"
+        )
+        .textContent =
+        "أدخل بيانات الموظف الأساسية";
+
+
+    document
+        .getElementById(
+            "saveEmployeeBtn"
+        )
+        .textContent =
+        "حفظ الموظف";
+
+
+    document
+        .getElementById(
+            "employeeModal"
+        )
+        .classList
+        .add(
+            "show"
+        );
+
+}
+
+
+
+/* =========================================
+   فتح تعديل موظف
+========================================= */
+
+function editEmployee(id) {
+
+
+    const employee =
+        employees.find(
+            function(item) {
+
+                return (
+                    Number(item.id)
+                    ===
+                    Number(id)
+                );
+
+            }
+        );
+
+
+    if (!employee) {
+
+        return;
+    }
+
+
+
+    document
+        .getElementById(
+            "editEmployeeId"
+        )
+        .value =
+        employee.id;
+
+
+    document
+        .getElementById(
+            "employeeName"
+        )
+        .value =
+        employee.name || "";
+
+
+    document
+        .getElementById(
+            "employeeNumber"
+        )
+        .value =
+        employee.employee_number || "";
+
+
+    document
+        .getElementById(
+            "employeeEmail"
+        )
+        .value =
+        employee.email || "";
+
+
+    document
+        .getElementById(
+            "employeeDepartment"
+        )
+        .value =
+        employee.department || "";
+
+
+    document
+        .getElementById(
+            "employeeTitle"
+        )
+        .value =
+        employee.job_title || "";
+
+
+    document
+        .getElementById(
+            "employeeExperience"
+        )
+        .value =
+        employee.experience_years ?? 0;
+
+
+    document
+        .getElementById(
+            "employeeLevel"
+        )
+        .value =
+        employee.job_level || "";
+
+
+    document
+        .getElementById(
+            "employeeStatus"
+        )
+        .value =
+        employee.status || "متاح";
+
+
+    document
+        .getElementById(
+            "employeeAvailability"
+        )
+        .value =
+        employee.availability ?? 100;
+
+
+    document
+        .getElementById(
+            "employeeWorkload"
+        )
+        .value =
+        employee.workload ?? 0;
+
+
+    document
+        .getElementById(
+            "employeeModalTitle"
+        )
+        .textContent =
+        "تعديل بيانات الموظف";
+
+
+    document
+        .getElementById(
+            "employeeModalDescription"
+        )
+        .textContent =
+        "يمكنك تعديل البيانات ثم حفظ التغييرات";
+
+
+    document
+        .getElementById(
+            "saveEmployeeBtn"
+        )
+        .textContent =
+        "حفظ التعديلات";
+
+
+    document
+        .getElementById(
+            "employeeModal"
+        )
+        .classList
+        .add(
+            "show"
+        );
+
+}
+
+
+
+/* =========================================
+   حفظ إضافة / تعديل
+========================================= */
+
+async function saveEmployee(event) {
 
 
     event.preventDefault();
+
+
+
+    const employeeId =
+        document
+            .getElementById(
+                "editEmployeeId"
+            )
+            .value;
 
 
 
@@ -1116,10 +1309,11 @@ async function addEmployee(event) {
             "نسبة التفرغ يجب أن تكون من 0 إلى 100"
         );
 
-        resetSaveButton();
+        resetSaveButton(
+            Boolean(employeeId)
+        );
 
         return;
-
     }
 
 
@@ -1134,9 +1328,34 @@ async function addEmployee(event) {
             "ضغط العمل يجب أن يكون من 0 إلى 100"
         );
 
-        resetSaveButton();
+        resetSaveButton(
+            Boolean(employeeId)
+        );
 
         return;
+    }
+
+
+
+    /* الرقم الوظيفي المكرر */
+
+    let numberQuery =
+        supabaseClient
+            .from("employees")
+            .select("id")
+            .eq(
+                "employee_number",
+                employeeData.employee_number
+            );
+
+
+    if (employeeId) {
+
+        numberQuery =
+            numberQuery.neq(
+                "id",
+                Number(employeeId)
+            );
 
     }
 
@@ -1144,23 +1363,17 @@ async function addEmployee(event) {
 
     const {
         data: duplicateNumber,
-        error: numberError
+        error: duplicateNumberError
     } =
-    await supabaseClient
-        .from("employees")
-        .select("id")
-        .eq(
-            "employee_number",
-            employeeData.employee_number
-        )
+    await numberQuery
         .maybeSingle();
 
 
 
-    if (numberError) {
+    if (duplicateNumberError) {
 
         console.error(
-            numberError
+            duplicateNumberError
         );
 
     }
@@ -1173,25 +1386,55 @@ async function addEmployee(event) {
             "الرقم الوظيفي مستخدم لموظف آخر"
         );
 
-        resetSaveButton();
+        resetSaveButton(
+            Boolean(employeeId)
+        );
 
         return;
+    }
+
+
+
+    /* البريد المكرر */
+
+    let emailQuery =
+        supabaseClient
+            .from("employees")
+            .select("id")
+            .eq(
+                "email",
+                employeeData.email
+            );
+
+
+    if (employeeId) {
+
+        emailQuery =
+            emailQuery.neq(
+                "id",
+                Number(employeeId)
+            );
 
     }
 
 
 
     const {
-        data: duplicateEmail
+        data: duplicateEmail,
+        error: duplicateEmailError
     } =
-    await supabaseClient
-        .from("employees")
-        .select("id")
-        .eq(
-            "email",
-            employeeData.email
-        )
+    await emailQuery
         .maybeSingle();
+
+
+
+    if (duplicateEmailError) {
+
+        console.error(
+            duplicateEmailError
+        );
+
+    }
 
 
 
@@ -1201,13 +1444,75 @@ async function addEmployee(event) {
             "البريد الإلكتروني مستخدم لموظف آخر"
         );
 
-        resetSaveButton();
+        resetSaveButton(
+            Boolean(employeeId)
+        );
+
+        return;
+    }
+
+
+
+    /* تعديل */
+
+    if (employeeId) {
+
+
+        const {
+            error
+        } =
+        await supabaseClient
+            .from("employees")
+            .update(
+                employeeData
+            )
+            .eq(
+                "id",
+                Number(employeeId)
+            );
+
+
+
+        if (error) {
+
+            console.error(
+                "خطأ تعديل الموظف:",
+                error
+            );
+
+
+            alert(
+                "تعذر تعديل بيانات الموظف.\n\n"
+                +
+                error.message
+            );
+
+
+            resetSaveButton(true);
+
+            return;
+        }
+
+
+
+        closeAddModal();
+
+
+        await loadEmployees();
+
+
+        alert(
+            "تم تعديل بيانات الموظف بنجاح"
+        );
+
 
         return;
 
     }
 
 
+
+    /* إضافة */
 
     const {
         error
@@ -1223,6 +1528,7 @@ async function addEmployee(event) {
     if (error) {
 
         console.error(
+            "خطأ إضافة الموظف:",
             error
         );
 
@@ -1234,10 +1540,9 @@ async function addEmployee(event) {
         );
 
 
-        resetSaveButton();
+        resetSaveButton(false);
 
         return;
-
     }
 
 
@@ -1246,9 +1551,6 @@ async function addEmployee(event) {
 
 
     await loadEmployees();
-
-
-    resetSaveButton();
 
 
     alert(
@@ -1279,7 +1581,6 @@ document
             if (!file) {
 
                 return;
-
             }
 
 
@@ -1292,29 +1593,11 @@ document
 
             if (!confirmed) {
 
-                this.value = "";
+                this.value =
+                    "";
 
                 return;
-
             }
-
-
-
-            const excelLabel =
-                document.getElementById(
-                    "excelLabel"
-                );
-
-
-            const oldText =
-                excelLabel.childNodes[0]
-                    .textContent;
-
-
-
-            excelLabel.childNodes[0]
-                .textContent =
-                "جارٍ الاستيراد...";
 
 
 
@@ -1335,11 +1618,10 @@ document
                 ) {
 
                     alert(
-                        "الملف لا يحتوي على موظفين"
+                        "الملف لا يحتوي على بيانات موظفين"
                     );
 
                     return;
-
                 }
 
 
@@ -1347,23 +1629,14 @@ document
                 const requiredColumns = [
 
                     "name",
-
                     "email",
-
                     "job_title",
-
                     "department",
-
                     "experience_years",
-
                     "job_level",
-
                     "availability",
-
                     "workload",
-
                     "status",
-
                     "employee_number"
 
                 ];
@@ -1396,7 +1669,7 @@ document
                 ) {
 
                     alert(
-                        "أسماء أعمدة Excel غير صحيحة.\n\n"
+                        "أسماء أعمدة الملف غير صحيحة.\n\n"
                         +
                         "الأعمدة الناقصة:\n"
                         +
@@ -1404,14 +1677,17 @@ document
                     );
 
                     return;
-
                 }
 
 
 
-                const validEmployees = [];
+                const validEmployees =
+                    [];
 
-                const invalidRows = [];
+
+
+                const invalidRows =
+                    [];
 
 
 
@@ -1425,8 +1701,7 @@ document
                             name:
                                 String(
                                     row.name ?? ""
-                                )
-                                .trim(),
+                                ).trim(),
 
 
                             email:
@@ -1440,15 +1715,13 @@ document
                             job_title:
                                 String(
                                     row.job_title ?? ""
-                                )
-                                .trim(),
+                                ).trim(),
 
 
                             department:
                                 String(
                                     row.department ?? ""
-                                )
-                                .trim(),
+                                ).trim(),
 
 
                             experience_years:
@@ -1460,8 +1733,7 @@ document
                             job_level:
                                 String(
                                     row.job_level ?? ""
-                                )
-                                .trim(),
+                                ).trim(),
 
 
                             availability:
@@ -1479,15 +1751,13 @@ document
                             status:
                                 String(
                                     row.status ?? ""
-                                )
-                                .trim(),
+                                ).trim(),
 
 
                             employee_number:
                                 String(
                                     row.employee_number ?? ""
-                                )
-                                .trim()
+                                ).trim()
 
                         };
 
@@ -1598,12 +1868,9 @@ document
                     );
 
                     return;
-
                 }
 
 
-
-                /* الموظفون الموجودون حاليًا */
 
                 const {
                     data: existingEmployees,
@@ -1621,7 +1888,6 @@ document
                 if (existingError) {
 
                     throw existingError;
-
                 }
 
 
@@ -1640,7 +1906,8 @@ document
                                     item.employee_number
                                     ??
                                     ""
-                                ).trim();
+                                )
+                                .trim();
 
                             }
                         )
@@ -1672,10 +1939,9 @@ document
 
 
 
-                /* منع التكرار داخل نفس ملف Excel */
-
                 const fileNumbers =
                     new Set();
+
 
 
                 const fileEmails =
@@ -1697,7 +1963,7 @@ document
                     function(employee) {
 
 
-                        const numberExists =
+                        const duplicateNumber =
 
                             existingNumbers.has(
                                 employee.employee_number
@@ -1711,7 +1977,7 @@ document
 
 
 
-                        const emailExists =
+                        const duplicateEmail =
 
                             existingEmails.has(
                                 employee.email
@@ -1726,15 +1992,14 @@ document
 
 
                         if (
-                            numberExists
+                            duplicateNumber
                             ||
-                            emailExists
+                            duplicateEmail
                         ) {
 
                             duplicateCount++;
 
                             return;
-
                         }
 
 
@@ -1764,16 +2029,13 @@ document
                 ) {
 
                     alert(
-                        "لا يوجد موظفون جدد للاستيراد. البيانات الموجودة في الملف مضافة مسبقاً."
+                        "لا يوجد موظفون جدد للاستيراد"
                     );
 
                     return;
-
                 }
 
 
-
-                /* الإضافة */
 
                 const {
                     error: insertError
@@ -1789,7 +2051,6 @@ document
                 if (insertError) {
 
                     throw insertError;
-
                 }
 
 
@@ -1804,7 +2065,7 @@ document
                     +
                     employeesToInsert.length
                     +
-                    " موظف بنجاح.";
+                    " موظف بنجاح";
 
 
 
@@ -1818,7 +2079,7 @@ document
                         +
                         duplicateCount
                         +
-                        " موظف مكرر.";
+                        " موظف مكرر";
 
                 }
 
@@ -1860,7 +2121,7 @@ document
                     (
                         error.message
                         ||
-                        "تأكدي من الملف وأسماء الأعمدة."
+                        "تأكدي من بيانات الملف"
                     )
                 );
 
@@ -1872,11 +2133,6 @@ document
 
                 this.value =
                     "";
-
-
-                excelLabel.childNodes[0]
-                    .textContent =
-                    oldText;
 
 
             }
@@ -1938,61 +2194,32 @@ async function readEmployeesFile(file) {
     ) {
 
         throw new Error(
-            "ملف Excel لا يحتوي على صفحات"
+            "الملف لا يحتوي على ورقة بيانات"
         );
 
     }
 
 
 
-    const firstSheetName =
+    const sheetName =
         workbook.SheetNames[0];
 
 
 
     const worksheet =
         workbook.Sheets[
-            firstSheetName
+            sheetName
         ];
 
 
 
-    const rows =
-        XLSX.utils.sheet_to_json(
-            worksheet,
-            {
-                defval: "",
-                raw: false
-            }
-        );
-
-
-
-    return rows;
-
-}
-
-
-
-/* =========================================
-   زر حفظ الموظف
-========================================= */
-
-function resetSaveButton() {
-
-
-    const button =
-        document.getElementById(
-            "saveEmployeeBtn"
-        );
-
-
-    button.disabled =
-        false;
-
-
-    button.textContent =
-        "حفظ الموظف";
+    return XLSX.utils.sheet_to_json(
+        worksheet,
+        {
+            defval: "",
+            raw: false
+        }
+    );
 
 }
 
@@ -2020,7 +2247,6 @@ function renderEmployees(list) {
         list.length === 0
     ) {
 
-
         table.innerHTML = `
 
             <tr>
@@ -2037,9 +2263,7 @@ function renderEmployees(list) {
 
         `;
 
-
         return;
-
     }
 
 
@@ -2073,11 +2297,9 @@ function renderEmployees(list) {
 
                         <div class="avatar">
 
-                            ${
-                                escapeHtml(
-                                    employeeName.charAt(0)
-                                )
-                            }
+                            ${escapeHtml(
+                                employeeName.charAt(0)
+                            )}
 
                         </div>
 
@@ -2092,37 +2314,31 @@ function renderEmployees(list) {
 
 
                 <td>
-                    ${
-                        escapeHtml(
-                            employee.employee_number
-                            ||
-                            "-"
-                        )
-                    }
+                    ${escapeHtml(
+                        employee.employee_number
+                        ||
+                        "-"
+                    )}
                 </td>
 
 
 
                 <td>
-                    ${
-                        escapeHtml(
-                            employee.department
-                            ||
-                            "-"
-                        )
-                    }
+                    ${escapeHtml(
+                        employee.department
+                        ||
+                        "-"
+                    )}
                 </td>
 
 
 
                 <td>
-                    ${
-                        escapeHtml(
-                            employee.job_title
-                            ||
-                            "-"
-                        )
-                    }
+                    ${escapeHtml(
+                        employee.job_title
+                        ||
+                        "-"
+                    )}
                 </td>
 
 
@@ -2177,6 +2393,14 @@ function renderEmployees(list) {
                             عرض
                         </button>
 
+
+                        <button
+                            type="button"
+                            class="view-btn"
+                            onclick="editEmployee(${employee.id})"
+                        >
+                            تعديل
+                        </button>
 
 
                         <button
@@ -2234,7 +2458,6 @@ function showEmployee(id) {
     if (!employee) {
 
         return;
-
     }
 
 
@@ -2444,7 +2667,6 @@ async function deleteEmployee(id) {
     if (!confirmed) {
 
         return;
-
     }
 
 
@@ -2457,7 +2679,7 @@ async function deleteEmployee(id) {
         .delete()
         .eq(
             "id",
-            id
+            Number(id)
         );
 
 
@@ -2466,6 +2688,7 @@ async function deleteEmployee(id) {
 
 
         console.error(
+            "خطأ حذف الموظف:",
             error
         );
 
@@ -2478,7 +2701,6 @@ async function deleteEmployee(id) {
 
 
         return;
-
     }
 
 
@@ -2495,7 +2717,7 @@ async function deleteEmployee(id) {
 
 
 /* =========================================
-   البحث
+   البحث والفلاتر
 ========================================= */
 
 function filterEmployees() {
@@ -2632,6 +2854,92 @@ function filterEmployees() {
 
 
 /* =========================================
+   إغلاق نافذة الموظف
+========================================= */
+
+function closeAddModal() {
+
+
+    document
+        .getElementById(
+            "employeeModal"
+        )
+        .classList
+        .remove(
+            "show"
+        );
+
+
+    document
+        .getElementById(
+            "employeeForm"
+        )
+        .reset();
+
+
+    document
+        .getElementById(
+            "editEmployeeId"
+        )
+        .value =
+        "";
+
+
+    resetSaveButton(false);
+
+}
+
+
+
+/* =========================================
+   إغلاق التفاصيل
+========================================= */
+
+function closeDetailsModal() {
+
+
+    document
+        .getElementById(
+            "detailsModal"
+        )
+        .classList
+        .remove(
+            "show"
+        );
+
+}
+
+
+
+/* =========================================
+   إعادة زر الحفظ
+========================================= */
+
+function resetSaveButton(editing) {
+
+
+    const button =
+        document.getElementById(
+            "saveEmployeeBtn"
+        );
+
+
+    button.disabled =
+        false;
+
+
+    button.textContent =
+        editing
+        ?
+        "حفظ التعديلات"
+        :
+        "حفظ الموظف";
+
+}
+
+
+
+/* =========================================
    حماية النصوص
 ========================================= */
 
@@ -2666,68 +2974,6 @@ function escapeHtml(value) {
         "'",
         "&#039;"
     );
-
-}
-
-
-
-/* =========================================
-   النوافذ
-========================================= */
-
-function openAddModal() {
-
-
-    document
-        .getElementById(
-            "employeeModal"
-        )
-        .classList
-        .add(
-            "show"
-        );
-
-}
-
-
-
-function closeAddModal() {
-
-
-    document
-        .getElementById(
-            "employeeModal"
-        )
-        .classList
-        .remove(
-            "show"
-        );
-
-
-    document
-        .getElementById(
-            "employeeForm"
-        )
-        .reset();
-
-
-    resetSaveButton();
-
-}
-
-
-
-function closeDetailsModal() {
-
-
-    document
-        .getElementById(
-            "detailsModal"
-        )
-        .classList
-        .remove(
-            "show"
-        );
 
 }
 
@@ -2819,12 +3065,10 @@ document
     .forEach(
         function(link) {
 
-
             link.addEventListener(
                 "click",
                 closeSidebar
             );
-
 
         }
     );
@@ -2841,7 +3085,6 @@ async function logout() {
     await supabaseClient
         .auth
         .signOut();
-
 
 
     localStorage.removeItem(
@@ -2862,7 +3105,6 @@ async function logout() {
     localStorage.removeItem(
         "miyarEmployeeName"
     );
-
 
 
     window.location.href =
@@ -2887,7 +3129,6 @@ async function startEmployeesPage() {
     if (!allowed) {
 
         return;
-
     }
 
 
