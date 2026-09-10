@@ -10,247 +10,16 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>معيار | الموظفون</title>
+    <title>معيار | التقييمات</title>
 
     <link
         rel="stylesheet"
-        href="employees.css"
+        href="evaluations.css"
     >
 
-    <!-- Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-
-    <!-- تنسيق المهارات وإصلاح الجوال -->
-    <style>
-
-        .skills-section {
-            grid-column: 1 / -1;
-            margin-top: 10px;
-            padding: 15px;
-            border-radius: 12px;
-
-            border:
-                1px solid
-                rgba(60,85,98,0.12);
-
-            background:
-                rgba(255,255,255,0.35);
-        }
-
-
-        .skills-section-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-
-
-        .skills-section-header h3 {
-            color: #31586c;
-            font-size: 13px;
-        }
-
-
-        .skills-section-header p {
-            margin-top: 3px;
-            color: #819098;
-            font-size: 9px;
-        }
-
-
-        .add-skill-btn {
-            min-width: 105px;
-            height: 36px;
-
-            border: none;
-            border-radius: 8px;
-
-            background: #31586c;
-            color: white;
-
-            font-family: inherit;
-            font-size: 9px;
-
-            cursor: pointer;
-        }
-
-
-        #skillsContainer {
-            display: flex;
-            flex-direction: column;
-            gap: 9px;
-        }
-
-
-        .employee-skill-row {
-            display: grid;
-
-            grid-template-columns:
-                minmax(0,1fr)
-                150px
-                42px;
-
-            gap: 8px;
-            align-items: end;
-
-            padding: 10px;
-
-            border-radius: 10px;
-
-            background:
-                rgba(255,255,255,0.55);
-        }
-
-
-        .remove-skill-btn {
-            width: 42px;
-            height: 44px;
-
-            border: none;
-            border-radius: 8px;
-
-            background:
-                rgba(151,77,77,0.09);
-
-            color: #985454;
-
-            font-size: 18px;
-
-            cursor: pointer;
-        }
-
-
-        .skill-chip {
-            display: inline-block;
-
-            margin:
-                4px
-                2px;
-
-            padding:
-                6px
-                10px;
-
-            border-radius: 20px;
-
-            background:
-                rgba(49,88,108,0.08);
-
-            color: #31586c;
-
-            font-size: 9px;
-        }
-
-
-        .save-btn:disabled {
-            opacity: 0.65;
-            cursor: not-allowed;
-        }
-
-
-        @media (max-width: 700px) {
-
-            .employees-page {
-                display: block;
-            }
-
-
-            .mobile-header {
-                display: flex !important;
-            }
-
-
-            .mobile-menu-btn {
-                display: flex !important;
-                align-items: center;
-                justify-content: center;
-            }
-
-
-            .sidebar {
-                width: 275px !important;
-                max-width: 83vw !important;
-
-                height: 100dvh !important;
-
-                position: fixed !important;
-
-                top: 0 !important;
-                right: -300px !important;
-
-                z-index: 5000 !important;
-
-                transition:
-                    right
-                    0.30s
-                    ease !important;
-            }
-
-
-            .sidebar.show {
-                right: 0 !important;
-            }
-
-
-            .sidebar-overlay {
-                display: block !important;
-
-                position: fixed;
-
-                inset: 0;
-
-                z-index: 4000;
-
-                background:
-                    rgba(22,36,44,0.42);
-
-                opacity: 0;
-                visibility: hidden;
-                pointer-events: none;
-
-                transition: 0.25s ease;
-            }
-
-
-            .sidebar-overlay.show {
-                opacity: 1;
-                visibility: visible;
-                pointer-events: auto;
-            }
-
-
-            .main-content {
-                width: 100% !important;
-                margin-right: 0 !important;
-            }
-
-
-            .employee-skill-row {
-                grid-template-columns: 1fr;
-            }
-
-
-            .remove-skill-btn {
-                width: 100%;
-            }
-
-
-            .skills-section-header {
-                align-items: stretch;
-                flex-direction: column;
-            }
-
-
-            .add-skill-btn {
-                width: 100%;
-            }
-
-        }
-
-    </style>
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    ></script>
 
 </head>
 
@@ -258,12 +27,10 @@
 <body>
 
 
-<div class="employees-page">
+<div class="evaluations-page">
 
 
-    <!-- =========================
-         هيدر الجوال
-    ========================== -->
+    <!-- هيدر الجوال -->
 
     <header class="mobile-header">
 
@@ -280,7 +47,7 @@
         <div class="mobile-header-title">
 
             <h2>
-                الموظفون
+                التقييمات
             </h2>
 
             <span>
@@ -299,6 +66,9 @@
     </header>
 
 
+
+    <!-- خلفية السايدبار -->
+
     <div
         class="sidebar-overlay"
         id="sidebarOverlay"
@@ -306,9 +76,7 @@
 
 
 
-    <!-- =========================
-         السايد بار
-    ========================== -->
+    <!-- السايد بار -->
 
     <aside
         class="sidebar"
@@ -337,7 +105,7 @@
 
             <a
                 href="employees.html"
-                class="nav-link active"
+                class="nav-link"
             >
                 الموظفون
             </a>
@@ -369,7 +137,7 @@
 
             <a
                 href="evaluations.html"
-                class="nav-link"
+                class="nav-link active"
             >
                 التقييمات
             </a>
@@ -405,9 +173,7 @@
 
 
 
-    <!-- =========================
-         المحتوى
-    ========================== -->
+    <!-- المحتوى -->
 
     <main class="main-content">
 
@@ -415,15 +181,17 @@
         <header class="topbar">
 
             <span class="page-badge">
-                إدارة الموظفين
+                تقييم الأداء
             </span>
 
+
             <h1>
-                الموظفون
+                التقييمات
             </h1>
 
+
             <p>
-                إدارة بيانات الموظفين ومهاراتهم ومستوى التفرغ وضغط العمل
+                تقييم الموظفين بعد تنفيذ المهام وتوثيق مستوى الأداء والإنجاز
             </p>
 
         </header>
@@ -440,164 +208,52 @@
                 <input
                     type="text"
                     id="searchInput"
-                    placeholder="ابحث باسم الموظف أو الرقم الوظيفي..."
+                    placeholder="ابحث باسم الموظف أو المهمة..."
                 >
 
             </div>
 
 
-
-            <div class="filters">
-
-
-                <select id="departmentFilter">
-
-                    <option value="">
-                        جميع الأقسام
-                    </option>
-
-                    <option value="تقنية المعلومات">
-                        تقنية المعلومات
-                    </option>
-
-                    <option value="الموارد البشرية">
-                        الموارد البشرية
-                    </option>
-
-                    <option value="إدارة المشاريع">
-                        إدارة المشاريع
-                    </option>
-
-                    <option value="خدمة عملاء">
-                        خدمة عملاء
-                    </option>
-
-                    <option value="التسويق">
-                        التسويق
-                    </option>
-
-                    <option value="العمليات">
-                        العمليات
-                    </option>
-
-                    <option value="الجودة">
-                        الجودة
-                    </option>
-
-                </select>
-
-
-
-                <select id="statusFilter">
-
-                    <option value="">
-                        جميع الحالات
-                    </option>
-
-                    <option value="متاح">
-                        متاح
-                    </option>
-
-                    <option value="مشغول">
-                        مشغول
-                    </option>
-
-                </select>
-
-            </div>
-
-
-
             <button
                 class="add-btn"
+                id="addEvaluationBtn"
                 type="button"
-                id="addEmployeeBtn"
             >
-                + إضافة موظف
+                + إضافة تقييم
             </button>
+
 
         </section>
 
 
 
-        <!-- =========================
-             جدول الموظفين
-        ========================== -->
+        <!-- التقييمات -->
 
-        <section class="table-card">
+        <section class="evaluations-container">
 
 
-            <div class="table-header">
+            <div class="section-title">
 
                 <h2>
-                    قائمة الموظفين
+                    سجل التقييمات
                 </h2>
+
+                <p>
+                    تقييمات الموظفين المرتبطة بالمهام المنفذة
+                </p>
 
             </div>
 
 
 
-            <div class="table-wrapper">
+            <div
+                class="evaluations-grid"
+                id="evaluationsGrid"
+            >
 
-                <table>
-
-
-                    <thead>
-
-                        <tr>
-
-                            <th>
-                                الموظف
-                            </th>
-
-                            <th>
-                                الرقم الوظيفي
-                            </th>
-
-                            <th>
-                                القسم
-                            </th>
-
-                            <th>
-                                المسمى الوظيفي
-                            </th>
-
-                            <th>
-                                سنوات الخبرة
-                            </th>
-
-                            <th>
-                                الحالة
-                            </th>
-
-                            <th>
-                                الإجراءات
-                            </th>
-
-                        </tr>
-
-                    </thead>
-
-
-
-                    <tbody id="employeesTable">
-
-                        <tr>
-
-                            <td colspan="7">
-
-                                <div class="empty-table">
-                                    جارٍ تحميل بيانات الموظفين...
-                                </div>
-
-                            </td>
-
-                        </tr>
-
-                    </tbody>
-
-
-                </table>
+                <div class="empty-state">
+                    جارٍ تحميل التقييمات...
+                </div>
 
             </div>
 
@@ -607,23 +263,24 @@
 
     </main>
 
+
 </div>
 
 
 
-<!-- =========================================
-     نافذة إضافة / تعديل موظف
-========================================= -->
+<!-- ===================================
+     إضافة / تعديل تقييم
+=================================== -->
 
 <div
     class="modal"
-    id="employeeModal"
+    id="evaluationModal"
 >
 
 
     <div
         class="modal-overlay"
-        id="employeeModalOverlay"
+        id="evaluationModalOverlay"
     ></div>
 
 
@@ -636,12 +293,12 @@
 
             <div>
 
-                <h2 id="employeeModalTitle">
-                    إضافة موظف
+                <h2 id="modalTitle">
+                    إضافة تقييم
                 </h2>
 
-                <p id="employeeModalDescription">
-                    أدخل بيانات الموظف ومهاراته
+                <p>
+                    قيّم أداء الموظف بعد تنفيذ المهمة
                 </p>
 
             </div>
@@ -650,21 +307,22 @@
             <button
                 class="close-btn"
                 type="button"
-                id="closeEmployeeModalBtn"
+                id="closeEvaluationBtn"
             >
                 ×
             </button>
+
 
         </div>
 
 
 
-        <form id="employeeForm">
+        <form id="evaluationForm">
 
 
             <input
                 type="hidden"
-                id="editEmployeeId"
+                id="editEvaluationId"
             >
 
 
@@ -672,128 +330,22 @@
             <div class="form-grid">
 
 
-                <div class="form-group">
-
-                    <label for="employeeName">
-                        اسم الموظف
-                    </label>
-
-                    <input
-                        type="text"
-                        id="employeeName"
-                        required
-                    >
-
-                </div>
-
-
+                <!-- الموظف -->
 
                 <div class="form-group">
 
-                    <label for="employeeNumber">
-                        الرقم الوظيفي
+                    <label for="employeeSelect">
+                        الموظف
                     </label>
 
-                    <input
-                        type="text"
-                        id="employeeNumber"
-                        required
-                    >
-
-                </div>
-
-
-
-                <div class="form-group">
-
-                    <label for="employeeEmail">
-                        البريد الإلكتروني
-                    </label>
-
-                    <input
-                        type="email"
-                        id="employeeEmail"
-                        required
-                    >
-
-                </div>
-
-
-
-                <div class="form-group">
-
-                    <label for="employeeDepartment">
-                        القسم
-                    </label>
-
-                    <input
-                        type="text"
-                        id="employeeDepartment"
-                        required
-                    >
-
-                </div>
-
-
-
-                <div class="form-group">
-
-                    <label for="employeeTitle">
-                        المسمى الوظيفي
-                    </label>
-
-                    <input
-                        type="text"
-                        id="employeeTitle"
-                        required
-                    >
-
-                </div>
-
-
-
-                <div class="form-group">
-
-                    <label for="employeeExperience">
-                        سنوات الخبرة
-                    </label>
-
-                    <input
-                        type="number"
-                        id="employeeExperience"
-                        min="0"
-                        required
-                    >
-
-                </div>
-
-
-
-                <div class="form-group">
-
-                    <label for="employeeLevel">
-                        المستوى الوظيفي
-                    </label>
 
                     <select
-                        id="employeeLevel"
+                        id="employeeSelect"
                         required
                     >
 
                         <option value="">
-                            اختر المستوى
-                        </option>
-
-                        <option value="مبتدئ">
-                            مبتدئ
-                        </option>
-
-                        <option value="متوسط">
-                            متوسط
-                        </option>
-
-                        <option value="متقدم">
-                            متقدم
+                            جارٍ تحميل الموظفين...
                         </option>
 
                     </select>
@@ -802,23 +354,22 @@
 
 
 
+                <!-- المهمة -->
+
                 <div class="form-group">
 
-                    <label for="employeeStatus">
-                        حالة الموظف
+                    <label for="taskSelect">
+                        المهمة
                     </label>
+
 
                     <select
-                        id="employeeStatus"
+                        id="taskSelect"
                         required
                     >
 
-                        <option value="متاح">
-                            متاح
-                        </option>
-
-                        <option value="مشغول">
-                            مشغول
+                        <option value="">
+                            جارٍ تحميل المهام...
                         </option>
 
                     </select>
@@ -827,18 +378,106 @@
 
 
 
+                <!-- الإنجاز -->
+
                 <div class="form-group">
 
-                    <label for="employeeAvailability">
-                        نسبة التفرغ %
+                    <label for="achievementLevel">
+                        مستوى الإنجاز
                     </label>
 
+
+                    <select
+                        id="achievementLevel"
+                        required
+                    >
+
+                        <option value="">
+                            اختر مستوى الإنجاز
+                        </option>
+
+                        <option value="ممتاز">
+                            ممتاز
+                        </option>
+
+                        <option value="جيد جداً">
+                            جيد جداً
+                        </option>
+
+                        <option value="جيد">
+                            جيد
+                        </option>
+
+                        <option value="مقبول">
+                            مقبول
+                        </option>
+
+                        <option value="يحتاج تحسين">
+                            يحتاج تحسين
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- التقييم -->
+
+                <div class="form-group">
+
+                    <label for="performanceRating">
+                        تقييم الأداء
+                    </label>
+
+
+                    <select
+                        id="performanceRating"
+                        required
+                    >
+
+                        <option value="">
+                            اختر التقييم
+                        </option>
+
+                        <option value="5">
+                            5 - ممتاز
+                        </option>
+
+                        <option value="4">
+                            4 - جيد جداً
+                        </option>
+
+                        <option value="3">
+                            3 - جيد
+                        </option>
+
+                        <option value="2">
+                            2 - مقبول
+                        </option>
+
+                        <option value="1">
+                            1 - يحتاج تحسين
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- التاريخ -->
+
+                <div class="form-group">
+
+                    <label for="evaluationDate">
+                        تاريخ التقييم
+                    </label>
+
+
                     <input
-                        type="number"
-                        id="employeeAvailability"
-                        min="0"
-                        max="100"
-                        value="100"
+                        type="date"
+                        id="evaluationDate"
                         required
                     >
 
@@ -846,60 +485,19 @@
 
 
 
-                <div class="form-group">
+                <!-- الملاحظات -->
 
-                    <label for="employeeWorkload">
-                        ضغط العمل %
+                <div class="form-group full-width">
+
+                    <label for="evaluationNotes">
+                        ملاحظات المسؤول
                     </label>
 
-                    <input
-                        type="number"
-                        id="employeeWorkload"
-                        min="0"
-                        max="100"
-                        value="0"
-                        required
-                    >
 
-                </div>
-
-
-
-                <!-- =========================
-                     مهارات الموظف
-                ========================== -->
-
-                <div class="skills-section">
-
-
-                    <div class="skills-section-header">
-
-                        <div>
-
-                            <h3>
-                                مهارات الموظف
-                            </h3>
-
-                            <p>
-                                أضف المهارات وحدد مستوى كل مهارة
-                            </p>
-
-                        </div>
-
-
-                        <button
-                            type="button"
-                            class="add-skill-btn"
-                            id="addSkillBtn"
-                        >
-                            + إضافة مهارة
-                        </button>
-
-                    </div>
-
-
-                    <div id="skillsContainer"></div>
-
+                    <textarea
+                        id="evaluationNotes"
+                        placeholder="اكتب ملاحظاتك عن أداء الموظف"
+                    ></textarea>
 
                 </div>
 
@@ -914,7 +512,7 @@
                 <button
                     type="button"
                     class="cancel-btn"
-                    id="cancelEmployeeBtn"
+                    id="cancelEvaluationBtn"
                 >
                     إلغاء
                 </button>
@@ -923,9 +521,9 @@
                 <button
                     type="submit"
                     class="save-btn"
-                    id="saveEmployeeBtn"
+                    id="saveEvaluationBtn"
                 >
-                    حفظ الموظف
+                    حفظ التقييم
                 </button>
 
 
@@ -937,13 +535,14 @@
 
     </div>
 
+
 </div>
 
 
 
-<!-- =========================================
-     نافذة تفاصيل الموظف
-========================================= -->
+<!-- ===================================
+     تفاصيل التقييم
+=================================== -->
 
 <div
     class="modal"
@@ -967,11 +566,11 @@
             <div>
 
                 <h2>
-                    تفاصيل الموظف
+                    تفاصيل التقييم
                 </h2>
 
                 <p>
-                    البيانات الأساسية والمهارات
+                    عرض تقييم الموظف والملاحظات
                 </p>
 
             </div>
@@ -985,13 +584,19 @@
                 ×
             </button>
 
+
         </div>
 
 
-        <div id="detailsContent"></div>
+
+        <div
+            class="details-grid"
+            id="evaluationDetails"
+        ></div>
 
 
     </div>
+
 
 </div>
 
@@ -1000,9 +605,9 @@
 <script>
 
 
-/* =========================================
+/* ===================================
    Supabase
-========================================= */
+=================================== */
 
 const SUPABASE_URL =
     "https://avooyglxacytrfhvotsl.supabase.co";
@@ -1019,39 +624,43 @@ const supabaseClient =
     );
 
 
+
 const ADMIN_EMAIL =
     "admin@gmail.com";
 
 
+
+/* ===================================
+   البيانات
+=================================== */
+
+let evaluations = [];
+
 let employees = [];
 
+let tasks = [];
 
 
-/* =========================================
+
+/* ===================================
    العناصر
-========================================= */
+=================================== */
 
-const employeesTable =
+const evaluationsGrid =
     document.getElementById(
-        "employeesTable"
+        "evaluationsGrid"
     );
 
 
-const employeeModal =
+const evaluationModal =
     document.getElementById(
-        "employeeModal"
+        "evaluationModal"
     );
 
 
 const detailsModal =
     document.getElementById(
         "detailsModal"
-    );
-
-
-const skillsContainer =
-    document.getElementById(
-        "skillsContainer"
     );
 
 
@@ -1073,20 +682,16 @@ const mobileMenuBtn =
     );
 
 
-const saveEmployeeBtn =
-    document.getElementById(
-        "saveEmployeeBtn"
-    );
 
-
-
-/* =========================================
+/* ===================================
    حماية الصفحة
-========================================= */
+=================================== */
 
 async function protectPage() {
 
+
     try {
+
 
         const {
             data,
@@ -1097,6 +702,7 @@ async function protectPage() {
             .getSession();
 
 
+
         if (error) {
 
             throw error;
@@ -1104,18 +710,20 @@ async function protectPage() {
         }
 
 
+
         if (
-            !data
-            ||
             !data.session
         ) {
+
 
             window.location.href =
                 "login.html";
 
+
             return false;
 
         }
+
 
 
         const email =
@@ -1128,10 +736,12 @@ async function protectPage() {
             .toLowerCase();
 
 
+
         if (
             email !==
             ADMIN_EMAIL.toLowerCase()
         ) {
+
 
             await supabaseClient
                 .auth
@@ -1150,6 +760,7 @@ async function protectPage() {
         }
 
 
+
         localStorage.setItem(
             "miyarRole",
             "admin"
@@ -1164,31 +775,16 @@ async function protectPage() {
 
         return true;
 
+
     }
 
     catch(error) {
 
+
         console.error(
-            "خطأ التحقق من تسجيل الدخول:",
+            "خطأ حماية الصفحة:",
             error
         );
-
-
-        employeesTable.innerHTML = `
-
-            <tr>
-
-                <td colspan="7">
-
-                    <div class="empty-table">
-                        تعذر التحقق من تسجيل الدخول
-                    </div>
-
-                </td>
-
-            </tr>
-
-        `;
 
 
         return false;
@@ -1199,76 +795,34 @@ async function protectPage() {
 
 
 
-/* =========================================
+/* ===================================
    تحميل الموظفين
-========================================= */
+=================================== */
 
 async function loadEmployees() {
 
-    employeesTable.innerHTML = `
 
-        <tr>
-
-            <td colspan="7">
-
-                <div class="empty-table">
-                    جارٍ تحميل بيانات الموظفين...
-                </div>
-
-            </td>
-
-        </tr>
-
-    `;
-
-
-    try {
-
-        const {
-            data,
-            error
-        } =
-        await supabaseClient
-            .from("employees")
-            .select(`
-                id,
-                name,
-                email,
-                job_title,
-                department,
-                experience_years,
-                job_level,
-                availability,
-                workload,
-                status,
-                employee_number
-            `)
-            .order(
-                "id",
-                {
-                    ascending: false
-                }
-            );
-
-
-        if (error) {
-
-            throw error;
-
-        }
-
-
-        employees =
-            data || [];
-
-
-        renderEmployees(
-            employees
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("employees")
+        .select(`
+            id,
+            name,
+            employee_number
+        `)
+        .order(
+            "name",
+            {
+                ascending: true
+            }
         );
 
-    }
 
-    catch(error) {
+
+    if (error) {
 
         console.error(
             "خطأ تحميل الموظفين:",
@@ -1276,67 +830,223 @@ async function loadEmployees() {
         );
 
 
-        employeesTable.innerHTML = `
-
-            <tr>
-
-                <td colspan="7">
-
-                    <div class="empty-table">
-
-                        تعذر تحميل بيانات الموظفين
-
-                        <br><br>
-
-                        ${escapeHtml(
-                            error.message
-                            ||
-                            ""
-                        )}
-
-                    </div>
-
-                </td>
-
-            </tr>
-
-        `;
+        return;
 
     }
+
+
+
+    employees =
+        data || [];
+
+
+
+    const select =
+        document.getElementById(
+            "employeeSelect"
+        );
+
+
+    select.innerHTML = `
+
+        <option value="">
+            اختر الموظف
+        </option>
+
+    `;
+
+
+
+    employees.forEach(
+        function(employee) {
+
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+
+            option.value =
+                employee.id;
+
+
+            option.textContent =
+                employee.name;
+
+
+            select.appendChild(
+                option
+            );
+
+
+        }
+    );
 
 }
 
 
 
-/* =========================================
-   عرض الموظفين
-========================================= */
+/* ===================================
+   تحميل المهام
+=================================== */
 
-function renderEmployees(list) {
-
-    employeesTable.innerHTML =
-        "";
+async function loadTasks() {
 
 
-    if (
-        !list
-        ||
-        list.length === 0
-    ) {
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("tasks")
+        .select(`
+            id,
+            task_name,
+            status
+        `)
+        .order(
+            "id",
+            {
+                ascending: false
+            }
+        );
 
-        employeesTable.innerHTML = `
 
-            <tr>
 
-                <td colspan="7">
+    if (error) {
 
-                    <div class="empty-table">
-                        لا توجد بيانات موظفين حالياً
-                    </div>
+        console.error(
+            "خطأ تحميل المهام:",
+            error
+        );
 
-                </td>
 
-            </tr>
+        return;
+
+    }
+
+
+
+    tasks =
+        data || [];
+
+
+
+    const select =
+        document.getElementById(
+            "taskSelect"
+        );
+
+
+    select.innerHTML = `
+
+        <option value="">
+            اختر المهمة
+        </option>
+
+    `;
+
+
+
+    tasks.forEach(
+        function(task) {
+
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+
+            option.value =
+                task.id;
+
+
+            option.textContent =
+                task.task_name;
+
+
+            select.appendChild(
+                option
+            );
+
+
+        }
+    );
+
+}
+
+
+
+/* ===================================
+   تحميل التقييمات
+=================================== */
+
+async function loadEvaluations() {
+
+
+    evaluationsGrid.innerHTML = `
+
+        <div class="empty-state">
+            جارٍ تحميل التقييمات...
+        </div>
+
+    `;
+
+
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("evaluations")
+        .select(`
+            id,
+            employee_id,
+            task_id,
+            achievement_level,
+            performance_rating,
+            notes,
+            evaluation_date,
+            employees (
+                name,
+                employee_number
+            ),
+            tasks (
+                task_name
+            )
+        `)
+        .order(
+            "id",
+            {
+                ascending: false
+            }
+        );
+
+
+
+    if (error) {
+
+
+        console.error(
+            "خطأ تحميل التقييمات:",
+            error
+        );
+
+
+        evaluationsGrid.innerHTML = `
+
+            <div class="empty-state">
+
+                تعذر تحميل التقييمات
+
+                <br>
+
+                ${escapeHtml(error.message)}
+
+            </div>
 
         `;
 
@@ -1346,459 +1056,77 @@ function renderEmployees(list) {
     }
 
 
-    list.forEach(
-        function(employee) {
 
-            const tr =
-                document.createElement(
-                    "tr"
-                );
+    evaluations =
+        data || [];
 
 
-            const name =
-                employee.name
-                ||
-                "-";
-
-
-            const status =
-                employee.status
-                ||
-                "-";
-
-
-            tr.innerHTML = `
-
-                <td>
-
-                    <div class="employee-name">
-
-                        <div class="avatar">
-
-                            ${escapeHtml(
-                                name.charAt(0)
-                            )}
-
-                        </div>
-
-                        <span>
-                            ${escapeHtml(name)}
-                        </span>
-
-                    </div>
-
-                </td>
-
-
-                <td>
-
-                    ${escapeHtml(
-                        employee.employee_number
-                        ||
-                        "-"
-                    )}
-
-                </td>
-
-
-                <td>
-
-                    ${escapeHtml(
-                        employee.department
-                        ||
-                        "-"
-                    )}
-
-                </td>
-
-
-                <td>
-
-                    ${escapeHtml(
-                        employee.job_title
-                        ||
-                        "-"
-                    )}
-
-                </td>
-
-
-                <td>
-
-                    ${
-                        Number(
-                            employee.experience_years
-                            ||
-                            0
-                        )
-                    }
-
-                    سنوات
-
-                </td>
-
-
-                <td>
-
-                    <span
-                        class="
-                            status-badge
-                            ${
-                                status === "متاح"
-                                ?
-                                "available"
-                                :
-                                "busy"
-                            }
-                        "
-                    >
-
-                        ${escapeHtml(status)}
-
-                    </span>
-
-                </td>
-
-
-                <td>
-
-                    <div class="actions">
-
-
-                        <button
-                            type="button"
-                            class="view-btn"
-                            data-action="view"
-                            data-id="${employee.id}"
-                        >
-                            عرض
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="view-btn"
-                            data-action="edit"
-                            data-id="${employee.id}"
-                        >
-                            تعديل
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="delete-btn"
-                            data-action="delete"
-                            data-id="${employee.id}"
-                        >
-                            حذف
-                        </button>
-
-
-                    </div>
-
-                </td>
-
-            `;
-
-
-            employeesTable.appendChild(
-                tr
-            );
-
-        }
+    renderEvaluations(
+        evaluations
     );
 
 }
 
 
 
-/* =========================================
-   إضافة صف مهارة
-========================================= */
+/* ===================================
+   فتح إضافة تقييم
+=================================== */
 
-function addSkillRow(
-    name = "",
-    level = 3
-) {
+function openEvaluationModal() {
 
-    const row =
-        document.createElement(
-            "div"
-        );
-
-
-    row.className =
-        "employee-skill-row";
-
-
-    row.innerHTML = `
-
-        <div class="form-group">
-
-            <label>
-                اسم المهارة
-            </label>
-
-            <input
-                type="text"
-                class="employee-skill-name"
-                placeholder="مثال: JavaScript"
-                value="${escapeAttribute(name)}"
-            >
-
-        </div>
-
-
-        <div class="form-group">
-
-            <label>
-                المستوى
-            </label>
-
-            <select class="employee-skill-level">
-
-                <option
-                    value="1"
-                    ${Number(level) === 1 ? "selected" : ""}
-                >
-                    1 - مبتدئ
-                </option>
-
-
-                <option
-                    value="2"
-                    ${Number(level) === 2 ? "selected" : ""}
-                >
-                    2 - أساسي
-                </option>
-
-
-                <option
-                    value="3"
-                    ${Number(level) === 3 ? "selected" : ""}
-                >
-                    3 - متوسط
-                </option>
-
-
-                <option
-                    value="4"
-                    ${Number(level) === 4 ? "selected" : ""}
-                >
-                    4 - متقدم
-                </option>
-
-
-                <option
-                    value="5"
-                    ${Number(level) === 5 ? "selected" : ""}
-                >
-                    5 - خبير
-                </option>
-
-            </select>
-
-        </div>
-
-
-        <button
-            type="button"
-            class="remove-skill-btn"
-        >
-            ×
-        </button>
-
-    `;
-
-
-    skillsContainer.appendChild(
-        row
-    );
-
-}
-
-
-
-/* =========================================
-   قراءة مهارات الفورم
-========================================= */
-
-function getFormSkills() {
-
-    const rows =
-        skillsContainer
-            .querySelectorAll(
-                ".employee-skill-row"
-            );
-
-
-    const result =
-        [];
-
-
-    const duplicateCheck =
-        new Set();
-
-
-    rows.forEach(
-        function(row) {
-
-            const name =
-                row
-                    .querySelector(
-                        ".employee-skill-name"
-                    )
-                    .value
-                    .trim();
-
-
-            const level =
-                Number(
-                    row
-                        .querySelector(
-                            ".employee-skill-level"
-                        )
-                        .value
-                );
-
-
-            if (!name) {
-
-                return;
-
-            }
-
-
-            const normalized =
-                name.toLowerCase();
-
-
-            if (
-                duplicateCheck.has(
-                    normalized
-                )
-            ) {
-
-                return;
-
-            }
-
-
-            duplicateCheck.add(
-                normalized
-            );
-
-
-            result.push({
-
-                name,
-                level
-
-            });
-
-        }
-    );
-
-
-    return result;
-
-}
-
-
-
-/* =========================================
-   حالة زر الحفظ
-========================================= */
-
-function setSaveButton(
-    disabled,
-    text
-) {
-
-    saveEmployeeBtn.disabled =
-        disabled;
-
-
-    saveEmployeeBtn.textContent =
-        text;
-
-}
-
-
-
-/* =========================================
-   فتح إضافة موظف
-========================================= */
-
-function openAddModal() {
 
     document
         .getElementById(
-            "employeeForm"
+            "evaluationForm"
         )
         .reset();
 
 
+
     document
         .getElementById(
-            "editEmployeeId"
+            "editEvaluationId"
         )
         .value =
         "";
 
 
-    document
-        .getElementById(
-            "employeeAvailability"
-        )
-        .value =
-        100;
-
 
     document
         .getElementById(
-            "employeeWorkload"
-        )
-        .value =
-        0;
-
-
-    document
-        .getElementById(
-            "employeeModalTitle"
+            "modalTitle"
         )
         .textContent =
-        "إضافة موظف";
+        "إضافة تقييم";
+
 
 
     document
         .getElementById(
-            "employeeModalDescription"
+            "saveEvaluationBtn"
         )
         .textContent =
-        "أدخل بيانات الموظف ومهاراته";
+        "حفظ التقييم";
 
 
-    /*
-        مهم:
-        إعادة تفعيل زر الحفظ
-    */
 
-    setSaveButton(
-        false,
-        "حفظ الموظف"
-    );
+    const today =
+        new Date()
+            .toISOString()
+            .split("T")[0];
 
 
-    skillsContainer.innerHTML =
-        "";
+    document
+        .getElementById(
+            "evaluationDate"
+        )
+        .value =
+        today;
 
 
-    addSkillRow();
 
-
-    employeeModal
+    evaluationModal
         .classList
         .add(
             "show"
@@ -1808,136 +1136,15 @@ function openAddModal() {
 
 
 
-/* =========================================
-   تحميل مهارات الموظف
-========================================= */
+/* ===================================
+   تعديل تقييم
+=================================== */
 
-async function getEmployeeSkills(
-    employeeId
-) {
-
-    const {
-        data: links,
-        error
-    } =
-    await supabaseClient
-        .from("employee_skills")
-        .select(`
-            skill_id,
-            skill_level
-        `)
-        .eq(
-            "employee_id",
-            Number(employeeId)
-        );
+function editEvaluation(id) {
 
 
-    if (error) {
-
-        throw error;
-
-    }
-
-
-    if (
-        !links
-        ||
-        links.length === 0
-    ) {
-
-        return [];
-
-    }
-
-
-    const skillIds =
-        links.map(
-            function(item) {
-
-                return item.skill_id;
-
-            }
-        );
-
-
-    const {
-        data: skillRows,
-        error: skillError
-    } =
-    await supabaseClient
-        .from("skills")
-        .select(`
-            id,
-            skill_name
-        `)
-        .in(
-            "id",
-            skillIds
-        );
-
-
-    if (skillError) {
-
-        throw skillError;
-
-    }
-
-
-    return links.map(
-        function(link) {
-
-            const skill =
-                (
-                    skillRows
-                    ||
-                    []
-                )
-                .find(
-                    function(item) {
-
-                        return (
-                            Number(item.id)
-                            ===
-                            Number(link.skill_id)
-                        );
-
-                    }
-                );
-
-
-            return {
-
-                name:
-                    skill
-                    ?
-                    skill.skill_name
-                    :
-                    "مهارة غير معروفة",
-
-                level:
-                    Number(
-                        link.skill_level
-                        ||
-                        1
-                    )
-
-            };
-
-        }
-    );
-
-}
-
-
-
-/* =========================================
-   تعديل موظف
-========================================= */
-
-async function editEmployee(id) {
-
-    const employee =
-        employees.find(
+    const evaluation =
+        evaluations.find(
             function(item) {
 
                 return (
@@ -1950,624 +1157,253 @@ async function editEmployee(id) {
         );
 
 
-    if (!employee) {
+
+    if (!evaluation) {
 
         return;
 
     }
 
 
-    /*
-        مهم جداً:
-        إعادة تفعيل زر الحفظ عند كل موظف
-    */
-
-    setSaveButton(
-        false,
-        "حفظ التعديلات"
-    );
-
 
     document
         .getElementById(
-            "editEmployeeId"
+            "editEvaluationId"
         )
         .value =
-        employee.id;
+        evaluation.id;
+
 
 
     document
         .getElementById(
-            "employeeName"
+            "employeeSelect"
         )
         .value =
-        employee.name || "";
+        evaluation.employee_id;
+
 
 
     document
         .getElementById(
-            "employeeNumber"
+            "taskSelect"
         )
         .value =
-        employee.employee_number || "";
+        evaluation.task_id;
+
 
 
     document
         .getElementById(
-            "employeeEmail"
+            "achievementLevel"
         )
         .value =
-        employee.email || "";
+        evaluation.achievement_level;
+
 
 
     document
         .getElementById(
-            "employeeDepartment"
+            "performanceRating"
         )
         .value =
-        employee.department || "";
+        evaluation.performance_rating;
+
 
 
     document
         .getElementById(
-            "employeeTitle"
+            "evaluationNotes"
         )
         .value =
-        employee.job_title || "";
+        evaluation.notes || "";
+
 
 
     document
         .getElementById(
-            "employeeExperience"
+            "evaluationDate"
         )
         .value =
-        employee.experience_years ?? 0;
+        evaluation.evaluation_date;
 
-
-    document
-        .getElementById(
-            "employeeLevel"
-        )
-        .value =
-        employee.job_level || "";
 
 
     document
         .getElementById(
-            "employeeStatus"
-        )
-        .value =
-        employee.status || "متاح";
-
-
-    document
-        .getElementById(
-            "employeeAvailability"
-        )
-        .value =
-        employee.availability ?? 100;
-
-
-    document
-        .getElementById(
-            "employeeWorkload"
-        )
-        .value =
-        employee.workload ?? 0;
-
-
-    document
-        .getElementById(
-            "employeeModalTitle"
+            "modalTitle"
         )
         .textContent =
-        "تعديل الموظف";
+        "تعديل التقييم";
+
 
 
     document
         .getElementById(
-            "employeeModalDescription"
+            "saveEvaluationBtn"
         )
         .textContent =
-        "عدل بيانات الموظف ومهاراته";
+        "حفظ التعديلات";
 
 
-    skillsContainer.innerHTML = `
 
-        <div
-            style="
-                padding:15px;
-                text-align:center;
-                color:#819098;
-                font-size:10px;
-            "
-        >
-            جارٍ تحميل المهارات...
-        </div>
-
-    `;
-
-
-    employeeModal
+    evaluationModal
         .classList
         .add(
             "show"
         );
 
-
-    try {
-
-        const currentSkills =
-            await getEmployeeSkills(
-                employee.id
-            );
-
-
-        skillsContainer.innerHTML =
-            "";
-
-
-        if (
-            currentSkills.length === 0
-        ) {
-
-            addSkillRow();
-
-            return;
-
-        }
-
-
-        currentSkills.forEach(
-            function(skill) {
-
-                addSkillRow(
-                    skill.name,
-                    skill.level
-                );
-
-            }
-        );
-
-    }
-
-    catch(error) {
-
-        console.error(
-            "خطأ تحميل مهارات الموظف:",
-            error
-        );
-
-
-        skillsContainer.innerHTML =
-            "";
-
-
-        addSkillRow();
-
-
-        alert(
-            "تعذر تحميل مهارات الموظف"
-        );
-
-    }
-
 }
 
 
 
-/* =========================================
-   إيجاد أو إنشاء مهارة
-========================================= */
+/* ===================================
+   حفظ التقييم
+=================================== */
 
-async function getOrCreateSkill(
-    skillName
-) {
+async function saveEvaluation(event) {
 
-    const cleanName =
-        String(
-            skillName
-        )
-        .trim();
-
-
-    if (!cleanName) {
-
-        throw new Error(
-            "اسم المهارة فارغ"
-        );
-
-    }
-
-
-    const {
-        data: existingSkills,
-        error: findError
-    } =
-    await supabaseClient
-        .from("skills")
-        .select(`
-            id,
-            skill_name
-        `)
-        .ilike(
-            "skill_name",
-            cleanName
-        )
-        .limit(1);
-
-
-    if (findError) {
-
-        throw findError;
-
-    }
-
-
-    if (
-        existingSkills
-        &&
-        existingSkills.length > 0
-    ) {
-
-        return existingSkills[0].id;
-
-    }
-
-
-    const {
-        data: created,
-        error: createError
-    } =
-    await supabaseClient
-        .from("skills")
-        .insert([
-
-            {
-                skill_name:
-                    cleanName,
-
-                description:
-                    null
-            }
-
-        ])
-        .select(`
-            id
-        `)
-        .single();
-
-
-    if (createError) {
-
-        throw createError;
-
-    }
-
-
-    return created.id;
-
-}
-
-
-
-/* =========================================
-   حفظ مهارات الموظف
-========================================= */
-
-async function saveEmployeeSkills(
-    employeeId,
-    skills
-) {
-
-    /*
-        حذف روابط المهارات القديمة
-        ثم إضافة المهارات الحالية
-    */
-
-    const {
-        error: deleteError
-    } =
-    await supabaseClient
-        .from("employee_skills")
-        .delete()
-        .eq(
-            "employee_id",
-            Number(employeeId)
-        );
-
-
-    if (deleteError) {
-
-        throw deleteError;
-
-    }
-
-
-    if (
-        !skills
-        ||
-        skills.length === 0
-    ) {
-
-        return;
-
-    }
-
-
-    const rows =
-        [];
-
-
-    for (
-        const skill
-        of skills
-    ) {
-
-        const skillId =
-            await getOrCreateSkill(
-                skill.name
-            );
-
-
-        rows.push({
-
-            employee_id:
-                Number(employeeId),
-
-            skill_id:
-                Number(skillId),
-
-            skill_level:
-                Number(skill.level)
-
-        });
-
-    }
-
-
-    const {
-        error
-    } =
-    await supabaseClient
-        .from("employee_skills")
-        .insert(
-            rows
-        );
-
-
-    if (error) {
-
-        throw error;
-
-    }
-
-}
-
-
-
-/* =========================================
-   حفظ الموظف
-========================================= */
-
-async function saveEmployee(event) {
 
     event.preventDefault();
 
 
-    const id =
+
+    const editId =
         document
             .getElementById(
-                "editEmployeeId"
+                "editEvaluationId"
             )
             .value;
 
 
-    const editing =
-        Boolean(id);
+
+    const button =
+        document.getElementById(
+            "saveEvaluationBtn"
+        );
 
 
-    /*
-        منع الضغط المتكرر أثناء الحفظ
-    */
 
-    setSaveButton(
-        true,
-        "جارٍ الحفظ..."
-    );
+    button.disabled =
+        true;
 
 
-    const employeeData = {
+    button.textContent =
+        "جارٍ الحفظ...";
 
-        name:
+
+
+    const evaluationData = {
+
+
+        employee_id:
+            Number(
+                document
+                    .getElementById(
+                        "employeeSelect"
+                    )
+                    .value
+            ),
+
+
+        task_id:
+            Number(
+                document
+                    .getElementById(
+                        "taskSelect"
+                    )
+                    .value
+            ),
+
+
+        achievement_level:
             document
                 .getElementById(
-                    "employeeName"
+                    "achievementLevel"
                 )
-                .value
-                .trim(),
+                .value,
 
-        employee_number:
+
+        performance_rating:
+            Number(
+                document
+                    .getElementById(
+                        "performanceRating"
+                    )
+                    .value
+            ),
+
+
+        notes:
             document
                 .getElementById(
-                    "employeeNumber"
-                )
-                .value
-                .trim(),
-
-        email:
-            document
-                .getElementById(
-                    "employeeEmail"
+                    "evaluationNotes"
                 )
                 .value
                 .trim()
-                .toLowerCase(),
+            ||
+            null,
 
-        department:
+
+        evaluation_date:
             document
                 .getElementById(
-                    "employeeDepartment"
+                    "evaluationDate"
                 )
                 .value
-                .trim(),
-
-        job_title:
-            document
-                .getElementById(
-                    "employeeTitle"
-                )
-                .value
-                .trim(),
-
-        experience_years:
-            Number(
-                document
-                    .getElementById(
-                        "employeeExperience"
-                    )
-                    .value
-            ),
-
-        job_level:
-            document
-                .getElementById(
-                    "employeeLevel"
-                )
-                .value,
-
-        status:
-            document
-                .getElementById(
-                    "employeeStatus"
-                )
-                .value,
-
-        availability:
-            Number(
-                document
-                    .getElementById(
-                        "employeeAvailability"
-                    )
-                    .value
-            ),
-
-        workload:
-            Number(
-                document
-                    .getElementById(
-                        "employeeWorkload"
-                    )
-                    .value
-            )
 
     };
 
 
-    if (
-        employeeData.availability < 0
-        ||
-        employeeData.availability > 100
-    ) {
-
-        alert(
-            "نسبة التفرغ يجب أن تكون من 0 إلى 100"
-        );
-
-
-        resetSaveButton(
-            editing
-        );
-
-
-        return;
-
-    }
-
-
-    if (
-        employeeData.workload < 0
-        ||
-        employeeData.workload > 100
-    ) {
-
-        alert(
-            "ضغط العمل يجب أن يكون من 0 إلى 100"
-        );
-
-
-        resetSaveButton(
-            editing
-        );
-
-
-        return;
-
-    }
-
-
-    const skills =
-        getFormSkills();
-
 
     try {
 
-        let employeeId =
-            editing
-            ?
-            Number(id)
-            :
-            null;
 
+        if (editId) {
 
-        /*
-            تعديل الموظف
-        */
-
-        if (editing) {
 
             const {
                 error
             } =
             await supabaseClient
-                .from("employees")
+                .from("evaluations")
                 .update(
-                    employeeData
+                    evaluationData
                 )
                 .eq(
                     "id",
-                    employeeId
+                    Number(editId)
                 );
 
 
+
             if (error) {
 
                 throw error;
 
             }
 
+
+
+            alert(
+                "تم تعديل التقييم بنجاح"
+            );
+
+
         }
-
-
-        /*
-            إضافة موظف جديد
-        */
 
         else {
 
+
             const {
-                data,
                 error
             } =
             await supabaseClient
-                .from("employees")
+                .from("evaluations")
                 .insert([
-                    employeeData
-                ])
-                .select(`
-                    id
-                `)
-                .single();
+                    evaluationData
+                ]);
+
 
 
             if (error) {
@@ -2577,58 +1413,34 @@ async function saveEmployee(event) {
             }
 
 
-            employeeId =
-                data.id;
+
+            alert(
+                "تمت إضافة التقييم بنجاح"
+            );
 
         }
 
 
-        /*
-            حفظ المهارات
-        */
 
-        await saveEmployeeSkills(
-            employeeId,
-            skills
-        );
+        closeEvaluationModal();
 
 
-        /*
-            مهم:
-            إعادة الزر قبل إغلاق النافذة
-        */
+        await loadEvaluations();
 
-        resetSaveButton(
-            editing
-        );
-
-
-        closeEmployeeModal();
-
-
-        await loadEmployees();
-
-
-        alert(
-            editing
-            ?
-            "تم تعديل الموظف بنجاح"
-            :
-            "تمت إضافة الموظف بنجاح"
-        );
 
     }
 
     catch(error) {
 
+
         console.error(
-            "خطأ الحفظ:",
+            "خطأ حفظ التقييم:",
             error
         );
 
 
         alert(
-            "تعذر حفظ الموظف.\n\n"
+            "تعذر حفظ التقييم.\n\n"
             +
             (
                 error.message
@@ -2638,13 +1450,21 @@ async function saveEmployee(event) {
         );
 
 
-        /*
-            إذا حصل خطأ يرجع الزر يشتغل
-        */
+    }
 
-        resetSaveButton(
-            editing
-        );
+    finally {
+
+
+        button.disabled =
+            false;
+
+
+        button.textContent =
+            editId
+            ?
+            "حفظ التعديلات"
+            :
+            "حفظ التقييم";
 
     }
 
@@ -2652,14 +1472,238 @@ async function saveEmployee(event) {
 
 
 
-/* =========================================
-   تفاصيل الموظف
-========================================= */
+/* ===================================
+   عرض التقييمات
+=================================== */
 
-async function showEmployee(id) {
+function renderEvaluations(list) {
 
-    const employee =
-        employees.find(
+
+    evaluationsGrid.innerHTML =
+        "";
+
+
+
+    if (
+        !list
+        ||
+        list.length === 0
+    ) {
+
+
+        evaluationsGrid.innerHTML = `
+
+            <div class="empty-state">
+                لا توجد تقييمات حالياً
+            </div>
+
+        `;
+
+
+        return;
+
+    }
+
+
+
+    list.forEach(
+        function(evaluation) {
+
+
+            const employeeName =
+                evaluation.employees?.name
+                ||
+                "-";
+
+
+            const taskName =
+                evaluation.tasks?.task_name
+                ||
+                "-";
+
+
+
+            const card =
+                document.createElement(
+                    "article"
+                );
+
+
+            card.className =
+                "evaluation-card";
+
+
+
+            card.innerHTML = `
+
+
+                <div class="card-top">
+
+
+                    <div>
+
+                        <span class="evaluation-label">
+                            تقييم موظف
+                        </span>
+
+
+                        <h3>
+                            ${escapeHtml(employeeName)}
+                        </h3>
+
+
+                        <p class="task-name">
+                            ${escapeHtml(taskName)}
+                        </p>
+
+                    </div>
+
+
+
+                    <div class="rating-badge">
+
+                        <span>
+                            التقييم
+                        </span>
+
+                        <strong>
+
+                            ${
+                                evaluation.performance_rating
+                            }/5
+
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <div class="evaluation-info">
+
+
+                    <div class="info-item">
+
+                        <span>
+                            مستوى الإنجاز
+                        </span>
+
+                        <strong>
+
+                            ${escapeHtml(
+                                evaluation.achievement_level
+                            )}
+
+                        </strong>
+
+                    </div>
+
+
+
+                    <div class="info-item">
+
+                        <span>
+                            تاريخ التقييم
+                        </span>
+
+                        <strong>
+
+                            ${formatDate(
+                                evaluation.evaluation_date
+                            )}
+
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <div class="notes-preview">
+
+                    <span>
+                        ملاحظات المسؤول
+                    </span>
+
+                    <p>
+
+                        ${escapeHtml(
+                            evaluation.notes
+                            ||
+                            "لا توجد ملاحظات"
+                        )}
+
+                    </p>
+
+                </div>
+
+
+
+                <div class="evaluation-actions">
+
+
+                    <button
+                        type="button"
+                        class="view-btn"
+                        data-action="view"
+                        data-id="${evaluation.id}"
+                    >
+                        عرض
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="edit-btn"
+                        data-action="edit"
+                        data-id="${evaluation.id}"
+                    >
+                        تعديل
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="delete-btn"
+                        data-action="delete"
+                        data-id="${evaluation.id}"
+                    >
+                        حذف
+                    </button>
+
+
+                </div>
+
+
+            `;
+
+
+
+            evaluationsGrid.appendChild(
+                card
+            );
+
+
+        }
+    );
+
+}
+
+
+
+/* ===================================
+   عرض التفاصيل
+=================================== */
+
+function viewEvaluation(id) {
+
+
+    const evaluation =
+        evaluations.find(
             function(item) {
 
                 return (
@@ -2672,91 +1716,20 @@ async function showEmployee(id) {
         );
 
 
-    if (!employee) {
+
+    if (!evaluation) {
 
         return;
 
     }
 
 
-    detailsModal
-        .classList
-        .add(
-            "show"
-        );
 
-
-    const container =
-        document.getElementById(
-            "detailsContent"
-        );
-
-
-    container.innerHTML = `
-
-        <div
-            style="
-                text-align:center;
-                padding:20px;
-            "
-        >
-            جارٍ تحميل التفاصيل...
-        </div>
-
-    `;
-
-
-    let skills =
-        [];
-
-
-    try {
-
-        skills =
-            await getEmployeeSkills(
-                employee.id
-            );
-
-    }
-
-    catch(error) {
-
-        console.error(
-            error
-        );
-
-    }
-
-
-    const skillsHtml =
-        skills.length > 0
-        ?
-        skills.map(
-            function(skill) {
-
-                return `
-
-                    <span class="skill-chip">
-
-                        ${escapeHtml(skill.name)}
-
-                        — مستوى
-
-                        ${skill.level}
-
-                    </span>
-
-                `;
-
-            }
-        ).join("")
-        :
-        "لا توجد مهارات مضافة";
-
-
-    container.innerHTML = `
-
-        <div class="details-grid">
+    document
+        .getElementById(
+            "evaluationDetails"
+        )
+        .innerHTML = `
 
 
             <div class="detail-item">
@@ -2766,10 +1739,17 @@ async function showEmployee(id) {
                 </span>
 
                 <strong>
-                    ${escapeHtml(employee.name || "-")}
+
+                    ${escapeHtml(
+                        evaluation.employees?.name
+                        ||
+                        "-"
+                    )}
+
                 </strong>
 
             </div>
+
 
 
             <div class="detail-item">
@@ -2779,162 +1759,140 @@ async function showEmployee(id) {
                 </span>
 
                 <strong>
-                    ${escapeHtml(employee.employee_number || "-")}
+
+                    ${escapeHtml(
+                        evaluation.employees?.employee_number
+                        ||
+                        "-"
+                    )}
+
                 </strong>
 
             </div>
+
 
 
             <div class="detail-item">
 
                 <span>
-                    البريد الإلكتروني
+                    اسم المهمة
                 </span>
 
                 <strong>
-                    ${escapeHtml(employee.email || "-")}
+
+                    ${escapeHtml(
+                        evaluation.tasks?.task_name
+                        ||
+                        "-"
+                    )}
+
                 </strong>
 
             </div>
+
 
 
             <div class="detail-item">
 
                 <span>
-                    القسم
+                    مستوى الإنجاز
                 </span>
 
                 <strong>
-                    ${escapeHtml(employee.department || "-")}
+
+                    ${escapeHtml(
+                        evaluation.achievement_level
+                    )}
+
                 </strong>
 
             </div>
+
 
 
             <div class="detail-item">
 
                 <span>
-                    المسمى الوظيفي
+                    تقييم الأداء
                 </span>
 
                 <strong>
-                    ${escapeHtml(employee.job_title || "-")}
+
+                    ${
+                        evaluation.performance_rating
+                    }
+
+                    من 5
+
                 </strong>
 
             </div>
+
 
 
             <div class="detail-item">
 
                 <span>
-                    سنوات الخبرة
+                    تاريخ التقييم
                 </span>
 
                 <strong>
 
-                    ${employee.experience_years ?? 0}
-
-                    سنوات
+                    ${formatDate(
+                        evaluation.evaluation_date
+                    )}
 
                 </strong>
 
             </div>
 
 
-            <div class="detail-item">
+
+            <div class="detail-item full-detail">
 
                 <span>
-                    المستوى الوظيفي
+                    ملاحظات المسؤول
                 </span>
 
                 <strong>
-                    ${escapeHtml(employee.job_level || "-")}
+
+                    ${escapeHtml(
+                        evaluation.notes
+                        ||
+                        "لا توجد ملاحظات"
+                    )}
+
                 </strong>
 
             </div>
 
 
-            <div class="detail-item">
-
-                <span>
-                    الحالة
-                </span>
-
-                <strong>
-                    ${escapeHtml(employee.status || "-")}
-                </strong>
-
-            </div>
+        `;
 
 
-            <div class="detail-item">
 
-                <span>
-                    نسبة التفرغ
-                </span>
-
-                <strong>
-                    ${employee.availability ?? 0}%
-                </strong>
-
-            </div>
-
-
-            <div class="detail-item">
-
-                <span>
-                    ضغط العمل
-                </span>
-
-                <strong>
-                    ${employee.workload ?? 0}%
-                </strong>
-
-            </div>
-
-
-            <div
-                class="detail-item"
-                style="
-                    grid-column:1 / -1;
-                "
-            >
-
-                <span>
-                    المهارات
-                </span>
-
-                <div
-                    style="
-                        margin-top:8px;
-                    "
-                >
-
-                    ${skillsHtml}
-
-                </div>
-
-            </div>
-
-
-        </div>
-
-    `;
+    detailsModal
+        .classList
+        .add(
+            "show"
+        );
 
 }
 
 
 
-/* =========================================
-   حذف الموظف
-========================================= */
+/* ===================================
+   حذف تقييم
+=================================== */
 
-async function deleteEmployee(id) {
+async function deleteEvaluation(id) {
+
 
     const confirmed =
         confirm(
-            "هل أنت متأكد من حذف هذا الموظف؟"
+            "هل تريد حذف هذا التقييم؟"
         );
+
 
 
     if (!confirmed) {
@@ -2944,64 +1902,22 @@ async function deleteEmployee(id) {
     }
 
 
-    try {
 
-        /*
-            حذف روابط المهارات
-        */
-
-        const {
-            error: skillError
-        } =
-        await supabaseClient
-            .from("employee_skills")
-            .delete()
-            .eq(
-                "employee_id",
-                Number(id)
-            );
-
-
-        if (skillError) {
-
-            throw skillError;
-
-        }
-
-
-        /*
-            حذف الموظف
-        */
-
-        const {
-            error
-        } =
-        await supabaseClient
-            .from("employees")
-            .delete()
-            .eq(
-                "id",
-                Number(id)
-            );
-
-
-        if (error) {
-
-            throw error;
-
-        }
-
-
-        await loadEmployees();
-
-
-        alert(
-            "تم حذف الموظف"
+    const {
+        error
+    } =
+    await supabaseClient
+        .from("evaluations")
+        .delete()
+        .eq(
+            "id",
+            Number(id)
         );
 
-    }
 
-    catch(error) {
+
+    if (error) {
+
 
         console.error(
             error
@@ -3009,26 +1925,35 @@ async function deleteEmployee(id) {
 
 
         alert(
-            "تعذر حذف الموظف.\n\n"
+            "تعذر حذف التقييم.\n\n"
             +
-            (
-                error.message
-                ||
-                ""
-            )
+            error.message
         );
 
+
+        return;
+
     }
+
+
+
+    alert(
+        "تم حذف التقييم بنجاح"
+    );
+
+
+    await loadEvaluations();
 
 }
 
 
 
-/* =========================================
-   البحث والفلاتر
-========================================= */
+/* ===================================
+   البحث
+=================================== */
 
-function filterEmployees() {
+function filterEvaluations() {
+
 
     const search =
         document
@@ -3040,165 +1965,70 @@ function filterEmployees() {
             .toLowerCase();
 
 
-    const department =
-        document
-            .getElementById(
-                "departmentFilter"
-            )
-            .value;
+
+    const filtered =
+        evaluations.filter(
+            function(evaluation) {
 
 
-    const status =
-        document
-            .getElementById(
-                "statusFilter"
-            )
-            .value;
-
-
-    const result =
-        employees.filter(
-            function(employee) {
-
-                const employeeName =
+                const employee =
                     String(
-                        employee.name
+                        evaluation.employees?.name
                         ||
                         ""
                     )
                     .toLowerCase();
 
 
-                const employeeNumber =
+
+                const task =
                     String(
-                        employee.employee_number
+                        evaluation.tasks?.task_name
                         ||
                         ""
                     )
                     .toLowerCase();
 
-
-                const employeeEmail =
-                    String(
-                        employee.email
-                        ||
-                        ""
-                    )
-                    .toLowerCase();
-
-
-                const matchSearch =
-
-                    employeeName.includes(
-                        search
-                    )
-
-                    ||
-
-                    employeeNumber.includes(
-                        search
-                    )
-
-                    ||
-
-                    employeeEmail.includes(
-                        search
-                    );
-
-
-                const matchDepartment =
-
-                    !department
-
-                    ||
-
-                    employee.department
-                    ===
-                    department;
-
-
-                const matchStatus =
-
-                    !status
-
-                    ||
-
-                    employee.status
-                    ===
-                    status;
 
 
                 return (
-                    matchSearch
-                    &&
-                    matchDepartment
-                    &&
-                    matchStatus
+                    employee.includes(search)
+                    ||
+                    task.includes(search)
                 );
 
             }
         );
 
 
-    renderEmployees(
-        result
+
+    renderEvaluations(
+        filtered
     );
 
 }
 
 
 
-/* =========================================
-   إغلاق نافذة الموظف
-========================================= */
+/* ===================================
+   إغلاق النوافذ
+=================================== */
 
-function closeEmployeeModal() {
-
-    /*
-        مهم جداً:
-        إعادة تفعيل الزر دائماً
-    */
-
-    setSaveButton(
-        false,
-        "حفظ الموظف"
-    );
+function closeEvaluationModal() {
 
 
-    employeeModal
+    evaluationModal
         .classList
         .remove(
             "show"
         );
 
-
-    document
-        .getElementById(
-            "employeeForm"
-        )
-        .reset();
-
-
-    document
-        .getElementById(
-            "editEmployeeId"
-        )
-        .value =
-        "";
-
-
-    skillsContainer.innerHTML =
-        "";
-
 }
 
 
 
-/* =========================================
-   إغلاق التفاصيل
-========================================= */
-
 function closeDetailsModal() {
+
 
     detailsModal
         .classList
@@ -3210,52 +2040,63 @@ function closeDetailsModal() {
 
 
 
-/* =========================================
-   إعادة زر الحفظ
-========================================= */
+/* ===================================
+   التاريخ
+=================================== */
 
-function resetSaveButton(
-    editing
-) {
+function formatDate(value) {
 
-    setSaveButton(
-        false,
-        editing
-        ?
-        "حفظ التعديلات"
-        :
-        "حفظ الموظف"
+
+    if (!value) {
+
+        return "-";
+
+    }
+
+
+
+    return new Date(
+        value + "T00:00:00"
+    )
+    .toLocaleDateString(
+        "ar-SA"
     );
 
 }
 
 
 
-/* =========================================
-   حماية النصوص
-========================================= */
+/* ===================================
+   حماية النص
+=================================== */
 
 function escapeHtml(value) {
+
 
     return String(
         value ?? ""
     )
+
     .replaceAll(
         "&",
         "&amp;"
     )
+
     .replaceAll(
         "<",
         "&lt;"
     )
+
     .replaceAll(
         ">",
         "&gt;"
     )
+
     .replaceAll(
         '"',
         "&quot;"
     )
+
     .replaceAll(
         "'",
         "&#039;"
@@ -3264,21 +2105,13 @@ function escapeHtml(value) {
 }
 
 
-function escapeAttribute(value) {
 
-    return escapeHtml(
-        value
-    );
-
-}
-
-
-
-/* =========================================
-   سايد بار الجوال
-========================================= */
+/* ===================================
+   السايد بار
+=================================== */
 
 function openSidebar() {
+
 
     sidebar
         .classList
@@ -3301,10 +2134,12 @@ function openSidebar() {
         );
 
 }
+
 
 
 function closeSidebar() {
 
+
     sidebar
         .classList
         .remove(
@@ -3329,11 +2164,12 @@ function closeSidebar() {
 
 
 
-/* =========================================
+/* ===================================
    تسجيل الخروج
-========================================= */
+=================================== */
 
 async function logout() {
+
 
     await supabaseClient
         .auth
@@ -3357,126 +2193,67 @@ async function logout() {
 
 
 
-/* =========================================
+/* ===================================
    الأحداث
-========================================= */
-
-mobileMenuBtn
-    .addEventListener(
-        "click",
-        openSidebar
-    );
-
-
-sidebarOverlay
-    .addEventListener(
-        "click",
-        closeSidebar
-    );
-
+=================================== */
 
 document
-    .querySelectorAll(
-        ".nav-link"
+    .getElementById(
+        "addEvaluationBtn"
     )
-    .forEach(
-        function(link) {
-
-            link.addEventListener(
-                "click",
-                closeSidebar
-            );
-
-        }
+    .addEventListener(
+        "click",
+        openEvaluationModal
     );
 
 
 document
     .getElementById(
-        "addEmployeeBtn"
-    )
-    .addEventListener(
-        "click",
-        openAddModal
-    );
-
-
-document
-    .getElementById(
-        "addSkillBtn"
-    )
-    .addEventListener(
-        "click",
-        function() {
-
-            addSkillRow();
-
-        }
-    );
-
-
-skillsContainer
-    .addEventListener(
-        "click",
-        function(event) {
-
-            if (
-                event.target
-                    .classList
-                    .contains(
-                        "remove-skill-btn"
-                    )
-            ) {
-
-                event.target
-                    .closest(
-                        ".employee-skill-row"
-                    )
-                    .remove();
-
-            }
-
-        }
-    );
-
-
-document
-    .getElementById(
-        "employeeForm"
+        "evaluationForm"
     )
     .addEventListener(
         "submit",
-        saveEmployee
+        saveEvaluation
     );
 
 
 document
     .getElementById(
-        "cancelEmployeeBtn"
+        "searchInput"
     )
     .addEventListener(
-        "click",
-        closeEmployeeModal
+        "input",
+        filterEvaluations
     );
 
 
 document
     .getElementById(
-        "closeEmployeeModalBtn"
+        "cancelEvaluationBtn"
     )
     .addEventListener(
         "click",
-        closeEmployeeModal
+        closeEvaluationModal
     );
 
 
 document
     .getElementById(
-        "employeeModalOverlay"
+        "closeEvaluationBtn"
     )
     .addEventListener(
         "click",
-        closeEmployeeModal
+        closeEvaluationModal
+    );
+
+
+document
+    .getElementById(
+        "evaluationModalOverlay"
+    )
+    .addEventListener(
+        "click",
+        closeEvaluationModal
     );
 
 
@@ -3500,33 +2277,35 @@ document
     );
 
 
-document
-    .getElementById(
-        "searchInput"
-    )
+mobileMenuBtn
     .addEventListener(
-        "input",
-        filterEmployees
+        "click",
+        openSidebar
+    );
+
+
+sidebarOverlay
+    .addEventListener(
+        "click",
+        closeSidebar
     );
 
 
 document
-    .getElementById(
-        "departmentFilter"
+    .querySelectorAll(
+        ".nav-link"
     )
-    .addEventListener(
-        "change",
-        filterEmployees
-    );
+    .forEach(
+        function(link) {
 
 
-document
-    .getElementById(
-        "statusFilter"
-    )
-    .addEventListener(
-        "change",
-        filterEmployees
+            link.addEventListener(
+                "click",
+                closeSidebar
+            );
+
+
+        }
     );
 
 
@@ -3540,12 +2319,11 @@ document
     );
 
 
-/* أزرار عرض / تعديل / حذف */
-
-employeesTable
+evaluationsGrid
     .addEventListener(
         "click",
         function(event) {
+
 
             const button =
                 event.target.closest(
@@ -3560,6 +2338,7 @@ employeesTable
             }
 
 
+
             const id =
                 Number(
                     button.dataset.id
@@ -3570,49 +2349,49 @@ employeesTable
                 button.dataset.action;
 
 
+
             if (
                 action === "view"
             ) {
 
-                showEmployee(
-                    id
-                );
+                viewEvaluation(id);
 
             }
+
 
             else if (
                 action === "edit"
             ) {
 
-                editEmployee(
-                    id
-                );
+                editEvaluation(id);
 
             }
+
 
             else if (
                 action === "delete"
             ) {
 
-                deleteEmployee(
-                    id
-                );
+                deleteEvaluation(id);
 
             }
+
 
         }
     );
 
 
 
-/* =========================================
+/* ===================================
    تشغيل الصفحة
-========================================= */
+=================================== */
 
 async function startPage() {
 
+
     const allowed =
         await protectPage();
+
 
 
     if (!allowed) {
@@ -3622,9 +2401,21 @@ async function startPage() {
     }
 
 
-    await loadEmployees();
+
+    await Promise.all([
+
+        loadEmployees(),
+
+        loadTasks()
+
+    ]);
+
+
+
+    await loadEvaluations();
 
 }
+
 
 
 startPage();
