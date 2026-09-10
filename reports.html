@@ -2,6 +2,7 @@
 <html lang="ar" dir="rtl">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -11,30 +12,51 @@
 
     <title>معيار | التقارير</title>
 
-    <link rel="stylesheet" href="reports.css">
+    <link
+        rel="stylesheet"
+        href="reports.css"
+    >
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    ></script>
+
 </head>
 
+
 <body>
+
 
 <div class="reports-page">
 
 
-    <!-- هيدر الجوال -->
+    <!-- =========================
+         هيدر الجوال
+    ========================== -->
+
     <header class="mobile-header">
 
         <button
             class="mobile-menu-btn"
             id="mobileMenuBtn"
             type="button"
-            aria-label="فتح القائمة"
         >
             ☰
         </button>
 
+
         <div class="mobile-header-title">
-            <h2>التقارير</h2>
-            <span>معيار</span>
+
+            <h2>
+                التقارير
+            </h2>
+
+            <span>
+                معيار
+            </span>
+
         </div>
+
 
         <img
             src="assets/logo.png"
@@ -45,18 +67,23 @@
     </header>
 
 
-    <!-- الطبقة خلف السايد بار -->
+
     <div
         class="sidebar-overlay"
         id="sidebarOverlay"
     ></div>
 
 
-    <!-- السايد بار -->
+
+    <!-- =========================
+         السايد بار
+    ========================== -->
+
     <aside
         class="sidebar"
         id="sidebar"
     >
+
 
         <div class="sidebar-logo">
 
@@ -70,37 +97,70 @@
 
         <nav class="sidebar-nav">
 
-            <a href="dashboard.html" class="nav-link">
+
+            <a
+                href="dashboard.html"
+                class="nav-link"
+            >
                 لوحة التحكم
             </a>
 
-            <a href="employees.html" class="nav-link">
+
+            <a
+                href="employees.html"
+                class="nav-link"
+            >
                 الموظفون
             </a>
 
-            <a href="projects.html" class="nav-link">
+
+            <a
+                href="projects.html"
+                class="nav-link"
+            >
                 المشاريع
             </a>
 
-            <a href="tasks.html" class="nav-link">
+
+            <a
+                href="tasks.html"
+                class="nav-link"
+            >
                 المهام
             </a>
 
-            <a href="matching.html" class="nav-link">
+
+            <a
+                href="matching.html"
+                class="nav-link"
+            >
                 المطابقة والترشيح
             </a>
 
-            <a href="evaluations.html" class="nav-link">
+
+            <a
+                href="evaluations.html"
+                class="nav-link"
+            >
                 التقييمات
             </a>
 
-            <a href="decisions.html" class="nav-link">
+
+            <a
+                href="decisions.html"
+                class="nav-link"
+            >
                 القرارات
             </a>
 
-            <a href="reports.html" class="nav-link active">
+
+            <a
+                href="reports.html"
+                class="nav-link active"
+            >
                 التقارير
             </a>
+
 
         </nav>
 
@@ -108,38 +168,51 @@
         <button
             class="logout-btn"
             type="button"
-            onclick="logout()"
+            id="logoutBtn"
         >
             تسجيل الخروج
         </button>
 
+
     </aside>
 
 
-    <!-- المحتوى -->
+
+    <!-- =========================
+         المحتوى
+    ========================== -->
+
     <main class="main-content">
 
 
         <!-- رأس الصفحة -->
+
         <header class="topbar">
 
             <span class="page-badge">
                 تقارير وتحليلات
             </span>
 
+
             <h1>
                 التقارير
             </h1>
 
+
             <p>
-                عرض ملخصات تساعد المسؤول على متابعة توزيع المهام والأداء والضغط التشغيلي
+                عرض وتحليل بيانات توزيع المهام والأداء ونتائج المطابقة
             </p>
 
         </header>
 
 
-        <!-- أدوات التقرير -->
+
+        <!-- =========================
+             أدوات التقرير
+        ========================== -->
+
         <section class="report-tools">
+
 
             <div class="filter-group">
 
@@ -147,10 +220,8 @@
                     الفترة
                 </label>
 
-                <select
-                    id="periodFilter"
-                    onchange="applyFilters()"
-                >
+
+                <select id="periodFilter">
 
                     <option value="all">
                         جميع الفترات
@@ -173,16 +244,15 @@
             </div>
 
 
+
             <div class="filter-group">
 
                 <label for="projectFilter">
                     المشروع
                 </label>
 
-                <select
-                    id="projectFilter"
-                    onchange="applyFilters()"
-                >
+
+                <select id="projectFilter">
 
                     <option value="all">
                         جميع المشاريع
@@ -193,24 +263,31 @@
             </div>
 
 
+
             <button
                 class="refresh-btn"
                 type="button"
-                onclick="refreshReports()"
+                id="refreshBtn"
             >
                 تحديث التقارير
             </button>
 
+
         </section>
 
 
-        <!-- الملخص -->
+
+        <!-- =========================
+             البطاقات الرئيسية
+        ========================== -->
+
         <section class="summary-grid">
+
 
             <article class="summary-card">
 
                 <span class="card-title">
-                    توزيع المهام
+                    المهام المسندة
                 </span>
 
                 <strong id="tasksDistribution">
@@ -218,16 +295,17 @@
                 </strong>
 
                 <p>
-                    توزيع المهام الحالية على الموظفين
+                    عدد المهام المسندة إلى موظفين
                 </p>
 
             </article>
 
 
+
             <article class="summary-card">
 
                 <span class="card-title">
-                    ضغط العمل
+                    متوسط ضغط العمل
                 </span>
 
                 <strong id="workloadSummary">
@@ -235,16 +313,17 @@
                 </strong>
 
                 <p>
-                    مستوى ضغط العمل العام على الفريق
+                    متوسط ضغط العمل للموظفين
                 </p>
 
             </article>
 
 
+
             <article class="summary-card">
 
                 <span class="card-title">
-                    أداء الموظفين
+                    متوسط الأداء
                 </span>
 
                 <strong id="performanceSummary">
@@ -252,16 +331,17 @@
                 </strong>
 
                 <p>
-                    متوسط نتائج التقييمات المسجلة
+                    متوسط نتائج تقييم الموظفين
                 </p>
 
             </article>
 
 
+
             <article class="summary-card">
 
                 <span class="card-title">
-                    نتائج المطابقة
+                    متوسط المطابقة
                 </span>
 
                 <strong id="matchingSummary">
@@ -269,17 +349,24 @@
                 </strong>
 
                 <p>
-                    ملخص نتائج المطابقة والترشيحات
+                    متوسط نسب التوافق في القرارات
                 </p>
 
             </article>
 
+
         </section>
 
 
-        <!-- شبكة التقارير -->
+
+        <!-- =========================
+             التقارير
+        ========================== -->
+
         <section class="reports-grid">
 
+
+            <!-- 01 -->
 
             <article class="report-card">
 
@@ -295,19 +382,23 @@
 
                 </div>
 
+
                 <div
                     class="report-content"
                     id="taskDistributionList"
                 >
 
                     <div class="empty-report">
-                        لا توجد بيانات متاحة حالياً
+                        جارٍ تحميل البيانات...
                     </div>
 
                 </div>
 
             </article>
 
+
+
+            <!-- 02 -->
 
             <article class="report-card">
 
@@ -323,19 +414,23 @@
 
                 </div>
 
+
                 <div
                     class="report-content"
                     id="workloadList"
                 >
 
                     <div class="empty-report">
-                        لا توجد بيانات متاحة حالياً
+                        جارٍ تحميل البيانات...
                     </div>
 
                 </div>
 
             </article>
 
+
+
+            <!-- 03 -->
 
             <article class="report-card">
 
@@ -351,19 +446,23 @@
 
                 </div>
 
+
                 <div
                     class="report-content"
                     id="performanceList"
                 >
 
                     <div class="empty-report">
-                        لا توجد تقييمات مسجلة حالياً
+                        جارٍ تحميل البيانات...
                     </div>
 
                 </div>
 
             </article>
 
+
+
+            <!-- 04 -->
 
             <article class="report-card">
 
@@ -379,19 +478,23 @@
 
                 </div>
 
+
                 <div
                     class="report-content"
                     id="matchingList"
                 >
 
                     <div class="empty-report">
-                        لا توجد نتائج مطابقة حالياً
+                        جارٍ تحميل البيانات...
                     </div>
 
                 </div>
 
             </article>
 
+
+
+            <!-- 05 -->
 
             <article class="report-card">
 
@@ -407,19 +510,23 @@
 
                 </div>
 
+
                 <div
                     class="report-content"
                     id="skillsList"
                 >
 
                     <div class="empty-report">
-                        لا توجد بيانات مهارات حالياً
+                        جارٍ تحميل البيانات...
                     </div>
 
                 </div>
 
             </article>
 
+
+
+            <!-- 06 -->
 
             <article class="report-card">
 
@@ -435,13 +542,14 @@
 
                 </div>
 
+
                 <div
                     class="report-content"
                     id="currentWorkList"
                 >
 
                     <div class="empty-report">
-                        لا توجد مشاريع أو مهام حالياً
+                        جارٍ تحميل البيانات...
                     </div>
 
                 </div>
@@ -451,688 +559,2504 @@
 
         </section>
 
+
     </main>
+
 
 </div>
 
 
+
 <script>
 
-    /* حماية صفحة المسؤول */
 
-    const role =
-        localStorage.getItem(
-            "miyarRole"
+/* =====================================================
+   Supabase
+===================================================== */
+
+const SUPABASE_URL =
+    "https://avooyglxacytrfhvotsl.supabase.co";
+
+
+const SUPABASE_KEY =
+    "sb_publishable_NVlWEnA_w4KbSse_-70zdA_J9ut0Kyo";
+
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+
+const ADMIN_EMAIL =
+    "admin@gmail.com";
+
+
+
+/* =====================================================
+   البيانات
+===================================================== */
+
+let employees = [];
+
+let projects = [];
+
+let tasks = [];
+
+let evaluations = [];
+
+let decisions = [];
+
+let taskRequirements = [];
+
+let skills = [];
+
+
+
+/* =====================================================
+   العناصر
+===================================================== */
+
+const periodFilter =
+    document.getElementById(
+        "periodFilter"
+    );
+
+
+const projectFilter =
+    document.getElementById(
+        "projectFilter"
+    );
+
+
+const refreshBtn =
+    document.getElementById(
+        "refreshBtn"
+    );
+
+
+const sidebar =
+    document.getElementById(
+        "sidebar"
+    );
+
+
+const sidebarOverlay =
+    document.getElementById(
+        "sidebarOverlay"
+    );
+
+
+const mobileMenuBtn =
+    document.getElementById(
+        "mobileMenuBtn"
+    );
+
+
+
+/* =====================================================
+   حماية الصفحة
+===================================================== */
+
+async function protectPage() {
+
+
+    try {
+
+
+        const {
+            data,
+            error
+        } =
+        await supabaseClient
+            .auth
+            .getSession();
+
+
+        if (
+            error
+            ||
+            !data
+            ||
+            !data.session
+        ) {
+
+
+            window.location.href =
+                "login.html";
+
+
+            return false;
+
+        }
+
+
+        const email =
+            String(
+                data.session.user.email
+                ||
+                ""
+            )
+            .trim()
+            .toLowerCase();
+
+
+        if (
+            email !==
+            ADMIN_EMAIL.toLowerCase()
+        ) {
+
+
+            await supabaseClient
+                .auth
+                .signOut();
+
+
+            localStorage.removeItem(
+                "miyarRole"
+            );
+
+
+            localStorage.removeItem(
+                "miyarEmail"
+            );
+
+
+            window.location.href =
+                "login.html";
+
+
+            return false;
+
+        }
+
+
+        localStorage.setItem(
+            "miyarRole",
+            "admin"
         );
 
 
-    if (role !== "admin") {
-
-        alert(
-            "غير مصرح لك بالدخول إلى صفحة التقارير"
+        localStorage.setItem(
+            "miyarEmail",
+            email
         );
 
-        window.location.href =
-            "login.html";
+
+        return true;
+
+
+    }
+
+    catch(error) {
+
+
+        console.error(
+            "خطأ حماية الصفحة:",
+            error
+        );
+
+
+        return false;
+
+    }
+
+}
+
+
+
+/* =====================================================
+   تحميل الموظفين
+===================================================== */
+
+async function loadEmployees() {
+
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("employees")
+        .select(`
+            id,
+            name,
+            job_title,
+            department,
+            experience_years,
+            availability,
+            workload,
+            status
+        `)
+        .order(
+            "name",
+            {
+                ascending: true
+            }
+        );
+
+
+    if (error) {
+
+        console.error(
+            "خطأ تحميل الموظفين:",
+            error
+        );
+
+        employees = [];
+
+        return;
     }
 
 
-    /* سايد بار الجوال */
+    employees =
+        data || [];
 
-    const mobileMenuBtn =
-        document.getElementById(
-            "mobileMenuBtn"
+}
+
+
+
+/* =====================================================
+   تحميل المشاريع
+===================================================== */
+
+async function loadProjects() {
+
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("projects")
+        .select("*")
+        .order(
+            "id",
+            {
+                ascending: false
+            }
         );
 
 
-    const sidebar =
-        document.getElementById(
-            "sidebar"
+    if (error) {
+
+        console.error(
+            "خطأ تحميل المشاريع:",
+            error
+        );
+
+        projects = [];
+
+        return;
+    }
+
+
+    projects =
+        data || [];
+
+
+    renderProjectFilter();
+
+}
+
+
+
+/* =====================================================
+   تحميل المهام
+===================================================== */
+
+async function loadTasks() {
+
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("tasks")
+        .select(`
+            id,
+            project_id,
+            task_name,
+            priority,
+            due_date,
+            status,
+            assigned_employee_id
+        `)
+        .order(
+            "id",
+            {
+                ascending: false
+            }
         );
 
 
-    const sidebarOverlay =
-        document.getElementById(
-            "sidebarOverlay"
+    if (error) {
+
+        console.error(
+            "خطأ تحميل المهام:",
+            error
+        );
+
+        tasks = [];
+
+        return;
+    }
+
+
+    tasks =
+        data || [];
+
+}
+
+
+
+/* =====================================================
+   تحميل التقييمات
+===================================================== */
+
+async function loadEvaluations() {
+
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("evaluations")
+        .select("*")
+        .order(
+            "id",
+            {
+                ascending: false
+            }
         );
 
 
-    function openSidebar() {
+    if (error) {
 
-        sidebar.classList.add(
+        console.error(
+            "خطأ تحميل التقييمات:",
+            error
+        );
+
+        evaluations = [];
+
+        return;
+    }
+
+
+    evaluations =
+        data || [];
+
+}
+
+
+
+/* =====================================================
+   تحميل القرارات
+===================================================== */
+
+async function loadDecisions() {
+
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("decisions")
+        .select(`
+            id,
+            task_id,
+            system_candidate_id,
+            selected_employee_id,
+            match_rate,
+            reason,
+            decision_date
+        `)
+        .order(
+            "id",
+            {
+                ascending: false
+            }
+        );
+
+
+    if (error) {
+
+        console.error(
+            "خطأ تحميل القرارات:",
+            error
+        );
+
+        decisions = [];
+
+        return;
+    }
+
+
+    decisions =
+        data || [];
+
+}
+
+
+
+/* =====================================================
+   تحميل متطلبات المهام
+===================================================== */
+
+async function loadTaskRequirements() {
+
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("task_requirements")
+        .select(`
+            id,
+            task_id,
+            skill_id,
+            required_level,
+            experience_required,
+            availability_required,
+            skill_weight
+        `);
+
+
+    if (error) {
+
+        console.error(
+            "خطأ تحميل متطلبات المهام:",
+            error
+        );
+
+        taskRequirements = [];
+
+        return;
+    }
+
+
+    taskRequirements =
+        data || [];
+
+}
+
+
+
+/* =====================================================
+   تحميل المهارات
+===================================================== */
+
+async function loadSkills() {
+
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("skills")
+        .select(`
+            id,
+            skill_name
+        `);
+
+
+    if (error) {
+
+        console.error(
+            "خطأ تحميل المهارات:",
+            error
+        );
+
+        skills = [];
+
+        return;
+    }
+
+
+    skills =
+        data || [];
+
+}
+
+
+
+/* =====================================================
+   قائمة المشاريع
+===================================================== */
+
+function renderProjectFilter() {
+
+
+    projectFilter.innerHTML = `
+
+        <option value="all">
+            جميع المشاريع
+        </option>
+
+    `;
+
+
+    projects.forEach(
+        function(project) {
+
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+
+            option.value =
+                project.id;
+
+
+            option.textContent =
+                project.project_name
+                ||
+                "مشروع بدون اسم";
+
+
+            projectFilter.appendChild(
+                option
+            );
+
+
+        }
+    );
+
+}
+
+
+
+/* =====================================================
+   المشروع
+===================================================== */
+
+function getProjectName(
+    projectId
+) {
+
+
+    const project =
+        projects.find(
+            function(item) {
+
+                return (
+                    Number(item.id)
+                    ===
+                    Number(projectId)
+                );
+
+            }
+        );
+
+
+    return project
+        ?
+        project.project_name
+        :
+        "غير محدد";
+
+}
+
+
+
+/* =====================================================
+   الموظف
+===================================================== */
+
+function getEmployeeName(
+    employeeId
+) {
+
+
+    const employee =
+        employees.find(
+            function(item) {
+
+                return (
+                    Number(item.id)
+                    ===
+                    Number(employeeId)
+                );
+
+            }
+        );
+
+
+    return employee
+        ?
+        employee.name
+        :
+        "غير مسند";
+
+}
+
+
+
+/* =====================================================
+   المهمة
+===================================================== */
+
+function getTask(
+    taskId
+) {
+
+
+    return tasks.find(
+        function(item) {
+
+            return (
+                Number(item.id)
+                ===
+                Number(taskId)
+            );
+
+        }
+    );
+
+}
+
+
+
+/* =====================================================
+   اسم المهارة
+===================================================== */
+
+function getSkillName(
+    skillId
+) {
+
+
+    const skill =
+        skills.find(
+            function(item) {
+
+                return (
+                    Number(item.id)
+                    ===
+                    Number(skillId)
+                );
+
+            }
+        );
+
+
+    return skill
+        ?
+        skill.skill_name
+        :
+        "مهارة غير معروفة";
+
+}
+
+
+
+/* =====================================================
+   فلترة التاريخ
+===================================================== */
+
+function dateMatchesPeriod(
+    dateValue
+) {
+
+
+    const period =
+        periodFilter.value;
+
+
+    if (
+        period === "all"
+    ) {
+
+        return true;
+
+    }
+
+
+    if (!dateValue) {
+
+        return false;
+
+    }
+
+
+    const date =
+        new Date(
+            dateValue
+        );
+
+
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return false;
+
+    }
+
+
+    const today =
+        new Date();
+
+
+    if (
+        period === "year"
+    ) {
+
+        return (
+            date.getFullYear()
+            ===
+            today.getFullYear()
+        );
+
+    }
+
+
+    if (
+        period === "month"
+    ) {
+
+        return (
+
+            date.getFullYear()
+            ===
+            today.getFullYear()
+
+            &&
+
+            date.getMonth()
+            ===
+            today.getMonth()
+
+        );
+
+    }
+
+
+    if (
+        period === "week"
+    ) {
+
+
+        const start =
+            new Date(today);
+
+
+        start.setHours(
+            0,
+            0,
+            0,
+            0
+        );
+
+
+        const day =
+            start.getDay();
+
+
+        start.setDate(
+            start.getDate()
+            -
+            day
+        );
+
+
+        const end =
+            new Date(start);
+
+
+        end.setDate(
+            start.getDate()
+            +
+            7
+        );
+
+
+        return (
+            date >= start
+            &&
+            date < end
+        );
+
+    }
+
+
+    return true;
+
+}
+
+
+
+/* =====================================================
+   المهام المفلترة
+===================================================== */
+
+function getFilteredTasks() {
+
+
+    const selectedProject =
+        projectFilter.value;
+
+
+    return tasks.filter(
+        function(task) {
+
+
+            const projectMatch =
+
+                selectedProject === "all"
+
+                ||
+
+                Number(task.project_id)
+                ===
+                Number(selectedProject);
+
+
+            const dateMatch =
+                dateMatchesPeriod(
+                    task.due_date
+                );
+
+
+            return (
+                projectMatch
+                &&
+                dateMatch
+            );
+
+
+        }
+    );
+
+}
+
+
+
+/* =====================================================
+   تقييم الموظف
+===================================================== */
+
+function getEvaluationRating(
+    evaluation
+) {
+
+
+    const value =
+
+        evaluation.performance_rating
+        ??
+        evaluation.rating
+        ??
+        evaluation.score
+        ??
+        evaluation.achievement_level
+        ??
+        0;
+
+
+    return Number(value) || 0;
+
+}
+
+
+
+/* =====================================================
+   تاريخ التقييم
+===================================================== */
+
+function getEvaluationDate(
+    evaluation
+) {
+
+
+    return (
+
+        evaluation.evaluation_date
+        ||
+        evaluation.created_at
+        ||
+        ""
+
+    );
+
+}
+
+
+
+/* =====================================================
+   تطبيق الفلاتر
+===================================================== */
+
+function applyFilters() {
+
+
+    renderReports();
+
+}
+
+
+
+/* =====================================================
+   تحديث
+===================================================== */
+
+async function refreshReports() {
+
+
+    refreshBtn.disabled =
+        true;
+
+
+    refreshBtn.textContent =
+        "جارٍ التحديث...";
+
+
+    try {
+
+
+        await loadAllData();
+
+
+        renderReports();
+
+
+    }
+
+    finally {
+
+
+        refreshBtn.disabled =
+            false;
+
+
+        refreshBtn.textContent =
+            "تحديث التقارير";
+
+
+    }
+
+}
+
+
+
+/* =====================================================
+   عرض جميع التقارير
+===================================================== */
+
+function renderReports() {
+
+
+    renderTaskDistribution();
+
+    renderWorkload();
+
+    renderPerformance();
+
+    renderMatching();
+
+    renderSkills();
+
+    renderCurrentWork();
+
+    updateSummary();
+
+}
+
+
+
+/* =====================================================
+   01 توزيع المهام
+===================================================== */
+
+function renderTaskDistribution() {
+
+
+    const container =
+        document.getElementById(
+            "taskDistributionList"
+        );
+
+
+    container.innerHTML =
+        "";
+
+
+    const filteredTasks =
+        getFilteredTasks()
+        .filter(
+            function(task) {
+
+                return (
+                    task.assigned_employee_id
+                    !== null
+                    &&
+                    task.assigned_employee_id
+                    !== undefined
+                );
+
+            }
+        );
+
+
+    if (
+        filteredTasks.length === 0
+    ) {
+
+
+        container.innerHTML = `
+
+            <div class="empty-report">
+                لا توجد مهام مسندة ضمن الفترة المحددة
+            </div>
+
+        `;
+
+
+        return;
+
+    }
+
+
+    filteredTasks.forEach(
+        function(task) {
+
+
+            const row =
+                document.createElement(
+                    "div"
+                );
+
+
+            row.className =
+                "report-row";
+
+
+            row.innerHTML = `
+
+                <div>
+
+                    <strong>
+                        ${escapeHtml(
+                            getEmployeeName(
+                                task.assigned_employee_id
+                            )
+                        )}
+                    </strong>
+
+                    <span>
+                        ${escapeHtml(
+                            task.task_name
+                        )}
+                    </span>
+
+                </div>
+
+
+                <span class="status-badge">
+                    ${escapeHtml(
+                        task.status
+                        ||
+                        "غير محدد"
+                    )}
+                </span>
+
+            `;
+
+
+            container.appendChild(
+                row
+            );
+
+
+        }
+    );
+
+}
+
+
+
+/* =====================================================
+   02 ضغط العمل
+===================================================== */
+
+function renderWorkload() {
+
+
+    const container =
+        document.getElementById(
+            "workloadList"
+        );
+
+
+    container.innerHTML =
+        "";
+
+
+    const filteredTasks =
+        getFilteredTasks();
+
+
+    let employeesToShow =
+        employees;
+
+
+    /*
+        إذا تم اختيار مشروع
+        نظهر الموظفين المرتبطين بمهامه
+    */
+
+    if (
+        projectFilter.value
+        !==
+        "all"
+    ) {
+
+
+        const employeeIds =
+            new Set(
+
+                filteredTasks
+
+                .filter(
+                    task =>
+                        task.assigned_employee_id
+                )
+
+                .map(
+                    task =>
+                        Number(
+                            task.assigned_employee_id
+                        )
+                )
+
+            );
+
+
+        employeesToShow =
+            employees.filter(
+                employee =>
+                    employeeIds.has(
+                        Number(employee.id)
+                    )
+            );
+
+    }
+
+
+    if (
+        employeesToShow.length === 0
+    ) {
+
+
+        container.innerHTML = `
+
+            <div class="empty-report">
+                لا توجد بيانات ضغط عمل
+            </div>
+
+        `;
+
+
+        return;
+
+    }
+
+
+    employeesToShow
+
+    .slice()
+
+    .sort(
+        function(a, b) {
+
+            return (
+                Number(b.workload || 0)
+                -
+                Number(a.workload || 0)
+            );
+
+        }
+    )
+
+    .forEach(
+        function(employee) {
+
+
+            const workload =
+                Number(
+                    employee.workload
+                    ||
+                    0
+                );
+
+
+            let level =
+                "منخفض";
+
+
+            if (
+                workload >= 70
+            ) {
+
+                level =
+                    "مرتفع";
+
+            }
+
+            else if (
+                workload >= 40
+            ) {
+
+                level =
+                    "متوسط";
+
+            }
+
+
+            const row =
+                document.createElement(
+                    "div"
+                );
+
+
+            row.className =
+                "report-row";
+
+
+            row.innerHTML = `
+
+                <div>
+
+                    <strong>
+                        ${escapeHtml(employee.name)}
+                    </strong>
+
+                    <span>
+                        ${escapeHtml(level)}
+                    </span>
+
+                </div>
+
+
+                <span class="value-badge">
+                    ${workload}%
+                </span>
+
+            `;
+
+
+            container.appendChild(
+                row
+            );
+
+
+        }
+    );
+
+}
+
+
+
+/* =====================================================
+   03 أداء الموظفين
+===================================================== */
+
+function renderPerformance() {
+
+
+    const container =
+        document.getElementById(
+            "performanceList"
+        );
+
+
+    container.innerHTML =
+        "";
+
+
+    const filteredTaskIds =
+        new Set(
+
+            getFilteredTasks()
+            .map(
+                task =>
+                    Number(task.id)
+            )
+
+        );
+
+
+    const filtered =
+        evaluations.filter(
+            function(evaluation) {
+
+
+                const taskMatch =
+                    projectFilter.value === "all"
+                    ?
+                    true
+                    :
+                    filteredTaskIds.has(
+                        Number(
+                            evaluation.task_id
+                        )
+                    );
+
+
+                const dateMatch =
+                    dateMatchesPeriod(
+                        getEvaluationDate(
+                            evaluation
+                        )
+                    );
+
+
+                return (
+                    taskMatch
+                    &&
+                    dateMatch
+                );
+
+
+            }
+        );
+
+
+    if (
+        filtered.length === 0
+    ) {
+
+
+        container.innerHTML = `
+
+            <div class="empty-report">
+                لا توجد تقييمات مسجلة ضمن الفترة المحددة
+            </div>
+
+        `;
+
+
+        return;
+
+    }
+
+
+    filtered.forEach(
+        function(evaluation) {
+
+
+            const task =
+                getTask(
+                    evaluation.task_id
+                );
+
+
+            const row =
+                document.createElement(
+                    "div"
+                );
+
+
+            row.className =
+                "report-row";
+
+
+            row.innerHTML = `
+
+                <div>
+
+                    <strong>
+                        ${escapeHtml(
+                            getEmployeeName(
+                                evaluation.employee_id
+                            )
+                        )}
+                    </strong>
+
+                    <span>
+                        ${
+                            escapeHtml(
+                                task
+                                ?
+                                task.task_name
+                                :
+                                "تقييم موظف"
+                            )
+                        }
+                    </span>
+
+                </div>
+
+
+                <span class="value-badge">
+                    ${getEvaluationRating(evaluation)}
+                </span>
+
+            `;
+
+
+            container.appendChild(
+                row
+            );
+
+
+        }
+    );
+
+}
+
+
+
+/* =====================================================
+   04 نتائج المطابقة
+===================================================== */
+
+function renderMatching() {
+
+
+    const container =
+        document.getElementById(
+            "matchingList"
+        );
+
+
+    container.innerHTML =
+        "";
+
+
+    const filteredTaskIds =
+        new Set(
+
+            getFilteredTasks()
+            .map(
+                task =>
+                    Number(task.id)
+            )
+
+        );
+
+
+    const filtered =
+        decisions.filter(
+            function(decision) {
+
+
+                const projectMatch =
+
+                    projectFilter.value === "all"
+
+                    ||
+
+                    filteredTaskIds.has(
+                        Number(
+                            decision.task_id
+                        )
+                    );
+
+
+                const dateMatch =
+                    dateMatchesPeriod(
+                        decision.decision_date
+                    );
+
+
+                return (
+                    projectMatch
+                    &&
+                    dateMatch
+                );
+
+
+            }
+        );
+
+
+    if (
+        filtered.length === 0
+    ) {
+
+
+        container.innerHTML = `
+
+            <div class="empty-report">
+                لا توجد نتائج مطابقة ضمن الفترة المحددة
+            </div>
+
+        `;
+
+
+        return;
+
+    }
+
+
+    filtered.forEach(
+        function(decision) {
+
+
+            const task =
+                getTask(
+                    decision.task_id
+                );
+
+
+            const row =
+                document.createElement(
+                    "div"
+                );
+
+
+            row.className =
+                "report-row";
+
+
+            row.innerHTML = `
+
+                <div>
+
+                    <strong>
+                        ${escapeHtml(
+                            getEmployeeName(
+                                decision.selected_employee_id
+                            )
+                        )}
+                    </strong>
+
+                    <span>
+                        ${
+                            escapeHtml(
+                                task
+                                ?
+                                task.task_name
+                                :
+                                "مهمة غير معروفة"
+                            )
+                        }
+                    </span>
+
+                </div>
+
+
+                <span class="match-badge">
+                    ${Number(
+                        decision.match_rate
+                        ||
+                        0
+                    )}%
+                </span>
+
+            `;
+
+
+            container.appendChild(
+                row
+            );
+
+
+        }
+    );
+
+}
+
+
+
+/* =====================================================
+   05 أكثر المهارات المطلوبة
+===================================================== */
+
+function renderSkills() {
+
+
+    const container =
+        document.getElementById(
+            "skillsList"
+        );
+
+
+    container.innerHTML =
+        "";
+
+
+    const taskIds =
+        new Set(
+
+            getFilteredTasks()
+            .map(
+                task =>
+                    Number(task.id)
+            )
+
+        );
+
+
+    const filteredRequirements =
+        taskRequirements.filter(
+            function(requirement) {
+
+
+                if (
+                    projectFilter.value === "all"
+                    &&
+                    periodFilter.value === "all"
+                ) {
+
+                    return true;
+
+                }
+
+
+                return taskIds.has(
+                    Number(
+                        requirement.task_id
+                    )
+                );
+
+
+            }
+        );
+
+
+    const counts =
+        {};
+
+
+    filteredRequirements.forEach(
+        function(requirement) {
+
+
+            if (
+                !requirement.skill_id
+            ) {
+
+                return;
+
+            }
+
+
+            const id =
+                Number(
+                    requirement.skill_id
+                );
+
+
+            if (!counts[id]) {
+
+                counts[id] = 0;
+
+            }
+
+
+            counts[id]++;
+
+        }
+    );
+
+
+    const result =
+        Object.entries(
+            counts
+        )
+
+        .map(
+            function(entry) {
+
+
+                return {
+
+                    id:
+                        Number(entry[0]),
+
+                    count:
+                        Number(entry[1])
+
+                };
+
+
+            }
+        )
+
+        .sort(
+            function(a, b) {
+
+                return (
+                    b.count
+                    -
+                    a.count
+                );
+
+            }
+        );
+
+
+    if (
+        result.length === 0
+    ) {
+
+
+        container.innerHTML = `
+
+            <div class="empty-report">
+                لا توجد بيانات مهارات ضمن الفترة المحددة
+            </div>
+
+        `;
+
+
+        return;
+
+    }
+
+
+    result
+
+    .slice(
+        0,
+        10
+    )
+
+    .forEach(
+        function(item) {
+
+
+            const row =
+                document.createElement(
+                    "div"
+                );
+
+
+            row.className =
+                "report-row";
+
+
+            row.innerHTML = `
+
+                <div>
+
+                    <strong>
+                        ${escapeHtml(
+                            getSkillName(
+                                item.id
+                            )
+                        )}
+                    </strong>
+
+                    <span>
+                        عدد مرات طلب المهارة
+                    </span>
+
+                </div>
+
+
+                <span class="value-badge">
+                    ${item.count}
+                </span>
+
+            `;
+
+
+            container.appendChild(
+                row
+            );
+
+
+        }
+    );
+
+}
+
+
+
+/* =====================================================
+   06 المشاريع والمهام
+===================================================== */
+
+function renderCurrentWork() {
+
+
+    const container =
+        document.getElementById(
+            "currentWorkList"
+        );
+
+
+    container.innerHTML =
+        "";
+
+
+    const filteredTasks =
+        getFilteredTasks();
+
+
+    if (
+        filteredTasks.length === 0
+    ) {
+
+
+        container.innerHTML = `
+
+            <div class="empty-report">
+                لا توجد مشاريع أو مهام ضمن الفترة المحددة
+            </div>
+
+        `;
+
+
+        return;
+
+    }
+
+
+    filteredTasks.forEach(
+        function(task) {
+
+
+            const row =
+                document.createElement(
+                    "div"
+                );
+
+
+            row.className =
+                "report-row";
+
+
+            row.innerHTML = `
+
+                <div>
+
+                    <strong>
+                        ${escapeHtml(
+                            getProjectName(
+                                task.project_id
+                            )
+                        )}
+                    </strong>
+
+                    <span>
+                        ${escapeHtml(
+                            task.task_name
+                        )}
+                    </span>
+
+                </div>
+
+
+                <span class="status-badge">
+                    ${escapeHtml(
+                        task.status
+                        ||
+                        "غير محدد"
+                    )}
+                </span>
+
+            `;
+
+
+            container.appendChild(
+                row
+            );
+
+
+        }
+    );
+
+}
+
+
+
+/* =====================================================
+   تحديث الملخص
+===================================================== */
+
+function updateSummary() {
+
+
+    const filteredTasks =
+        getFilteredTasks();
+
+
+    /*
+        المهام المسندة
+    */
+
+    const assignedTasks =
+        filteredTasks.filter(
+            function(task) {
+
+                return (
+                    task.assigned_employee_id
+                    !== null
+                    &&
+                    task.assigned_employee_id
+                    !== undefined
+                );
+
+            }
+        );
+
+
+    document
+        .getElementById(
+            "tasksDistribution"
+        )
+        .textContent =
+        assignedTasks.length;
+
+
+
+    /*
+        ضغط العمل
+    */
+
+    let workloadEmployees =
+        employees;
+
+
+    if (
+        projectFilter.value
+        !==
+        "all"
+    ) {
+
+
+        const ids =
+            new Set(
+
+                filteredTasks
+
+                .filter(
+                    task =>
+                        task.assigned_employee_id
+                )
+
+                .map(
+                    task =>
+                        Number(
+                            task.assigned_employee_id
+                        )
+                )
+
+            );
+
+
+        workloadEmployees =
+            employees.filter(
+                employee =>
+                    ids.has(
+                        Number(employee.id)
+                    )
+            );
+
+    }
+
+
+    const workloadValues =
+        workloadEmployees.map(
+            employee =>
+                Number(
+                    employee.workload
+                    ||
+                    0
+                )
+        );
+
+
+    const workloadAverage =
+        average(
+            workloadValues
+        );
+
+
+    document
+        .getElementById(
+            "workloadSummary"
+        )
+        .textContent =
+        workloadValues.length > 0
+        ?
+        workloadAverage + "%"
+        :
+        "—";
+
+
+
+    /*
+        متوسط الأداء
+    */
+
+    const filteredTaskIds =
+        new Set(
+
+            filteredTasks.map(
+                task =>
+                    Number(task.id)
+            )
+
+        );
+
+
+    const filteredEvaluations =
+        evaluations.filter(
+            function(item) {
+
+
+                const projectMatch =
+
+                    projectFilter.value === "all"
+
+                    ||
+
+                    filteredTaskIds.has(
+                        Number(
+                            item.task_id
+                        )
+                    );
+
+
+                return (
+
+                    projectMatch
+
+                    &&
+
+                    dateMatchesPeriod(
+                        getEvaluationDate(item)
+                    )
+
+                );
+
+
+            }
+        );
+
+
+    const ratings =
+        filteredEvaluations
+
+        .map(
+            getEvaluationRating
+        )
+
+        .filter(
+            value =>
+                value > 0
+        );
+
+
+    document
+        .getElementById(
+            "performanceSummary"
+        )
+        .textContent =
+        ratings.length > 0
+        ?
+        average(ratings)
+        :
+        "—";
+
+
+
+    /*
+        متوسط المطابقة
+    */
+
+    const filteredDecisions =
+        decisions.filter(
+            function(item) {
+
+
+                const projectMatch =
+
+                    projectFilter.value === "all"
+
+                    ||
+
+                    filteredTaskIds.has(
+                        Number(
+                            item.task_id
+                        )
+                    );
+
+
+                return (
+
+                    projectMatch
+
+                    &&
+
+                    dateMatchesPeriod(
+                        item.decision_date
+                    )
+
+                );
+
+
+            }
+        );
+
+
+    const matches =
+        filteredDecisions.map(
+            item =>
+                Number(
+                    item.match_rate
+                    ||
+                    0
+                )
+        );
+
+
+    document
+        .getElementById(
+            "matchingSummary"
+        )
+        .textContent =
+        matches.length > 0
+        ?
+        average(matches) + "%"
+        :
+        "—";
+
+}
+
+
+
+/* =====================================================
+   المتوسط
+===================================================== */
+
+function average(
+    values
+) {
+
+
+    if (
+        values.length === 0
+    ) {
+
+        return 0;
+
+    }
+
+
+    const total =
+        values.reduce(
+            function(sum, value) {
+
+                return (
+                    sum
+                    +
+                    Number(value || 0)
+                );
+
+            },
+            0
+        );
+
+
+    return Math.round(
+        total
+        /
+        values.length
+    );
+
+}
+
+
+
+/* =====================================================
+   حماية النص
+===================================================== */
+
+function escapeHtml(
+    value
+) {
+
+
+    return String(
+        value ?? ""
+    )
+
+    .replaceAll(
+        "&",
+        "&amp;"
+    )
+
+    .replaceAll(
+        "<",
+        "&lt;"
+    )
+
+    .replaceAll(
+        ">",
+        "&gt;"
+    )
+
+    .replaceAll(
+        '"',
+        "&quot;"
+    )
+
+    .replaceAll(
+        "'",
+        "&#039;"
+    );
+
+}
+
+
+
+/* =====================================================
+   السايد بار
+===================================================== */
+
+function openSidebar() {
+
+
+    sidebar
+        .classList
+        .add(
             "show"
         );
 
-        sidebarOverlay.classList.add(
+
+    sidebarOverlay
+        .classList
+        .add(
             "show"
         );
 
-        document.body.classList.add(
+
+    document.body
+        .classList
+        .add(
             "menu-open"
         );
-    }
+
+}
 
 
-    function closeSidebar() {
 
-        sidebar.classList.remove(
+function closeSidebar() {
+
+
+    sidebar
+        .classList
+        .remove(
             "show"
         );
 
-        sidebarOverlay.classList.remove(
+
+    sidebarOverlay
+        .classList
+        .remove(
             "show"
         );
 
-        document.body.classList.remove(
+
+    document.body
+        .classList
+        .remove(
             "menu-open"
         );
-    }
+
+}
 
 
-    mobileMenuBtn.addEventListener(
+
+/* =====================================================
+   تسجيل الخروج
+===================================================== */
+
+async function logout() {
+
+
+    await supabaseClient
+        .auth
+        .signOut();
+
+
+    localStorage.removeItem(
+        "miyarRole"
+    );
+
+
+    localStorage.removeItem(
+        "miyarEmail"
+    );
+
+
+    localStorage.removeItem(
+        "pendingDecision"
+    );
+
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+
+/* =====================================================
+   تحميل كل البيانات
+===================================================== */
+
+async function loadAllData() {
+
+
+    await Promise.all([
+
+        loadEmployees(),
+
+        loadProjects(),
+
+        loadTasks(),
+
+        loadEvaluations(),
+
+        loadDecisions(),
+
+        loadTaskRequirements(),
+
+        loadSkills()
+
+    ]);
+
+}
+
+
+
+/* =====================================================
+   الأحداث
+===================================================== */
+
+periodFilter
+    .addEventListener(
+        "change",
+        applyFilters
+    );
+
+
+projectFilter
+    .addEventListener(
+        "change",
+        applyFilters
+    );
+
+
+refreshBtn
+    .addEventListener(
+        "click",
+        refreshReports
+    );
+
+
+mobileMenuBtn
+    .addEventListener(
         "click",
         openSidebar
     );
 
 
-    sidebarOverlay.addEventListener(
+sidebarOverlay
+    .addEventListener(
         "click",
         closeSidebar
     );
 
 
-    document
-        .querySelectorAll(".nav-link")
-        .forEach(function(link) {
+document
+    .querySelectorAll(
+        ".nav-link"
+    )
+    .forEach(
+        function(link) {
 
             link.addEventListener(
                 "click",
                 closeSidebar
             );
 
-        });
+        }
+    );
 
 
-    /* بيانات مؤقتة */
-
-    const reportsData = {
-
-        taskDistribution: [],
-
-        workload: [],
-
-        performance: [],
-
-        matching: [],
-
-        skills: [],
-
-        currentWork: []
-
-    };
+document
+    .getElementById(
+        "logoutBtn"
+    )
+    .addEventListener(
+        "click",
+        logout
+    );
 
 
-    function refreshReports() {
 
-        renderReports();
+/* =====================================================
+   تشغيل الصفحة
+===================================================== */
+
+async function startPage() {
+
+
+    const allowed =
+        await protectPage();
+
+
+    if (!allowed) {
+
+        return;
+
     }
 
 
-    function applyFilters() {
-
-        const period =
-            document
-                .getElementById(
-                    "periodFilter"
-                )
-                .value;
+    try {
 
 
-        const project =
-            document
-                .getElementById(
-                    "projectFilter"
-                )
-                .value;
+        await loadAllData();
 
 
         renderReports();
-    }
 
-
-    function renderReports() {
-
-        renderTaskDistribution();
-
-        renderWorkload();
-
-        renderPerformance();
-
-        renderMatching();
-
-        renderSkills();
-
-        renderCurrentWork();
-
-        updateSummary();
-    }
-
-
-    function renderTaskDistribution() {
-
-        const container =
-            document.getElementById(
-                "taskDistributionList"
-            );
-
-
-        container.innerHTML = "";
-
-
-        if (
-            reportsData
-                .taskDistribution
-                .length === 0
-        ) {
-
-            container.innerHTML = `
-
-                <div class="empty-report">
-                    لا توجد بيانات متاحة حالياً
-                </div>
-
-            `;
-
-            return;
-        }
-
-
-        reportsData
-            .taskDistribution
-            .forEach(function(item) {
-
-                const row =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                row.className =
-                    "report-row";
-
-
-                row.innerHTML = `
-
-                    <div>
-
-                        <strong>
-                            ${item.employee}
-                        </strong>
-
-                        <span>
-                            ${item.task}
-                        </span>
-
-                    </div>
-
-                    <span class="status-badge">
-                        ${item.status}
-                    </span>
-
-                `;
-
-
-                container.appendChild(
-                    row
-                );
-
-            });
 
     }
 
+    catch(error) {
 
-    function renderWorkload() {
 
-        const container =
-            document.getElementById(
-                "workloadList"
-            );
-
-
-        container.innerHTML = "";
-
-
-        if (
-            reportsData
-                .workload
-                .length === 0
-        ) {
-
-            container.innerHTML = `
-
-                <div class="empty-report">
-                    لا توجد بيانات متاحة حالياً
-                </div>
-
-            `;
-
-            return;
-        }
-
-
-        reportsData
-            .workload
-            .forEach(function(item) {
-
-                const row =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                row.className =
-                    "report-row";
-
-
-                row.innerHTML = `
-
-                    <div>
-
-                        <strong>
-                            ${item.employee}
-                        </strong>
-
-                        <span>
-                            ضغط العمل
-                        </span>
-
-                    </div>
-
-                    <span class="value-badge">
-                        ${item.level}
-                    </span>
-
-                `;
-
-
-                container.appendChild(
-                    row
-                );
-
-            });
-
-    }
-
-
-    function renderPerformance() {
-
-        const container =
-            document.getElementById(
-                "performanceList"
-            );
-
-
-        container.innerHTML = "";
-
-
-        if (
-            reportsData
-                .performance
-                .length === 0
-        ) {
-
-            container.innerHTML = `
-
-                <div class="empty-report">
-                    لا توجد تقييمات مسجلة حالياً
-                </div>
-
-            `;
-
-            return;
-        }
-
-
-        reportsData
-            .performance
-            .forEach(function(item) {
-
-                const row =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                row.className =
-                    "report-row";
-
-
-                row.innerHTML = `
-
-                    <div>
-
-                        <strong>
-                            ${item.employee}
-                        </strong>
-
-                        <span>
-                            ${item.task}
-                        </span>
-
-                    </div>
-
-                    <span class="value-badge">
-                        ${item.rating}
-                    </span>
-
-                `;
-
-
-                container.appendChild(
-                    row
-                );
-
-            });
-
-    }
-
-
-    function renderMatching() {
-
-        const container =
-            document.getElementById(
-                "matchingList"
-            );
-
-
-        container.innerHTML = "";
-
-
-        if (
-            reportsData
-                .matching
-                .length === 0
-        ) {
-
-            container.innerHTML = `
-
-                <div class="empty-report">
-                    لا توجد نتائج مطابقة حالياً
-                </div>
-
-            `;
-
-            return;
-        }
-
-
-        reportsData
-            .matching
-            .forEach(function(item) {
-
-                const row =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                row.className =
-                    "report-row";
-
-
-                row.innerHTML = `
-
-                    <div>
-
-                        <strong>
-                            ${item.employee}
-                        </strong>
-
-                        <span>
-                            ${item.task}
-                        </span>
-
-                    </div>
-
-                    <span class="match-badge">
-                        ${item.match}%
-                    </span>
-
-                `;
-
-
-                container.appendChild(
-                    row
-                );
-
-            });
-
-    }
-
-
-    function renderSkills() {
-
-        const container =
-            document.getElementById(
-                "skillsList"
-            );
-
-
-        container.innerHTML = "";
-
-
-        if (
-            reportsData
-                .skills
-                .length === 0
-        ) {
-
-            container.innerHTML = `
-
-                <div class="empty-report">
-                    لا توجد بيانات مهارات حالياً
-                </div>
-
-            `;
-
-            return;
-        }
-
-
-        reportsData
-            .skills
-            .forEach(function(item) {
-
-                const row =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                row.className =
-                    "report-row";
-
-
-                row.innerHTML = `
-
-                    <strong>
-                        ${item.skill}
-                    </strong>
-
-                    <span class="value-badge">
-                        ${item.count}
-                    </span>
-
-                `;
-
-
-                container.appendChild(
-                    row
-                );
-
-            });
-
-    }
-
-
-    function renderCurrentWork() {
-
-        const container =
-            document.getElementById(
-                "currentWorkList"
-            );
-
-
-        container.innerHTML = "";
-
-
-        if (
-            reportsData
-                .currentWork
-                .length === 0
-        ) {
-
-            container.innerHTML = `
-
-                <div class="empty-report">
-                    لا توجد مشاريع أو مهام حالياً
-                </div>
-
-            `;
-
-            return;
-        }
-
-
-        reportsData
-            .currentWork
-            .forEach(function(item) {
-
-                const row =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                row.className =
-                    "report-row";
-
-
-                row.innerHTML = `
-
-                    <div>
-
-                        <strong>
-                            ${item.project}
-                        </strong>
-
-                        <span>
-                            ${item.task}
-                        </span>
-
-                    </div>
-
-                    <span class="status-badge">
-                        ${item.status}
-                    </span>
-
-                `;
-
-
-                container.appendChild(
-                    row
-                );
-
-            });
-
-    }
-
-
-    function updateSummary() {
-
-        const taskDistribution =
-            reportsData
-                .taskDistribution
-                .length;
-
-
-        const workload =
-            reportsData
-                .workload
-                .length;
-
-
-        const performance =
-            reportsData
-                .performance
-                .length;
-
-
-        const matching =
-            reportsData
-                .matching
-                .length;
-
-
-        document
-            .getElementById(
-                "tasksDistribution"
-            )
-            .textContent =
-                taskDistribution === 0
-                    ? "—"
-                    : taskDistribution;
-
-
-        document
-            .getElementById(
-                "workloadSummary"
-            )
-            .textContent =
-                workload === 0
-                    ? "—"
-                    : workload;
-
-
-        document
-            .getElementById(
-                "performanceSummary"
-            )
-            .textContent =
-                performance === 0
-                    ? "—"
-                    : performance;
-
-
-        document
-            .getElementById(
-                "matchingSummary"
-            )
-            .textContent =
-                matching === 0
-                    ? "—"
-                    : matching;
-    }
-
-
-    function logout() {
-
-        localStorage.removeItem(
-            "miyarRole"
+        console.error(
+            "خطأ تشغيل صفحة التقارير:",
+            error
         );
 
-        localStorage.removeItem(
-            "miyarEmail"
+
+        alert(
+            "تعذر تحميل بيانات التقارير"
         );
 
-        window.location.href =
-            "login.html";
+
     }
 
+}
 
-    renderReports();
+
+startPage();
+
 
 </script>
+
 
 </body>
 
