@@ -2,7 +2,6 @@
 <html lang="ar" dir="rtl">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta
@@ -23,7 +22,12 @@
     <!-- Excel -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
+
     <style>
+
+        /* =====================================
+           Excel
+        ===================================== */
 
         .toolbar-actions {
             display: flex;
@@ -32,22 +36,22 @@
             flex-wrap: wrap;
         }
 
-        .excel-btn {
-            min-height: 42px;
-            padding: 0 16px;
+        .excel-wrapper {
+            position: relative;
+        }
 
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+        .excel-main-btn {
+            height: 42px;
+            padding: 0 17px;
 
             border:
                 1px solid
-                rgba(49, 88, 108, 0.17);
+                rgba(49, 88, 108, 0.16);
 
             border-radius: 9px;
 
             background:
-                rgba(255, 255, 255, 0.48);
+                rgba(255, 255, 255, 0.58);
 
             color: #31586c;
 
@@ -55,37 +59,91 @@
             font-size: 10px;
 
             cursor: pointer;
-
-            transition: 0.2s ease;
         }
 
-        .excel-btn:hover {
+        .excel-menu {
+            position: absolute;
+
+            top: calc(100% + 7px);
+            right: 0;
+
+            min-width: 160px;
+
+            padding: 6px;
+
+            border:
+                1px solid
+                rgba(49, 88, 108, 0.12);
+
+            border-radius: 10px;
+
+            background: #ffffff;
+
+            box-shadow:
+                0 10px 30px
+                rgba(32, 50, 60, 0.12);
+
+            z-index: 1000;
+
+            display: none;
+        }
+
+        .excel-menu.show {
+            display: block;
+        }
+
+        .excel-menu button,
+        .excel-menu label {
+            width: 100%;
+
+            display: flex;
+            align-items: center;
+
+            padding: 10px 12px;
+
+            border: none;
+            border-radius: 7px;
+
+            background: transparent;
+
+            color: #31586c;
+
+            font-family: inherit;
+            font-size: 10px;
+
+            cursor: pointer;
+        }
+
+        .excel-menu button:hover,
+        .excel-menu label:hover {
             background:
-                rgba(49, 88, 108, 0.08);
+                rgba(49, 88, 108, 0.07);
         }
+
+
+        /* =====================================
+           المهارات
+        ===================================== */
 
         .skills-section {
             grid-column: 1 / -1;
 
             margin-top: 10px;
-
             padding: 15px;
 
             border-radius: 12px;
 
             border:
                 1px solid
-                rgba(60,85,98,0.12);
+                rgba(60, 85, 98, 0.12);
 
             background:
-                rgba(255,255,255,0.35);
+                rgba(255, 255, 255, 0.35);
         }
 
         .skills-section-header {
             display: flex;
-
             align-items: center;
-
             justify-content: space-between;
 
             gap: 10px;
@@ -100,12 +158,14 @@
 
         .skills-section-header p {
             margin-top: 3px;
+
             color: #819098;
+
             font-size: 9px;
         }
 
         .add-skill-btn {
-            min-width: 105px;
+            min-width: 110px;
             height: 36px;
 
             border: none;
@@ -124,6 +184,7 @@
         #skillsContainer {
             display: flex;
             flex-direction: column;
+
             gap: 9px;
         }
 
@@ -131,7 +192,7 @@
             display: grid;
 
             grid-template-columns:
-                minmax(0,1fr)
+                minmax(0, 1fr)
                 150px
                 42px;
 
@@ -144,7 +205,7 @@
             border-radius: 10px;
 
             background:
-                rgba(255,255,255,0.55);
+                rgba(255, 255, 255, 0.55);
         }
 
         .remove-skill-btn {
@@ -155,7 +216,7 @@
             border-radius: 8px;
 
             background:
-                rgba(151,77,77,0.09);
+                rgba(151, 77, 77, 0.09);
 
             color: #985454;
 
@@ -167,40 +228,54 @@
         .skill-chip {
             display: inline-block;
 
-            margin:
-                4px
-                2px;
-
-            padding:
-                6px
-                10px;
+            margin: 4px 2px;
+            padding: 6px 10px;
 
             border-radius: 20px;
 
             background:
-                rgba(49,88,108,0.08);
+                rgba(49, 88, 108, 0.08);
 
             color: #31586c;
 
             font-size: 9px;
         }
 
+
+        /* =====================================
+           حالة التحميل
+        ===================================== */
+
+        .loading-message,
+        .error-message {
+            text-align: center;
+            padding: 30px 10px;
+        }
+
+        .loading-message {
+            color: #71858e;
+        }
+
+        .error-message {
+            color: #9b5656;
+        }
+
+
+        /* =====================================
+           زر الحفظ
+        ===================================== */
+
         .save-btn:disabled {
-            opacity: 0.65;
+            opacity: 0.6;
             cursor: not-allowed;
         }
 
+
+        /* =====================================
+           جوال
+        ===================================== */
+
         @media (max-width: 700px) {
-
-            .toolbar-actions {
-                width: 100%;
-            }
-
-            .excel-btn,
-            .add-btn {
-                flex: 1;
-                min-width: 120px;
-            }
 
             .employees-page {
                 display: block;
@@ -231,7 +306,7 @@
 
                 transition:
                     right
-                    0.30s
+                    0.3s
                     ease !important;
             }
 
@@ -243,20 +318,18 @@
                 display: block !important;
 
                 position: fixed;
-
                 inset: 0;
 
                 z-index: 4000;
 
                 background:
-                    rgba(22,36,44,0.42);
+                    rgba(22, 36, 44, 0.42);
 
                 opacity: 0;
                 visibility: hidden;
                 pointer-events: none;
 
-                transition:
-                    0.25s ease;
+                transition: 0.25s ease;
             }
 
             .sidebar-overlay.show {
@@ -270,6 +343,21 @@
                 margin-right: 0 !important;
             }
 
+            .toolbar-actions {
+                width: 100%;
+            }
+
+            .excel-wrapper,
+            .excel-main-btn,
+            .add-btn {
+                flex: 1;
+            }
+
+            .excel-main-btn,
+            .add-btn {
+                width: 100%;
+            }
+
             .employee-skill-row {
                 grid-template-columns: 1fr;
             }
@@ -279,8 +367,8 @@
             }
 
             .skills-section-header {
-                align-items: stretch;
                 flex-direction: column;
+                align-items: stretch;
             }
 
             .add-skill-btn {
@@ -300,7 +388,9 @@
 <div class="employees-page">
 
 
-    <!-- هيدر الجوال -->
+    <!-- =====================================
+         هيدر الجوال
+    ====================================== -->
 
     <header class="mobile-header">
 
@@ -308,7 +398,6 @@
             class="mobile-menu-btn"
             id="mobileMenuBtn"
             type="button"
-            aria-label="فتح القائمة"
         >
             ☰
         </button>
@@ -344,7 +433,9 @@
 
 
 
-    <!-- السايد بار -->
+    <!-- =====================================
+         السايدبار
+    ====================================== -->
 
     <aside
         class="sidebar"
@@ -410,7 +501,9 @@
 
 
 
-    <!-- المحتوى -->
+    <!-- =====================================
+         المحتوى
+    ====================================== -->
 
     <main class="main-content">
 
@@ -433,7 +526,9 @@
 
 
 
-        <!-- الأدوات -->
+        <!-- =====================================
+             الأدوات
+        ====================================== -->
 
         <section class="toolbar">
 
@@ -451,6 +546,7 @@
 
 
             <div class="filters">
+
 
                 <select id="departmentFilter">
 
@@ -489,6 +585,7 @@
                 </select>
 
 
+
                 <select id="statusFilter">
 
                     <option value="">
@@ -505,33 +602,57 @@
 
                 </select>
 
+
             </div>
 
 
 
             <div class="toolbar-actions">
 
-                <label class="excel-btn">
 
-                    استيراد Excel
+                <!-- زر Excel واحد -->
 
-                    <input
-                        type="file"
-                        id="excelInput"
-                        accept=".xlsx,.xls,.csv"
-                        hidden
+                <div class="excel-wrapper">
+
+                    <button
+                        type="button"
+                        class="excel-main-btn"
+                        id="excelMenuBtn"
+                    >
+                        Excel ▾
+                    </button>
+
+
+                    <div
+                        class="excel-menu"
+                        id="excelMenu"
                     >
 
-                </label>
+                        <label>
+
+                            استيراد Excel
+
+                            <input
+                                type="file"
+                                id="excelInput"
+                                accept=".xlsx,.xls,.csv"
+                                hidden
+                            >
+
+                        </label>
 
 
-                <button
-                    class="excel-btn"
-                    type="button"
-                    id="exportExcelBtn"
-                >
-                    تصدير Excel
-                </button>
+                        <button
+                            type="button"
+                            id="exportExcelBtn"
+                        >
+                            تصدير Excel
+                        </button>
+
+                    </div>
+
+                </div>
+
 
 
                 <button
@@ -542,6 +663,7 @@
                     + إضافة موظف
                 </button>
 
+
             </div>
 
 
@@ -549,7 +671,9 @@
 
 
 
-        <!-- جدول الموظفين -->
+        <!-- =====================================
+             جدول الموظفين
+        ====================================== -->
 
         <section class="table-card">
 
@@ -567,7 +691,6 @@
             <div class="table-wrapper">
 
                 <table>
-
 
                     <thead>
 
@@ -592,14 +715,13 @@
                     </thead>
 
 
-
                     <tbody id="employeesTable">
 
                         <tr>
 
                             <td colspan="7">
 
-                                <div class="empty-table">
+                                <div class="loading-message">
                                     جارٍ تحميل بيانات الموظفين...
                                 </div>
 
@@ -609,28 +731,28 @@
 
                     </tbody>
 
-
                 </table>
 
             </div>
-
 
         </section>
 
 
     </main>
 
+
 </div>
 
 
 
-<!-- نافذة إضافة / تعديل موظف -->
+<!-- =========================================
+     نافذة إضافة / تعديل موظف
+========================================== -->
 
 <div
     class="modal"
     id="employeeModal"
 >
-
 
     <div
         class="modal-overlay"
@@ -638,12 +760,10 @@
     ></div>
 
 
-
     <div class="modal-box">
 
 
         <div class="modal-header">
-
 
             <div>
 
@@ -677,7 +797,6 @@
                 type="hidden"
                 id="editEmployeeId"
             >
-
 
 
             <div class="form-grid">
@@ -876,10 +995,11 @@
 
 
 
-                <!-- المهارات -->
+                <!-- =====================================
+                     مهارات الموظف
+                ====================================== -->
 
                 <div class="skills-section">
-
 
                     <div class="skills-section-header">
 
@@ -909,7 +1029,6 @@
 
                     <div id="skillsContainer"></div>
 
-
                 </div>
 
 
@@ -918,7 +1037,6 @@
 
 
             <div class="modal-actions">
-
 
                 <button
                     type="button"
@@ -937,12 +1055,10 @@
                     حفظ الموظف
                 </button>
 
-
             </div>
 
 
         </form>
-
 
     </div>
 
@@ -950,19 +1066,19 @@
 
 
 
-<!-- نافذة التفاصيل -->
+<!-- =========================================
+     نافذة التفاصيل
+========================================== -->
 
 <div
     class="modal"
     id="detailsModal"
 >
 
-
     <div
         class="modal-overlay"
         id="detailsModalOverlay"
     ></div>
-
 
 
     <div class="modal-box details-box">
@@ -977,7 +1093,7 @@
                 </h2>
 
                 <p>
-                    البيانات الأساسية والمهارات
+                    بيانات الموظف ومهاراته
                 </p>
 
             </div>
@@ -1005,10 +1121,9 @@
 
 <script>
 
-
-/* =====================================
+/* =========================================================
    Supabase
-===================================== */
+========================================================= */
 
 const SUPABASE_URL =
     "https://avooyglxacytrfhvotsl.supabase.co";
@@ -1029,14 +1144,18 @@ const ADMIN_EMAIL =
     "admin@gmail.com";
 
 
-let employees =
-    [];
+
+/* =========================================================
+   البيانات
+========================================================= */
+
+let employees = [];
 
 
 
-/* =====================================
+/* =========================================================
    العناصر
-===================================== */
+========================================================= */
 
 const employeesTable =
     document.getElementById(
@@ -1086,10 +1205,16 @@ const mobileMenuBtn =
     );
 
 
+const excelMenu =
+    document.getElementById(
+        "excelMenu"
+    );
 
-/* =====================================
+
+
+/* =========================================================
    حماية الصفحة
-===================================== */
+========================================================= */
 
 async function protectPage() {
 
@@ -1157,18 +1282,6 @@ async function protectPage() {
         }
 
 
-        localStorage.setItem(
-            "miyarRole",
-            "admin"
-        );
-
-
-        localStorage.setItem(
-            "miyarEmail",
-            email
-        );
-
-
         return true;
 
     }
@@ -1176,9 +1289,36 @@ async function protectPage() {
     catch(error) {
 
         console.error(
-            "خطأ تسجيل الدخول:",
+            "protectPage:",
             error
         );
+
+
+        employeesTable.innerHTML = `
+
+            <tr>
+
+                <td colspan="7">
+
+                    <div class="error-message">
+
+                        تعذر التحقق من تسجيل الدخول
+
+                        <br><br>
+
+                        ${escapeHtml(
+                            error.message
+                            ||
+                            ""
+                        )}
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+        `;
 
 
         return false;
@@ -1189,9 +1329,9 @@ async function protectPage() {
 
 
 
-/* =====================================
+/* =========================================================
    تحميل الموظفين
-===================================== */
+========================================================= */
 
 async function loadEmployees() {
 
@@ -1201,7 +1341,7 @@ async function loadEmployees() {
 
             <td colspan="7">
 
-                <div class="empty-table">
+                <div class="loading-message">
                     جارٍ تحميل بيانات الموظفين...
                 </div>
 
@@ -1249,7 +1389,11 @@ async function loadEmployees() {
 
 
         employees =
-            data || [];
+            Array.isArray(data)
+            ?
+            data
+            :
+            [];
 
 
         renderEmployees(
@@ -1261,6 +1405,7 @@ async function loadEmployees() {
     catch(error) {
 
         console.error(
+            "loadEmployees:",
             error
         );
 
@@ -1271,14 +1416,16 @@ async function loadEmployees() {
 
                 <td colspan="7">
 
-                    <div class="empty-table">
+                    <div class="error-message">
 
                         تعذر تحميل بيانات الموظفين
 
                         <br><br>
 
                         ${escapeHtml(
-                            error.message || ""
+                            error.message
+                            ||
+                            ""
                         )}
 
                     </div>
@@ -1295,9 +1442,9 @@ async function loadEmployees() {
 
 
 
-/* =====================================
+/* =========================================================
    عرض الموظفين
-===================================== */
+========================================================= */
 
 function renderEmployees(list) {
 
@@ -1306,7 +1453,7 @@ function renderEmployees(list) {
 
 
     if (
-        !list
+        !Array.isArray(list)
         ||
         list.length === 0
     ) {
@@ -1361,10 +1508,13 @@ function renderEmployees(list) {
                     <div class="employee-name">
 
                         <div class="avatar">
+
                             ${escapeHtml(
                                 name.charAt(0)
                             )}
+
                         </div>
+
 
                         <span>
                             ${escapeHtml(name)}
@@ -1429,7 +1579,9 @@ function renderEmployees(list) {
                             }
                         "
                     >
+
                         ${escapeHtml(status)}
+
                     </span>
 
                 </td>
@@ -1486,9 +1638,9 @@ function renderEmployees(list) {
 
 
 
-/* =====================================
-   صف مهارة
-===================================== */
+/* =========================================================
+   إضافة صف مهارة
+========================================================= */
 
 function addSkillRow(
     name = "",
@@ -1531,23 +1683,38 @@ function addSkillRow(
 
             <select class="employee-skill-level">
 
-                <option value="1" ${Number(level) === 1 ? "selected" : ""}>
+                <option
+                    value="1"
+                    ${Number(level) === 1 ? "selected" : ""}
+                >
                     1 - مبتدئ
                 </option>
 
-                <option value="2" ${Number(level) === 2 ? "selected" : ""}>
+                <option
+                    value="2"
+                    ${Number(level) === 2 ? "selected" : ""}
+                >
                     2 - أساسي
                 </option>
 
-                <option value="3" ${Number(level) === 3 ? "selected" : ""}>
+                <option
+                    value="3"
+                    ${Number(level) === 3 ? "selected" : ""}
+                >
                     3 - متوسط
                 </option>
 
-                <option value="4" ${Number(level) === 4 ? "selected" : ""}>
+                <option
+                    value="4"
+                    ${Number(level) === 4 ? "selected" : ""}
+                >
                     4 - متقدم
                 </option>
 
-                <option value="5" ${Number(level) === 5 ? "selected" : ""}>
+                <option
+                    value="5"
+                    ${Number(level) === 5 ? "selected" : ""}
+                >
                     5 - خبير
                 </option>
 
@@ -1574,9 +1741,9 @@ function addSkillRow(
 
 
 
-/* =====================================
-   قراءة المهارات
-===================================== */
+/* =========================================================
+   قراءة مهارات الفورم
+========================================================= */
 
 function getFormSkills() {
 
@@ -1587,11 +1754,11 @@ function getFormSkills() {
             );
 
 
-    const result =
+    const skills =
         [];
 
 
-    const seen =
+    const usedNames =
         new Set();
 
 
@@ -1624,13 +1791,13 @@ function getFormSkills() {
             }
 
 
-            const key =
+            const normalized =
                 name.toLowerCase();
 
 
             if (
-                seen.has(
-                    key
+                usedNames.has(
+                    normalized
                 )
             ) {
 
@@ -1639,15 +1806,18 @@ function getFormSkills() {
             }
 
 
-            seen.add(
-                key
+            usedNames.add(
+                normalized
             );
 
 
-            result.push({
+            skills.push({
 
-                name,
-                level
+                name:
+                    name,
+
+                level:
+                    level
 
             });
 
@@ -1655,111 +1825,15 @@ function getFormSkills() {
     );
 
 
-    return result;
+    return skills;
 
 }
 
 
 
-/* =====================================
-   زر الحفظ
-===================================== */
-
-function setSaveButton(
-    disabled,
-    text
-) {
-
-    saveEmployeeBtn.disabled =
-        disabled;
-
-
-    saveEmployeeBtn.textContent =
-        text;
-
-}
-
-
-
-/* =====================================
-   إضافة موظف
-===================================== */
-
-function openAddModal() {
-
-    document
-        .getElementById(
-            "employeeForm"
-        )
-        .reset();
-
-
-    document
-        .getElementById(
-            "editEmployeeId"
-        )
-        .value =
-        "";
-
-
-    document
-        .getElementById(
-            "employeeAvailability"
-        )
-        .value =
-        100;
-
-
-    document
-        .getElementById(
-            "employeeWorkload"
-        )
-        .value =
-        0;
-
-
-    document
-        .getElementById(
-            "employeeModalTitle"
-        )
-        .textContent =
-        "إضافة موظف";
-
-
-    document
-        .getElementById(
-            "employeeModalDescription"
-        )
-        .textContent =
-        "أدخل بيانات الموظف ومهاراته";
-
-
-    skillsContainer.innerHTML =
-        "";
-
-
-    addSkillRow();
-
-
-    setSaveButton(
-        false,
-        "حفظ الموظف"
-    );
-
-
-    employeeModal
-        .classList
-        .add(
-            "show"
-        );
-
-}
-
-
-
-/* =====================================
-   جلب مهارات موظف
-===================================== */
+/* =========================================================
+   جلب مهارات الموظف
+========================================================= */
 
 async function getEmployeeSkills(
     employeeId
@@ -1799,18 +1873,18 @@ async function getEmployeeSkills(
     }
 
 
-    const ids =
+    const skillIds =
         links.map(
-            function(item) {
+            function(link) {
 
-                return item.skill_id;
+                return link.skill_id;
 
             }
         );
 
 
     const {
-        data: skills,
+        data: skillRows,
         error: skillError
     } =
     await supabaseClient
@@ -1821,7 +1895,7 @@ async function getEmployeeSkills(
         `)
         .in(
             "id",
-            ids
+            skillIds
         );
 
 
@@ -1837,7 +1911,9 @@ async function getEmployeeSkills(
 
             const skill =
                 (
-                    skills || []
+                    skillRows
+                    ||
+                    []
                 )
                 .find(
                     function(item) {
@@ -1859,7 +1935,7 @@ async function getEmployeeSkills(
                     ?
                     skill.skill_name
                     :
-                    "مهارة غير معروفة",
+                    "",
 
                 level:
                     Number(
@@ -1877,233 +1953,9 @@ async function getEmployeeSkills(
 
 
 
-/* =====================================
-   تعديل موظف
-===================================== */
-
-async function editEmployee(id) {
-
-    const employee =
-        employees.find(
-            function(item) {
-
-                return (
-                    Number(item.id)
-                    ===
-                    Number(id)
-                );
-
-            }
-        );
-
-
-    if (!employee) {
-
-        return;
-
-    }
-
-
-    /*
-        إصلاح أساسي:
-        كل مرة نفتح موظف نرجع الزر شغال
-    */
-
-    setSaveButton(
-        false,
-        "حفظ التعديلات"
-    );
-
-
-    document
-        .getElementById(
-            "editEmployeeId"
-        )
-        .value =
-        employee.id;
-
-
-    document
-        .getElementById(
-            "employeeName"
-        )
-        .value =
-        employee.name || "";
-
-
-    document
-        .getElementById(
-            "employeeNumber"
-        )
-        .value =
-        employee.employee_number || "";
-
-
-    document
-        .getElementById(
-            "employeeEmail"
-        )
-        .value =
-        employee.email || "";
-
-
-    document
-        .getElementById(
-            "employeeDepartment"
-        )
-        .value =
-        employee.department || "";
-
-
-    document
-        .getElementById(
-            "employeeTitle"
-        )
-        .value =
-        employee.job_title || "";
-
-
-    document
-        .getElementById(
-            "employeeExperience"
-        )
-        .value =
-        employee.experience_years ?? 0;
-
-
-    document
-        .getElementById(
-            "employeeLevel"
-        )
-        .value =
-        employee.job_level || "";
-
-
-    document
-        .getElementById(
-            "employeeStatus"
-        )
-        .value =
-        employee.status || "متاح";
-
-
-    document
-        .getElementById(
-            "employeeAvailability"
-        )
-        .value =
-        employee.availability ?? 100;
-
-
-    document
-        .getElementById(
-            "employeeWorkload"
-        )
-        .value =
-        employee.workload ?? 0;
-
-
-    document
-        .getElementById(
-            "employeeModalTitle"
-        )
-        .textContent =
-        "تعديل الموظف";
-
-
-    document
-        .getElementById(
-            "employeeModalDescription"
-        )
-        .textContent =
-        "عدل بيانات الموظف ومهاراته";
-
-
-    skillsContainer.innerHTML = `
-
-        <div
-            style="
-                padding:15px;
-                text-align:center;
-                color:#819098;
-            "
-        >
-            جارٍ تحميل المهارات...
-        </div>
-
-    `;
-
-
-    employeeModal
-        .classList
-        .add(
-            "show"
-        );
-
-
-    try {
-
-        const currentSkills =
-            await getEmployeeSkills(
-                employee.id
-            );
-
-
-        skillsContainer.innerHTML =
-            "";
-
-
-        if (
-            currentSkills.length === 0
-        ) {
-
-            addSkillRow();
-
-            return;
-
-        }
-
-
-        currentSkills.forEach(
-            function(skill) {
-
-                addSkillRow(
-                    skill.name,
-                    skill.level
-                );
-
-            }
-        );
-
-    }
-
-    catch(error) {
-
-        console.error(
-            error
-        );
-
-
-        skillsContainer.innerHTML =
-            "";
-
-
-        addSkillRow();
-
-
-        alert(
-            "تعذر تحميل مهارات الموظف"
-        );
-
-    }
-
-}
-
-
-
-/* =====================================
-   إيجاد أو إضافة مهارة
-===================================== */
+/* =========================================================
+   إيجاد أو إنشاء مهارة
+========================================================= */
 
 async function getOrCreateSkill(
     skillName
@@ -2127,7 +1979,7 @@ async function getOrCreateSkill(
 
     const {
         data: existing,
-        error: findError
+        error: searchError
     } =
     await supabaseClient
         .from("skills")
@@ -2142,9 +1994,9 @@ async function getOrCreateSkill(
         .limit(1);
 
 
-    if (findError) {
+    if (searchError) {
 
-        throw findError;
+        throw searchError;
 
     }
 
@@ -2162,7 +2014,7 @@ async function getOrCreateSkill(
 
     const {
         data: created,
-        error: createError
+        error: insertError
     } =
     await supabaseClient
         .from("skills")
@@ -2181,9 +2033,9 @@ async function getOrCreateSkill(
         .single();
 
 
-    if (createError) {
+    if (insertError) {
 
-        throw createError;
+        throw insertError;
 
     }
 
@@ -2194,14 +2046,19 @@ async function getOrCreateSkill(
 
 
 
-/* =====================================
+/* =========================================================
    حفظ مهارات الموظف
-===================================== */
+========================================================= */
 
 async function saveEmployeeSkills(
     employeeId,
-    skills
+    formSkills
 ) {
+
+    /*
+       أولاً نحذف روابط المهارات السابقة
+       ثم نعيد حفظ المهارات الحالية.
+    */
 
     const {
         error: deleteError
@@ -2223,9 +2080,9 @@ async function saveEmployeeSkills(
 
 
     if (
-        !skills
+        !formSkills
         ||
-        skills.length === 0
+        formSkills.length === 0
     ) {
 
         return;
@@ -2239,7 +2096,7 @@ async function saveEmployeeSkills(
 
     for (
         const skill
-        of skills
+        of formSkills
     ) {
 
         const skillId =
@@ -2265,7 +2122,7 @@ async function saveEmployeeSkills(
 
 
     const {
-        error
+        error: insertError
     } =
     await supabaseClient
         .from("employee_skills")
@@ -2274,9 +2131,9 @@ async function saveEmployeeSkills(
         );
 
 
-    if (error) {
+    if (insertError) {
 
-        throw error;
+        throw insertError;
 
     }
 
@@ -2284,9 +2141,308 @@ async function saveEmployeeSkills(
 
 
 
-/* =====================================
+/* =========================================================
+   فتح إضافة موظف
+========================================================= */
+
+function openAddModal() {
+
+    const form =
+        document.getElementById(
+            "employeeForm"
+        );
+
+
+    form.reset();
+
+
+    document.getElementById(
+        "editEmployeeId"
+    ).value =
+        "";
+
+
+    document.getElementById(
+        "employeeAvailability"
+    ).value =
+        100;
+
+
+    document.getElementById(
+        "employeeWorkload"
+    ).value =
+        0;
+
+
+    document.getElementById(
+        "employeeStatus"
+    ).value =
+        "متاح";
+
+
+    document.getElementById(
+        "employeeModalTitle"
+    ).textContent =
+        "إضافة موظف";
+
+
+    document.getElementById(
+        "employeeModalDescription"
+    ).textContent =
+        "أدخل بيانات الموظف ومهاراته";
+
+
+    skillsContainer.innerHTML =
+        "";
+
+
+    addSkillRow();
+
+
+    /*
+       مهم جداً:
+       يرجع زر الحفظ شغال
+    */
+
+    setSaveButton(
+        false,
+        "حفظ الموظف"
+    );
+
+
+    employeeModal
+        .classList
+        .add(
+            "show"
+        );
+
+}
+
+
+
+/* =========================================================
+   تعديل موظف
+========================================================= */
+
+async function editEmployee(id) {
+
+    const employee =
+        employees.find(
+            function(item) {
+
+                return (
+                    Number(item.id)
+                    ===
+                    Number(id)
+                );
+
+            }
+        );
+
+
+    if (!employee) {
+
+        return;
+
+    }
+
+
+    /*
+       إصلاح مشكلة الزر:
+       قبل أي شيء نرجعه enabled
+    */
+
+    setSaveButton(
+        false,
+        "حفظ التعديلات"
+    );
+
+
+    document.getElementById(
+        "editEmployeeId"
+    ).value =
+        employee.id;
+
+
+    document.getElementById(
+        "employeeName"
+    ).value =
+        employee.name
+        ||
+        "";
+
+
+    document.getElementById(
+        "employeeNumber"
+    ).value =
+        employee.employee_number
+        ||
+        "";
+
+
+    document.getElementById(
+        "employeeEmail"
+    ).value =
+        employee.email
+        ||
+        "";
+
+
+    document.getElementById(
+        "employeeDepartment"
+    ).value =
+        employee.department
+        ||
+        "";
+
+
+    document.getElementById(
+        "employeeTitle"
+    ).value =
+        employee.job_title
+        ||
+        "";
+
+
+    document.getElementById(
+        "employeeExperience"
+    ).value =
+        employee.experience_years
+        ??
+        0;
+
+
+    document.getElementById(
+        "employeeLevel"
+    ).value =
+        employee.job_level
+        ||
+        "";
+
+
+    document.getElementById(
+        "employeeStatus"
+    ).value =
+        employee.status
+        ||
+        "متاح";
+
+
+    document.getElementById(
+        "employeeAvailability"
+    ).value =
+        employee.availability
+        ??
+        100;
+
+
+    document.getElementById(
+        "employeeWorkload"
+    ).value =
+        employee.workload
+        ??
+        0;
+
+
+    document.getElementById(
+        "employeeModalTitle"
+    ).textContent =
+        "تعديل الموظف";
+
+
+    document.getElementById(
+        "employeeModalDescription"
+    ).textContent =
+        "عدل بيانات الموظف ومهاراته";
+
+
+    skillsContainer.innerHTML = `
+
+        <div class="loading-message">
+            جارٍ تحميل المهارات...
+        </div>
+
+    `;
+
+
+    employeeModal
+        .classList
+        .add(
+            "show"
+        );
+
+
+    try {
+
+        const skills =
+            await getEmployeeSkills(
+                employee.id
+            );
+
+
+        skillsContainer.innerHTML =
+            "";
+
+
+        if (
+            skills.length === 0
+        ) {
+
+            addSkillRow();
+
+        }
+
+        else {
+
+            skills.forEach(
+                function(skill) {
+
+                    addSkillRow(
+                        skill.name,
+                        skill.level
+                    );
+
+                }
+            );
+
+        }
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "getEmployeeSkills:",
+            error
+        );
+
+
+        skillsContainer.innerHTML =
+            "";
+
+
+        addSkillRow();
+
+
+        alert(
+            "تعذر تحميل مهارات الموظف.\n\n"
+            +
+            (
+                error.message
+                ||
+                ""
+            )
+        );
+
+    }
+
+}
+
+
+
+/* =========================================================
    حفظ الموظف
-===================================== */
+========================================================= */
 
 async function saveEmployee(event) {
 
@@ -2294,11 +2450,9 @@ async function saveEmployee(event) {
 
 
     const id =
-        document
-            .getElementById(
-                "editEmployeeId"
-            )
-            .value;
+        document.getElementById(
+            "editEmployeeId"
+        ).value;
 
 
     const editing =
@@ -2311,160 +2465,226 @@ async function saveEmployee(event) {
     );
 
 
-    const employeeData = {
+    try {
 
-        name:
-            document
-                .getElementById(
+        const employeeData = {
+
+            name:
+                document.getElementById(
                     "employeeName"
                 )
                 .value
                 .trim(),
 
-        employee_number:
-            document
-                .getElementById(
+            employee_number:
+                document.getElementById(
                     "employeeNumber"
                 )
                 .value
                 .trim(),
 
-        email:
-            document
-                .getElementById(
+            email:
+                document.getElementById(
                     "employeeEmail"
                 )
                 .value
                 .trim()
                 .toLowerCase(),
 
-        department:
-            document
-                .getElementById(
+            department:
+                document.getElementById(
                     "employeeDepartment"
                 )
                 .value
                 .trim(),
 
-        job_title:
-            document
-                .getElementById(
+            job_title:
+                document.getElementById(
                     "employeeTitle"
                 )
                 .value
                 .trim(),
 
-        experience_years:
-            Number(
-                document
-                    .getElementById(
+            experience_years:
+                Number(
+                    document.getElementById(
                         "employeeExperience"
-                    )
-                    .value
-            ),
+                    ).value
+                ),
 
-        job_level:
-            document
-                .getElementById(
+            job_level:
+                document.getElementById(
                     "employeeLevel"
-                )
-                .value,
+                ).value,
 
-        status:
-            document
-                .getElementById(
+            status:
+                document.getElementById(
                     "employeeStatus"
-                )
-                .value,
+                ).value,
 
-        availability:
-            Number(
-                document
-                    .getElementById(
+            availability:
+                Number(
+                    document.getElementById(
                         "employeeAvailability"
-                    )
-                    .value
-            ),
+                    ).value
+                ),
 
-        workload:
-            Number(
-                document
-                    .getElementById(
+            workload:
+                Number(
+                    document.getElementById(
                         "employeeWorkload"
-                    )
-                    .value
-            )
+                    ).value
+                )
 
-    };
-
-
-    if (
-        employeeData.availability < 0
-        ||
-        employeeData.availability > 100
-    ) {
-
-        alert(
-            "نسبة التفرغ يجب أن تكون من 0 إلى 100"
-        );
+        };
 
 
-        setSaveButton(
-            false,
-            editing
-            ?
-            "حفظ التعديلات"
-            :
-            "حفظ الموظف"
-        );
+        if (
+            employeeData.availability < 0
+            ||
+            employeeData.availability > 100
+        ) {
+
+            throw new Error(
+                "نسبة التفرغ يجب أن تكون من 0 إلى 100"
+            );
+
+        }
 
 
-        return;
+        if (
+            employeeData.workload < 0
+            ||
+            employeeData.workload > 100
+        ) {
 
-    }
+            throw new Error(
+                "ضغط العمل يجب أن يكون من 0 إلى 100"
+            );
 
-
-    if (
-        employeeData.workload < 0
-        ||
-        employeeData.workload > 100
-    ) {
-
-        alert(
-            "ضغط العمل يجب أن يكون من 0 إلى 100"
-        );
+        }
 
 
-        setSaveButton(
-            false,
-            editing
-            ?
-            "حفظ التعديلات"
-            :
-            "حفظ الموظف"
-        );
+        /*
+           منع الرقم الوظيفي المكرر
+        */
 
-
-        return;
-
-    }
-
-
-    const formSkills =
-        getFormSkills();
-
-
-    try {
-
-        let employeeId =
-            editing
-            ?
-            Number(id)
-            :
-            null;
+        let numberQuery =
+            supabaseClient
+                .from("employees")
+                .select("id")
+                .eq(
+                    "employee_number",
+                    employeeData.employee_number
+                );
 
 
         if (editing) {
+
+            numberQuery =
+                numberQuery.neq(
+                    "id",
+                    Number(id)
+                );
+
+        }
+
+
+        const {
+            data: sameNumber,
+            error: numberError
+        } =
+        await numberQuery.limit(1);
+
+
+        if (numberError) {
+
+            throw numberError;
+
+        }
+
+
+        if (
+            sameNumber
+            &&
+            sameNumber.length > 0
+        ) {
+
+            throw new Error(
+                "الرقم الوظيفي مستخدم لموظف آخر"
+            );
+
+        }
+
+
+        /*
+           منع البريد المكرر
+        */
+
+        let emailQuery =
+            supabaseClient
+                .from("employees")
+                .select("id")
+                .eq(
+                    "email",
+                    employeeData.email
+                );
+
+
+        if (editing) {
+
+            emailQuery =
+                emailQuery.neq(
+                    "id",
+                    Number(id)
+                );
+
+        }
+
+
+        const {
+            data: sameEmail,
+            error: emailError
+        } =
+        await emailQuery.limit(1);
+
+
+        if (emailError) {
+
+            throw emailError;
+
+        }
+
+
+        if (
+            sameEmail
+            &&
+            sameEmail.length > 0
+        ) {
+
+            throw new Error(
+                "البريد الإلكتروني مستخدم لموظف آخر"
+            );
+
+        }
+
+
+        const formSkills =
+            getFormSkills();
+
+
+        let employeeId;
+
+
+        /* =============================
+           تعديل
+        ============================== */
+
+        if (editing) {
+
+            employeeId =
+                Number(id);
+
 
             const {
                 error
@@ -2487,6 +2707,11 @@ async function saveEmployee(event) {
             }
 
         }
+
+
+        /* =============================
+           إضافة
+        ============================== */
 
         else {
 
@@ -2516,6 +2741,10 @@ async function saveEmployee(event) {
         }
 
 
+        /*
+           حفظ المهارات
+        */
+
         await saveEmployeeSkills(
             employeeId,
             formSkills
@@ -2523,8 +2752,7 @@ async function saveEmployee(event) {
 
 
         /*
-            مهم:
-            نرجع الزر شغال قبل إغلاق النافذة
+           أهم إصلاح لمشكلة الزر
         */
 
         setSaveButton(
@@ -2546,9 +2774,9 @@ async function saveEmployee(event) {
         alert(
             editing
             ?
-            "تم تعديل الموظف بنجاح"
+            "تم تعديل الموظف ومهاراته بنجاح"
             :
-            "تمت إضافة الموظف بنجاح"
+            "تمت إضافة الموظف ومهاراته بنجاح"
         );
 
     }
@@ -2556,7 +2784,7 @@ async function saveEmployee(event) {
     catch(error) {
 
         console.error(
-            "خطأ الحفظ:",
+            "saveEmployee:",
             error
         );
 
@@ -2567,13 +2795,14 @@ async function saveEmployee(event) {
             (
                 error.message
                 ||
-                ""
+                "حدث خطأ غير معروف"
             )
         );
 
 
         /*
-            مهما صار خطأ، يرجع الزر يشتغل
+           حتى لو صار أي خطأ
+           يرجع الزر شغال
         */
 
         setSaveButton(
@@ -2591,9 +2820,29 @@ async function saveEmployee(event) {
 
 
 
-/* =====================================
-   تفاصيل الموظف
-===================================== */
+/* =========================================================
+   التحكم بزر الحفظ
+========================================================= */
+
+function setSaveButton(
+    disabled,
+    text
+) {
+
+    saveEmployeeBtn.disabled =
+        disabled;
+
+
+    saveEmployeeBtn.textContent =
+        text;
+
+}
+
+
+
+/* =========================================================
+   عرض تفاصيل الموظف
+========================================================= */
 
 async function showEmployee(id) {
 
@@ -2633,25 +2882,20 @@ async function showEmployee(id) {
 
     container.innerHTML = `
 
-        <div
-            style="
-                text-align:center;
-                padding:20px;
-            "
-        >
+        <div class="loading-message">
             جارٍ تحميل التفاصيل...
         </div>
 
     `;
 
 
-    let employeeSkills =
+    let skills =
         [];
 
 
     try {
 
-        employeeSkills =
+        skills =
             await getEmployeeSkills(
                 employee.id
             );
@@ -2668,9 +2912,9 @@ async function showEmployee(id) {
 
 
     const skillsHtml =
-        employeeSkills.length
+        skills.length > 0
         ?
-        employeeSkills.map(
+        skills.map(
             function(skill) {
 
                 return `
@@ -2696,6 +2940,7 @@ async function showEmployee(id) {
     container.innerHTML = `
 
         <div class="details-grid">
+
 
             <div class="detail-item">
 
@@ -2769,7 +3014,11 @@ async function showEmployee(id) {
                 </span>
 
                 <strong>
-                    ${employee.experience_years ?? 0} سنوات
+
+                    ${employee.experience_years ?? 0}
+
+                    سنوات
+
                 </strong>
 
             </div>
@@ -2830,7 +3079,7 @@ async function showEmployee(id) {
             <div
                 class="detail-item"
                 style="
-                    grid-column:1 / -1;
+                    grid-column: 1 / -1;
                 "
             >
 
@@ -2843,10 +3092,13 @@ async function showEmployee(id) {
                         margin-top:8px;
                     "
                 >
+
                     ${skillsHtml}
+
                 </div>
 
             </div>
+
 
         </div>
 
@@ -2856,9 +3108,9 @@ async function showEmployee(id) {
 
 
 
-/* =====================================
+/* =========================================================
    حذف الموظف
-===================================== */
+========================================================= */
 
 async function deleteEmployee(id) {
 
@@ -2877,8 +3129,12 @@ async function deleteEmployee(id) {
 
     try {
 
+        /*
+           نحذف روابط المهارات أولاً
+        */
+
         const {
-            error: skillsError
+            error: linksError
         } =
         await supabaseClient
             .from("employee_skills")
@@ -2889,12 +3145,16 @@ async function deleteEmployee(id) {
             );
 
 
-        if (skillsError) {
+        if (linksError) {
 
-            throw skillsError;
+            throw linksError;
 
         }
 
+
+        /*
+           ثم الموظف
+        */
 
         const {
             error
@@ -2919,7 +3179,7 @@ async function deleteEmployee(id) {
 
 
         alert(
-            "تم حذف الموظف"
+            "تم حذف الموظف بنجاح"
         );
 
     }
@@ -2947,39 +3207,34 @@ async function deleteEmployee(id) {
 
 
 
-/* =====================================
-   البحث
-===================================== */
+/* =========================================================
+   البحث والفلاتر
+========================================================= */
 
 function filterEmployees() {
 
     const search =
-        document
-            .getElementById(
-                "searchInput"
-            )
-            .value
-            .trim()
-            .toLowerCase();
+        document.getElementById(
+            "searchInput"
+        )
+        .value
+        .trim()
+        .toLowerCase();
 
 
     const department =
-        document
-            .getElementById(
-                "departmentFilter"
-            )
-            .value;
+        document.getElementById(
+            "departmentFilter"
+        ).value;
 
 
     const status =
-        document
-            .getElementById(
-                "statusFilter"
-            )
-            .value;
+        document.getElementById(
+            "statusFilter"
+        ).value;
 
 
-    const result =
+    const filtered =
         employees.filter(
             function(employee) {
 
@@ -3010,7 +3265,7 @@ function filterEmployees() {
                     .toLowerCase();
 
 
-                const searchMatch =
+                const matchSearch =
 
                     name.includes(search)
 
@@ -3023,7 +3278,7 @@ function filterEmployees() {
                     email.includes(search);
 
 
-                const departmentMatch =
+                const matchDepartment =
 
                     !department
 
@@ -3034,7 +3289,7 @@ function filterEmployees() {
                     department;
 
 
-                const statusMatch =
+                const matchStatus =
 
                     !status
 
@@ -3046,11 +3301,17 @@ function filterEmployees() {
 
 
                 return (
-                    searchMatch
+
+                    matchSearch
+
                     &&
-                    departmentMatch
+
+                    matchDepartment
+
                     &&
-                    statusMatch
+
+                    matchStatus
+
                 );
 
             }
@@ -3058,35 +3319,46 @@ function filterEmployees() {
 
 
     renderEmployees(
-        result
+        filtered
     );
 
 }
 
 
 
-/* =====================================
+/* =========================================================
    استيراد Excel
-===================================== */
+========================================================= */
 
-async function importExcelFile(file) {
+async function importExcel(file) {
 
     try {
 
-        const buffer =
+        const arrayBuffer =
             await file.arrayBuffer();
 
 
         const workbook =
             XLSX.read(
-                buffer,
+                arrayBuffer,
                 {
                     type: "array"
                 }
             );
 
 
-        const firstSheet =
+        if (
+            !workbook.SheetNames.length
+        ) {
+
+            throw new Error(
+                "ملف Excel لا يحتوي على بيانات"
+            );
+
+        }
+
+
+        const worksheet =
             workbook.Sheets[
                 workbook.SheetNames[0]
             ];
@@ -3094,31 +3366,30 @@ async function importExcelFile(file) {
 
         const rows =
             XLSX.utils.sheet_to_json(
-                firstSheet,
+                worksheet,
                 {
-                    defval: ""
+                    defval: "",
+                    raw: false
                 }
             );
 
 
         if (
-            !rows.length
+            rows.length === 0
         ) {
 
-            alert(
+            throw new Error(
                 "ملف Excel فارغ"
             );
-
-            return;
 
         }
 
 
-        let successCount =
+        let added =
             0;
 
 
-        let skippedCount =
+        let skipped =
             0;
 
 
@@ -3131,54 +3402,74 @@ async function importExcelFile(file) {
 
                 name:
                     String(
-                        row.name || ""
+                        row.name
+                        ||
+                        ""
                     ).trim(),
 
                 email:
                     String(
-                        row.email || ""
+                        row.email
+                        ||
+                        ""
                     )
                     .trim()
                     .toLowerCase(),
 
                 job_title:
                     String(
-                        row.job_title || ""
+                        row.job_title
+                        ||
+                        ""
                     ).trim(),
 
                 department:
                     String(
-                        row.department || ""
+                        row.department
+                        ||
+                        ""
                     ).trim(),
 
                 experience_years:
                     Number(
-                        row.experience_years || 0
+                        row.experience_years
+                        ||
+                        0
                     ),
 
                 job_level:
                     String(
-                        row.job_level || ""
+                        row.job_level
+                        ||
+                        ""
                     ).trim(),
 
                 availability:
                     Number(
-                        row.availability || 0
+                        row.availability
+                        ||
+                        0
                     ),
 
                 workload:
                     Number(
-                        row.workload || 0
+                        row.workload
+                        ||
+                        0
                     ),
 
                 status:
                     String(
-                        row.status || ""
+                        row.status
+                        ||
+                        ""
                     ).trim(),
 
                 employee_number:
                     String(
-                        row.employee_number || ""
+                        row.employee_number
+                        ||
+                        ""
                     ).trim()
 
             };
@@ -3192,7 +3483,7 @@ async function importExcelFile(file) {
                 !employeeData.employee_number
             ) {
 
-                skippedCount++;
+                skipped++;
 
                 continue;
 
@@ -3200,11 +3491,12 @@ async function importExcelFile(file) {
 
 
             /*
-                فحص إذا الموظف موجود
+               التأكد من أنه غير موجود مسبقاً
             */
 
             const {
-                data: existing
+                data: existing,
+                error: existingError
             } =
             await supabaseClient
                 .from("employees")
@@ -3215,22 +3507,39 @@ async function importExcelFile(file) {
                 .limit(1);
 
 
-            if (
-                existing
-                &&
-                existing.length > 0
-            ) {
+            if (existingError) {
 
-                skippedCount++;
+                console.error(
+                    existingError
+                );
+
+                skipped++;
 
                 continue;
 
             }
 
 
+            if (
+                existing
+                &&
+                existing.length > 0
+            ) {
+
+                skipped++;
+
+                continue;
+
+            }
+
+
+            /*
+               حفظ الموظف
+            */
+
             const {
-                data: inserted,
-                error
+                data: createdEmployee,
+                error: employeeError
             } =
             await supabaseClient
                 .from("employees")
@@ -3241,13 +3550,13 @@ async function importExcelFile(file) {
                 .single();
 
 
-            if (error) {
+            if (employeeError) {
 
                 console.error(
-                    error
+                    employeeError
                 );
 
-                skippedCount++;
+                skipped++;
 
                 continue;
 
@@ -3255,7 +3564,8 @@ async function importExcelFile(file) {
 
 
             /*
-                قراءة المهارات من Excel
+               قراءة المهارات
+               من الملف الذي جهزناه
             */
 
             const excelSkills =
@@ -3278,7 +3588,7 @@ async function importExcelFile(file) {
                     ).trim();
 
 
-                const level =
+                const skillLevel =
                     Number(
                         row[
                             `skill_${i}_level`
@@ -3296,7 +3606,7 @@ async function importExcelFile(file) {
                             skillName,
 
                         level:
-                            level
+                            skillLevel
 
                     });
 
@@ -3309,15 +3619,28 @@ async function importExcelFile(file) {
                 excelSkills.length > 0
             ) {
 
-                await saveEmployeeSkills(
-                    inserted.id,
-                    excelSkills
-                );
+                try {
+
+                    await saveEmployeeSkills(
+                        createdEmployee.id,
+                        excelSkills
+                    );
+
+                }
+
+                catch(skillError) {
+
+                    console.error(
+                        "خطأ مهارات Excel:",
+                        skillError
+                    );
+
+                }
 
             }
 
 
-            successCount++;
+            added++;
 
         }
 
@@ -3328,16 +3651,16 @@ async function importExcelFile(file) {
         alert(
             "تم استيراد "
             +
-            successCount
+            added
             +
             " موظف بنجاح"
             +
             (
-                skippedCount > 0
+                skipped > 0
                 ?
                 "\nتم تجاهل "
                 +
-                skippedCount
+                skipped
                 +
                 " صف مكرر أو غير مكتمل"
                 :
@@ -3350,6 +3673,7 @@ async function importExcelFile(file) {
     catch(error) {
 
         console.error(
+            "importExcel:",
             error
         );
 
@@ -3370,543 +3694,11 @@ async function importExcelFile(file) {
 
 
 
-/* =====================================
+/* =========================================================
    تصدير Excel
-===================================== */
+========================================================= */
 
-async function exportEmployeesExcel() {
+async function exportExcel() {
 
     if (
-        employees.length === 0
-    ) {
-
-        alert(
-            "لا توجد بيانات موظفين للتصدير"
-        );
-
-        return;
-
-    }
-
-
-    try {
-
-        const exportRows =
-            [];
-
-
-        for (
-            const employee
-            of employees
-        ) {
-
-            let employeeSkills =
-                [];
-
-
-            try {
-
-                employeeSkills =
-                    await getEmployeeSkills(
-                        employee.id
-                    );
-
-            }
-
-            catch(error) {
-
-                console.error(
-                    error
-                );
-
-            }
-
-
-            exportRows.push({
-
-                name:
-                    employee.name || "",
-
-                email:
-                    employee.email || "",
-
-                job_title:
-                    employee.job_title || "",
-
-                department:
-                    employee.department || "",
-
-                experience_years:
-                    employee.experience_years ?? 0,
-
-                job_level:
-                    employee.job_level || "",
-
-                availability:
-                    employee.availability ?? 0,
-
-                workload:
-                    employee.workload ?? 0,
-
-                status:
-                    employee.status || "",
-
-                employee_number:
-                    employee.employee_number || "",
-
-                skill_1:
-                    employeeSkills[0]?.name || "",
-
-                skill_1_level:
-                    employeeSkills[0]?.level || "",
-
-                skill_2:
-                    employeeSkills[1]?.name || "",
-
-                skill_2_level:
-                    employeeSkills[1]?.level || "",
-
-                skill_3:
-                    employeeSkills[2]?.name || "",
-
-                skill_3_level:
-                    employeeSkills[2]?.level || "",
-
-                skill_4:
-                    employeeSkills[3]?.name || "",
-
-                skill_4_level:
-                    employeeSkills[3]?.level || ""
-
-            });
-
-        }
-
-
-        const worksheet =
-            XLSX.utils.json_to_sheet(
-                exportRows
-            );
-
-
-        const workbook =
-            XLSX.utils.book_new();
-
-
-        XLSX.utils.book_append_sheet(
-            workbook,
-            worksheet,
-            "employees"
-        );
-
-
-        XLSX.writeFile(
-            workbook,
-            "miyar_employees.xlsx"
-        );
-
-    }
-
-    catch(error) {
-
-        console.error(
-            error
-        );
-
-
-        alert(
-            "تعذر تصدير Excel"
-        );
-
-    }
-
-}
-
-
-
-/* =====================================
-   إغلاق النوافذ
-===================================== */
-
-function closeEmployeeModal() {
-
-    /*
-        مهم:
-        مهما كان الموظف السابق،
-        الزر يرجع مفعّل
-    */
-
-    setSaveButton(
-        false,
-        "حفظ الموظف"
-    );
-
-
-    employeeModal
-        .classList
-        .remove(
-            "show"
-        );
-
-
-    document
-        .getElementById(
-            "employeeForm"
-        )
-        .reset();
-
-
-    document
-        .getElementById(
-            "editEmployeeId"
-        )
-        .value =
-        "";
-
-
-    skillsContainer.innerHTML =
-        "";
-
-}
-
-
-function closeDetailsModal() {
-
-    detailsModal
-        .classList
-        .remove(
-            "show"
-        );
-
-}
-
-
-
-/* =====================================
-   حماية النص
-===================================== */
-
-function escapeHtml(value) {
-
-    return String(
-        value ?? ""
-    )
-    .replaceAll(
-        "&",
-        "&amp;"
-    )
-    .replaceAll(
-        "<",
-        "&lt;"
-    )
-    .replaceAll(
-        ">",
-        "&gt;"
-    )
-    .replaceAll(
-        '"',
-        "&quot;"
-    )
-    .replaceAll(
-        "'",
-        "&#039;"
-    );
-
-}
-
-
-function escapeAttribute(value) {
-
-    return escapeHtml(
-        value
-    );
-
-}
-
-
-
-/* =====================================
-   سايد بار الجوال
-===================================== */
-
-function openSidebar() {
-
-    sidebar
-        .classList
-        .add(
-            "show"
-        );
-
-
-    sidebarOverlay
-        .classList
-        .add(
-            "show"
-        );
-
-
-    document.body
-        .classList
-        .add(
-            "menu-open"
-        );
-
-}
-
-
-function closeSidebar() {
-
-    sidebar
-        .classList
-        .remove(
-            "show"
-        );
-
-
-    sidebarOverlay
-        .classList
-        .remove(
-            "show"
-        );
-
-
-    document.body
-        .classList
-        .remove(
-            "menu-open"
-        );
-
-}
-
-
-
-/* =====================================
-   تسجيل الخروج
-===================================== */
-
-async function logout() {
-
-    await supabaseClient
-        .auth
-        .signOut();
-
-
-    localStorage.removeItem(
-        "miyarRole"
-    );
-
-
-    localStorage.removeItem(
-        "miyarEmail"
-    );
-
-
-    window.location.href =
-        "login.html";
-
-}
-
-
-
-/* =====================================
-   الأحداث
-===================================== */
-
-mobileMenuBtn
-    .addEventListener(
-        "click",
-        openSidebar
-    );
-
-
-sidebarOverlay
-    .addEventListener(
-        "click",
-        closeSidebar
-    );
-
-
-document
-    .querySelectorAll(
-        ".nav-link"
-    )
-    .forEach(
-        function(link) {
-
-            link.addEventListener(
-                "click",
-                closeSidebar
-            );
-
-        }
-    );
-
-
-document
-    .getElementById(
-        "addEmployeeBtn"
-    )
-    .addEventListener(
-        "click",
-        openAddModal
-    );
-
-
-document
-    .getElementById(
-        "addSkillBtn"
-    )
-    .addEventListener(
-        "click",
-        function() {
-
-            addSkillRow();
-
-        }
-    );
-
-
-skillsContainer
-    .addEventListener(
-        "click",
-        function(event) {
-
-            if (
-                event.target
-                    .classList
-                    .contains(
-                        "remove-skill-btn"
-                    )
-            ) {
-
-                event.target
-                    .closest(
-                        ".employee-skill-row"
-                    )
-                    .remove();
-
-            }
-
-        }
-    );
-
-
-document
-    .getElementById(
-        "employeeForm"
-    )
-    .addEventListener(
-        "submit",
-        saveEmployee
-    );
-
-
-document
-    .getElementById(
-        "cancelEmployeeBtn"
-    )
-    .addEventListener(
-        "click",
-        closeEmployeeModal
-    );
-
-
-document
-    .getElementById(
-        "closeEmployeeModalBtn"
-    )
-    .addEventListener(
-        "click",
-        closeEmployeeModal
-    );
-
-
-document
-    .getElementById(
-        "employeeModalOverlay"
-    )
-    .addEventListener(
-        "click",
-        closeEmployeeModal
-    );
-
-
-document
-    .getElementById(
-        "closeDetailsBtn"
-    )
-    .addEventListener(
-        "click",
-        closeDetailsModal
-    );
-
-
-document
-    .getElementById(
-        "detailsModalOverlay"
-    )
-    .addEventListener(
-        "click",
-        closeDetailsModal
-    );
-
-
-document
-    .getElementById(
-        "searchInput"
-    )
-    .addEventListener(
-        "input",
-        filterEmployees
-    );
-
-
-document
-    .getElementById(
-        "departmentFilter"
-    )
-    .addEventListener(
-        "change",
-        filterEmployees
-    );
-
-
-document
-    .getElementById(
-        "statusFilter"
-    )
-    .addEventListener(
-        "change",
-        filterEmployees
-    );
-
-
-document
-    .getElementById(
-        "logoutBtn"
-    )
-    .addEventListener(
-        "click",
-        logout
-    );
-
-
-document
-    .getElementById(
-        "exportExcelBtn"
-    )
-    .addEventListener(
-        "click",
-        exportEmployeesExcel
-    );
-
-
-document
-    .getElementById(
-        "excelInput"
-    )
-    .addEventListener(
-        "change",
-        async function() {
-
-            const file
+        employees.length =
