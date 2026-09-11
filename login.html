@@ -2,6 +2,7 @@
 <html lang="ar" dir="rtl">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -16,15 +17,21 @@
         href="login.css"
     >
 
-    <!-- Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    ></script>
+
 </head>
+
 
 <body>
 
+
 <main class="login-page">
 
+
     <!-- الشعار -->
+
     <header class="header">
 
         <img
@@ -36,10 +43,14 @@
     </header>
 
 
+
     <!-- تسجيل الدخول -->
+
     <section class="login-section">
 
+
         <div class="login-card">
+
 
             <div class="card-header">
 
@@ -47,14 +58,16 @@
                     تسجيل الدخول
                 </h1>
 
-                <p>
+                <p id="loginDescription">
                     اختر نوع المستخدم ثم أدخل بياناتك
                 </p>
 
             </div>
 
 
+
             <!-- نوع المستخدم -->
+
             <div class="role-title">
                 نوع المستخدم
             </div>
@@ -62,15 +75,17 @@
 
             <div class="role-options">
 
+
                 <button
                     type="button"
                     class="role-btn active"
                     id="employeeBtn"
-                    onclick="selectRole('employee')"
                 >
+
                     <span class="radio-circle"></span>
 
                     موظف
+
                 </button>
 
 
@@ -78,19 +93,24 @@
                     type="button"
                     class="role-btn"
                     id="adminBtn"
-                    onclick="selectRole('admin')"
                 >
+
                     <span class="radio-circle"></span>
 
                     مسؤول
+
                 </button>
+
 
             </div>
 
 
+
             <form id="loginForm">
 
+
                 <!-- البريد -->
+
                 <div class="input-group">
 
                     <label for="email">
@@ -101,13 +121,16 @@
                         type="email"
                         id="email"
                         placeholder="example@email.com"
+                        autocomplete="email"
                         required
                     >
 
                 </div>
 
 
+
                 <!-- كلمة المرور -->
+
                 <div class="input-group">
 
                     <label for="password">
@@ -118,20 +141,37 @@
                         type="password"
                         id="password"
                         placeholder="أدخل كلمة المرور"
+                        minlength="6"
+                        autocomplete="current-password"
                         required
                     >
 
                 </div>
 
 
-                <!-- رسالة الخطأ -->
+
+                <!-- تنبيه الموظف -->
+
+                <p
+                    class="employee-note"
+                    id="employeeNote"
+                >
+                    إذا كانت هذه أول مرة تدخل فيها، اكتب بريدك المسجل لدى الجهة واختر كلمة مرور لحسابك.
+                </p>
+
+
+
+                <!-- رسالة الخطأ / النجاح -->
+
                 <p
                     class="error-message"
                     id="errorMessage"
                 ></p>
 
 
+
                 <!-- تسجيل الدخول -->
+
                 <button
                     type="submit"
                     class="login-btn"
@@ -141,440 +181,847 @@
                 </button>
 
 
+
                 <!-- العودة -->
+
                 <button
                     type="button"
                     class="back-btn"
-                    onclick="goHome()"
+                    id="backButton"
                 >
                     العودة إلى الصفحة الرئيسية
                 </button>
 
+
             </form>
+
 
         </div>
 
+
     </section>
+
 
 </main>
 
 
+
 <script>
 
-    /* =========================================
-       بيانات Supabase
-    ========================================= */
 
-    const SUPABASE_URL =
-        "https://avooyglxacytrfhvotsl.supabase.co";
+/* =========================================
+   Supabase
+========================================= */
 
-
-    const SUPABASE_KEY =
-        "sb_publishable_NVlWEnA_w4KbSse_-70zdA_J9ut0Kyo";
+const SUPABASE_URL =
+    "https://avooyglxacytrfhvotsl.supabase.co";
 
 
-    const supabaseClient =
-        supabase.createClient(
-            SUPABASE_URL,
-            SUPABASE_KEY
-        );
+const SUPABASE_KEY =
+    "sb_publishable_NVlWEnA_w4KbSse_-70zdA_J9ut0Kyo";
 
 
-    /* =========================================
-       نوع المستخدم الافتراضي
-    ========================================= */
-
-    let selectedRole =
-        "employee";
-
-
-    /* =========================================
-       بريد المسؤول
-    ========================================= */
-
-    const ADMIN_EMAIL =
-        "admin@gmail.com";
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
 
 
-    /* =========================================
-       اختيار نوع المستخدم
-    ========================================= */
 
-    function selectRole(role) {
+/* =========================================
+   المسؤول
+========================================= */
 
-        selectedRole = role;
-
-
-        const employeeBtn =
-            document.getElementById(
-                "employeeBtn"
-            );
+const ADMIN_EMAIL =
+    "admin@gmail.com";
 
 
-        const adminBtn =
-            document.getElementById(
-                "adminBtn"
-            );
+
+/* =========================================
+   نوع المستخدم
+========================================= */
+
+let selectedRole =
+    "employee";
 
 
-        employeeBtn.classList.remove(
+
+/* =========================================
+   العناصر
+========================================= */
+
+const employeeBtn =
+    document.getElementById(
+        "employeeBtn"
+    );
+
+
+const adminBtn =
+    document.getElementById(
+        "adminBtn"
+    );
+
+
+const loginForm =
+    document.getElementById(
+        "loginForm"
+    );
+
+
+const emailInput =
+    document.getElementById(
+        "email"
+    );
+
+
+const passwordInput =
+    document.getElementById(
+        "password"
+    );
+
+
+const errorMessage =
+    document.getElementById(
+        "errorMessage"
+    );
+
+
+const loginButton =
+    document.getElementById(
+        "loginButton"
+    );
+
+
+const employeeNote =
+    document.getElementById(
+        "employeeNote"
+    );
+
+
+const loginDescription =
+    document.getElementById(
+        "loginDescription"
+    );
+
+
+
+/* =========================================
+   اختيار الدور
+========================================= */
+
+function selectRole(role) {
+
+
+    selectedRole =
+        role;
+
+
+    employeeBtn
+        .classList
+        .remove(
             "active"
         );
 
 
-        adminBtn.classList.remove(
+    adminBtn
+        .classList
+        .remove(
             "active"
         );
 
 
-        if (role === "employee") {
+    errorMessage.textContent =
+        "";
 
-            employeeBtn.classList.add(
+
+    if (
+        role === "employee"
+    ) {
+
+
+        employeeBtn
+            .classList
+            .add(
                 "active"
             );
 
-        } else {
 
-            adminBtn.classList.add(
+        employeeNote.style.display =
+            "block";
+
+
+        loginDescription.textContent =
+            "أدخل بريدك المسجل لدى الجهة وكلمة المرور";
+
+
+    }
+
+
+    else {
+
+
+        adminBtn
+            .classList
+            .add(
                 "active"
             );
+
+
+        employeeNote.style.display =
+            "none";
+
+
+        loginDescription.textContent =
+            "أدخل بيانات حساب المسؤول";
+
+
+    }
+
+}
+
+
+
+/* =========================================
+   البحث عن الموظف
+========================================= */
+
+async function findEmployee(
+    email
+) {
+
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("employees")
+        .select(`
+            id,
+            name,
+            email,
+            status
+        `)
+        .ilike(
+            "email",
+            email
+        )
+        .maybeSingle();
+
+
+    if (error) {
+
+
+        console.error(
+            "خطأ البحث عن الموظف:",
+            error
+        );
+
+
+        throw new Error(
+            "تعذر التحقق من بيانات الموظف"
+        );
+
+    }
+
+
+    return data;
+
+}
+
+
+
+/* =========================================
+   تخزين بيانات الموظف
+========================================= */
+
+function saveEmployeeSession(
+    employee
+) {
+
+
+    localStorage.setItem(
+        "miyarRole",
+        "employee"
+    );
+
+
+    localStorage.setItem(
+        "miyarEmail",
+        employee.email
+    );
+
+
+    localStorage.setItem(
+        "miyarEmployeeId",
+        String(employee.id)
+    );
+
+
+    localStorage.setItem(
+        "miyarEmployeeName",
+        employee.name || ""
+    );
+
+}
+
+
+
+/* =========================================
+   دخول المسؤول
+========================================= */
+
+async function loginAdmin(
+    email,
+    password
+) {
+
+
+    if (
+        email !==
+        ADMIN_EMAIL.toLowerCase()
+    ) {
+
+
+        errorMessage.textContent =
+            "هذا الحساب غير مصرح له بالدخول كمسؤول";
+
+
+        return;
+
+    }
+
+
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .auth
+        .signInWithPassword({
+
+            email:
+                email,
+
+            password:
+                password
+
+        });
+
+
+
+    if (
+        error
+        ||
+        !data.user
+    ) {
+
+
+        console.error(
+            error
+        );
+
+
+        errorMessage.textContent =
+            "البريد الإلكتروني أو كلمة المرور غير صحيحة";
+
+
+        return;
+
+    }
+
+
+
+    localStorage.setItem(
+        "miyarRole",
+        "admin"
+    );
+
+
+    localStorage.setItem(
+        "miyarEmail",
+        email
+    );
+
+
+    localStorage.removeItem(
+        "miyarEmployeeId"
+    );
+
+
+    localStorage.removeItem(
+        "miyarEmployeeName"
+    );
+
+
+    window.location.href =
+        "dashboard.html";
+
+}
+
+
+
+/* =========================================
+   دخول الموظف
+========================================= */
+
+async function loginEmployee(
+    email,
+    password
+) {
+
+
+    /*
+        أول شيء:
+        نتأكد أن البريد موجود أساساً
+        داخل جدول employees
+    */
+
+    const employee =
+        await findEmployee(
+            email
+        );
+
+
+
+    if (!employee) {
+
+
+        errorMessage.textContent =
+            "هذا البريد غير مسجل ضمن الموظفين";
+
+
+        return;
+
+    }
+
+
+
+    /*
+        منع حساب المسؤول من استخدام
+        واجهة الموظفين
+    */
+
+    if (
+        email ===
+        ADMIN_EMAIL.toLowerCase()
+    ) {
+
+
+        errorMessage.textContent =
+            "يرجى اختيار مسؤول للدخول بهذا الحساب";
+
+
+        return;
+
+    }
+
+
+
+    /*
+        أولاً نحاول تسجيل الدخول.
+        إذا كان للموظف حساب سابق
+        سيدخل مباشرة.
+    */
+
+    const {
+        data: loginData,
+        error: loginError
+    } =
+    await supabaseClient
+        .auth
+        .signInWithPassword({
+
+            email:
+                email,
+
+            password:
+                password
+
+        });
+
+
+
+    /*
+        الحساب موجود وكلمة المرور صحيحة
+    */
+
+    if (
+        !loginError
+        &&
+        loginData.user
+    ) {
+
+
+        saveEmployeeSession(
+            employee
+        );
+
+
+        window.location.href =
+            "employee-home.html";
+
+
+        return;
+
+    }
+
+
+
+    /*
+        إذا فشل تسجيل الدخول،
+        نحاول إنشاء الحساب.
+
+        هذا يفيد الموظف في أول دخول له.
+    */
+
+    const {
+        data: signUpData,
+        error: signUpError
+    } =
+    await supabaseClient
+        .auth
+        .signUp({
+
+            email:
+                email,
+
+            password:
+                password
+
+        });
+
+
+
+    /*
+        إذا كان الحساب موجود أصلاً
+        فمعناه غالباً كلمة المرور المدخلة خطأ
+    */
+
+    if (signUpError) {
+
+
+        console.error(
+            "خطأ إنشاء الحساب:",
+            signUpError
+        );
+
+
+        const message =
+            String(
+                signUpError.message
+                ||
+                ""
+            )
+            .toLowerCase();
+
+
+        if (
+            message.includes(
+                "already"
+            )
+            ||
+            message.includes(
+                "registered"
+            )
+            ||
+            message.includes(
+                "exists"
+            )
+        ) {
+
+
+            errorMessage.textContent =
+                "كلمة المرور غير صحيحة";
+
 
         }
 
+
+        else {
+
+
+            errorMessage.textContent =
+                "تعذر إنشاء حساب الموظف";
+
+
+        }
+
+
+        return;
+
     }
 
 
-    /* =========================================
-       تسجيل الدخول
-    ========================================= */
 
-    document
-        .getElementById("loginForm")
-        .addEventListener(
-            "submit",
-            async function(event) {
+    /*
+        بعض إعدادات Supabase
+        تسمح بالدخول مباشرة بعد التسجيل
+    */
 
-                event.preventDefault();
+    if (
+        signUpData.session
+        &&
+        signUpData.user
+    ) {
 
 
-                const email =
-                    document
-                        .getElementById("email")
-                        .value
-                        .trim()
-                        .toLowerCase();
-
-
-                const password =
-                    document
-                        .getElementById("password")
-                        .value;
-
-
-                const errorMessage =
-                    document
-                        .getElementById(
-                            "errorMessage"
-                        );
-
-
-                const loginButton =
-                    document
-                        .getElementById(
-                            "loginButton"
-                        );
-
-
-                /* تنظيف الرسالة */
-
-                errorMessage.textContent =
-                    "";
-
-
-                /* التحقق من الحقول */
-
-                if (
-                    email === ""
-                    ||
-                    password === ""
-                ) {
-
-                    errorMessage.textContent =
-                        "يرجى إدخال البريد الإلكتروني وكلمة المرور";
-
-                    return;
-
-                }
-
-
-                /* تعطيل الزر أثناء الاتصال */
-
-                loginButton.disabled =
-                    true;
-
-
-                loginButton.textContent =
-                    "جارٍ تسجيل الدخول...";
-
-
-                try {
-
-
-                    /* =================================
-                       تسجيل الدخول من Supabase Auth
-                    ================================= */
-
-                    const {
-                        data,
-                        error
-                    } =
-                    await supabaseClient
-                        .auth
-                        .signInWithPassword({
-
-                            email: email,
-
-                            password: password
-
-                        });
-
-
-                    /* خطأ تسجيل الدخول */
-
-                    if (error) {
-
-                        console.error(
-                            error
-                        );
-
-
-                        errorMessage.textContent =
-                            "البريد الإلكتروني أو كلمة المرور غير صحيحة";
-
-                        return;
-
-                    }
-
-
-                    /* التأكد من وجود مستخدم */
-
-                    if (!data.user) {
-
-                        errorMessage.textContent =
-                            "تعذر تسجيل الدخول";
-
-                        return;
-
-                    }
-
-
-                    /* =================================
-                       دخول المسؤول
-                    ================================= */
-
-                    if (
-                        selectedRole === "admin"
-                    ) {
-
-
-                        /* التحقق من بريد المسؤول */
-
-                        if (
-                            email !==
-                            ADMIN_EMAIL.toLowerCase()
-                        ) {
-
-                            await supabaseClient
-                                .auth
-                                .signOut();
-
-
-                            errorMessage.textContent =
-                                "هذا الحساب غير مصرح له بالدخول كمسؤول";
-
-                            return;
-
-                        }
-
-
-                        /* تخزين بيانات الدخول */
-
-                        localStorage.setItem(
-                            "miyarRole",
-                            "admin"
-                        );
-
-
-                        localStorage.setItem(
-                            "miyarEmail",
-                            email
-                        );
-
-
-                        localStorage.removeItem(
-                            "miyarEmployeeId"
-                        );
-
-
-                        localStorage.removeItem(
-                            "miyarEmployeeName"
-                        );
-
-
-                        /* الذهاب إلى لوحة التحكم */
-
-                        window.location.href =
-                            "dashboard.html";
-
-
-                        return;
-
-                    }
-
-
-                    /* =================================
-                       دخول الموظف
-                    ================================= */
-
-                    if (
-                        selectedRole === "employee"
-                    ) {
-
-
-                        /* البحث عن الموظف في جدول employees */
-
-                        const {
-                            data: employee,
-                            error: employeeError
-                        } =
-                        await supabaseClient
-                            .from("employees")
-                            .select(
-                                "id, name, email"
-                            )
-                            .eq(
-                                "email",
-                                email
-                            )
-                            .maybeSingle();
-
-
-                        /* مشكلة في قاعدة البيانات */
-
-                        if (employeeError) {
-
-                            console.error(
-                                employeeError
-                            );
-
-
-                            await supabaseClient
-                                .auth
-                                .signOut();
-
-
-                            errorMessage.textContent =
-                                "تعذر التحقق من بيانات الموظف";
-
-                            return;
-
-                        }
-
-
-                        /* الموظف غير موجود */
-
-                        if (!employee) {
-
-                            await supabaseClient
-                                .auth
-                                .signOut();
-
-
-                            errorMessage.textContent =
-                                "هذا الحساب غير مسجل كموظف";
-
-                            return;
-
-                        }
-
-
-                        /* تخزين بيانات الموظف */
-
-                        localStorage.setItem(
-                            "miyarRole",
-                            "employee"
-                        );
-
-
-                        localStorage.setItem(
-                            "miyarEmail",
-                            employee.email
-                        );
-
-
-                        localStorage.setItem(
-                            "miyarEmployeeId",
-                            employee.id
-                        );
-
-
-                        localStorage.setItem(
-                            "miyarEmployeeName",
-                            employee.name || ""
-                        );
-
-
-                        /* الذهاب إلى صفحة الموظف */
-
-                        window.location.href =
-                            "employee-home.html";
-
-
-                        return;
-
-                    }
-
-                }
-
-                catch (error) {
-
-                    console.error(
-                        error
-                    );
-
-
-                    errorMessage.textContent =
-                        "حدث خطأ أثناء الاتصال بقاعدة البيانات";
-
-                }
-
-                finally {
-
-                    loginButton.disabled =
-                        false;
-
-
-                    loginButton.textContent =
-                        "تسجيل الدخول";
-
-                }
-
-            }
+        saveEmployeeSession(
+            employee
         );
 
 
-    /* =========================================
-       العودة للرئيسية
-    ========================================= */
-
-    function goHome() {
-
         window.location.href =
-            "home.html";
+            "employee-home.html";
+
+
+        return;
 
     }
 
+
+
+    /*
+        إذا كان تأكيد البريد مفعلاً
+    */
+
+    if (
+        signUpData.user
+        &&
+        !signUpData.session
+    ) {
+
+
+        errorMessage.textContent =
+            "تم إنشاء حسابك. تحقق من بريدك الإلكتروني لتأكيد الحساب ثم سجل الدخول.";
+
+
+        errorMessage.classList.add(
+            "success-message"
+        );
+
+
+        return;
+
+    }
+
+
+
+    errorMessage.textContent =
+        "تعذر تسجيل الدخول";
+
+
+}
+
+
+
+/* =========================================
+   إرسال النموذج
+========================================= */
+
+loginForm
+    .addEventListener(
+        "submit",
+        async function(event) {
+
+
+            event.preventDefault();
+
+
+            const email =
+                emailInput
+                    .value
+                    .trim()
+                    .toLowerCase();
+
+
+            const password =
+                passwordInput
+                    .value;
+
+
+
+            errorMessage.textContent =
+                "";
+
+
+            errorMessage.classList.remove(
+                "success-message"
+            );
+
+
+
+            if (
+                !email
+                ||
+                !password
+            ) {
+
+
+                errorMessage.textContent =
+                    "يرجى إدخال البريد الإلكتروني وكلمة المرور";
+
+
+                return;
+
+            }
+
+
+
+            if (
+                password.length < 6
+            ) {
+
+
+                errorMessage.textContent =
+                    "كلمة المرور يجب أن تكون 6 أحرف على الأقل";
+
+
+                return;
+
+            }
+
+
+
+            loginButton.disabled =
+                true;
+
+
+            loginButton.textContent =
+                "جارٍ تسجيل الدخول...";
+
+
+
+            try {
+
+
+                if (
+                    selectedRole ===
+                    "admin"
+                ) {
+
+
+                    await loginAdmin(
+                        email,
+                        password
+                    );
+
+
+                }
+
+
+                else {
+
+
+                    await loginEmployee(
+                        email,
+                        password
+                    );
+
+
+                }
+
+
+            }
+
+
+            catch(error) {
+
+
+                console.error(
+                    "خطأ تسجيل الدخول:",
+                    error
+                );
+
+
+                errorMessage.textContent =
+                    error.message
+                    ||
+                    "حدث خطأ أثناء الاتصال بقاعدة البيانات";
+
+
+            }
+
+
+            finally {
+
+
+                loginButton.disabled =
+                    false;
+
+
+                loginButton.textContent =
+                    "تسجيل الدخول";
+
+
+            }
+
+
+        }
+    );
+
+
+
+/* =========================================
+   أحداث اختيار الدور
+========================================= */
+
+employeeBtn
+    .addEventListener(
+        "click",
+        function() {
+
+
+            selectRole(
+                "employee"
+            );
+
+
+        }
+    );
+
+
+adminBtn
+    .addEventListener(
+        "click",
+        function() {
+
+
+            selectRole(
+                "admin"
+            );
+
+
+        }
+    );
+
+
+
+/* =========================================
+   العودة للرئيسية
+========================================= */
+
+document
+    .getElementById(
+        "backButton"
+    )
+    .addEventListener(
+        "click",
+        function() {
+
+
+            window.location.href =
+                "home.html";
+
+
+        }
+    );
+
+
 </script>
+
 
 </body>
 
