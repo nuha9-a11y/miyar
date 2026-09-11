@@ -17,7 +17,10 @@
         href="employee-tasks.css"
     >
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 </head>
+
 
 <body>
 
@@ -63,10 +66,6 @@
     </header>
 
 
-
-    <!-- ===============================
-         خلفية السايد بار
-    ================================ -->
 
     <div
         class="sidebar-overlay"
@@ -146,7 +145,7 @@
         <button
             class="logout-btn"
             type="button"
-            onclick="logout()"
+            id="logoutBtn"
         >
             تسجيل الخروج
         </button>
@@ -162,8 +161,6 @@
 
     <main class="main-content">
 
-
-        <!-- رأس الصفحة -->
 
         <header class="topbar">
 
@@ -184,6 +181,69 @@
 
 
         <!-- ===============================
+             ملخص المهام
+        ================================ -->
+
+        <section class="summary-grid">
+
+
+            <article class="summary-card">
+
+                <span>
+                    جميع المهام
+                </span>
+
+                <strong id="allTasksCount">
+                    0
+                </strong>
+
+            </article>
+
+
+            <article class="summary-card">
+
+                <span>
+                    مهام حالية
+                </span>
+
+                <strong id="currentTasksCount">
+                    0
+                </strong>
+
+            </article>
+
+
+            <article class="summary-card">
+
+                <span>
+                    مهام مكتملة
+                </span>
+
+                <strong id="completedTasksCount">
+                    0
+                </strong>
+
+            </article>
+
+
+            <article class="summary-card">
+
+                <span>
+                    نسبة الإنجاز
+                </span>
+
+                <strong id="completionRate">
+                    0%
+                </strong>
+
+            </article>
+
+
+        </section>
+
+
+
+        <!-- ===============================
              البحث والتصفية
         ================================ -->
 
@@ -196,7 +256,6 @@
                     type="text"
                     id="searchInput"
                     placeholder="ابحث باسم المهمة أو المشروع..."
-                    oninput="filterTasks()"
                 >
 
             </div>
@@ -206,10 +265,7 @@
             <div class="filters">
 
 
-                <select
-                    id="statusFilter"
-                    onchange="filterTasks()"
-                >
+                <select id="statusFilter">
 
                     <option value="">
                         جميع الحالات
@@ -231,10 +287,7 @@
 
 
 
-                <select
-                    id="priorityFilter"
-                    onchange="filterTasks()"
-                >
+                <select id="priorityFilter">
 
                     <option value="">
                         جميع الأولويات
@@ -301,9 +354,7 @@
             >
 
                 <div class="empty-state">
-
-                    لا توجد مهام مسندة لك حالياً
-
+                    جارٍ تحميل المهام...
                 </div>
 
             </div>
@@ -331,7 +382,7 @@
 
     <div
         class="modal-overlay"
-        onclick="closeDetailsModal()"
+        id="detailsModalOverlay"
     ></div>
 
 
@@ -357,7 +408,7 @@
             <button
                 class="close-btn"
                 type="button"
-                onclick="closeDetailsModal()"
+                id="closeDetailsBtn"
             >
                 ×
             </button>
@@ -382,9 +433,108 @@
 <script>
 
 
-    /* ===============================
-       حماية واجهة الموظف
-    ================================ */
+/* ===============================
+   Supabase
+================================ */
+
+const SUPABASE_URL =
+    "https://avooyglxacytrfhvotsl.supabase.co";
+
+
+const SUPABASE_KEY =
+    "sb_publishable_NVlWEnA_w4KbSse_-70zdA_J9ut0Kyo";
+
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+
+
+/* ===============================
+   البيانات
+================================ */
+
+let employeeId =
+    null;
+
+
+let tasks =
+    [];
+
+
+let projects =
+    [];
+
+
+
+/* ===============================
+   العناصر
+================================ */
+
+const tasksGrid =
+    document.getElementById(
+        "tasksGrid"
+    );
+
+
+const tasksCount =
+    document.getElementById(
+        "tasksCount"
+    );
+
+
+const searchInput =
+    document.getElementById(
+        "searchInput"
+    );
+
+
+const statusFilter =
+    document.getElementById(
+        "statusFilter"
+    );
+
+
+const priorityFilter =
+    document.getElementById(
+        "priorityFilter"
+    );
+
+
+const mobileMenuBtn =
+    document.getElementById(
+        "mobileMenuBtn"
+    );
+
+
+const sidebar =
+    document.getElementById(
+        "sidebar"
+    );
+
+
+const sidebarOverlay =
+    document.getElementById(
+        "sidebarOverlay"
+    );
+
+
+const detailsModal =
+    document.getElementById(
+        "detailsModal"
+    );
+
+
+
+/* ===============================
+   حماية واجهة الموظف
+================================ */
+
+function protectEmployeePage() {
+
 
     const role =
         localStorage.getItem(
@@ -392,687 +542,1461 @@
         );
 
 
-    /*
-       إذا كان تسجيل الدخول عندك
-       يخزن employee استخدميه.
-
-       لو القيمة مختلفة نعدلها
-       لما نربط تسجيل الدخول.
-    */
-
-
-    /* ===============================
-       السايد بار
-    ================================ */
-
-    const mobileMenuBtn =
-        document.getElementById(
-            "mobileMenuBtn"
+    const savedEmployeeId =
+        localStorage.getItem(
+            "miyarEmployeeId"
         );
 
 
-    const sidebar =
-        document.getElementById(
-            "sidebar"
-        );
-
-
-    const sidebarOverlay =
-        document.getElementById(
-            "sidebarOverlay"
-        );
-
-
-    function openSidebar() {
-
-        sidebar.classList.add(
-            "show"
-        );
-
-        sidebarOverlay.classList.add(
-            "show"
-        );
-
-        document.body.classList.add(
-            "menu-open"
-        );
-
-    }
-
-
-    function closeSidebar() {
-
-        sidebar.classList.remove(
-            "show"
-        );
-
-        sidebarOverlay.classList.remove(
-            "show"
-        );
-
-        document.body.classList.remove(
-            "menu-open"
-        );
-
-    }
-
-
-    mobileMenuBtn.addEventListener(
-        "click",
-        openSidebar
-    );
-
-
-    sidebarOverlay.addEventListener(
-        "click",
-        closeSidebar
-    );
-
-
-    document
-        .querySelectorAll(
-            ".nav-link"
-        )
-        .forEach(
-            function(link) {
-
-                link.addEventListener(
-                    "click",
-                    closeSidebar
-                );
-
-            }
-        );
-
-
-
-    /* ===============================
-       بيانات مؤقتة
-    ================================
-
-       حالياً فاضية.
-
-       بعد قاعدة البيانات راح تجي
-       المهام الحقيقية المسندة
-       للموظف المسجل دخوله.
-
-    ================================= */
-
-    let tasks = [];
-
-
-
-    /* ===============================
-       عرض المهام
-    ================================ */
-
-    function renderTasks(list) {
-
-
-        const grid =
-            document.getElementById(
-                "tasksGrid"
-            );
-
-
-        const count =
-            document.getElementById(
-                "tasksCount"
-            );
-
-
-        grid.innerHTML = "";
-
-
-        count.textContent =
-            list.length + " مهام";
-
-
-        if (
-            list.length === 0
-        ) {
-
-            grid.innerHTML = `
-
-                <div class="empty-state">
-
-                    لا توجد مهام مسندة لك حالياً
-
-                </div>
-
-            `;
-
-            return;
-        }
-
-
-
-        list.forEach(
-            function(task) {
-
-
-                const card =
-                    document.createElement(
-                        "article"
-                    );
-
-
-                card.className =
-                    "task-card";
-
-
-                card.innerHTML = `
-
-
-                    <div class="task-card-top">
-
-
-                        <div>
-
-                            <span class="task-label">
-
-                                ${task.project}
-
-                            </span>
-
-
-                            <h3>
-
-                                ${task.name}
-
-                            </h3>
-
-                        </div>
-
-
-
-                        <span class="
-                            priority-badge
-                            ${getPriorityClass(task.priority)}
-                        ">
-
-                            ${task.priority}
-
-                        </span>
-
-
-                    </div>
-
-
-
-                    <p class="task-description">
-
-                        ${task.description}
-
-                    </p>
-
-
-
-                    <div class="task-info">
-
-
-                        <div class="info-item">
-
-                            <span>
-                                المشروع
-                            </span>
-
-                            <strong>
-
-                                ${task.project}
-
-                            </strong>
-
-                        </div>
-
-
-
-                        <div class="info-item">
-
-                            <span>
-                                الأولوية
-                            </span>
-
-                            <strong>
-
-                                ${task.priority}
-
-                            </strong>
-
-                        </div>
-
-
-
-                        <div class="info-item">
-
-                            <span>
-                                تاريخ التسليم
-                            </span>
-
-                            <strong>
-
-                                ${task.dueDate || "غير محدد"}
-
-                            </strong>
-
-                        </div>
-
-
-
-                        <div class="info-item">
-
-                            <span>
-                                الحالة
-                            </span>
-
-                            <strong>
-
-                                ${task.status}
-
-                            </strong>
-
-                        </div>
-
-
-                    </div>
-
-
-
-                    <div class="task-footer">
-
-
-                        <span class="
-                            status-badge
-                            ${getStatusClass(task.status)}
-                        ">
-
-                            ${task.status}
-
-                        </span>
-
-
-
-                        <button
-                            class="details-btn"
-                            type="button"
-                            onclick="viewTask(${task.id})"
-                        >
-
-                            عرض التفاصيل
-
-                        </button>
-
-
-                    </div>
-
-
-                `;
-
-
-                grid.appendChild(
-                    card
-                );
-
-
-            }
-        );
-
-    }
-
-
-
-    /* ===============================
-       ألوان الأولوية
-    ================================ */
-
-    function getPriorityClass(
-        priority
+    if (
+        role !== "employee"
+        ||
+        !savedEmployeeId
     ) {
-
-
-        if (
-            priority === "عالية"
-        ) {
-
-            return "high";
-
-        }
-
-
-        if (
-            priority === "منخفضة"
-        ) {
-
-            return "low";
-
-        }
-
-
-        return "medium";
-
-    }
-
-
-
-    /* ===============================
-       ألوان الحالة
-    ================================ */
-
-    function getStatusClass(
-        status
-    ) {
-
-
-        if (
-            status === "مكتملة"
-        ) {
-
-            return "completed";
-
-        }
-
-
-        if (
-            status === "قيد التنفيذ"
-        ) {
-
-            return "running";
-
-        }
-
-
-        return "new";
-
-    }
-
-
-
-    /* ===============================
-       عرض تفاصيل المهمة
-    ================================ */
-
-    function viewTask(id) {
-
-
-        const task =
-            tasks.find(
-                item =>
-                    item.id === id
-            );
-
-
-        if (!task) {
-            return;
-        }
-
-
-        document
-            .getElementById(
-                "taskDetails"
-            )
-            .innerHTML = `
-
-
-                <div class="detail-item">
-
-                    <span>
-                        اسم المهمة
-                    </span>
-
-                    <strong>
-
-                        ${task.name}
-
-                    </strong>
-
-                </div>
-
-
-
-                <div class="detail-item">
-
-                    <span>
-                        المشروع
-                    </span>
-
-                    <strong>
-
-                        ${task.project}
-
-                    </strong>
-
-                </div>
-
-
-
-                <div class="detail-item">
-
-                    <span>
-                        الأولوية
-                    </span>
-
-                    <strong>
-
-                        ${task.priority}
-
-                    </strong>
-
-                </div>
-
-
-
-                <div class="detail-item">
-
-                    <span>
-                        تاريخ التسليم
-                    </span>
-
-                    <strong>
-
-                        ${task.dueDate || "غير محدد"}
-
-                    </strong>
-
-                </div>
-
-
-
-                <div class="detail-item">
-
-                    <span>
-                        الحالة
-                    </span>
-
-                    <strong>
-
-                        ${task.status}
-
-                    </strong>
-
-                </div>
-
-
-
-                <div class="
-                    detail-item
-                    full-detail
-                ">
-
-                    <span>
-                        وصف المهمة
-                    </span>
-
-                    <strong>
-
-                        ${task.description}
-
-                    </strong>
-
-                </div>
-
-
-            `;
-
-
-        document
-            .getElementById(
-                "detailsModal"
-            )
-            .classList.add(
-                "show"
-            );
-
-    }
-
-
-
-    function closeDetailsModal() {
-
-        document
-            .getElementById(
-                "detailsModal"
-            )
-            .classList.remove(
-                "show"
-            );
-
-    }
-
-
-
-    /* ===============================
-       البحث والتصفية
-    ================================ */
-
-    function filterTasks() {
-
-
-        const search =
-            document
-                .getElementById(
-                    "searchInput"
-                )
-                .value
-                .toLowerCase();
-
-
-        const status =
-            document
-                .getElementById(
-                    "statusFilter"
-                )
-                .value;
-
-
-        const priority =
-            document
-                .getElementById(
-                    "priorityFilter"
-                )
-                .value;
-
-
-
-        const filtered =
-            tasks.filter(
-                function(task) {
-
-
-                    const matchSearch =
-
-                        task.name
-                            .toLowerCase()
-                            .includes(search)
-
-                        ||
-
-                        task.project
-                            .toLowerCase()
-                            .includes(search);
-
-
-
-                    const matchStatus =
-
-                        !status
-
-                        ||
-
-                        task.status
-                            === status;
-
-
-
-                    const matchPriority =
-
-                        !priority
-
-                        ||
-
-                        task.priority
-                            === priority;
-
-
-
-                    return (
-
-                        matchSearch
-
-                        &&
-
-                        matchStatus
-
-                        &&
-
-                        matchPriority
-
-                    );
-
-
-                }
-            );
-
-
-        renderTasks(
-            filtered
-        );
-
-    }
-
-
-
-    /* ===============================
-       تسجيل الخروج
-    ================================ */
-
-    function logout() {
-
-
-        localStorage.removeItem(
-            "miyarRole"
-        );
-
-
-        localStorage.removeItem(
-            "miyarEmail"
-        );
-
-
-        localStorage.removeItem(
-            "miyarName"
-        );
 
 
         window.location.href =
             "login.html";
 
+
+        return false;
+
     }
 
+
+    employeeId =
+        Number(
+            savedEmployeeId
+        );
+
+
+    if (
+        !employeeId
+        ||
+        Number.isNaN(
+            employeeId
+        )
+    ) {
+
+
+        logout();
+
+
+        return false;
+
+    }
+
+
+    return true;
+
+}
+
+
+
+/* ===============================
+   تحميل مهام الموظف
+================================ */
+
+async function loadTasks() {
+
+
+    tasksGrid.innerHTML = `
+
+        <div class="empty-state">
+            جارٍ تحميل المهام...
+        </div>
+
+    `;
+
+
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("tasks")
+        .select(`
+            id,
+            project_id,
+            task_name,
+            description,
+            priority,
+            due_date,
+            status,
+            assigned_employee_id
+        `)
+        .eq(
+            "assigned_employee_id",
+            employeeId
+        )
+        .order(
+            "id",
+            {
+                ascending: false
+            }
+        );
+
+
+
+    if (error) {
+
+
+        console.error(
+            "خطأ تحميل المهام:",
+            error
+        );
+
+
+        tasks =
+            [];
+
+
+        tasksGrid.innerHTML = `
+
+            <div class="empty-state">
+                تعذر تحميل المهام
+            </div>
+
+        `;
+
+
+        return;
+
+    }
+
+
+    tasks =
+        data || [];
+
+}
+
+
+
+/* ===============================
+   تحميل المشاريع
+================================ */
+
+async function loadProjects() {
+
+
+    const projectIds =
+        [
+            ...new Set(
+
+                tasks
+                    .map(
+                        task =>
+                            task.project_id
+                    )
+                    .filter(
+                        id =>
+                            id !== null
+                            &&
+                            id !== undefined
+                    )
+
+            )
+        ];
+
+
+
+    if (
+        projectIds.length === 0
+    ) {
+
+
+        projects =
+            [];
+
+
+        return;
+
+    }
+
+
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("projects")
+        .select(`
+            id,
+            project_name
+        `)
+        .in(
+            "id",
+            projectIds
+        );
+
+
+
+    if (error) {
+
+
+        console.error(
+            "خطأ تحميل المشاريع:",
+            error
+        );
+
+
+        projects =
+            [];
+
+
+        return;
+
+    }
+
+
+    projects =
+        data || [];
+
+}
+
+
+
+/* ===============================
+   اسم المشروع
+================================ */
+
+function getProjectName(
+    projectId
+) {
+
+
+    const project =
+        projects.find(
+            item =>
+                Number(item.id)
+                ===
+                Number(projectId)
+        );
+
+
+    return project
+        ?
+        project.project_name
+        :
+        "غير مرتبط بمشروع";
+
+}
+
+
+
+/* ===============================
+   ترجمة الأولوية
+================================ */
+
+function getPriorityText(
+    priority
+) {
+
+
+    const value =
+        String(
+            priority
+            ||
+            ""
+        )
+        .trim()
+        .toLowerCase();
+
+
+    if (
+        value === "high"
+        ||
+        value === "عالية"
+    ) {
+
+        return "عالية";
+
+    }
+
+
+    if (
+        value === "low"
+        ||
+        value === "منخفضة"
+    ) {
+
+        return "منخفضة";
+
+    }
+
+
+    if (
+        value === "medium"
+        ||
+        value === "متوسطة"
+    ) {
+
+        return "متوسطة";
+
+    }
+
+
+    return (
+        priority
+        ||
+        "غير محددة"
+    );
+
+}
+
+
+
+/* ===============================
+   ترجمة الحالة
+================================ */
+
+function getStatusText(
+    status
+) {
+
+
+    const value =
+        String(
+            status
+            ||
+            ""
+        )
+        .trim()
+        .toLowerCase();
+
+
+
+    if (
+        value === "done"
+        ||
+        value === "completed"
+        ||
+        value.includes(
+            "مكتمل"
+        )
+    ) {
+
+        return "مكتملة";
+
+    }
+
+
+    if (
+        value === "running"
+        ||
+        value === "in progress"
+        ||
+        value === "in_progress"
+        ||
+        value.includes(
+            "قيد التنفيذ"
+        )
+    ) {
+
+        return "قيد التنفيذ";
+
+    }
+
+
+    if (
+        value === "processing"
+        ||
+        value === "pending"
+        ||
+        value === "new"
+        ||
+        value.includes(
+            "جديد"
+        )
+    ) {
+
+        return "جديدة";
+
+    }
+
+
+    return (
+        status
+        ||
+        "غير محددة"
+    );
+
+}
+
+
+
+/* ===============================
+   هل المهمة مكتملة؟
+================================ */
+
+function isCompletedTask(
+    task
+) {
+
+
+    return (
+        getStatusText(
+            task.status
+        )
+        ===
+        "مكتملة"
+    );
+
+}
+
+
+
+/* ===============================
+   تحديث الملخص
+================================ */
+
+function updateSummary() {
+
+
+    const completed =
+        tasks.filter(
+            isCompletedTask
+        );
+
+
+    const current =
+        tasks.filter(
+            task =>
+                !isCompletedTask(
+                    task
+                )
+        );
+
+
+    document
+        .getElementById(
+            "allTasksCount"
+        )
+        .textContent =
+        tasks.length;
+
+
+    document
+        .getElementById(
+            "currentTasksCount"
+        )
+        .textContent =
+        current.length;
+
+
+    document
+        .getElementById(
+            "completedTasksCount"
+        )
+        .textContent =
+        completed.length;
+
+
+
+    const rate =
+        tasks.length > 0
+        ?
+        Math.round(
+
+            (
+                completed.length
+                /
+                tasks.length
+            )
+            *
+            100
+
+        )
+        :
+        0;
+
+
+    document
+        .getElementById(
+            "completionRate"
+        )
+        .textContent =
+        rate + "%";
+
+}
+
+
+
+/* ===============================
+   ألوان الأولوية
+================================ */
+
+function getPriorityClass(
+    priority
+) {
+
+
+    const value =
+        getPriorityText(
+            priority
+        );
+
+
+    if (
+        value === "عالية"
+    ) {
+
+        return "high";
+
+    }
+
+
+    if (
+        value === "منخفضة"
+    ) {
+
+        return "low";
+
+    }
+
+
+    return "medium";
+
+}
+
+
+
+/* ===============================
+   ألوان الحالة
+================================ */
+
+function getStatusClass(
+    status
+) {
+
+
+    const value =
+        getStatusText(
+            status
+        );
+
+
+    if (
+        value === "مكتملة"
+    ) {
+
+        return "completed";
+
+    }
+
+
+    if (
+        value === "قيد التنفيذ"
+    ) {
+
+        return "running";
+
+    }
+
+
+    return "new";
+
+}
+
+
+
+/* ===============================
+   عرض المهام
+================================ */
+
+function renderTasks(
+    list
+) {
+
+
+    tasksGrid.innerHTML =
+        "";
+
+
+    tasksCount.textContent =
+        list.length
+        +
+        " مهام";
+
+
+
+    if (
+        list.length === 0
+    ) {
+
+
+        tasksGrid.innerHTML = `
+
+            <div class="empty-state">
+                لا توجد مهام مسندة لك حالياً
+            </div>
+
+        `;
+
+
+        return;
+
+    }
+
+
+
+    list.forEach(
+        function(task) {
+
+
+            const projectName =
+                getProjectName(
+                    task.project_id
+                );
+
+
+            const priority =
+                getPriorityText(
+                    task.priority
+                );
+
+
+            const status =
+                getStatusText(
+                    task.status
+                );
+
+
+
+            const card =
+                document.createElement(
+                    "article"
+                );
+
+
+            card.className =
+                "task-card";
+
+
+
+            card.innerHTML = `
+
+
+                <div class="task-card-top">
+
+
+                    <div>
+
+                        <span class="task-label">
+
+                            ${
+                                escapeHtml(
+                                    projectName
+                                )
+                            }
+
+                        </span>
+
+
+                        <h3>
+
+                            ${
+                                escapeHtml(
+                                    task.task_name
+                                    ||
+                                    "مهمة بدون اسم"
+                                )
+                            }
+
+                        </h3>
+
+                    </div>
+
+
+
+                    <span class="
+                        priority-badge
+                        ${
+                            getPriorityClass(
+                                priority
+                            )
+                        }
+                    ">
+
+                        ${
+                            escapeHtml(
+                                priority
+                            )
+                        }
+
+                    </span>
+
+
+                </div>
+
+
+
+                <p class="task-description">
+
+                    ${
+                        escapeHtml(
+                            task.description
+                            ||
+                            "لا يوجد وصف للمهمة"
+                        )
+                    }
+
+                </p>
+
+
+
+                <div class="task-info">
+
+
+                    <div class="info-item">
+
+                        <span>
+                            المشروع
+                        </span>
+
+                        <strong>
+
+                            ${
+                                escapeHtml(
+                                    projectName
+                                )
+                            }
+
+                        </strong>
+
+                    </div>
+
+
+
+                    <div class="info-item">
+
+                        <span>
+                            الأولوية
+                        </span>
+
+                        <strong>
+
+                            ${
+                                escapeHtml(
+                                    priority
+                                )
+                            }
+
+                        </strong>
+
+                    </div>
+
+
+
+                    <div class="info-item">
+
+                        <span>
+                            تاريخ التسليم
+                        </span>
+
+                        <strong>
+
+                            ${
+                                task.due_date
+                                ?
+                                escapeHtml(
+                                    task.due_date
+                                )
+                                :
+                                "غير محدد"
+                            }
+
+                        </strong>
+
+                    </div>
+
+
+
+                    <div class="info-item">
+
+                        <span>
+                            الحالة
+                        </span>
+
+                        <strong>
+
+                            ${
+                                escapeHtml(
+                                    status
+                                )
+                            }
+
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <div class="task-footer">
+
+
+                    <span class="
+                        status-badge
+                        ${
+                            getStatusClass(
+                                status
+                            )
+                        }
+                    ">
+
+                        ${
+                            escapeHtml(
+                                status
+                            )
+                        }
+
+                    </span>
+
+
+
+                    <button
+                        class="details-btn"
+                        type="button"
+                        data-id="${task.id}"
+                    >
+
+                        عرض التفاصيل
+
+                    </button>
+
+
+                </div>
+
+
+            `;
+
+
+            tasksGrid.appendChild(
+                card
+            );
+
+
+        }
+    );
+
+}
+
+
+
+/* ===============================
+   البحث والتصفية
+================================ */
+
+function filterTasks() {
+
+
+    const search =
+        searchInput
+            .value
+            .trim()
+            .toLowerCase();
+
+
+    const selectedStatus =
+        statusFilter.value;
+
+
+    const selectedPriority =
+        priorityFilter.value;
+
+
+
+    const filtered =
+        tasks.filter(
+            function(task) {
+
+
+                const taskName =
+                    String(
+                        task.task_name
+                        ||
+                        ""
+                    )
+                    .toLowerCase();
+
+
+                const projectName =
+                    String(
+                        getProjectName(
+                            task.project_id
+                        )
+                    )
+                    .toLowerCase();
+
+
+                const status =
+                    getStatusText(
+                        task.status
+                    );
+
+
+                const priority =
+                    getPriorityText(
+                        task.priority
+                    );
+
+
+
+                const matchSearch =
+
+                    taskName.includes(
+                        search
+                    )
+
+                    ||
+
+                    projectName.includes(
+                        search
+                    );
+
+
+
+                const matchStatus =
+
+                    !selectedStatus
+
+                    ||
+
+                    status ===
+                    selectedStatus;
+
+
+
+                const matchPriority =
+
+                    !selectedPriority
+
+                    ||
+
+                    priority ===
+                    selectedPriority;
+
+
+
+                return (
+
+                    matchSearch
+
+                    &&
+
+                    matchStatus
+
+                    &&
+
+                    matchPriority
+
+                );
+
+
+            }
+        );
+
+
+    renderTasks(
+        filtered
+    );
+
+}
+
+
+
+/* ===============================
+   تفاصيل المهمة
+================================ */
+
+function viewTask(
+    id
+) {
+
+
+    const task =
+        tasks.find(
+            item =>
+                Number(item.id)
+                ===
+                Number(id)
+        );
+
+
+    if (!task) {
+
+        return;
+
+    }
+
+
+
+    const projectName =
+        getProjectName(
+            task.project_id
+        );
+
+
+    const priority =
+        getPriorityText(
+            task.priority
+        );
+
+
+    const status =
+        getStatusText(
+            task.status
+        );
+
+
+
+    document
+        .getElementById(
+            "taskDetails"
+        )
+        .innerHTML = `
+
+
+            <div class="detail-item">
+
+                <span>
+                    اسم المهمة
+                </span>
+
+                <strong>
+
+                    ${
+                        escapeHtml(
+                            task.task_name
+                        )
+                    }
+
+                </strong>
+
+            </div>
+
+
+
+            <div class="detail-item">
+
+                <span>
+                    المشروع
+                </span>
+
+                <strong>
+
+                    ${
+                        escapeHtml(
+                            projectName
+                        )
+                    }
+
+                </strong>
+
+            </div>
+
+
+
+            <div class="detail-item">
+
+                <span>
+                    الأولوية
+                </span>
+
+                <strong>
+
+                    ${
+                        escapeHtml(
+                            priority
+                        )
+                    }
+
+                </strong>
+
+            </div>
+
+
+
+            <div class="detail-item">
+
+                <span>
+                    تاريخ التسليم
+                </span>
+
+                <strong>
+
+                    ${
+                        task.due_date
+                        ?
+                        escapeHtml(
+                            task.due_date
+                        )
+                        :
+                        "غير محدد"
+                    }
+
+                </strong>
+
+            </div>
+
+
+
+            <div class="detail-item">
+
+                <span>
+                    الحالة
+                </span>
+
+                <strong>
+
+                    ${
+                        escapeHtml(
+                            status
+                        )
+                    }
+
+                </strong>
+
+            </div>
+
+
+
+            <div class="
+                detail-item
+                full-detail
+            ">
+
+                <span>
+                    وصف المهمة
+                </span>
+
+                <strong>
+
+                    ${
+                        escapeHtml(
+                            task.description
+                            ||
+                            "لا يوجد وصف للمهمة"
+                        )
+                    }
+
+                </strong>
+
+            </div>
+
+
+        `;
+
+
+
+    detailsModal
+        .classList
+        .add(
+            "show"
+        );
+
+}
+
+
+
+/* ===============================
+   إغلاق التفاصيل
+================================ */
+
+function closeDetailsModal() {
+
+
+    detailsModal
+        .classList
+        .remove(
+            "show"
+        );
+
+}
+
+
+
+/* ===============================
+   حماية النص
+================================ */
+
+function escapeHtml(
+    value
+) {
+
+
+    return String(
+        value ?? ""
+    )
+
+    .replaceAll(
+        "&",
+        "&amp;"
+    )
+
+    .replaceAll(
+        "<",
+        "&lt;"
+    )
+
+    .replaceAll(
+        ">",
+        "&gt;"
+    )
+
+    .replaceAll(
+        '"',
+        "&quot;"
+    )
+
+    .replaceAll(
+        "'",
+        "&#039;"
+    );
+
+}
+
+
+
+/* ===============================
+   السايد بار
+================================ */
+
+function openSidebar() {
+
+
+    sidebar.classList.add(
+        "show"
+    );
+
+
+    sidebarOverlay.classList.add(
+        "show"
+    );
+
+
+    document.body.classList.add(
+        "menu-open"
+    );
+
+}
+
+
+
+function closeSidebar() {
+
+
+    sidebar.classList.remove(
+        "show"
+    );
+
+
+    sidebarOverlay.classList.remove(
+        "show"
+    );
+
+
+    document.body.classList.remove(
+        "menu-open"
+    );
+
+}
+
+
+
+/* ===============================
+   تسجيل الخروج
+================================ */
+
+function logout() {
+
+
+    localStorage.removeItem(
+        "miyarRole"
+    );
+
+
+    localStorage.removeItem(
+        "miyarEmail"
+    );
+
+
+    localStorage.removeItem(
+        "miyarEmployeeId"
+    );
+
+
+    localStorage.removeItem(
+        "miyarEmployeeName"
+    );
+
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+
+/* ===============================
+   الأحداث
+================================ */
+
+mobileMenuBtn
+    .addEventListener(
+        "click",
+        openSidebar
+    );
+
+
+sidebarOverlay
+    .addEventListener(
+        "click",
+        closeSidebar
+    );
+
+
+document
+    .querySelectorAll(
+        ".nav-link"
+    )
+    .forEach(
+        function(link) {
+
+
+            link.addEventListener(
+                "click",
+                closeSidebar
+            );
+
+
+        }
+    );
+
+
+searchInput
+    .addEventListener(
+        "input",
+        filterTasks
+    );
+
+
+statusFilter
+    .addEventListener(
+        "change",
+        filterTasks
+    );
+
+
+priorityFilter
+    .addEventListener(
+        "change",
+        filterTasks
+    );
+
+
+document
+    .getElementById(
+        "logoutBtn"
+    )
+    .addEventListener(
+        "click",
+        logout
+    );
+
+
+document
+    .getElementById(
+        "closeDetailsBtn"
+    )
+    .addEventListener(
+        "click",
+        closeDetailsModal
+    );
+
+
+document
+    .getElementById(
+        "detailsModalOverlay"
+    )
+    .addEventListener(
+        "click",
+        closeDetailsModal
+    );
+
+
+tasksGrid
+    .addEventListener(
+        "click",
+        function(event) {
+
+
+            const button =
+                event.target.closest(
+                    ".details-btn"
+                );
+
+
+            if (!button) {
+
+                return;
+
+            }
+
+
+            viewTask(
+                Number(
+                    button.dataset.id
+                )
+            );
+
+        }
+    );
+
+
+
+/* ===============================
+   تشغيل الصفحة
+================================ */
+
+async function startPage() {
+
+
+    const allowed =
+        protectEmployeePage();
+
+
+    if (!allowed) {
+
+        return;
+
+    }
+
+
+
+    await loadTasks();
+
+
+    await loadProjects();
+
+
+    updateSummary();
 
 
     renderTasks(
         tasks
     );
+
+}
+
+
+
+startPage();
 
 
 </script>
