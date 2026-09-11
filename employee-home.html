@@ -28,9 +28,7 @@
 <div class="employee-page">
 
 
-    <!-- =========================
-         هيدر الجوال
-    ========================== -->
+    <!-- هيدر الجوال -->
 
     <header class="mobile-header">
 
@@ -74,9 +72,7 @@
 
 
 
-    <!-- =========================
-         السايد بار
-    ========================== -->
+    <!-- السايد بار -->
 
     <aside
         class="sidebar"
@@ -155,9 +151,7 @@
 
 
 
-    <!-- =========================
-         المحتوى الرئيسي
-    ========================== -->
+    <!-- المحتوى -->
 
     <main class="main-content">
 
@@ -190,9 +184,7 @@
 
 
 
-        <!-- =========================
-             الملخص
-        ========================== -->
+        <!-- الملخص -->
 
         <section class="summary-section">
 
@@ -276,9 +268,7 @@
 
 
 
-        <!-- =========================
-             المهام الحالية
-        ========================== -->
+        <!-- المهام -->
 
         <section class="content-card">
 
@@ -325,9 +315,7 @@
 
 
 
-        <!-- =========================
-             المشاريع الحالية
-        ========================== -->
+        <!-- المشاريع -->
 
         <section class="content-card">
 
@@ -483,10 +471,10 @@ const sidebarOverlay =
 
 
 /* =========================================
-   حماية صفحة الموظف
+   جلب الموظف الحالي
 ========================================= */
 
-function protectEmployeePage() {
+async function resolveCurrentEmployee() {
 
 
     const role =
@@ -495,22 +483,12 @@ function protectEmployeePage() {
         );
 
 
-    const savedEmployeeId =
-        localStorage.getItem(
-            "miyarEmployeeId"
-        );
-
-
     if (
         role !== "employee"
-        ||
-        !savedEmployeeId
     ) {
-
 
         window.location.href =
             "login.html";
-
 
         return false;
 
@@ -518,19 +496,82 @@ function protectEmployeePage() {
 
 
 
-    employeeId =
-        Number(
-            savedEmployeeId
+    /*
+        نحاول الحصول على البريد من
+        جلسة Supabase أولاً
+    */
+
+    let email = "";
+
+
+    try {
+
+
+        const {
+            data
+        } =
+        await supabaseClient
+            .auth
+            .getSession();
+
+
+
+        if (
+            data
+            &&
+            data.session
+            &&
+            data.session.user
+            &&
+            data.session.user.email
+        ) {
+
+
+            email =
+                data.session.user.email
+                    .trim()
+                    .toLowerCase();
+
+        }
+
+
+    }
+
+    catch(error) {
+
+        console.warn(
+            "تعذر قراءة جلسة Supabase:",
+            error
         );
 
+    }
 
-    if (
-        !employeeId
-        ||
-        Number.isNaN(
-            employeeId
-        )
-    ) {
+
+
+    /*
+        إذا لم نجد البريد من Supabase
+        نأخذه من localStorage
+    */
+
+    if (!email) {
+
+
+        email =
+            String(
+                localStorage.getItem(
+                    "miyarEmail"
+                )
+                ||
+                ""
+            )
+            .trim()
+            .toLowerCase();
+
+    }
+
+
+
+    if (!email) {
 
 
         clearEmployeeSession();
@@ -545,18 +586,10 @@ function protectEmployeePage() {
     }
 
 
-    return true;
 
-}
-
-
-
-/* =========================================
-   تحميل بيانات الموظف
-========================================= */
-
-async function loadEmployeeData() {
-
+    /*
+        البحث عن الموظف بالبريد
+    */
 
     const {
         data,
@@ -577,11 +610,11 @@ async function loadEmployeeData() {
             status,
             employee_number
         `)
-        .eq(
-            "id",
-            employeeId
+        .ilike(
+            "email",
+            email
         )
-        .single();
+        .limit(1);
 
 
 
@@ -589,21 +622,95 @@ async function loadEmployeeData() {
 
 
         console.error(
-            "خطأ تحميل بيانات الموظف:",
+            "خطأ البحث عن الموظف:",
             error
         );
 
 
-        return;
+        employeeName.textContent =
+            "تعذر تحميل البيانات";
+
+
+        return false;
+
+    }
+
+
+
+    if (
+        !data
+        ||
+        data.length === 0
+    ) {
+
+
+        console.error(
+            "لم يتم العثور على الموظف:",
+            email
+        );
+
+
+        alert(
+            "لم يتم العثور على بيانات الموظف في النظام"
+        );
+
+
+        clearEmployeeSession();
+
+
+        window.location.href =
+            "login.html";
+
+
+        return false;
 
     }
 
 
 
     employeeData =
-        data;
+        data[0];
 
 
+    employeeId =
+        Number(
+            employeeData.id
+        );
+
+
+
+    /*
+        تحديث بيانات الجهاز الحالي
+    */
+
+    localStorage.setItem(
+        "miyarRole",
+        "employee"
+    );
+
+
+    localStorage.setItem(
+        "miyarEmail",
+        employeeData.email || email
+    );
+
+
+    localStorage.setItem(
+        "miyarEmployeeId",
+        String(employeeData.id)
+    );
+
+
+    localStorage.setItem(
+        "miyarEmployeeName",
+        employeeData.name || ""
+    );
+
+
+
+    /*
+        عرض الاسم
+    */
 
     employeeName.textContent =
         employeeData.name
@@ -611,11 +718,7 @@ async function loadEmployeeData() {
         "الموظف";
 
 
-
-    localStorage.setItem(
-        "miyarEmployeeName",
-        employeeData.name || ""
-    );
+    return true;
 
 }
 
@@ -661,7 +764,7 @@ async function loadEmployeeTasks() {
 
 
         console.error(
-            "خطأ تحميل مهام الموظف:",
+            "خطأ تحميل المهام:",
             error
         );
 
@@ -697,15 +800,23 @@ async function loadEmployeeProjects() {
                 employeeTasks
 
                     .map(
-                        task =>
-                            task.project_id
+                        function(task) {
+
+                            return task.project_id;
+
+                        }
                     )
 
                     .filter(
-                        id =>
-                            id !== null
-                            &&
-                            id !== undefined
+                        function(id) {
+
+                            return (
+                                id !== null
+                                &&
+                                id !== undefined
+                            );
+
+                        }
                     )
 
             )
@@ -759,7 +870,7 @@ async function loadEmployeeProjects() {
 
 
         console.error(
-            "خطأ تحميل مشاريع الموظف:",
+            "خطأ تحميل المشاريع:",
             error
         );
 
@@ -782,19 +893,15 @@ async function loadEmployeeProjects() {
 
 
 /* =========================================
-   المهمة مكتملة؟
+   هل المهمة مكتملة؟
 ========================================= */
 
-function isCompletedTask(
-    task
-) {
+function isCompletedTask(task) {
 
 
     const status =
         String(
-            task.status
-            ||
-            ""
+            task.status || ""
         )
         .trim()
         .toLowerCase();
@@ -831,16 +938,12 @@ function isCompletedTask(
    ترجمة الحالة
 ========================================= */
 
-function getStatusText(
-    status
-) {
+function getStatusText(status) {
 
 
     const value =
         String(
-            status
-            ||
-            ""
+            status || ""
         )
         .trim()
         .toLowerCase();
@@ -852,7 +955,6 @@ function getStatusText(
         ||
         value === "completed"
     ) {
-
 
         return "مكتملة";
 
@@ -868,7 +970,6 @@ function getStatusText(
         value === "in_progress"
     ) {
 
-
         return "قيد التنفيذ";
 
     }
@@ -880,7 +981,6 @@ function getStatusText(
         ||
         value === "pending"
     ) {
-
 
         return "جديدة";
 
@@ -902,16 +1002,12 @@ function getStatusText(
    ترجمة الأولوية
 ========================================= */
 
-function getPriorityText(
-    priority
-) {
+function getPriorityText(priority) {
 
 
     const value =
         String(
-            priority
-            ||
-            ""
+            priority || ""
         )
         .trim()
         .toLowerCase();
@@ -921,7 +1017,6 @@ function getPriorityText(
     if (
         value === "high"
     ) {
-
 
         return "عالية";
 
@@ -933,7 +1028,6 @@ function getPriorityText(
         value === "medium"
     ) {
 
-
         return "متوسطة";
 
     }
@@ -943,7 +1037,6 @@ function getPriorityText(
     if (
         value === "low"
     ) {
-
 
         return "منخفضة";
 
@@ -976,10 +1069,13 @@ function updateSummary() {
 
     const current =
         employeeTasks.filter(
-            task =>
-                !isCompletedTask(
+            function(task) {
+
+                return !isCompletedTask(
                     task
-                )
+                );
+
+            }
         );
 
 
@@ -988,10 +1084,8 @@ function updateSummary() {
         current.length;
 
 
-
     completedTasksCount.textContent =
         completed.length;
-
 
 
     projectsCount.textContent =
@@ -1022,7 +1116,9 @@ function updateSummary() {
                 /
                 employeeTasks.length
             )
+
             *
+
             100
 
         );
@@ -1037,7 +1133,7 @@ function updateSummary() {
 
 
 /* =========================================
-   عرض المهام الحالية
+   عرض المهام
 ========================================= */
 
 function renderTasksPreview() {
@@ -1052,10 +1148,13 @@ function renderTasksPreview() {
         employeeTasks
 
             .filter(
-                task =>
-                    !isCompletedTask(
+                function(task) {
+
+                    return !isCompletedTask(
                         task
-                    )
+                    );
+
+                }
             )
 
             .slice(
@@ -1182,7 +1281,7 @@ function renderTasksPreview() {
 
 
 /* =========================================
-   عرض المشاريع الحالية
+   عرض المشاريع
 ========================================= */
 
 function renderProjectsPreview() {
@@ -1214,12 +1313,10 @@ function renderProjectsPreview() {
 
 
     employeeProjects
-
         .slice(
             0,
             4
         )
-
         .forEach(
             function(project) {
 
@@ -1242,7 +1339,6 @@ function renderProjectsPreview() {
                                 )
 
                             );
-
 
                         }
                     );
@@ -1279,9 +1375,7 @@ function renderProjectsPreview() {
 
                         <span>
 
-                            ${
-                                projectTasks.length
-                            }
+                            ${projectTasks.length}
 
                             مهمة مسندة لك
 
@@ -1341,9 +1435,7 @@ function renderProjectsPreview() {
    حماية النص
 ========================================= */
 
-function escapeHtml(
-    value
-) {
+function escapeHtml(value) {
 
 
     return String(
@@ -1426,7 +1518,7 @@ function closeSidebar() {
 
 
 /* =========================================
-   تنظيف بيانات الموظف
+   تنظيف الجلسة
 ========================================= */
 
 function clearEmployeeSession() {
@@ -1459,7 +1551,25 @@ function clearEmployeeSession() {
    تسجيل الخروج
 ========================================= */
 
-function logout() {
+async function logout() {
+
+
+    try {
+
+        await supabaseClient
+            .auth
+            .signOut();
+
+    }
+
+    catch(error) {
+
+        console.error(
+            error
+        );
+
+    }
+
 
 
     clearEmployeeSession();
@@ -1526,24 +1636,20 @@ document
 async function startPage() {
 
 
-    const allowed =
-        protectEmployeePage();
-
-
-
-    if (!allowed) {
-
-
-        return;
-
-    }
-
-
-
     try {
 
 
-        await loadEmployeeData();
+        const allowed =
+            await resolveCurrentEmployee();
+
+
+
+        if (!allowed) {
+
+            return;
+
+        }
+
 
 
         await loadEmployeeTasks();
@@ -1572,6 +1678,28 @@ async function startPage() {
             "خطأ تشغيل صفحة الموظف:",
             error
         );
+
+
+        employeeName.textContent =
+            "تعذر تحميل البيانات";
+
+
+        tasksPreview.innerHTML = `
+
+            <div class="empty-state">
+                تعذر تحميل المهام
+            </div>
+
+        `;
+
+
+        projectsPreview.innerHTML = `
+
+            <div class="empty-state">
+                تعذر تحميل المشاريع
+            </div>
+
+        `;
 
 
     }
