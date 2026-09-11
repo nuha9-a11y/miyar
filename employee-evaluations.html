@@ -2,6 +2,7 @@
 <html lang="ar" dir="rtl">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -15,11 +16,17 @@
         rel="stylesheet"
         href="employee-evaluations.css"
     >
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 </head>
+
 
 <body>
 
+
 <div class="employee-page">
+
 
     <!-- =========================
          هيدر الجوال
@@ -36,10 +43,19 @@
             ☰
         </button>
 
+
         <div class="mobile-header-title">
-            <h2>تقييمي</h2>
-            <span>معيار</span>
+
+            <h2>
+                تقييمي
+            </h2>
+
+            <span>
+                معيار
+            </span>
+
         </div>
+
 
         <img
             src="assets/logo.png"
@@ -50,7 +66,6 @@
     </header>
 
 
-    <!-- خلفية السايد بار في الجوال -->
 
     <div
         class="sidebar-overlay"
@@ -58,14 +73,16 @@
     ></div>
 
 
+
     <!-- =========================
-         القائمة الجانبية
+         السايد بار
     ========================== -->
 
     <aside
         class="sidebar"
         id="sidebar"
     >
+
 
         <div class="sidebar-logo">
 
@@ -79,12 +96,14 @@
 
         <nav class="sidebar-nav">
 
+
             <a
                 href="employee-home.html"
                 class="nav-link"
             >
                 الرئيسية
             </a>
+
 
             <a
                 href="employee-tasks.html"
@@ -93,12 +112,14 @@
                 مهامي
             </a>
 
+
             <a
                 href="employee-projects.html"
                 class="nav-link"
             >
                 مشاريعي
             </a>
+
 
             <a
                 href="employee-profile.html"
@@ -107,6 +128,7 @@
                 ملفي الشخصي
             </a>
 
+
             <a
                 href="employee-evaluations.html"
                 class="nav-link active"
@@ -114,18 +136,21 @@
                 تقييمي
             </a>
 
+
         </nav>
 
 
         <button
             type="button"
             class="logout-btn"
-            onclick="logout()"
+            id="logoutBtn"
         >
             تسجيل الخروج
         </button>
 
+
     </aside>
+
 
 
     <!-- =========================
@@ -133,6 +158,7 @@
     ========================== -->
 
     <main class="main-content">
+
 
         <!-- رأس الصفحة -->
 
@@ -142,15 +168,18 @@
                 متابعة الأداء
             </span>
 
+
             <h1>
-              تقييمي
+                تقييمي
             </h1>
 
+
             <p>
-                متابعة تقييمات المهام السابقة ومستوى الأداء وملاحظات المسؤول
+                متابعة تقييمات مهامك ومستوى الإنجاز وملاحظات المسؤول
             </p>
 
         </header>
+
 
 
         <!-- =========================
@@ -159,6 +188,7 @@
 
         <section class="summary-grid">
 
+
             <article class="summary-card">
 
                 <span class="summary-title">
@@ -166,7 +196,7 @@
                 </span>
 
                 <strong id="evaluationCount">
-                    —
+                    0
                 </strong>
 
                 <p>
@@ -174,6 +204,7 @@
                 </p>
 
             </article>
+
 
 
             <article class="summary-card">
@@ -187,10 +218,11 @@
                 </strong>
 
                 <p>
-                    متوسط تقييم المهام
+                    متوسط تقييم الأداء
                 </p>
 
             </article>
+
 
 
             <article class="summary-card">
@@ -204,12 +236,14 @@
                 </strong>
 
                 <p>
-                    المستوى العام للأداء
+                    المستوى العام حسب التقييمات
                 </p>
 
             </article>
 
+
         </section>
+
 
 
         <!-- =========================
@@ -218,7 +252,9 @@
 
         <section class="evaluations-section">
 
+
             <div class="section-heading">
+
 
                 <div>
 
@@ -226,17 +262,29 @@
                         01
                     </span>
 
+
                     <h2>
                         التقييمات السابقة
                     </h2>
 
+
                     <p>
-                        تظهر هنا تقييمات المهام بعد تسجيلها من المسؤول
+                        تظهر هنا التقييمات التي سجلها المسؤول لمهامك
                     </p>
 
                 </div>
 
+
+                <span
+                    class="evaluations-count"
+                    id="evaluationsCountBadge"
+                >
+                    0 تقييمات
+                </span>
+
+
             </div>
+
 
 
             <div
@@ -244,8 +292,6 @@
                 id="evaluationsList"
             >
 
-                <!-- لا توجد بيانات حالياً -->
-
                 <div class="empty-state">
 
                     <div class="empty-icon">
@@ -253,125 +299,533 @@
                     </div>
 
                     <h3>
-                        لا توجد تقييمات حالياً
+                        جارٍ تحميل التقييمات...
                     </h3>
-
-                    <p>
-                        ستظهر تقييمات المهام هنا بعد إضافتها من المسؤول
-                    </p>
 
                 </div>
 
             </div>
 
+
         </section>
 
+
     </main>
+
 
 </div>
 
 
+
 <script>
 
-    /* ====================================
-       القائمة الجانبية للجوال
-    ==================================== */
 
-    const mobileMenuBtn =
-        document.getElementById("mobileMenuBtn");
+/* =========================
+   Supabase
+========================== */
 
-    const sidebar =
-        document.getElementById("sidebar");
-
-    const sidebarOverlay =
-        document.getElementById("sidebarOverlay");
+const SUPABASE_URL =
+    "https://avooyglxacytrfhvotsl.supabase.co";
 
 
-    function openSidebar() {
-
-        sidebar.classList.add("show");
-
-        sidebarOverlay.classList.add("show");
-
-        document.body.classList.add("menu-open");
-    }
+const SUPABASE_KEY =
+    "sb_publishable_NVlWEnA_w4KbSse_-70zdA_J9ut0Kyo";
 
 
-    function closeSidebar() {
-
-        sidebar.classList.remove("show");
-
-        sidebarOverlay.classList.remove("show");
-
-        document.body.classList.remove("menu-open");
-    }
-
-
-    mobileMenuBtn.addEventListener(
-        "click",
-        openSidebar
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
     );
 
 
-    sidebarOverlay.addEventListener(
-        "click",
-        closeSidebar
+
+/* =========================
+   البيانات
+========================== */
+
+let employeeId =
+    null;
+
+
+let evaluations =
+    [];
+
+
+let tasks =
+    [];
+
+
+
+/* =========================
+   العناصر
+========================== */
+
+const evaluationsList =
+    document.getElementById(
+        "evaluationsList"
     );
 
 
-    document
-        .querySelectorAll(".nav-link")
-        .forEach(function(link) {
-
-            link.addEventListener(
-                "click",
-                closeSidebar
-            );
-
-        });
+const evaluationCount =
+    document.getElementById(
+        "evaluationCount"
+    );
 
 
-    /* ====================================
-       بيانات التقييمات
-
-       حالياً فارغة.
-       لاحقاً تأتي من قاعدة البيانات.
-    ==================================== */
-
-    let evaluations = [];
+const averageRating =
+    document.getElementById(
+        "averageRating"
+    );
 
 
-    /* ====================================
-       عرض التقييمات
-    ==================================== */
-
-    function renderEvaluations() {
-
-        const container =
-            document.getElementById(
-                "evaluationsList"
-            );
+const performanceLevel =
+    document.getElementById(
+        "performanceLevel"
+    );
 
 
-        container.innerHTML = "";
+const evaluationsCountBadge =
+    document.getElementById(
+        "evaluationsCountBadge"
+    );
 
 
-        if (evaluations.length === 0) {
 
-            container.innerHTML = `
+/* =========================
+   حماية صفحة الموظف
+========================== */
 
-                <div class="empty-state">
+function protectEmployeePage() {
 
-                    <div class="empty-icon">
-                        ✓
+
+    const role =
+        localStorage.getItem(
+            "miyarRole"
+        );
+
+
+    const savedEmployeeId =
+        localStorage.getItem(
+            "miyarEmployeeId"
+        );
+
+
+    if (
+        role !== "employee"
+        ||
+        !savedEmployeeId
+    ) {
+
+
+        window.location.href =
+            "login.html";
+
+
+        return false;
+
+    }
+
+
+    employeeId =
+        Number(
+            savedEmployeeId
+        );
+
+
+    if (
+        !employeeId
+        ||
+        Number.isNaN(
+            employeeId
+        )
+    ) {
+
+
+        clearEmployeeSession();
+
+
+        window.location.href =
+            "login.html";
+
+
+        return false;
+
+    }
+
+
+    return true;
+
+}
+
+
+
+/* =========================
+   تحميل تقييمات الموظف
+========================== */
+
+async function loadEvaluations() {
+
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("evaluations")
+        .select(`
+            id,
+            employee_id,
+            task_id,
+            achievement_level,
+            performance_rating,
+            notes,
+            evaluation_date,
+            created_at
+        `)
+        .eq(
+            "employee_id",
+            employeeId
+        )
+        .order(
+            "evaluation_date",
+            {
+                ascending: false
+            }
+        );
+
+
+    if (error) {
+
+
+        console.error(
+            "خطأ تحميل التقييمات:",
+            error
+        );
+
+
+        throw error;
+
+    }
+
+
+    evaluations =
+        data || [];
+
+}
+
+
+
+/* =========================
+   تحميل المهام المرتبطة
+========================== */
+
+async function loadTasks() {
+
+
+    const taskIds =
+        [
+            ...new Set(
+
+                evaluations
+                    .map(
+                        evaluation =>
+                            evaluation.task_id
+                    )
+                    .filter(
+                        id =>
+                            id !== null
+                            &&
+                            id !== undefined
+                    )
+
+            )
+        ];
+
+
+    if (
+        taskIds.length === 0
+    ) {
+
+
+        tasks =
+            [];
+
+
+        return;
+
+    }
+
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("tasks")
+        .select(`
+            id,
+            task_name,
+            project_id,
+            priority,
+            status,
+            due_date
+        `)
+        .in(
+            "id",
+            taskIds
+        );
+
+
+    if (error) {
+
+
+        console.error(
+            "خطأ تحميل المهام:",
+            error
+        );
+
+
+        tasks =
+            [];
+
+
+        return;
+
+    }
+
+
+    tasks =
+        data || [];
+
+}
+
+
+
+/* =========================
+   اسم المهمة
+========================== */
+
+function getTaskName(
+    taskId
+) {
+
+
+    const task =
+        tasks.find(
+            item =>
+                Number(
+                    item.id
+                )
+                ===
+                Number(
+                    taskId
+                )
+        );
+
+
+    return task
+        ?
+        task.task_name
+        :
+        "مهمة غير معروفة";
+
+}
+
+
+
+/* =========================
+   عرض التقييمات
+========================== */
+
+function renderEvaluations() {
+
+
+    evaluationsList.innerHTML =
+        "";
+
+
+    evaluationsCountBadge.textContent =
+        evaluations.length
+        +
+        " تقييمات";
+
+
+    if (
+        evaluations.length === 0
+    ) {
+
+
+        evaluationsList.innerHTML = `
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    ✓
+                </div>
+
+                <h3>
+                    لا توجد تقييمات حالياً
+                </h3>
+
+                <p>
+                    ستظهر تقييمات مهامك هنا بعد تسجيلها من المسؤول
+                </p>
+
+            </div>
+
+        `;
+
+
+        updateSummary();
+
+
+        return;
+
+    }
+
+
+
+    evaluations.forEach(
+        function(evaluation) {
+
+
+            const taskName =
+                getTaskName(
+                    evaluation.task_id
+                );
+
+
+            const rating =
+                formatRating(
+                    evaluation.performance_rating
+                );
+
+
+            const achievement =
+                evaluation.achievement_level
+                ||
+                "غير محدد";
+
+
+            const date =
+                evaluation.evaluation_date
+                ||
+                "غير محدد";
+
+
+            const card =
+                document.createElement(
+                    "article"
+                );
+
+
+            card.className =
+                "evaluation-card";
+
+
+            card.innerHTML = `
+
+                <div class="evaluation-header">
+
+
+                    <div class="evaluation-title-area">
+
+                        <span class="evaluation-label">
+                            تقييم مهمة
+                        </span>
+
+
+                        <h3>
+                            ${
+                                escapeHtml(
+                                    taskName
+                                )
+                            }
+                        </h3>
+
                     </div>
 
-                    <h3>
-                        لا توجد تقييمات حالياً
-                    </h3>
+
+                    <div class="rating-box">
+
+                        <span>
+                            التقييم
+                        </span>
+
+                        <strong>
+                            ${
+                                escapeHtml(
+                                    rating
+                                )
+                            }
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <div class="evaluation-details">
+
+
+                    <div class="detail-item">
+
+                        <span>
+                            مستوى الإنجاز
+                        </span>
+
+                        <strong>
+                            ${
+                                escapeHtml(
+                                    achievement
+                                )
+                            }
+                        </strong>
+
+                    </div>
+
+
+
+                    <div class="detail-item">
+
+                        <span>
+                            تاريخ التقييم
+                        </span>
+
+                        <strong>
+                            ${
+                                escapeHtml(
+                                    date
+                                )
+                            }
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <div class="notes-box">
+
+                    <span>
+                        ملاحظات المسؤول
+                    </span>
 
                     <p>
-                        ستظهر تقييمات المهام هنا بعد إضافتها من المسؤول
+
+                        ${
+                            escapeHtml(
+                                evaluation.notes
+                                ||
+                                "لا توجد ملاحظات مسجلة"
+                            )
+                        }
+
                     </p>
 
                 </div>
@@ -379,248 +833,599 @@
             `;
 
 
-            updateSummary();
+            evaluationsList.appendChild(
+                card
+            );
 
-            return;
-        }
-
-
-        evaluations.forEach(
-            function(evaluation) {
-
-                const card =
-                    document.createElement(
-                        "article"
-                    );
-
-
-                card.className =
-                    "evaluation-card";
-
-
-                card.innerHTML = `
-
-                    <div class="evaluation-header">
-
-                        <div>
-
-                            <span class="evaluation-label">
-                                تقييم مهمة
-                            </span>
-
-                            <h3>
-                                ${evaluation.task}
-                            </h3>
-
-                        </div>
-
-
-                        <div class="rating-box">
-
-                            <span>
-                                التقييم
-                            </span>
-
-                            <strong>
-                                ${evaluation.rating}
-                            </strong>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="evaluation-details">
-
-                        <div class="detail-item">
-
-                            <span>
-                                مستوى الأداء
-                            </span>
-
-                            <strong>
-                                ${evaluation.level}
-                            </strong>
-
-                        </div>
-
-
-                        <div class="detail-item">
-
-                            <span>
-                                تاريخ التقييم
-                            </span>
-
-                            <strong>
-                                ${evaluation.date}
-                            </strong>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="notes-box">
-
-                        <span>
-                            ملاحظات المسؤول
-                        </span>
-
-                        <p>
-                            ${
-                                evaluation.notes
-                                ||
-                                "لا توجد ملاحظات"
-                            }
-                        </p>
-
-                    </div>
-
-                `;
-
-
-                container.appendChild(card);
-
-            });
-
-
-        updateSummary();
-    }
-
-
-    /* ====================================
-       تحديث الملخص
-    ==================================== */
-
-    function updateSummary() {
-
-        const count =
-            evaluations.length;
-
-
-        document
-            .getElementById(
-                "evaluationCount"
-            )
-            .textContent =
-            count === 0
-                ? "—"
-                : count;
-
-
-        if (count === 0) {
-
-            document
-                .getElementById(
-                    "averageRating"
-                )
-                .textContent = "—";
-
-
-            document
-                .getElementById(
-                    "performanceLevel"
-                )
-                .textContent = "—";
-
-
-            return;
-        }
-
-
-        let total = 0;
-
-
-        evaluations.forEach(
-            function(item) {
-
-                total +=
-                    Number(item.rating);
-
-            });
-
-
-        const average =
-            total / count;
-
-
-        document
-            .getElementById(
-                "averageRating"
-            )
-            .textContent =
-            average.toFixed(1);
-
-
-        let level = "—";
-
-
-        if (average >= 90) {
-
-            level = "ممتاز";
 
         }
-
-        else if (average >= 80) {
-
-            level = "جيد جداً";
-
-        }
-
-        else if (average >= 70) {
-
-            level = "جيد";
-
-        }
-
-        else if (average >= 60) {
-
-            level = "مقبول";
-
-        }
-
-        else {
-
-            level = "يحتاج تحسين";
-
-        }
+    );
 
 
-        document
-            .getElementById(
-                "performanceLevel"
-            )
-            .textContent =
-            level;
+    updateSummary();
 
-    }
+}
 
 
-    /* ====================================
-       تسجيل الخروج
-    ==================================== */
 
-    function logout() {
+/* =========================
+   تنسيق التقييم
+========================== */
 
-        localStorage.removeItem(
-            "miyarRole"
-        );
+function formatRating(
+    rating
+) {
 
-        localStorage.removeItem(
-            "miyarEmail"
+
+    const value =
+        Number(
+            rating
         );
 
 
-        window.location.href =
-            "login.html";
+    if (
+        Number.isNaN(
+            value
+        )
+    ) {
+
+        return "—";
+
     }
 
 
-    /* تشغيل الصفحة */
+    /*
+        إذا التقييم من 5
+    */
 
-    renderEvaluations();
+    if (
+        value <= 5
+    ) {
+
+        return (
+            value
+            +
+            " / 5"
+        );
+
+    }
+
+
+    /*
+        إذا التقييم من 100
+    */
+
+    return (
+        value
+        +
+        "%"
+    );
+
+}
+
+
+
+/* =========================
+   تحديث الملخص
+========================== */
+
+function updateSummary() {
+
+
+    const count =
+        evaluations.length;
+
+
+    evaluationCount.textContent =
+        count;
+
+
+    if (
+        count === 0
+    ) {
+
+
+        averageRating.textContent =
+            "—";
+
+
+        performanceLevel.textContent =
+            "—";
+
+
+        return;
+
+    }
+
+
+
+    const validRatings =
+        evaluations
+
+        .map(
+            evaluation =>
+                Number(
+                    evaluation.performance_rating
+                )
+        )
+
+        .filter(
+            value =>
+                !Number.isNaN(
+                    value
+                )
+        );
+
+
+    if (
+        validRatings.length === 0
+    ) {
+
+
+        averageRating.textContent =
+            "—";
+
+
+        performanceLevel.textContent =
+            "—";
+
+
+        return;
+
+    }
+
+
+
+    const total =
+        validRatings.reduce(
+            (
+                sum,
+                value
+            ) =>
+                sum
+                +
+                value,
+            0
+        );
+
+
+    const average =
+        total
+        /
+        validRatings.length;
+
+
+
+    /*
+        نحدد هل نظام التقييم
+        من 5 أو من 100
+    */
+
+    const maximumRating =
+        Math.max(
+            ...validRatings
+        );
+
+
+    if (
+        maximumRating <= 5
+    ) {
+
+
+        averageRating.textContent =
+            average.toFixed(
+                1
+            )
+            +
+            " / 5";
+
+
+        performanceLevel.textContent =
+            getPerformanceLevelFromFive(
+                average
+            );
+
+
+    }
+
+
+    else {
+
+
+        averageRating.textContent =
+            average.toFixed(
+                1
+            )
+            +
+            "%";
+
+
+        performanceLevel.textContent =
+            getPerformanceLevelFromHundred(
+                average
+            );
+
+    }
+
+}
+
+
+
+/* =========================
+   مستوى الأداء من 5
+========================== */
+
+function getPerformanceLevelFromFive(
+    average
+) {
+
+
+    if (
+        average >= 4.5
+    ) {
+
+        return "ممتاز";
+
+    }
+
+
+    if (
+        average >= 4
+    ) {
+
+        return "جيد جداً";
+
+    }
+
+
+    if (
+        average >= 3
+    ) {
+
+        return "جيد";
+
+    }
+
+
+    if (
+        average >= 2
+    ) {
+
+        return "مقبول";
+
+    }
+
+
+    return "يحتاج تحسين";
+
+}
+
+
+
+/* =========================
+   مستوى الأداء من 100
+========================== */
+
+function getPerformanceLevelFromHundred(
+    average
+) {
+
+
+    if (
+        average >= 90
+    ) {
+
+        return "ممتاز";
+
+    }
+
+
+    if (
+        average >= 80
+    ) {
+
+        return "جيد جداً";
+
+    }
+
+
+    if (
+        average >= 70
+    ) {
+
+        return "جيد";
+
+    }
+
+
+    if (
+        average >= 60
+    ) {
+
+        return "مقبول";
+
+    }
+
+
+    return "يحتاج تحسين";
+
+}
+
+
+
+/* =========================
+   حماية النصوص
+========================== */
+
+function escapeHtml(
+    value
+) {
+
+
+    return String(
+        value ?? ""
+    )
+
+    .replaceAll(
+        "&",
+        "&amp;"
+    )
+
+    .replaceAll(
+        "<",
+        "&lt;"
+    )
+
+    .replaceAll(
+        ">",
+        "&gt;"
+    )
+
+    .replaceAll(
+        '"',
+        "&quot;"
+    )
+
+    .replaceAll(
+        "'",
+        "&#039;"
+    );
+
+}
+
+
+
+/* =========================
+   سايد بار الجوال
+========================== */
+
+const mobileMenuBtn =
+    document.getElementById(
+        "mobileMenuBtn"
+    );
+
+
+const sidebar =
+    document.getElementById(
+        "sidebar"
+    );
+
+
+const sidebarOverlay =
+    document.getElementById(
+        "sidebarOverlay"
+    );
+
+
+function openSidebar() {
+
+
+    sidebar.classList.add(
+        "show"
+    );
+
+
+    sidebarOverlay.classList.add(
+        "show"
+    );
+
+
+    document.body.classList.add(
+        "menu-open"
+    );
+
+}
+
+
+
+function closeSidebar() {
+
+
+    sidebar.classList.remove(
+        "show"
+    );
+
+
+    sidebarOverlay.classList.remove(
+        "show"
+    );
+
+
+    document.body.classList.remove(
+        "menu-open"
+    );
+
+}
+
+
+
+/* =========================
+   تنظيف الجلسة
+========================== */
+
+function clearEmployeeSession() {
+
+
+    localStorage.removeItem(
+        "miyarRole"
+    );
+
+
+    localStorage.removeItem(
+        "miyarEmail"
+    );
+
+
+    localStorage.removeItem(
+        "miyarEmployeeId"
+    );
+
+
+    localStorage.removeItem(
+        "miyarEmployeeName"
+    );
+
+}
+
+
+
+/* =========================
+   تسجيل الخروج
+========================== */
+
+async function logout() {
+
+
+    await supabaseClient
+        .auth
+        .signOut();
+
+
+    clearEmployeeSession();
+
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+
+/* =========================
+   الأحداث
+========================== */
+
+mobileMenuBtn
+    .addEventListener(
+        "click",
+        openSidebar
+    );
+
+
+sidebarOverlay
+    .addEventListener(
+        "click",
+        closeSidebar
+    );
+
+
+document
+    .querySelectorAll(
+        ".nav-link"
+    )
+    .forEach(
+        function(link) {
+
+
+            link.addEventListener(
+                "click",
+                closeSidebar
+            );
+
+
+        }
+    );
+
+
+document
+    .getElementById(
+        "logoutBtn"
+    )
+    .addEventListener(
+        "click",
+        logout
+    );
+
+
+
+/* =========================
+   تشغيل الصفحة
+========================== */
+
+async function startPage() {
+
+
+    const allowed =
+        protectEmployeePage();
+
+
+    if (!allowed) {
+
+        return;
+
+    }
+
+
+    try {
+
+
+        await loadEvaluations();
+
+
+        await loadTasks();
+
+
+        renderEvaluations();
+
+
+    }
+
+
+    catch(error) {
+
+
+        console.error(
+            "خطأ تشغيل صفحة التقييمات:",
+            error
+        );
+
+
+        evaluationsList.innerHTML = `
+
+            <div class="empty-state">
+
+                <h3>
+                    تعذر تحميل التقييمات
+                </h3>
+
+                <p>
+                    تأكد من الاتصال بقاعدة البيانات ثم أعد المحاولة
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+startPage();
+
 
 </script>
+
 
 </body>
 
