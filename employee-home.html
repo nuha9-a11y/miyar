@@ -2,7 +2,6 @@
 <html lang="ar" dir="rtl">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta
@@ -18,7 +17,6 @@
     >
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 </head>
 
 
@@ -36,7 +34,6 @@
             class="mobile-menu-btn"
             id="mobileMenuBtn"
             type="button"
-            aria-label="فتح القائمة"
         >
             ☰
         </button>
@@ -64,12 +61,10 @@
     </header>
 
 
-
     <div
         class="sidebar-overlay"
         id="sidebarOverlay"
     ></div>
-
 
 
     <!-- السايد بار -->
@@ -79,7 +74,6 @@
         id="sidebar"
     >
 
-
         <div class="sidebar-logo">
 
             <img
@@ -88,7 +82,6 @@
             >
 
         </div>
-
 
 
         <nav class="sidebar-nav">
@@ -131,7 +124,6 @@
         </nav>
 
 
-
         <button
             class="logout-btn"
             type="button"
@@ -140,9 +132,7 @@
             تسجيل الخروج
         </button>
 
-
     </aside>
-
 
 
     <!-- المحتوى -->
@@ -158,17 +148,12 @@
                 لوحة الموظف
             </span>
 
-
             <h1>
-
                 أهلاً بك،
-
                 <span id="employeeName">
                     الموظف
                 </span>
-
             </h1>
-
 
             <p>
                 هنا يمكنك متابعة مهامك ومشاريعك وتقييماتك الحالية.
@@ -177,11 +162,9 @@
         </section>
 
 
-
         <!-- الملخص -->
 
         <section class="summary-section">
-
 
             <div class="section-heading">
 
@@ -196,11 +179,10 @@
             </div>
 
 
-
             <div class="summary-grid">
 
 
-                <article class="summary-card">
+                <div class="summary-card">
 
                     <span>
                         مهام حالية
@@ -210,11 +192,10 @@
                         0
                     </strong>
 
-                </article>
+                </div>
 
 
-
-                <article class="summary-card">
+                <div class="summary-card">
 
                     <span>
                         مهام مكتملة
@@ -224,11 +205,10 @@
                         0
                     </strong>
 
-                </article>
+                </div>
 
 
-
-                <article class="summary-card">
+                <div class="summary-card">
 
                     <span>
                         مشاريع أعمل عليها
@@ -238,11 +218,10 @@
                         0
                     </strong>
 
-                </article>
+                </div>
 
 
-
-                <article class="summary-card">
+                <div class="summary-card">
 
                     <span>
                         نسبة إنجاز المهام
@@ -252,20 +231,17 @@
                         0%
                     </strong>
 
-                </article>
+                </div>
 
 
             </div>
 
-
         </section>
 
 
-
-        <!-- المهام -->
+        <!-- المهام الحالية -->
 
         <section class="content-card">
-
 
             <div class="card-header">
 
@@ -292,7 +268,6 @@
             </div>
 
 
-
             <div
                 class="tasks-preview"
                 id="tasksPreview"
@@ -304,15 +279,12 @@
 
             </div>
 
-
         </section>
-
 
 
         <!-- المشاريع -->
 
         <section class="content-card">
-
 
             <div class="card-header">
 
@@ -339,7 +311,6 @@
             </div>
 
 
-
             <div
                 class="projects-preview"
                 id="projectsPreview"
@@ -351,15 +322,12 @@
 
             </div>
 
-
         </section>
 
 
     </main>
 
-
 </div>
-
 
 
 <script>
@@ -465,7 +433,7 @@ const sidebarOverlay =
 
 
 /* =========================================
-   حماية صفحة الموظف
+   حماية الصفحة
 ========================================= */
 
 function protectEmployeePage() {
@@ -476,15 +444,22 @@ function protectEmployeePage() {
         );
 
 
+    const email =
+        localStorage.getItem(
+            "miyarEmail"
+        );
+
+
     if (
         role !== "employee"
+        ||
+        !email
     ) {
 
         window.location.href =
             "login.html";
 
         return false;
-
     }
 
 
@@ -495,16 +470,10 @@ function protectEmployeePage() {
 
 
 /* =========================================
-   معرفة الموظف الحالي
+   البحث عن الموظف
 ========================================= */
 
-async function resolveCurrentEmployee() {
-
-
-    /*
-        1 - نحاول أولاً باستخدام ID
-        لأنه الأدق والأسرع
-    */
+async function findEmployee() {
 
     const savedId =
         localStorage.getItem(
@@ -512,13 +481,23 @@ async function resolveCurrentEmployee() {
         );
 
 
-    if (
-        savedId
-        &&
-        !Number.isNaN(
-            Number(savedId)
+    const savedEmail =
+        (
+            localStorage.getItem(
+                "miyarEmail"
+            )
+            ||
+            ""
         )
-    ) {
+        .trim()
+        .toLowerCase();
+
+
+    /*
+        1- نحاول بالرقم المخزن
+    */
+
+    if (savedId) {
 
         const {
             data,
@@ -554,105 +533,24 @@ async function resolveCurrentEmployee() {
             data.length > 0
         ) {
 
-            setCurrentEmployee(
-                data[0]
-            );
-
-            return true;
+            return data[0];
 
         }
 
     }
 
 
-
     /*
-        2 - نبحث بالبريد المحفوظ
-        من صفحة تسجيل الدخول
+        2- إذا الرقم غير موجود أو قديم
+        نبحث بالبريد
     */
 
-    let email =
-        String(
-            localStorage.getItem(
-                "miyarEmail"
-            )
-            ||
-            ""
-        )
-        .trim()
-        .toLowerCase();
+    if (!savedEmail) {
 
-
-
-    /*
-        3 - إذا لم يوجد بريد محفوظ،
-        نأخذه من Supabase Auth
-    */
-
-    if (!email) {
-
-        try {
-
-            const {
-                data,
-                error
-            } =
-            await supabaseClient
-                .auth
-                .getSession();
-
-
-            if (
-                !error
-                &&
-                data
-                &&
-                data.session
-                &&
-                data.session.user
-                &&
-                data.session.user.email
-            ) {
-
-                email =
-                    data.session.user.email
-                        .trim()
-                        .toLowerCase();
-
-            }
-
-        }
-
-        catch(error) {
-
-            console.error(
-                "خطأ قراءة جلسة المستخدم:",
-                error
-            );
-
-        }
+        return null;
 
     }
 
-
-
-    if (!email) {
-
-        showEmployeeLoadError(
-            "تعذر تحديد حساب الموظف"
-        );
-
-        return false;
-
-    }
-
-
-
-    /*
-        نستخدم limit(1)
-        لأن جدول employees عندك قد يحتوي
-        على بريد مكرر أكثر من مرة
-    */
 
     const {
         data,
@@ -675,7 +573,7 @@ async function resolveCurrentEmployee() {
         `)
         .ilike(
             "email",
-            email
+            savedEmail
         )
         .order(
             "id",
@@ -686,7 +584,6 @@ async function resolveCurrentEmployee() {
         .limit(1);
 
 
-
     if (error) {
 
         console.error(
@@ -694,15 +591,8 @@ async function resolveCurrentEmployee() {
             error
         );
 
-
-        showEmployeeLoadError(
-            "تعذر تحميل بيانات الموظف"
-        );
-
-        return false;
-
+        return null;
     }
-
 
 
     if (
@@ -711,40 +601,57 @@ async function resolveCurrentEmployee() {
         data.length === 0
     ) {
 
-        console.error(
-            "البريد غير موجود في employees:",
-            email
-        );
-
-
-        showEmployeeLoadError(
-            "لم يتم العثور على بيانات الموظف"
-        );
-
-        return false;
-
+        return null;
     }
 
 
-
-    setCurrentEmployee(
-        data[0]
-    );
-
-
-    return true;
+    return data[0];
 
 }
 
 
 
 /* =========================================
-   تعيين بيانات الموظف
+   تحميل بيانات الموظف
 ========================================= */
 
-function setCurrentEmployee(
-    employee
-) {
+async function loadEmployeeData() {
+
+    const employee =
+        await findEmployee();
+
+
+    if (!employee) {
+
+        employeeName.textContent =
+            "الموظف";
+
+
+        tasksPreview.innerHTML = `
+
+            <div class="empty-state">
+                تعذر تحميل بيانات الموظف
+            </div>
+
+        `;
+
+
+        projectsPreview.innerHTML = `
+
+            <div class="empty-state">
+                تعذر تحميل بيانات الموظف
+            </div>
+
+        `;
+
+
+        console.error(
+            "لم يتم العثور على الموظف بالبريد أو الرقم المخزن"
+        );
+
+
+        return false;
+    }
 
 
     employeeData =
@@ -757,23 +664,14 @@ function setCurrentEmployee(
         );
 
 
-    employeeName.textContent =
-        employee.name
-        ||
-        "الموظف";
-
-
-    localStorage.setItem(
-        "miyarRole",
-        "employee"
-    );
-
+    /*
+        نحدث التخزين في الجوال
+        والكمبيوتر بالرقم الصحيح
+    */
 
     localStorage.setItem(
         "miyarEmployeeId",
-        String(
-            employee.id
-        )
+        String(employee.id)
     );
 
 
@@ -783,70 +681,23 @@ function setCurrentEmployee(
     );
 
 
-    if (
-        employee.email
-    ) {
-
-        localStorage.setItem(
-            "miyarEmail",
-            employee.email
-        );
-
-    }
-
-}
-
-
-
-/* =========================================
-   رسالة خطأ تحميل الموظف
-========================================= */
-
-function showEmployeeLoadError(
-    message
-) {
+    localStorage.setItem(
+        "miyarEmail",
+        String(
+            employee.email || ""
+        )
+        .trim()
+        .toLowerCase()
+    );
 
 
     employeeName.textContent =
+        employee.name
+        ||
         "الموظف";
 
 
-    tasksPreview.innerHTML = `
-
-        <div class="empty-state error-state">
-
-            ${escapeHtml(message)}
-
-        </div>
-
-    `;
-
-
-    projectsPreview.innerHTML = `
-
-        <div class="empty-state error-state">
-
-            ${escapeHtml(message)}
-
-        </div>
-
-    `;
-
-
-    currentTasksCount.textContent =
-        "0";
-
-
-    completedTasksCount.textContent =
-        "0";
-
-
-    projectsCount.textContent =
-        "0";
-
-
-    completionRate.textContent =
-        "0%";
+    return true;
 
 }
 
@@ -858,11 +709,11 @@ function showEmployeeLoadError(
 
 async function loadEmployeeTasks() {
 
-
     if (!employeeId) {
 
-        return;
+        employeeTasks = [];
 
+        return;
     }
 
 
@@ -894,23 +745,18 @@ async function loadEmployeeTasks() {
         );
 
 
-
     if (error) {
 
         console.error(
-            "خطأ تحميل مهام الموظف:",
+            "خطأ تحميل المهام:",
             error
         );
 
 
-        employeeTasks =
-            [];
-
+        employeeTasks = [];
 
         return;
-
     }
-
 
 
     employeeTasks =
@@ -925,7 +771,6 @@ async function loadEmployeeTasks() {
 ========================================= */
 
 async function loadEmployeeProjects() {
-
 
     const projectIds =
         [
@@ -949,18 +794,14 @@ async function loadEmployeeProjects() {
         ];
 
 
-
     if (
         projectIds.length === 0
     ) {
 
-        employeeProjects =
-            [];
+        employeeProjects = [];
 
         return;
-
     }
-
 
 
     const {
@@ -989,23 +830,18 @@ async function loadEmployeeProjects() {
         );
 
 
-
     if (error) {
 
         console.error(
-            "خطأ تحميل مشاريع الموظف:",
+            "خطأ تحميل المشاريع:",
             error
         );
 
 
-        employeeProjects =
-            [];
-
+        employeeProjects = [];
 
         return;
-
     }
-
 
 
     employeeProjects =
@@ -1016,23 +852,17 @@ async function loadEmployeeProjects() {
 
 
 /* =========================================
-   المهمة مكتملة؟
+   هل المهمة مكتملة؟
 ========================================= */
 
-function isCompletedTask(
-    task
-) {
-
+function isCompletedTask(task) {
 
     const status =
         String(
-            task.status
-            ||
-            ""
+            task.status || ""
         )
         .trim()
         .toLowerCase();
-
 
 
     return (
@@ -1062,23 +892,17 @@ function isCompletedTask(
 
 
 /* =========================================
-   اسم الحالة
+   ترجمة الحالة
 ========================================= */
 
-function getStatusText(
-    status
-) {
-
+function getStatusText(status) {
 
     const value =
         String(
-            status
-            ||
-            ""
+            status || ""
         )
         .trim()
         .toLowerCase();
-
 
 
     if (
@@ -1090,7 +914,6 @@ function getStatusText(
         return "مكتملة";
 
     }
-
 
 
     if (
@@ -1106,7 +929,6 @@ function getStatusText(
     }
 
 
-
     if (
         value === "processing"
         ||
@@ -1118,80 +940,58 @@ function getStatusText(
     }
 
 
-
-    return (
-        status
-        ||
-        "غير محددة"
-    );
+    return status || "غير محددة";
 
 }
 
 
 
 /* =========================================
-   اسم الأولوية
+   ترجمة الأولوية
 ========================================= */
 
-function getPriorityText(
-    priority
-) {
-
+function getPriorityText(priority) {
 
     const value =
         String(
-            priority
-            ||
-            ""
+            priority || ""
         )
         .trim()
         .toLowerCase();
 
 
-
-    if (
-        value === "high"
-    ) {
+    if (value === "high") {
 
         return "عالية";
 
     }
 
 
-    if (
-        value === "medium"
-    ) {
+    if (value === "medium") {
 
         return "متوسطة";
 
     }
 
 
-    if (
-        value === "low"
-    ) {
+    if (value === "low") {
 
         return "منخفضة";
 
     }
 
 
-    return (
-        priority
-        ||
-        "غير محددة"
-    );
+    return priority || "غير محددة";
 
 }
 
 
 
 /* =========================================
-   الملخص
+   تحديث الملخص
 ========================================= */
 
 function updateSummary() {
-
 
     const completed =
         employeeTasks.filter(
@@ -1208,7 +1008,6 @@ function updateSummary() {
         );
 
 
-
     currentTasksCount.textContent =
         current.length;
 
@@ -1221,7 +1020,6 @@ function updateSummary() {
         employeeProjects.length;
 
 
-
     if (
         employeeTasks.length === 0
     ) {
@@ -1230,9 +1028,7 @@ function updateSummary() {
             "0%";
 
         return;
-
     }
-
 
 
     const rate =
@@ -1262,7 +1058,6 @@ function updateSummary() {
 
 function renderTasksPreview() {
 
-
     tasksPreview.innerHTML =
         "";
 
@@ -1283,7 +1078,6 @@ function renderTasksPreview() {
             );
 
 
-
     if (
         currentTasks.length === 0
     ) {
@@ -1297,14 +1091,11 @@ function renderTasksPreview() {
         `;
 
         return;
-
     }
-
 
 
     currentTasks.forEach(
         function(task) {
-
 
             const row =
                 document.createElement(
@@ -1321,7 +1112,6 @@ function renderTasksPreview() {
                 <div class="preview-main">
 
                     <strong>
-
                         ${
                             escapeHtml(
                                 task.task_name
@@ -1329,9 +1119,7 @@ function renderTasksPreview() {
                                 "مهمة بدون اسم"
                             )
                         }
-
                     </strong>
-
 
                     <span>
 
@@ -1401,10 +1189,8 @@ function renderTasksPreview() {
 
 function renderProjectsPreview() {
 
-
     projectsPreview.innerHTML =
         "";
-
 
 
     if (
@@ -1420,18 +1206,14 @@ function renderProjectsPreview() {
         `;
 
         return;
-
     }
 
 
-
     employeeProjects
-
         .slice(
             0,
             4
         )
-
         .forEach(
             function(project) {
 
@@ -1439,18 +1221,14 @@ function renderProjectsPreview() {
                 const projectTasks =
                     employeeTasks.filter(
                         task =>
-
                             Number(
                                 task.project_id
                             )
-
                             ===
-
                             Number(
                                 project.id
                             )
                     );
-
 
 
                 const row =
@@ -1482,10 +1260,7 @@ function renderProjectsPreview() {
 
                         <span>
 
-                            ${
-                                projectTasks.length
-                            }
-
+                            ${projectTasks.length}
                             مهمة مسندة لك
 
                         </span>
@@ -1542,9 +1317,7 @@ function renderProjectsPreview() {
    حماية النص
 ========================================= */
 
-function escapeHtml(
-    value
-) {
+function escapeHtml(value) {
 
     return String(
         value ?? ""
@@ -1629,7 +1402,6 @@ function closeSidebar() {
 
 async function logout() {
 
-
     try {
 
         await supabaseClient
@@ -1640,12 +1412,9 @@ async function logout() {
 
     catch(error) {
 
-        console.error(
-            error
-        );
+        console.log(error);
 
     }
-
 
 
     localStorage.removeItem(
@@ -1679,18 +1448,16 @@ async function logout() {
    الأحداث
 ========================================= */
 
-mobileMenuBtn
-    .addEventListener(
-        "click",
-        openSidebar
-    );
+mobileMenuBtn.addEventListener(
+    "click",
+    openSidebar
+);
 
 
-sidebarOverlay
-    .addEventListener(
-        "click",
-        closeSidebar
-    );
+sidebarOverlay.addEventListener(
+    "click",
+    closeSidebar
+);
 
 
 document
@@ -1726,7 +1493,6 @@ document
 
 async function startPage() {
 
-
     const allowed =
         protectEmployeePage();
 
@@ -1738,35 +1504,23 @@ async function startPage() {
     }
 
 
-
     try {
 
-
-        /*
-            أول شيء نعرف الموظف الحقيقي
-        */
-
-        const found =
-            await resolveCurrentEmployee();
+        const employeeLoaded =
+            await loadEmployeeData();
 
 
-        if (!found) {
+        if (!employeeLoaded) {
 
             return;
 
         }
 
 
-
-        /*
-            ثم نحمل بياناته فقط
-        */
-
         await loadEmployeeTasks();
 
 
         await loadEmployeeProjects();
-
 
 
         updateSummary();
@@ -1777,26 +1531,36 @@ async function startPage() {
 
         renderProjectsPreview();
 
-
     }
 
     catch(error) {
 
-
         console.error(
-            "خطأ تشغيل صفحة الموظف:",
+            "خطأ تشغيل الصفحة:",
             error
         );
 
 
-        showEmployeeLoadError(
-            "تعذر تحميل بيانات الصفحة"
-        );
+        tasksPreview.innerHTML = `
+
+            <div class="empty-state">
+                تعذر تحميل المهام
+            </div>
+
+        `;
+
+
+        projectsPreview.innerHTML = `
+
+            <div class="empty-state">
+                تعذر تحميل المشاريع
+            </div>
+
+        `;
 
     }
 
 }
-
 
 
 startPage();
@@ -1806,5 +1570,4 @@ startPage();
 
 
 </body>
-
 </html>
