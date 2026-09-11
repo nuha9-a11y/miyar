@@ -2,6 +2,7 @@
 <html lang="ar" dir="rtl">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -15,13 +16,22 @@
         rel="stylesheet"
         href="employee-profile.css"
     >
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 </head>
+
 
 <body>
 
+
 <div class="employee-page">
 
-    <!-- هيدر الجوال -->
+
+    <!-- =========================
+         هيدر الجوال
+    ========================== -->
+
     <header class="mobile-header">
 
         <button
@@ -33,10 +43,19 @@
             ☰
         </button>
 
+
         <div class="mobile-header-title">
-            <h2>ملفي الشخصي</h2>
-            <span>معيار</span>
+
+            <h2>
+                ملفي الشخصي
+            </h2>
+
+            <span>
+                معيار
+            </span>
+
         </div>
+
 
         <img
             src="assets/logo.png"
@@ -47,28 +66,36 @@
     </header>
 
 
-    <!-- خلفية السايد بار -->
+
     <div
         class="sidebar-overlay"
         id="sidebarOverlay"
     ></div>
 
 
-    <!-- السايد بار -->
+
+    <!-- =========================
+         السايد بار
+    ========================== -->
+
     <aside
         class="sidebar"
         id="sidebar"
     >
 
+
         <div class="sidebar-logo">
+
             <img
                 src="assets/logo.png"
                 alt="معيار"
             >
+
         </div>
 
 
         <nav class="sidebar-nav">
+
 
             <a
                 href="employee-home.html"
@@ -77,12 +104,14 @@
                 الرئيسية
             </a>
 
+
             <a
                 href="employee-tasks.html"
                 class="nav-link"
             >
                 مهامي
             </a>
+
 
             <a
                 href="employee-projects.html"
@@ -91,6 +120,7 @@
                 مشاريعي
             </a>
 
+
             <a
                 href="employee-profile.html"
                 class="nav-link active"
@@ -98,12 +128,14 @@
                 ملفي الشخصي
             </a>
 
+
             <a
                 href="employee-evaluations.html"
                 class="nav-link"
             >
-            تقييمي
+                تقييمي
             </a>
+
 
         </nav>
 
@@ -111,16 +143,22 @@
         <button
             type="button"
             class="logout-btn"
-            onclick="logout()"
+            id="logoutBtn"
         >
             تسجيل الخروج
         </button>
 
+
     </aside>
 
 
-    <!-- المحتوى -->
+
+    <!-- =========================
+         المحتوى
+    ========================== -->
+
     <main class="main-content">
+
 
         <header class="topbar">
 
@@ -128,25 +166,38 @@
                 بيانات الموظف
             </span>
 
+
             <h1>
                 ملفي الشخصي
             </h1>
 
+
             <p>
-                عرض بياناتك الوظيفية ومهاراتك
+                عرض بياناتك الوظيفية ومهاراتك المسجلة في النظام
             </p>
 
         </header>
 
 
-        <!-- بطاقة البيانات -->
+
+        <!-- =========================
+             بطاقة الملف
+        ========================== -->
+
         <section class="profile-card">
+
 
             <div class="profile-top">
 
+
                 <div class="profile-avatar">
-                    <span id="profileInitial">—</span>
+
+                    <span id="profileInitial">
+                        —
+                    </span>
+
                 </div>
+
 
                 <div class="profile-heading">
 
@@ -154,9 +205,11 @@
                         موظف
                     </span>
 
+
                     <h2 id="profileName">
-                        —
+                        جارٍ التحميل...
                     </h2>
+
 
                     <p id="profileTitle">
                         —
@@ -164,53 +217,266 @@
 
                 </div>
 
+
+                <div class="profile-status-wrapper">
+
+                    <span
+                        class="profile-status"
+                        id="profileStatus"
+                    >
+                        —
+                    </span>
+
+                </div>
+
+
             </div>
 
+
+
+            <!-- =========================
+                 البيانات الأساسية
+            ========================== -->
 
             <div class="profile-info-grid">
 
+
                 <div class="info-card">
-                    <span>البريد الإلكتروني</span>
-                    <strong id="profileEmail">—</strong>
+
+                    <span>
+                        البريد الإلكتروني
+                    </span>
+
+                    <strong id="profileEmail">
+                        —
+                    </strong>
+
                 </div>
 
 
+
                 <div class="info-card">
-                    <span>المسمى الوظيفي</span>
-                    <strong id="jobTitle">—</strong>
+
+                    <span>
+                        الرقم الوظيفي
+                    </span>
+
+                    <strong id="employeeNumber">
+                        —
+                    </strong>
+
                 </div>
 
 
+
                 <div class="info-card">
-                    <span>القسم</span>
-                    <strong id="department">—</strong>
+
+                    <span>
+                        المسمى الوظيفي
+                    </span>
+
+                    <strong id="jobTitle">
+                        —
+                    </strong>
+
                 </div>
 
 
+
                 <div class="info-card">
-                    <span>سنوات الخبرة</span>
-                    <strong id="experienceYears">—</strong>
+
+                    <span>
+                        القسم
+                    </span>
+
+                    <strong id="department">
+                        —
+                    </strong>
+
                 </div>
+
+
+
+                <div class="info-card">
+
+                    <span>
+                        المستوى الوظيفي
+                    </span>
+
+                    <strong id="jobLevel">
+                        —
+                    </strong>
+
+                </div>
+
+
+
+                <div class="info-card">
+
+                    <span>
+                        سنوات الخبرة
+                    </span>
+
+                    <strong id="experienceYears">
+                        —
+                    </strong>
+
+                </div>
+
+
+
+                <div class="info-card">
+
+                    <span>
+                        نسبة التوفر
+                    </span>
+
+                    <strong id="availability">
+                        —
+                    </strong>
+
+                </div>
+
+
+
+                <div class="info-card">
+
+                    <span>
+                        ضغط العمل
+                    </span>
+
+                    <strong id="workload">
+                        —
+                    </strong>
+
+                </div>
+
 
             </div>
+
 
         </section>
 
 
-        <!-- المهارات -->
-        <section class="skills-card">
+
+        <!-- =========================
+             حالة العمل
+        ========================== -->
+
+        <section class="work-card">
+
 
             <div class="section-heading">
 
                 <h2>
-                    المهارات
+                    حالة العمل
                 </h2>
 
                 <p>
-                    المهارات المسجلة للموظف
+                    معلومات التوفر وضغط العمل الحالي
                 </p>
 
             </div>
+
+
+
+            <div class="work-grid">
+
+
+                <div class="work-item">
+
+                    <div class="work-heading">
+
+                        <span>
+                            التوفر
+                        </span>
+
+                        <strong id="availabilityValue">
+                            0%
+                        </strong>
+
+                    </div>
+
+
+                    <div class="progress-track">
+
+                        <div
+                            class="progress-fill availability-fill"
+                            id="availabilityBar"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="work-item">
+
+                    <div class="work-heading">
+
+                        <span>
+                            ضغط العمل
+                        </span>
+
+                        <strong id="workloadValue">
+                            0%
+                        </strong>
+
+                    </div>
+
+
+                    <div class="progress-track">
+
+                        <div
+                            class="progress-fill workload-fill"
+                            id="workloadBar"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =========================
+             المهارات
+        ========================== -->
+
+        <section class="skills-card">
+
+
+            <div class="section-heading">
+
+                <div>
+
+                    <h2>
+                        المهارات
+                    </h2>
+
+                    <p>
+                        المهارات ومستواها المسجل في النظام
+                    </p>
+
+                </div>
+
+
+                <span
+                    class="skills-count"
+                    id="skillsCount"
+                >
+                    0 مهارات
+                </span>
+
+
+            </div>
+
 
 
             <div
@@ -219,118 +485,1233 @@
             >
 
                 <div class="empty-state">
-                    لا توجد مهارات مسجلة حالياً
+                    جارٍ تحميل المهارات...
                 </div>
 
             </div>
 
+
         </section>
 
+
     </main>
+
 
 </div>
 
 
+
 <script>
 
-    /* =========================
-       السايد بار
-    ========================== */
 
-    const mobileMenuBtn =
-        document.getElementById("mobileMenuBtn");
+/* =========================
+   Supabase
+========================== */
 
-    const sidebar =
-        document.getElementById("sidebar");
-
-    const sidebarOverlay =
-        document.getElementById("sidebarOverlay");
+const SUPABASE_URL =
+    "https://avooyglxacytrfhvotsl.supabase.co";
 
 
-    function openSidebar() {
+const SUPABASE_KEY =
+    "sb_publishable_NVlWEnA_w4KbSse_-70zdA_J9ut0Kyo";
 
-        sidebar.classList.add("show");
 
-        sidebarOverlay.classList.add("show");
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
 
-        document.body.classList.add("menu-open");
+
+
+/* =========================
+   البيانات
+========================== */
+
+let employeeId =
+    null;
+
+
+let employeeData =
+    null;
+
+
+let employeeSkills =
+    [];
+
+
+
+/* =========================
+   حماية الصفحة
+========================== */
+
+function protectEmployeePage() {
+
+
+    const role =
+        localStorage.getItem(
+            "miyarRole"
+        );
+
+
+    const savedEmployeeId =
+        localStorage.getItem(
+            "miyarEmployeeId"
+        );
+
+
+    if (
+        role !== "employee"
+        ||
+        !savedEmployeeId
+    ) {
+
+
+        window.location.href =
+            "login.html";
+
+
+        return false;
+
     }
 
 
-    function closeSidebar() {
+    employeeId =
+        Number(
+            savedEmployeeId
+        );
 
-        sidebar.classList.remove("show");
 
-        sidebarOverlay.classList.remove("show");
+    if (
+        !employeeId
+        ||
+        Number.isNaN(
+            employeeId
+        )
+    ) {
 
-        document.body.classList.remove("menu-open");
+
+        clearEmployeeSession();
+
+
+        window.location.href =
+            "login.html";
+
+
+        return false;
+
     }
 
 
-    mobileMenuBtn.addEventListener(
+    return true;
+
+}
+
+
+
+/* =========================
+   تحميل بيانات الموظف
+========================== */
+
+async function loadEmployeeData() {
+
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("employees")
+        .select(`
+            id,
+            name,
+            email,
+            job_title,
+            department,
+            experience_years,
+            job_level,
+            availability,
+            workload,
+            status,
+            employee_number
+        `)
+        .eq(
+            "id",
+            employeeId
+        )
+        .single();
+
+
+
+    if (error) {
+
+
+        console.error(
+            "خطأ تحميل بيانات الموظف:",
+            error
+        );
+
+
+        throw error;
+
+    }
+
+
+    employeeData =
+        data;
+
+
+    renderEmployeeData();
+
+}
+
+
+
+/* =========================
+   عرض بيانات الموظف
+========================== */
+
+function renderEmployeeData() {
+
+
+    const name =
+        employeeData.name
+        ||
+        "الموظف";
+
+
+    const firstLetter =
+        name
+            .trim()
+            .charAt(0)
+        ||
+        "م";
+
+
+    document
+        .getElementById(
+            "profileInitial"
+        )
+        .textContent =
+        firstLetter;
+
+
+    document
+        .getElementById(
+            "profileName"
+        )
+        .textContent =
+        name;
+
+
+    document
+        .getElementById(
+            "profileTitle"
+        )
+        .textContent =
+        employeeData.job_title
+        ||
+        "غير محدد";
+
+
+    document
+        .getElementById(
+            "profileEmail"
+        )
+        .textContent =
+        employeeData.email
+        ||
+        "—";
+
+
+    document
+        .getElementById(
+            "employeeNumber"
+        )
+        .textContent =
+        employeeData.employee_number
+        ||
+        "—";
+
+
+    document
+        .getElementById(
+            "jobTitle"
+        )
+        .textContent =
+        employeeData.job_title
+        ||
+        "—";
+
+
+    document
+        .getElementById(
+            "department"
+        )
+        .textContent =
+        employeeData.department
+        ||
+        "—";
+
+
+    document
+        .getElementById(
+            "jobLevel"
+        )
+        .textContent =
+        employeeData.job_level
+        ||
+        "—";
+
+
+    document
+        .getElementById(
+            "experienceYears"
+        )
+        .textContent =
+        employeeData.experience_years !== null
+        &&
+        employeeData.experience_years !== undefined
+        ?
+        employeeData.experience_years
+        +
+        " سنوات"
+        :
+        "—";
+
+
+    const availability =
+        normalizePercentage(
+            employeeData.availability
+        );
+
+
+    const workload =
+        normalizePercentage(
+            employeeData.workload
+        );
+
+
+    document
+        .getElementById(
+            "availability"
+        )
+        .textContent =
+        availability
+        +
+        "%";
+
+
+    document
+        .getElementById(
+            "workload"
+        )
+        .textContent =
+        workload
+        +
+        "%";
+
+
+    document
+        .getElementById(
+            "availabilityValue"
+        )
+        .textContent =
+        availability
+        +
+        "%";
+
+
+    document
+        .getElementById(
+            "workloadValue"
+        )
+        .textContent =
+        workload
+        +
+        "%";
+
+
+    document
+        .getElementById(
+            "availabilityBar"
+        )
+        .style.width =
+        availability
+        +
+        "%";
+
+
+    document
+        .getElementById(
+            "workloadBar"
+        )
+        .style.width =
+        workload
+        +
+        "%";
+
+
+    const status =
+        employeeData.status
+        ||
+        "غير محدد";
+
+
+    const statusElement =
+        document.getElementById(
+            "profileStatus"
+        );
+
+
+    statusElement.textContent =
+        status;
+
+
+    statusElement.className =
+        "profile-status "
+        +
+        getStatusClass(
+            status
+        );
+
+
+    localStorage.setItem(
+        "miyarEmployeeName",
+        name
+    );
+
+}
+
+
+
+/* =========================
+   النسبة
+========================== */
+
+function normalizePercentage(
+    value
+) {
+
+
+    const number =
+        Number(
+            value
+        );
+
+
+    if (
+        Number.isNaN(
+            number
+        )
+    ) {
+
+        return 0;
+
+    }
+
+
+    return Math.max(
+        0,
+        Math.min(
+            100,
+            number
+        )
+    );
+
+}
+
+
+
+/* =========================
+   لون حالة الموظف
+========================== */
+
+function getStatusClass(
+    status
+) {
+
+
+    const value =
+        String(
+            status
+            ||
+            ""
+        )
+        .trim()
+        .toLowerCase();
+
+
+    if (
+        value === "متاح"
+        ||
+        value === "available"
+    ) {
+
+        return "available";
+
+    }
+
+
+    if (
+        value === "مشغول"
+        ||
+        value === "busy"
+    ) {
+
+        return "busy";
+
+    }
+
+
+    return "default";
+
+}
+
+
+
+/* =========================
+   تحميل مهارات الموظف
+========================== */
+
+async function loadEmployeeSkills() {
+
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from(
+            "employee_skills"
+        )
+        .select(`
+            id,
+            employee_id,
+            skill_id,
+            skill_level
+        `)
+        .eq(
+            "employee_id",
+            employeeId
+        );
+
+
+
+    if (error) {
+
+
+        console.error(
+            "خطأ تحميل مهارات الموظف:",
+            error
+        );
+
+
+        employeeSkills =
+            [];
+
+
+        renderSkills();
+
+
+        return;
+
+    }
+
+
+
+    const relations =
+        data || [];
+
+
+    if (
+        relations.length === 0
+    ) {
+
+
+        employeeSkills =
+            [];
+
+
+        renderSkills();
+
+
+        return;
+
+    }
+
+
+
+    const skillIds =
+        [
+            ...new Set(
+
+                relations
+                    .map(
+                        item =>
+                            item.skill_id
+                    )
+                    .filter(
+                        id =>
+                            id !== null
+                            &&
+                            id !== undefined
+                    )
+
+            )
+        ];
+
+
+
+    if (
+        skillIds.length === 0
+    ) {
+
+
+        employeeSkills =
+            [];
+
+
+        renderSkills();
+
+
+        return;
+
+    }
+
+
+
+    const {
+        data: skillsData,
+        error: skillsError
+    } =
+    await supabaseClient
+        .from(
+            "skills"
+        )
+        .select(`
+            id,
+            skill_name,
+            description
+        `)
+        .in(
+            "id",
+            skillIds
+        );
+
+
+
+    if (skillsError) {
+
+
+        console.error(
+            "خطأ تحميل أسماء المهارات:",
+            skillsError
+        );
+
+
+        employeeSkills =
+            [];
+
+
+        renderSkills();
+
+
+        return;
+
+    }
+
+
+
+    employeeSkills =
+        relations.map(
+            function(relation) {
+
+
+                const skill =
+                    (
+                        skillsData
+                        ||
+                        []
+                    )
+                    .find(
+                        item =>
+                            Number(
+                                item.id
+                            )
+                            ===
+                            Number(
+                                relation.skill_id
+                            )
+                    );
+
+
+                return {
+
+                    id:
+                        relation.id,
+
+                    skillId:
+                        relation.skill_id,
+
+                    name:
+                        skill
+                        ?
+                        skill.skill_name
+                        :
+                        "مهارة غير معروفة",
+
+                    description:
+                        skill
+                        ?
+                        skill.description
+                        :
+                        "",
+
+                    level:
+                        relation.skill_level
+
+                };
+
+            }
+        );
+
+
+    renderSkills();
+
+}
+
+
+
+/* =========================
+   عرض المهارات
+========================== */
+
+function renderSkills() {
+
+
+    const container =
+        document.getElementById(
+            "skillsList"
+        );
+
+
+    const count =
+        document.getElementById(
+            "skillsCount"
+        );
+
+
+    container.innerHTML =
+        "";
+
+
+    count.textContent =
+        employeeSkills.length
+        +
+        " مهارات";
+
+
+    if (
+        employeeSkills.length === 0
+    ) {
+
+
+        container.innerHTML = `
+
+            <div class="empty-state">
+                لا توجد مهارات مسجلة حالياً
+            </div>
+
+        `;
+
+
+        return;
+
+    }
+
+
+
+    employeeSkills.forEach(
+        function(skill) {
+
+
+            const level =
+                normalizeSkillLevel(
+                    skill.level
+                );
+
+
+            const item =
+                document.createElement(
+                    "div"
+                );
+
+
+            item.className =
+                "skill-item";
+
+
+            item.innerHTML = `
+
+                <div class="skill-main">
+
+                    <div class="skill-title">
+
+                        <strong>
+
+                            ${
+                                escapeHtml(
+                                    skill.name
+                                )
+                            }
+
+                        </strong>
+
+
+                        <span class="skill-level-badge">
+
+                            المستوى:
+                            ${
+                                escapeHtml(
+                                    String(
+                                        skill.level
+                                        ??
+                                        "غير محدد"
+                                    )
+                                )
+                            }
+
+                        </span>
+
+                    </div>
+
+
+                    ${
+                        skill.description
+                        ?
+                        `
+
+                            <p>
+                                ${
+                                    escapeHtml(
+                                        skill.description
+                                    )
+                                }
+                            </p>
+
+                        `
+                        :
+                        ""
+                    }
+
+
+                    <div class="skill-progress">
+
+                        <div
+                            class="skill-progress-fill"
+                            style="
+                                width:
+                                ${level}%;
+                            "
+                        ></div>
+
+                    </div>
+
+                </div>
+
+            `;
+
+
+            container.appendChild(
+                item
+            );
+
+
+        }
+    );
+
+}
+
+
+
+/* =========================
+   مستوى المهارة
+========================== */
+
+function normalizeSkillLevel(
+    level
+) {
+
+
+    const value =
+        Number(
+            level
+        );
+
+
+    if (
+        !Number.isNaN(
+            value
+        )
+    ) {
+
+
+        if (
+            value <= 5
+        ) {
+
+            return Math.max(
+                0,
+                Math.min(
+                    100,
+                    value * 20
+                )
+            );
+
+        }
+
+
+        return Math.max(
+            0,
+            Math.min(
+                100,
+                value
+            )
+        );
+
+    }
+
+
+    const text =
+        String(
+            level
+            ||
+            ""
+        )
+        .trim()
+        .toLowerCase();
+
+
+    if (
+        text.includes(
+            "مبتد"
+        )
+        ||
+        text === "beginner"
+    ) {
+
+        return 30;
+
+    }
+
+
+    if (
+        text.includes(
+            "متوسط"
+        )
+        ||
+        text === "intermediate"
+    ) {
+
+        return 60;
+
+    }
+
+
+    if (
+        text.includes(
+            "متقدم"
+        )
+        ||
+        text === "advanced"
+    ) {
+
+        return 85;
+
+    }
+
+
+    if (
+        text.includes(
+            "خبير"
+        )
+        ||
+        text === "expert"
+    ) {
+
+        return 100;
+
+    }
+
+
+    return 50;
+
+}
+
+
+
+/* =========================
+   حماية النص
+========================== */
+
+function escapeHtml(
+    value
+) {
+
+
+    return String(
+        value ?? ""
+    )
+
+    .replaceAll(
+        "&",
+        "&amp;"
+    )
+
+    .replaceAll(
+        "<",
+        "&lt;"
+    )
+
+    .replaceAll(
+        ">",
+        "&gt;"
+    )
+
+    .replaceAll(
+        '"',
+        "&quot;"
+    )
+
+    .replaceAll(
+        "'",
+        "&#039;"
+    );
+
+}
+
+
+
+/* =========================
+   السايد بار
+========================== */
+
+const mobileMenuBtn =
+    document.getElementById(
+        "mobileMenuBtn"
+    );
+
+
+const sidebar =
+    document.getElementById(
+        "sidebar"
+    );
+
+
+const sidebarOverlay =
+    document.getElementById(
+        "sidebarOverlay"
+    );
+
+
+function openSidebar() {
+
+
+    sidebar.classList.add(
+        "show"
+    );
+
+
+    sidebarOverlay.classList.add(
+        "show"
+    );
+
+
+    document.body.classList.add(
+        "menu-open"
+    );
+
+}
+
+
+
+function closeSidebar() {
+
+
+    sidebar.classList.remove(
+        "show"
+    );
+
+
+    sidebarOverlay.classList.remove(
+        "show"
+    );
+
+
+    document.body.classList.remove(
+        "menu-open"
+    );
+
+}
+
+
+
+/* =========================
+   تنظيف الدخول
+========================== */
+
+function clearEmployeeSession() {
+
+
+    localStorage.removeItem(
+        "miyarRole"
+    );
+
+
+    localStorage.removeItem(
+        "miyarEmail"
+    );
+
+
+    localStorage.removeItem(
+        "miyarEmployeeId"
+    );
+
+
+    localStorage.removeItem(
+        "miyarEmployeeName"
+    );
+
+}
+
+
+
+/* =========================
+   تسجيل الخروج
+========================== */
+
+async function logout() {
+
+
+    await supabaseClient
+        .auth
+        .signOut();
+
+
+    clearEmployeeSession();
+
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+
+/* =========================
+   الأحداث
+========================== */
+
+mobileMenuBtn
+    .addEventListener(
         "click",
         openSidebar
     );
 
 
-    sidebarOverlay.addEventListener(
+sidebarOverlay
+    .addEventListener(
         "click",
         closeSidebar
     );
 
 
-    document
-        .querySelectorAll(".nav-link")
-        .forEach(function(link) {
+document
+    .querySelectorAll(
+        ".nav-link"
+    )
+    .forEach(
+        function(link) {
+
 
             link.addEventListener(
                 "click",
                 closeSidebar
             );
 
-        });
+
+        }
+    );
 
 
-    /* =========================
-       تحميل البيانات الحالية
-    ========================== */
+document
+    .getElementById(
+        "logoutBtn"
+    )
+    .addEventListener(
+        "click",
+        logout
+    );
 
-    function loadProfile() {
 
-        const email =
-            localStorage.getItem("miyarEmail");
+
+/* =========================
+   تشغيل الصفحة
+========================== */
+
+async function startPage() {
+
+
+    const allowed =
+        protectEmployeePage();
+
+
+    if (!allowed) {
+
+        return;
+
+    }
+
+
+    try {
+
+
+        await loadEmployeeData();
+
+
+        await loadEmployeeSkills();
+
+
+    }
+
+    catch(error) {
+
+
+        console.error(
+            "خطأ تشغيل صفحة الملف الشخصي:",
+            error
+        );
+
 
         document
-            .getElementById("profileEmail")
+            .getElementById(
+                "profileName"
+            )
             .textContent =
-            email || "—";
+            "تعذر تحميل البيانات";
 
-        /*
-            باقي البيانات ستأتي لاحقاً
-            من قاعدة البيانات
-        */
 
     }
 
-
-    /* =========================
-       تسجيل الخروج
-    ========================== */
-
-    function logout() {
-
-        localStorage.removeItem("miyarRole");
-
-        localStorage.removeItem("miyarEmail");
-
-        window.location.href =
-            "login.html";
-    }
+}
 
 
-    loadProfile();
+startPage();
+
 
 </script>
+
 
 </body>
 
