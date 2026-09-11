@@ -93,14 +93,12 @@
 
         <nav class="sidebar-nav">
 
-
             <a
                 href="employee-home.html"
                 class="nav-link active"
             >
                 الرئيسية
             </a>
-
 
             <a
                 href="employee-tasks.html"
@@ -109,14 +107,12 @@
                 مهامي
             </a>
 
-
             <a
                 href="employee-projects.html"
                 class="nav-link"
             >
                 مشاريعي
             </a>
-
 
             <a
                 href="employee-profile.html"
@@ -125,14 +121,12 @@
                 ملفي الشخصي
             </a>
 
-
             <a
                 href="employee-evaluations.html"
                 class="nav-link"
             >
                 تقييمي
             </a>
-
 
         </nav>
 
@@ -206,7 +200,7 @@
             <div class="summary-grid">
 
 
-                <div class="summary-card">
+                <article class="summary-card">
 
                     <span>
                         مهام حالية
@@ -216,11 +210,11 @@
                         0
                     </strong>
 
-                </div>
+                </article>
 
 
 
-                <div class="summary-card">
+                <article class="summary-card">
 
                     <span>
                         مهام مكتملة
@@ -230,11 +224,11 @@
                         0
                     </strong>
 
-                </div>
+                </article>
 
 
 
-                <div class="summary-card">
+                <article class="summary-card">
 
                     <span>
                         مشاريع أعمل عليها
@@ -244,11 +238,11 @@
                         0
                     </strong>
 
-                </div>
+                </article>
 
 
 
-                <div class="summary-card">
+                <article class="summary-card">
 
                     <span>
                         نسبة إنجاز المهام
@@ -258,7 +252,7 @@
                         0%
                     </strong>
 
-                </div>
+                </article>
 
 
             </div>
@@ -471,11 +465,10 @@ const sidebarOverlay =
 
 
 /* =========================================
-   جلب الموظف الحالي
+   حماية صفحة الموظف
 ========================================= */
 
-async function resolveCurrentEmployee() {
-
+function protectEmployeePage() {
 
     const role =
         localStorage.getItem(
@@ -495,77 +488,149 @@ async function resolveCurrentEmployee() {
     }
 
 
+    return true;
+
+}
+
+
+
+/* =========================================
+   معرفة الموظف الحالي
+========================================= */
+
+async function resolveCurrentEmployee() {
+
 
     /*
-        نحاول الحصول على البريد من
-        جلسة Supabase أولاً
+        1 - نحاول أولاً باستخدام ID
+        لأنه الأدق والأسرع
     */
 
-    let email = "";
+    const savedId =
+        localStorage.getItem(
+            "miyarEmployeeId"
+        );
 
 
-    try {
-
+    if (
+        savedId
+        &&
+        !Number.isNaN(
+            Number(savedId)
+        )
+    ) {
 
         const {
-            data
+            data,
+            error
         } =
         await supabaseClient
-            .auth
-            .getSession();
-
+            .from("employees")
+            .select(`
+                id,
+                name,
+                email,
+                job_title,
+                department,
+                experience_years,
+                job_level,
+                availability,
+                workload,
+                status,
+                employee_number
+            `)
+            .eq(
+                "id",
+                Number(savedId)
+            )
+            .limit(1);
 
 
         if (
+            !error
+            &&
             data
             &&
-            data.session
-            &&
-            data.session.user
-            &&
-            data.session.user.email
+            data.length > 0
         ) {
 
+            setCurrentEmployee(
+                data[0]
+            );
 
-            email =
-                data.session.user.email
-                    .trim()
-                    .toLowerCase();
+            return true;
 
         }
-
-
-    }
-
-    catch(error) {
-
-        console.warn(
-            "تعذر قراءة جلسة Supabase:",
-            error
-        );
 
     }
 
 
 
     /*
-        إذا لم نجد البريد من Supabase
-        نأخذه من localStorage
+        2 - نبحث بالبريد المحفوظ
+        من صفحة تسجيل الدخول
+    */
+
+    let email =
+        String(
+            localStorage.getItem(
+                "miyarEmail"
+            )
+            ||
+            ""
+        )
+        .trim()
+        .toLowerCase();
+
+
+
+    /*
+        3 - إذا لم يوجد بريد محفوظ،
+        نأخذه من Supabase Auth
     */
 
     if (!email) {
 
+        try {
 
-        email =
-            String(
-                localStorage.getItem(
-                    "miyarEmail"
-                )
-                ||
-                ""
-            )
-            .trim()
-            .toLowerCase();
+            const {
+                data,
+                error
+            } =
+            await supabaseClient
+                .auth
+                .getSession();
+
+
+            if (
+                !error
+                &&
+                data
+                &&
+                data.session
+                &&
+                data.session.user
+                &&
+                data.session.user.email
+            ) {
+
+                email =
+                    data.session.user.email
+                        .trim()
+                        .toLowerCase();
+
+            }
+
+        }
+
+        catch(error) {
+
+            console.error(
+                "خطأ قراءة جلسة المستخدم:",
+                error
+            );
+
+        }
 
     }
 
@@ -573,13 +638,9 @@ async function resolveCurrentEmployee() {
 
     if (!email) {
 
-
-        clearEmployeeSession();
-
-
-        window.location.href =
-            "login.html";
-
+        showEmployeeLoadError(
+            "تعذر تحديد حساب الموظف"
+        );
 
         return false;
 
@@ -588,7 +649,9 @@ async function resolveCurrentEmployee() {
 
 
     /*
-        البحث عن الموظف بالبريد
+        نستخدم limit(1)
+        لأن جدول employees عندك قد يحتوي
+        على بريد مكرر أكثر من مرة
     */
 
     const {
@@ -614,12 +677,17 @@ async function resolveCurrentEmployee() {
             "email",
             email
         )
+        .order(
+            "id",
+            {
+                ascending: true
+            }
+        )
         .limit(1);
 
 
 
     if (error) {
-
 
         console.error(
             "خطأ البحث عن الموظف:",
@@ -627,9 +695,9 @@ async function resolveCurrentEmployee() {
         );
 
 
-        employeeName.textContent =
-            "تعذر تحميل البيانات";
-
+        showEmployeeLoadError(
+            "تعذر تحميل بيانات الموظف"
+        );
 
         return false;
 
@@ -643,24 +711,15 @@ async function resolveCurrentEmployee() {
         data.length === 0
     ) {
 
-
         console.error(
-            "لم يتم العثور على الموظف:",
+            "البريد غير موجود في employees:",
             email
         );
 
 
-        alert(
-            "لم يتم العثور على بيانات الموظف في النظام"
+        showEmployeeLoadError(
+            "لم يتم العثور على بيانات الموظف"
         );
-
-
-        clearEmployeeSession();
-
-
-        window.location.href =
-            "login.html";
-
 
         return false;
 
@@ -668,54 +727,9 @@ async function resolveCurrentEmployee() {
 
 
 
-    employeeData =
-        data[0];
-
-
-    employeeId =
-        Number(
-            employeeData.id
-        );
-
-
-
-    /*
-        تحديث بيانات الجهاز الحالي
-    */
-
-    localStorage.setItem(
-        "miyarRole",
-        "employee"
+    setCurrentEmployee(
+        data[0]
     );
-
-
-    localStorage.setItem(
-        "miyarEmail",
-        employeeData.email || email
-    );
-
-
-    localStorage.setItem(
-        "miyarEmployeeId",
-        String(employeeData.id)
-    );
-
-
-    localStorage.setItem(
-        "miyarEmployeeName",
-        employeeData.name || ""
-    );
-
-
-
-    /*
-        عرض الاسم
-    */
-
-    employeeName.textContent =
-        employeeData.name
-        ||
-        "الموظف";
 
 
     return true;
@@ -725,10 +739,131 @@ async function resolveCurrentEmployee() {
 
 
 /* =========================================
-   تحميل مهام الموظف
+   تعيين بيانات الموظف
+========================================= */
+
+function setCurrentEmployee(
+    employee
+) {
+
+
+    employeeData =
+        employee;
+
+
+    employeeId =
+        Number(
+            employee.id
+        );
+
+
+    employeeName.textContent =
+        employee.name
+        ||
+        "الموظف";
+
+
+    localStorage.setItem(
+        "miyarRole",
+        "employee"
+    );
+
+
+    localStorage.setItem(
+        "miyarEmployeeId",
+        String(
+            employee.id
+        )
+    );
+
+
+    localStorage.setItem(
+        "miyarEmployeeName",
+        employee.name || ""
+    );
+
+
+    if (
+        employee.email
+    ) {
+
+        localStorage.setItem(
+            "miyarEmail",
+            employee.email
+        );
+
+    }
+
+}
+
+
+
+/* =========================================
+   رسالة خطأ تحميل الموظف
+========================================= */
+
+function showEmployeeLoadError(
+    message
+) {
+
+
+    employeeName.textContent =
+        "الموظف";
+
+
+    tasksPreview.innerHTML = `
+
+        <div class="empty-state error-state">
+
+            ${escapeHtml(message)}
+
+        </div>
+
+    `;
+
+
+    projectsPreview.innerHTML = `
+
+        <div class="empty-state error-state">
+
+            ${escapeHtml(message)}
+
+        </div>
+
+    `;
+
+
+    currentTasksCount.textContent =
+        "0";
+
+
+    completedTasksCount.textContent =
+        "0";
+
+
+    projectsCount.textContent =
+        "0";
+
+
+    completionRate.textContent =
+        "0%";
+
+}
+
+
+
+/* =========================================
+   تحميل المهام
 ========================================= */
 
 async function loadEmployeeTasks() {
+
+
+    if (!employeeId) {
+
+        return;
+
+    }
 
 
     const {
@@ -762,9 +897,8 @@ async function loadEmployeeTasks() {
 
     if (error) {
 
-
         console.error(
-            "خطأ تحميل المهام:",
+            "خطأ تحميل مهام الموظف:",
             error
         );
 
@@ -787,7 +921,7 @@ async function loadEmployeeTasks() {
 
 
 /* =========================================
-   تحميل مشاريع الموظف
+   تحميل المشاريع
 ========================================= */
 
 async function loadEmployeeProjects() {
@@ -800,23 +934,15 @@ async function loadEmployeeProjects() {
                 employeeTasks
 
                     .map(
-                        function(task) {
-
-                            return task.project_id;
-
-                        }
+                        task =>
+                            task.project_id
                     )
 
                     .filter(
-                        function(id) {
-
-                            return (
-                                id !== null
-                                &&
-                                id !== undefined
-                            );
-
-                        }
+                        id =>
+                            id !== null
+                            &&
+                            id !== undefined
                     )
 
             )
@@ -828,10 +954,8 @@ async function loadEmployeeProjects() {
         projectIds.length === 0
     ) {
 
-
         employeeProjects =
             [];
-
 
         return;
 
@@ -868,9 +992,8 @@ async function loadEmployeeProjects() {
 
     if (error) {
 
-
         console.error(
-            "خطأ تحميل المشاريع:",
+            "خطأ تحميل مشاريع الموظف:",
             error
         );
 
@@ -893,15 +1016,19 @@ async function loadEmployeeProjects() {
 
 
 /* =========================================
-   هل المهمة مكتملة؟
+   المهمة مكتملة؟
 ========================================= */
 
-function isCompletedTask(task) {
+function isCompletedTask(
+    task
+) {
 
 
     const status =
         String(
-            task.status || ""
+            task.status
+            ||
+            ""
         )
         .trim()
         .toLowerCase();
@@ -935,15 +1062,19 @@ function isCompletedTask(task) {
 
 
 /* =========================================
-   ترجمة الحالة
+   اسم الحالة
 ========================================= */
 
-function getStatusText(status) {
+function getStatusText(
+    status
+) {
 
 
     const value =
         String(
-            status || ""
+            status
+            ||
+            ""
         )
         .trim()
         .toLowerCase();
@@ -999,15 +1130,19 @@ function getStatusText(status) {
 
 
 /* =========================================
-   ترجمة الأولوية
+   اسم الأولوية
 ========================================= */
 
-function getPriorityText(priority) {
+function getPriorityText(
+    priority
+) {
 
 
     const value =
         String(
-            priority || ""
+            priority
+            ||
+            ""
         )
         .trim()
         .toLowerCase();
@@ -1023,7 +1158,6 @@ function getPriorityText(priority) {
     }
 
 
-
     if (
         value === "medium"
     ) {
@@ -1033,7 +1167,6 @@ function getPriorityText(priority) {
     }
 
 
-
     if (
         value === "low"
     ) {
@@ -1041,7 +1174,6 @@ function getPriorityText(priority) {
         return "منخفضة";
 
     }
-
 
 
     return (
@@ -1055,7 +1187,7 @@ function getPriorityText(priority) {
 
 
 /* =========================================
-   تحديث الملخص
+   الملخص
 ========================================= */
 
 function updateSummary() {
@@ -1069,13 +1201,10 @@ function updateSummary() {
 
     const current =
         employeeTasks.filter(
-            function(task) {
-
-                return !isCompletedTask(
+            task =>
+                !isCompletedTask(
                     task
-                );
-
-            }
+                )
         );
 
 
@@ -1097,10 +1226,8 @@ function updateSummary() {
         employeeTasks.length === 0
     ) {
 
-
         completionRate.textContent =
             "0%";
-
 
         return;
 
@@ -1116,13 +1243,10 @@ function updateSummary() {
                 /
                 employeeTasks.length
             )
-
             *
-
             100
 
         );
-
 
 
     completionRate.textContent =
@@ -1143,18 +1267,14 @@ function renderTasksPreview() {
         "";
 
 
-
     const currentTasks =
         employeeTasks
 
             .filter(
-                function(task) {
-
-                    return !isCompletedTask(
+                task =>
+                    !isCompletedTask(
                         task
-                    );
-
-                }
+                    )
             )
 
             .slice(
@@ -1168,7 +1288,6 @@ function renderTasksPreview() {
         currentTasks.length === 0
     ) {
 
-
         tasksPreview.innerHTML = `
 
             <div class="empty-state">
@@ -1176,7 +1295,6 @@ function renderTasksPreview() {
             </div>
 
         `;
-
 
         return;
 
@@ -1196,7 +1314,6 @@ function renderTasksPreview() {
 
             row.className =
                 "employee-preview-row";
-
 
 
             row.innerHTML = `
@@ -1267,11 +1384,9 @@ function renderTasksPreview() {
             `;
 
 
-
             tasksPreview.appendChild(
                 row
             );
-
 
         }
     );
@@ -1296,7 +1411,6 @@ function renderProjectsPreview() {
         employeeProjects.length === 0
     ) {
 
-
         projectsPreview.innerHTML = `
 
             <div class="empty-state">
@@ -1305,7 +1419,6 @@ function renderProjectsPreview() {
 
         `;
 
-
         return;
 
     }
@@ -1313,34 +1426,29 @@ function renderProjectsPreview() {
 
 
     employeeProjects
+
         .slice(
             0,
             4
         )
+
         .forEach(
             function(project) {
 
 
                 const projectTasks =
                     employeeTasks.filter(
-                        function(task) {
+                        task =>
 
+                            Number(
+                                task.project_id
+                            )
 
-                            return (
+                            ===
 
-                                Number(
-                                    task.project_id
-                                )
-
-                                ===
-
-                                Number(
-                                    project.id
-                                )
-
-                            );
-
-                        }
+                            Number(
+                                project.id
+                            )
                     );
 
 
@@ -1353,7 +1461,6 @@ function renderProjectsPreview() {
 
                 row.className =
                     "employee-preview-row";
-
 
 
                 row.innerHTML = `
@@ -1375,7 +1482,9 @@ function renderProjectsPreview() {
 
                         <span>
 
-                            ${projectTasks.length}
+                            ${
+                                projectTasks.length
+                            }
 
                             مهمة مسندة لك
 
@@ -1418,11 +1527,9 @@ function renderProjectsPreview() {
                 `;
 
 
-
                 projectsPreview.appendChild(
                     row
                 );
-
 
             }
         );
@@ -1435,8 +1542,9 @@ function renderProjectsPreview() {
    حماية النص
 ========================================= */
 
-function escapeHtml(value) {
-
+function escapeHtml(
+    value
+) {
 
     return String(
         value ?? ""
@@ -1477,7 +1585,6 @@ function escapeHtml(value) {
 
 function openSidebar() {
 
-
     sidebar.classList.add(
         "show"
     );
@@ -1498,7 +1605,6 @@ function openSidebar() {
 
 function closeSidebar() {
 
-
     sidebar.classList.remove(
         "show"
     );
@@ -1511,36 +1617,6 @@ function closeSidebar() {
 
     document.body.classList.remove(
         "menu-open"
-    );
-
-}
-
-
-
-/* =========================================
-   تنظيف الجلسة
-========================================= */
-
-function clearEmployeeSession() {
-
-
-    localStorage.removeItem(
-        "miyarRole"
-    );
-
-
-    localStorage.removeItem(
-        "miyarEmail"
-    );
-
-
-    localStorage.removeItem(
-        "miyarEmployeeId"
-    );
-
-
-    localStorage.removeItem(
-        "miyarEmployeeName"
     );
 
 }
@@ -1572,7 +1648,24 @@ async function logout() {
 
 
 
-    clearEmployeeSession();
+    localStorage.removeItem(
+        "miyarRole"
+    );
+
+
+    localStorage.removeItem(
+        "miyarEmail"
+    );
+
+
+    localStorage.removeItem(
+        "miyarEmployeeId"
+    );
+
+
+    localStorage.removeItem(
+        "miyarEmployeeName"
+    );
 
 
     window.location.href =
@@ -1607,12 +1700,10 @@ document
     .forEach(
         function(link) {
 
-
             link.addEventListener(
                 "click",
                 closeSidebar
             );
-
 
         }
     );
@@ -1636,21 +1727,40 @@ document
 async function startPage() {
 
 
+    const allowed =
+        protectEmployeePage();
+
+
+    if (!allowed) {
+
+        return;
+
+    }
+
+
+
     try {
 
 
-        const allowed =
+        /*
+            أول شيء نعرف الموظف الحقيقي
+        */
+
+        const found =
             await resolveCurrentEmployee();
 
 
-
-        if (!allowed) {
+        if (!found) {
 
             return;
 
         }
 
 
+
+        /*
+            ثم نحمل بياناته فقط
+        */
 
         await loadEmployeeTasks();
 
@@ -1670,7 +1780,6 @@ async function startPage() {
 
     }
 
-
     catch(error) {
 
 
@@ -1680,27 +1789,9 @@ async function startPage() {
         );
 
 
-        employeeName.textContent =
-            "تعذر تحميل البيانات";
-
-
-        tasksPreview.innerHTML = `
-
-            <div class="empty-state">
-                تعذر تحميل المهام
-            </div>
-
-        `;
-
-
-        projectsPreview.innerHTML = `
-
-            <div class="empty-state">
-                تعذر تحميل المشاريع
-            </div>
-
-        `;
-
+        showEmployeeLoadError(
+            "تعذر تحميل بيانات الصفحة"
+        );
 
     }
 
