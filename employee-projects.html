@@ -17,6 +17,8 @@
         href="employee-projects.css"
     >
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 </head>
 
 <body>
@@ -64,8 +66,6 @@
 
 
 
-    <!-- خلفية السايد بار -->
-
     <div
         class="sidebar-overlay"
         id="sidebarOverlay"
@@ -93,7 +93,6 @@
 
 
         <nav class="sidebar-nav">
-
 
             <a
                 href="employee-home.html"
@@ -134,18 +133,16 @@
                 تقييمي
             </a>
 
-
         </nav>
 
 
         <button
             class="logout-btn"
             type="button"
-            onclick="logout()"
+            id="logoutBtn"
         >
             تسجيل الخروج
         </button>
-
 
     </aside>
 
@@ -157,8 +154,6 @@
 
     <main class="main-content">
 
-
-        <!-- رأس الصفحة -->
 
         <header class="topbar">
 
@@ -181,6 +176,69 @@
 
 
         <!-- ===============================
+             ملخص المشاريع
+        ================================ -->
+
+        <section class="summary-grid">
+
+
+            <article class="summary-card">
+
+                <span>
+                    جميع المشاريع
+                </span>
+
+                <strong id="allProjectsCount">
+                    0
+                </strong>
+
+            </article>
+
+
+            <article class="summary-card">
+
+                <span>
+                    مشاريع جارية
+                </span>
+
+                <strong id="runningProjectsCount">
+                    0
+                </strong>
+
+            </article>
+
+
+            <article class="summary-card">
+
+                <span>
+                    إجمالي مهامي
+                </span>
+
+                <strong id="projectTasksCount">
+                    0
+                </strong>
+
+            </article>
+
+
+            <article class="summary-card">
+
+                <span>
+                    متوسط الإنجاز
+                </span>
+
+                <strong id="averageProgress">
+                    0%
+                </strong>
+
+            </article>
+
+
+        </section>
+
+
+
+        <!-- ===============================
              البحث والتصفية
         ================================ -->
 
@@ -193,7 +251,6 @@
                     type="text"
                     id="searchInput"
                     placeholder="ابحث باسم المشروع..."
-                    oninput="filterProjects()"
                 >
 
             </div>
@@ -201,10 +258,7 @@
 
             <div class="filters">
 
-                <select
-                    id="statusFilter"
-                    onchange="filterProjects()"
-                >
+                <select id="statusFilter">
 
                     <option value="">
                         جميع الحالات
@@ -252,7 +306,7 @@
                     </h2>
 
                     <p>
-                        جميع المشاريع المسندة إليك
+                        المشاريع المرتبطة بالمهام المسندة لك
                     </p>
 
                 </div>
@@ -276,9 +330,7 @@
             >
 
                 <div class="empty-state">
-
-                    لا توجد مشاريع مسندة لك حالياً
-
+                    جارٍ تحميل المشاريع...
                 </div>
 
             </div>
@@ -306,7 +358,7 @@
 
     <div
         class="modal-overlay"
-        onclick="closeDetailsModal()"
+        id="detailsModalOverlay"
     ></div>
 
 
@@ -323,7 +375,7 @@
                 </h2>
 
                 <p>
-                    عرض معلومات المشروع والمهام المرتبطة به
+                    عرض معلومات المشروع والمهام المرتبطة بك
                 </p>
 
             </div>
@@ -332,7 +384,7 @@
             <button
                 class="close-btn"
                 type="button"
-                onclick="closeDetailsModal()"
+                id="closeDetailsBtn"
             >
                 ×
             </button>
@@ -357,141 +409,684 @@
 <script>
 
 
-    /* ===============================
-       السايد بار بالجوال
-    ================================ */
+/* ===============================
+   Supabase
+================================ */
 
-    const mobileMenuBtn =
-        document.getElementById(
-            "mobileMenuBtn"
-        );
+const SUPABASE_URL =
+    "https://avooyglxacytrfhvotsl.supabase.co";
 
 
-    const sidebar =
-        document.getElementById(
-            "sidebar"
-        );
+const SUPABASE_KEY =
+    "sb_publishable_NVlWEnA_w4KbSse_-70zdA_J9ut0Kyo";
 
 
-    const sidebarOverlay =
-        document.getElementById(
-            "sidebarOverlay"
-        );
-
-
-    function openSidebar() {
-
-        sidebar.classList.add(
-            "show"
-        );
-
-        sidebarOverlay.classList.add(
-            "show"
-        );
-
-        document.body.classList.add(
-            "menu-open"
-        );
-
-    }
-
-
-    function closeSidebar() {
-
-        sidebar.classList.remove(
-            "show"
-        );
-
-        sidebarOverlay.classList.remove(
-            "show"
-        );
-
-        document.body.classList.remove(
-            "menu-open"
-        );
-
-    }
-
-
-    mobileMenuBtn.addEventListener(
-        "click",
-        openSidebar
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
     );
 
 
-    sidebarOverlay.addEventListener(
-        "click",
-        closeSidebar
+
+/* ===============================
+   البيانات
+================================ */
+
+let employeeId = null;
+
+let employeeTasks = [];
+
+let projects = [];
+
+
+
+/* ===============================
+   العناصر
+================================ */
+
+const projectsGrid =
+    document.getElementById(
+        "projectsGrid"
     );
+
+
+const projectsCount =
+    document.getElementById(
+        "projectsCount"
+    );
+
+
+const searchInput =
+    document.getElementById(
+        "searchInput"
+    );
+
+
+const statusFilter =
+    document.getElementById(
+        "statusFilter"
+    );
+
+
+const detailsModal =
+    document.getElementById(
+        "detailsModal"
+    );
+
+
+const mobileMenuBtn =
+    document.getElementById(
+        "mobileMenuBtn"
+    );
+
+
+const sidebar =
+    document.getElementById(
+        "sidebar"
+    );
+
+
+const sidebarOverlay =
+    document.getElementById(
+        "sidebarOverlay"
+    );
+
+
+
+/* ===============================
+   حماية صفحة الموظف
+================================ */
+
+function protectEmployeePage() {
+
+
+    const role =
+        localStorage.getItem(
+            "miyarRole"
+        );
+
+
+    const savedEmployeeId =
+        localStorage.getItem(
+            "miyarEmployeeId"
+        );
+
+
+    if (
+        role !== "employee"
+        ||
+        !savedEmployeeId
+    ) {
+
+        window.location.href =
+            "login.html";
+
+        return false;
+    }
+
+
+    employeeId =
+        Number(
+            savedEmployeeId
+        );
+
+
+    if (
+        !employeeId
+        ||
+        Number.isNaN(
+            employeeId
+        )
+    ) {
+
+        clearEmployeeSession();
+
+        window.location.href =
+            "login.html";
+
+        return false;
+    }
+
+
+    return true;
+
+}
+
+
+
+/* ===============================
+   تحميل مهام الموظف
+================================ */
+
+async function loadEmployeeTasks() {
+
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("tasks")
+        .select(`
+            id,
+            project_id,
+            task_name,
+            description,
+            priority,
+            due_date,
+            status,
+            assigned_employee_id
+        `)
+        .eq(
+            "assigned_employee_id",
+            employeeId
+        )
+        .order(
+            "id",
+            {
+                ascending: false
+            }
+        );
+
+
+    if (error) {
+
+        console.error(
+            "خطأ تحميل مهام الموظف:",
+            error
+        );
+
+        employeeTasks = [];
+
+        return;
+    }
+
+
+    employeeTasks =
+        data || [];
+
+}
+
+
+
+/* ===============================
+   تحميل المشاريع
+================================ */
+
+async function loadProjects() {
+
+
+    const projectIds =
+        [
+            ...new Set(
+
+                employeeTasks
+                    .map(
+                        task =>
+                            task.project_id
+                    )
+                    .filter(
+                        id =>
+                            id !== null
+                            &&
+                            id !== undefined
+                    )
+
+            )
+        ];
+
+
+    if (
+        projectIds.length === 0
+    ) {
+
+        projects = [];
+
+        return;
+    }
+
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("projects")
+        .select(`
+            id,
+            project_name,
+            description,
+            start_date,
+            end_date,
+            status
+        `)
+        .in(
+            "id",
+            projectIds
+        )
+        .order(
+            "id",
+            {
+                ascending: false
+            }
+        );
+
+
+    if (error) {
+
+        console.error(
+            "خطأ تحميل المشاريع:",
+            error
+        );
+
+        projects = [];
+
+        return;
+    }
+
+
+    projects =
+        (data || [])
+        .map(
+            function(project) {
+
+
+                const projectTasks =
+                    employeeTasks.filter(
+                        task =>
+                            Number(
+                                task.project_id
+                            )
+                            ===
+                            Number(
+                                project.id
+                            )
+                    );
+
+
+                const completedTasks =
+                    projectTasks.filter(
+                        isCompletedTask
+                    );
+
+
+                const progress =
+                    projectTasks.length > 0
+                    ?
+                    Math.round(
+
+                        (
+                            completedTasks.length
+                            /
+                            projectTasks.length
+                        )
+                        *
+                        100
+
+                    )
+                    :
+                    0;
+
+
+                return {
+
+                    ...project,
+
+                    tasksCount:
+                        projectTasks.length,
+
+                    completedTasksCount:
+                        completedTasks.length,
+
+                    progress:
+                        progress,
+
+                    employeeTasks:
+                        projectTasks
+
+                };
+
+            }
+        );
+
+}
+
+
+
+/* ===============================
+   حالة المهمة
+================================ */
+
+function getTaskStatusText(
+    status
+) {
+
+
+    const value =
+        String(
+            status || ""
+        )
+        .trim()
+        .toLowerCase();
+
+
+    if (
+        value === "done"
+        ||
+        value === "completed"
+        ||
+        value.includes(
+            "مكتمل"
+        )
+    ) {
+
+        return "مكتملة";
+    }
+
+
+    if (
+        value === "running"
+        ||
+        value === "in progress"
+        ||
+        value === "in_progress"
+        ||
+        value.includes(
+            "قيد التنفيذ"
+        )
+    ) {
+
+        return "قيد التنفيذ";
+    }
+
+
+    return "جديدة";
+
+}
+
+
+
+function isCompletedTask(
+    task
+) {
+
+    return (
+        getTaskStatusText(
+            task.status
+        )
+        ===
+        "مكتملة"
+    );
+
+}
+
+
+
+/* ===============================
+   حالة المشروع
+================================ */
+
+function getProjectStatusText(
+    status
+) {
+
+
+    const value =
+        String(
+            status || ""
+        )
+        .trim()
+        .toLowerCase();
+
+
+    if (
+        value === "completed"
+        ||
+        value === "done"
+        ||
+        value.includes(
+            "مكتمل"
+        )
+    ) {
+
+        return "مكتمل";
+    }
+
+
+    if (
+        value === "running"
+        ||
+        value === "in progress"
+        ||
+        value === "in_progress"
+        ||
+        value.includes(
+            "قيد التنفيذ"
+        )
+    ) {
+
+        return "قيد التنفيذ";
+    }
+
+
+    if (
+        value === "stopped"
+        ||
+        value === "paused"
+        ||
+        value.includes(
+            "متوقف"
+        )
+    ) {
+
+        return "متوقف";
+    }
+
+
+    if (
+        value === "planned"
+        ||
+        value === "planning"
+        ||
+        value.includes(
+            "مخطط"
+        )
+    ) {
+
+        return "مخطط";
+    }
+
+
+    return (
+        status
+        ||
+        "غير محدد"
+    );
+
+}
+
+
+
+/* ===============================
+   كلاس حالة المشروع
+================================ */
+
+function getStatusClass(
+    status
+) {
+
+
+    const value =
+        getProjectStatusText(
+            status
+        );
+
+
+    if (
+        value === "قيد التنفيذ"
+    ) {
+
+        return "running";
+    }
+
+
+    if (
+        value === "مكتمل"
+    ) {
+
+        return "completed";
+    }
+
+
+    if (
+        value === "متوقف"
+    ) {
+
+        return "stopped";
+    }
+
+
+    return "planned";
+
+}
+
+
+
+/* ===============================
+   تحديث الملخص
+================================ */
+
+function updateSummary() {
+
+
+    const running =
+        projects.filter(
+            project =>
+                getProjectStatusText(
+                    project.status
+                )
+                ===
+                "قيد التنفيذ"
+        );
+
+
+    const totalTasks =
+        projects.reduce(
+            (
+                total,
+                project
+            ) =>
+                total
+                +
+                project.tasksCount,
+            0
+        );
+
+
+    const totalProgress =
+        projects.reduce(
+            (
+                total,
+                project
+            ) =>
+                total
+                +
+                project.progress,
+            0
+        );
+
+
+    const average =
+        projects.length > 0
+        ?
+        Math.round(
+            totalProgress
+            /
+            projects.length
+        )
+        :
+        0;
 
 
     document
-        .querySelectorAll(".nav-link")
-        .forEach(function(link) {
-
-            link.addEventListener(
-                "click",
-                closeSidebar
-            );
-
-        });
+        .getElementById(
+            "allProjectsCount"
+        )
+        .textContent =
+        projects.length;
 
 
-
-    /* ===============================
-       بيانات مؤقتة
-       لاحقاً نجيبها من قاعدة البيانات
-    ================================ */
-
-    let projects = [];
-
+    document
+        .getElementById(
+            "runningProjectsCount"
+        )
+        .textContent =
+        running.length;
 
 
-    /* ===============================
-       عرض المشاريع
-    ================================ */
-
-    function renderProjects(list) {
-
-
-        const grid =
-            document.getElementById(
-                "projectsGrid"
-            );
+    document
+        .getElementById(
+            "projectTasksCount"
+        )
+        .textContent =
+        totalTasks;
 
 
-        const count =
-            document.getElementById(
-                "projectsCount"
-            );
+    document
+        .getElementById(
+            "averageProgress"
+        )
+        .textContent =
+        average + "%";
 
-
-        grid.innerHTML = "";
-
-
-        count.textContent =
-            list.length + " مشاريع";
-
-
-        if (list.length === 0) {
-
-            grid.innerHTML = `
-
-                <div class="empty-state">
-
-                    لا توجد مشاريع مسندة لك حالياً
-
-                </div>
-
-            `;
-
-            return;
-
-        }
+}
 
 
 
-        list.forEach(function(project) {
+/* ===============================
+   عرض المشاريع
+================================ */
+
+function renderProjects(
+    list
+) {
+
+
+    projectsGrid.innerHTML =
+        "";
+
+
+    projectsCount.textContent =
+        list.length
+        +
+        " مشاريع";
+
+
+    if (
+        list.length === 0
+    ) {
+
+        projectsGrid.innerHTML = `
+
+            <div class="empty-state">
+                لا توجد مشاريع مرتبطة بمهامك حالياً
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    list.forEach(
+        function(project) {
+
+
+            const status =
+                getProjectStatusText(
+                    project.status
+                );
 
 
             const card =
@@ -506,49 +1101,60 @@
 
             card.innerHTML = `
 
-
                 <div class="project-card-top">
-
 
                     <div>
 
                         <span class="project-label">
-
                             مشروع
-
                         </span>
-
 
                         <h3>
 
-                            ${project.name}
+                            ${
+                                escapeHtml(
+                                    project.project_name
+                                    ||
+                                    "مشروع بدون اسم"
+                                )
+                            }
 
                         </h3>
 
                     </div>
 
 
-
                     <span class="
                         project-status
-                        ${getStatusClass(project.status)}
+                        ${
+                            getStatusClass(
+                                status
+                            )
+                        }
                     ">
 
-                        ${project.status}
+                        ${
+                            escapeHtml(
+                                status
+                            )
+                        }
 
                     </span>
-
 
                 </div>
 
 
-
                 <p class="project-description">
 
-                    ${project.description}
+                    ${
+                        escapeHtml(
+                            project.description
+                            ||
+                            "لا يوجد وصف للمشروع"
+                        )
+                    }
 
                 </p>
-
 
 
                 <div class="project-info">
@@ -561,24 +1167,69 @@
                         </span>
 
                         <strong>
+                            ${
+                                escapeHtml(
+                                    status
+                                )
+                            }
+                        </strong>
 
-                            ${project.status}
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <span>
+                            مهامي في المشروع
+                        </span>
+
+                        <strong>
+                            ${project.tasksCount}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <span>
+                            تاريخ البداية
+                        </span>
+
+                        <strong>
+
+                            ${
+                                project.start_date
+                                ?
+                                escapeHtml(
+                                    project.start_date
+                                )
+                                :
+                                "غير محدد"
+                            }
 
                         </strong>
 
                     </div>
 
 
-
                     <div class="info-item">
 
                         <span>
-                            عدد المهام
+                            تاريخ الانتهاء
                         </span>
 
                         <strong>
 
-                            ${project.tasksCount || 0}
+                            ${
+                                project.end_date
+                                ?
+                                escapeHtml(
+                                    project.end_date
+                                )
+                                :
+                                "غير محدد"
+                            }
 
                         </strong>
 
@@ -588,20 +1239,17 @@
                 </div>
 
 
-
                 <div class="progress-section">
 
 
                     <div class="progress-heading">
 
                         <span>
-                            نسبة الإنجاز
+                            نسبة إنجاز مهامي
                         </span>
 
                         <strong>
-
-                            ${project.progress || 0}%
-
+                            ${project.progress}%
                         </strong>
 
                     </div>
@@ -611,16 +1259,15 @@
 
                         <div
                             class="progress-fill"
-                            style="width:
-                            ${project.progress || 0}%"
-                        >
-                        </div>
+                            style="
+                                width:
+                                ${project.progress}%;
+                            "
+                        ></div>
 
                     </div>
 
-
                 </div>
-
 
 
                 <div class="project-footer">
@@ -628,8 +1275,10 @@
 
                     <span class="tasks-label">
 
-                        المهام المرتبطة:
-                        ${project.tasksCount || 0}
+                        مكتملة:
+                        ${project.completedTasksCount}
+                        من
+                        ${project.tasksCount}
 
                     </span>
 
@@ -637,333 +1286,735 @@
                     <button
                         type="button"
                         class="details-btn"
-                        onclick="viewProject(${project.id})"
+                        data-id="${project.id}"
                     >
-
                         عرض التفاصيل
-
                     </button>
 
-
                 </div>
-
 
             `;
 
 
-            grid.appendChild(
+            projectsGrid.appendChild(
                 card
             );
 
-
-        });
-
-    }
-
-
-
-    /* ===============================
-       لون حالة المشروع
-    ================================ */
-
-    function getStatusClass(status) {
-
-
-        if (
-            status === "قيد التنفيذ"
-        ) {
-
-            return "running";
-
         }
+    );
 
+}
 
-        if (
-            status === "مكتمل"
-        ) {
 
-            return "completed";
 
-        }
+/* ===============================
+   البحث والتصفية
+================================ */
 
+function filterProjects() {
 
-        if (
-            status === "متوقف"
-        ) {
 
-            return "stopped";
+    const search =
+        searchInput
+            .value
+            .trim()
+            .toLowerCase();
 
-        }
 
+    const selectedStatus =
+        statusFilter.value;
 
-        return "planned";
 
-    }
+    const filtered =
+        projects.filter(
+            function(project) {
 
 
-
-    /* ===============================
-       تفاصيل المشروع
-    ================================ */
-
-    function viewProject(id) {
-
-
-        const project =
-            projects.find(
-                item =>
-                    item.id === id
-            );
-
-
-        if (!project) {
-
-            return;
-
-        }
-
-
-        document
-            .getElementById(
-                "projectDetails"
-            )
-            .innerHTML = `
-
-
-                <div class="detail-item">
-
-                    <span>
-                        اسم المشروع
-                    </span>
-
-                    <strong>
-
-                        ${project.name}
-
-                    </strong>
-
-                </div>
-
-
-
-                <div class="detail-item">
-
-                    <span>
-                        حالة المشروع
-                    </span>
-
-                    <strong>
-
-                        ${project.status}
-
-                    </strong>
-
-                </div>
-
-
-
-                <div class="detail-item">
-
-                    <span>
-                        عدد المهام المرتبطة
-                    </span>
-
-                    <strong>
-
-                        ${project.tasksCount || 0}
-
-                    </strong>
-
-                </div>
-
-
-
-                <div class="detail-item">
-
-                    <span>
-                        نسبة الإنجاز
-                    </span>
-
-                    <strong>
-
-                        ${project.progress || 0}%
-
-                    </strong>
-
-                </div>
-
-
-
-                <div class="
-                    detail-item
-                    full-detail
-                ">
-
-                    <span>
-                        وصف المشروع
-                    </span>
-
-                    <strong>
-
-                        ${project.description}
-
-                    </strong>
-
-                </div>
-
-
-
-                <div class="
-                    detail-item
-                    full-detail
-                ">
-
-                    <span>
-                        المهام المرتبطة
-                    </span>
-
-                    <strong>
-
-                        ${
-                            project.tasks
-                            ||
-                            "لا توجد تفاصيل مهام حالياً"
-                        }
-
-                    </strong>
-
-                </div>
-
-
-            `;
-
-
-        document
-            .getElementById(
-                "detailsModal"
-            )
-            .classList
-            .add("show");
-
-
-    }
-
-
-
-    function closeDetailsModal() {
-
-        document
-            .getElementById(
-                "detailsModal"
-            )
-            .classList
-            .remove("show");
-
-    }
-
-
-
-    /* ===============================
-       البحث والتصفية
-    ================================ */
-
-    function filterProjects() {
-
-
-        const search =
-            document
-                .getElementById(
-                    "searchInput"
-                )
-                .value
-                .toLowerCase();
-
-
-        const status =
-            document
-                .getElementById(
-                    "statusFilter"
-                )
-                .value;
-
-
-        const filtered =
-            projects.filter(
-                function(project) {
-
-
-                    const matchSearch =
-
-                        project.name
-                            .toLowerCase()
-                            .includes(search);
-
-
-
-                    const matchStatus =
-
-                        !status
-
+                const projectName =
+                    String(
+                        project.project_name
                         ||
+                        ""
+                    )
+                    .toLowerCase();
 
+
+                const projectDescription =
+                    String(
+                        project.description
+                        ||
+                        ""
+                    )
+                    .toLowerCase();
+
+
+                const projectStatus =
+                    getProjectStatusText(
                         project.status
-                            === status;
-
-
-
-                    return (
-
-                        matchSearch
-                        &&
-                        matchStatus
-
                     );
 
+
+                const matchSearch =
+
+                    projectName.includes(
+                        search
+                    )
+
+                    ||
+
+                    projectDescription.includes(
+                        search
+                    );
+
+
+                const matchStatus =
+
+                    !selectedStatus
+
+                    ||
+
+                    projectStatus
+                    ===
+                    selectedStatus;
+
+
+                return (
+                    matchSearch
+                    &&
+                    matchStatus
+                );
+
+            }
+        );
+
+
+    renderProjects(
+        filtered
+    );
+
+}
+
+
+
+/* ===============================
+   تفاصيل المشروع
+================================ */
+
+function viewProject(
+    id
+) {
+
+
+    const project =
+        projects.find(
+            item =>
+                Number(
+                    item.id
+                )
+                ===
+                Number(
+                    id
+                )
+        );
+
+
+    if (!project) {
+
+        return;
+    }
+
+
+    const status =
+        getProjectStatusText(
+            project.status
+        );
+
+
+    let tasksHtml =
+        "";
+
+
+    if (
+        project.employeeTasks.length === 0
+    ) {
+
+        tasksHtml = `
+
+            <div class="project-task-empty">
+                لا توجد مهام مرتبطة بك
+            </div>
+
+        `;
+
+    }
+
+    else {
+
+
+        project.employeeTasks
+            .forEach(
+                function(task) {
+
+
+                    tasksHtml += `
+
+                        <div class="project-task-row">
+
+                            <div>
+
+                                <strong>
+
+                                    ${
+                                        escapeHtml(
+                                            task.task_name
+                                            ||
+                                            "مهمة بدون اسم"
+                                        )
+                                    }
+
+                                </strong>
+
+                                <span>
+
+                                    ${
+                                        task.due_date
+                                        ?
+                                        escapeHtml(
+                                            task.due_date
+                                        )
+                                        :
+                                        "بدون تاريخ تسليم"
+                                    }
+
+                                </span>
+
+                            </div>
+
+
+                            <span class="task-status-mini">
+
+                                ${
+                                    escapeHtml(
+                                        getTaskStatusText(
+                                            task.status
+                                        )
+                                    )
+                                }
+
+                            </span>
+
+                        </div>
+
+                    `;
 
                 }
             );
 
+    }
+
+
+    document
+        .getElementById(
+            "projectDetails"
+        )
+        .innerHTML = `
+
+
+            <div class="detail-item">
+
+                <span>
+                    اسم المشروع
+                </span>
+
+                <strong>
+
+                    ${
+                        escapeHtml(
+                            project.project_name
+                        )
+                    }
+
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    حالة المشروع
+                </span>
+
+                <strong>
+
+                    ${
+                        escapeHtml(
+                            status
+                        )
+                    }
+
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    تاريخ البداية
+                </span>
+
+                <strong>
+
+                    ${
+                        project.start_date
+                        ?
+                        escapeHtml(
+                            project.start_date
+                        )
+                        :
+                        "غير محدد"
+                    }
+
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    تاريخ الانتهاء
+                </span>
+
+                <strong>
+
+                    ${
+                        project.end_date
+                        ?
+                        escapeHtml(
+                            project.end_date
+                        )
+                        :
+                        "غير محدد"
+                    }
+
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    عدد مهامي
+                </span>
+
+                <strong>
+                    ${project.tasksCount}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    المهام المكتملة
+                </span>
+
+                <strong>
+                    ${project.completedTasksCount}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    نسبة إنجاز مهامي
+                </span>
+
+                <strong>
+                    ${project.progress}%
+                </strong>
+
+            </div>
+
+
+            <div class="
+                detail-item
+                full-detail
+            ">
+
+                <span>
+                    وصف المشروع
+                </span>
+
+                <strong>
+
+                    ${
+                        escapeHtml(
+                            project.description
+                            ||
+                            "لا يوجد وصف للمشروع"
+                        )
+                    }
+
+                </strong>
+
+            </div>
+
+
+            <div class="
+                detail-item
+                full-detail
+            ">
+
+                <span>
+                    مهامي داخل المشروع
+                </span>
+
+                <div class="project-tasks-list">
+
+                    ${tasksHtml}
+
+                </div>
+
+            </div>
+
+        `;
+
+
+    detailsModal
+        .classList
+        .add(
+            "show"
+        );
+
+}
+
+
+
+/* ===============================
+   إغلاق التفاصيل
+================================ */
+
+function closeDetailsModal() {
+
+
+    detailsModal
+        .classList
+        .remove(
+            "show"
+        );
+
+}
+
+
+
+/* ===============================
+   حماية النص
+================================ */
+
+function escapeHtml(
+    value
+) {
+
+
+    return String(
+        value ?? ""
+    )
+
+    .replaceAll(
+        "&",
+        "&amp;"
+    )
+
+    .replaceAll(
+        "<",
+        "&lt;"
+    )
+
+    .replaceAll(
+        ">",
+        "&gt;"
+    )
+
+    .replaceAll(
+        '"',
+        "&quot;"
+    )
+
+    .replaceAll(
+        "'",
+        "&#039;"
+    );
+
+}
+
+
+
+/* ===============================
+   السايد بار
+================================ */
+
+function openSidebar() {
+
+
+    sidebar.classList.add(
+        "show"
+    );
+
+
+    sidebarOverlay.classList.add(
+        "show"
+    );
+
+
+    document.body.classList.add(
+        "menu-open"
+    );
+
+}
+
+
+
+function closeSidebar() {
+
+
+    sidebar.classList.remove(
+        "show"
+    );
+
+
+    sidebarOverlay.classList.remove(
+        "show"
+    );
+
+
+    document.body.classList.remove(
+        "menu-open"
+    );
+
+}
+
+
+
+/* ===============================
+   تنظيف جلسة الموظف
+================================ */
+
+function clearEmployeeSession() {
+
+
+    localStorage.removeItem(
+        "miyarRole"
+    );
+
+
+    localStorage.removeItem(
+        "miyarEmail"
+    );
+
+
+    localStorage.removeItem(
+        "miyarEmployeeId"
+    );
+
+
+    localStorage.removeItem(
+        "miyarEmployeeName"
+    );
+
+}
+
+
+
+/* ===============================
+   تسجيل الخروج
+================================ */
+
+function logout() {
+
+
+    clearEmployeeSession();
+
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+
+/* ===============================
+   الأحداث
+================================ */
+
+mobileMenuBtn
+    .addEventListener(
+        "click",
+        openSidebar
+    );
+
+
+sidebarOverlay
+    .addEventListener(
+        "click",
+        closeSidebar
+    );
+
+
+document
+    .querySelectorAll(
+        ".nav-link"
+    )
+    .forEach(
+        function(link) {
+
+            link.addEventListener(
+                "click",
+                closeSidebar
+            );
+
+        }
+    );
+
+
+searchInput
+    .addEventListener(
+        "input",
+        filterProjects
+    );
+
+
+statusFilter
+    .addEventListener(
+        "change",
+        filterProjects
+    );
+
+
+document
+    .getElementById(
+        "logoutBtn"
+    )
+    .addEventListener(
+        "click",
+        logout
+    );
+
+
+document
+    .getElementById(
+        "closeDetailsBtn"
+    )
+    .addEventListener(
+        "click",
+        closeDetailsModal
+    );
+
+
+document
+    .getElementById(
+        "detailsModalOverlay"
+    )
+    .addEventListener(
+        "click",
+        closeDetailsModal
+    );
+
+
+projectsGrid
+    .addEventListener(
+        "click",
+        function(event) {
+
+
+            const button =
+                event.target.closest(
+                    ".details-btn"
+                );
+
+
+            if (!button) {
+
+                return;
+            }
+
+
+            viewProject(
+                Number(
+                    button.dataset.id
+                )
+            );
+
+        }
+    );
+
+
+
+/* ===============================
+   تشغيل الصفحة
+================================ */
+
+async function startPage() {
+
+
+    const allowed =
+        protectEmployeePage();
+
+
+    if (!allowed) {
+
+        return;
+    }
+
+
+    try {
+
+
+        await loadEmployeeTasks();
+
+
+        await loadProjects();
+
+
+        updateSummary();
+
 
         renderProjects(
-            filtered
+            projects
         );
+
 
     }
 
+    catch(error) {
 
 
-    /* ===============================
-       تسجيل الخروج
-    ================================ */
-
-    function logout() {
-
-
-        localStorage.removeItem(
-            "miyarRole"
+        console.error(
+            "خطأ تشغيل صفحة المشاريع:",
+            error
         );
 
 
-        localStorage.removeItem(
-            "miyarEmail"
-        );
+        projectsGrid.innerHTML = `
 
+            <div class="empty-state">
+                حدث خطأ أثناء تحميل المشاريع
+            </div>
 
-        localStorage.removeItem(
-            "miyarName"
-        );
-
-
-        window.location.href =
-            "login.html";
+        `;
 
     }
 
+}
 
 
-    renderProjects(
-        projects
-    );
+startPage();
 
 
 </script>
