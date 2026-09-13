@@ -30,9 +30,9 @@
 <div class="dashboard-page">
 
 
-    <!-- =====================================
+    <!-- ======================================
          هيدر الجوال
-    ====================================== -->
+    ======================================= -->
 
     <header class="mobile-header">
 
@@ -69,6 +69,8 @@
 
 
 
+    <!-- خلفية القائمة في الجوال -->
+
     <div
         class="sidebar-overlay"
         id="sidebarOverlay"
@@ -76,9 +78,9 @@
 
 
 
-    <!-- =====================================
-         السايد بار
-    ====================================== -->
+    <!-- ======================================
+         القائمة الجانبية
+    ======================================= -->
 
     <aside
         class="sidebar"
@@ -181,9 +183,9 @@
 
 
 
-    <!-- =====================================
-         المحتوى
-    ====================================== -->
+    <!-- ======================================
+         المحتوى الرئيسي
+    ======================================= -->
 
     <main class="main-content">
 
@@ -196,9 +198,11 @@
                 لوحة المسؤول
             </span>
 
+
             <h1>
                 لوحة التحكم
             </h1>
+
 
             <p>
                 عرض ملخص عام لأهم بيانات النظام
@@ -208,9 +212,9 @@
 
 
 
-        <!-- =====================================
+        <!-- ======================================
              ملخص النظام
-        ====================================== -->
+        ======================================= -->
 
         <section class="summary-section">
 
@@ -370,9 +374,9 @@
 
 
 
-        <!-- =====================================
+        <!-- ======================================
              آخر النشاطات
-        ====================================== -->
+        ======================================= -->
 
         <section class="activity-section">
 
@@ -394,18 +398,22 @@
                                 آخر الترشيحات
                             </h3>
 
-                            <p>
-                                أحدث نتائج المطابقة والترشيح
-                            </p>
+                            <button
+                                type="button"
+                                class="activity-link"
+                                onclick="goToPage('matching.html')"
+                            >
+                                عرض المطابقة والترشيح
+                            </button>
 
                         </div>
 
 
                         <button
-                            type="button"
                             class="arrow-btn"
+                            type="button"
                             onclick="goToPage('matching.html')"
-                            aria-label="عرض الترشيحات"
+                            aria-label="عرض المطابقة والترشيح"
                         >
                             ←
                         </button>
@@ -445,16 +453,20 @@
                                 آخر القرارات
                             </h3>
 
-                            <p>
-                                أحدث قرارات إسناد المهام
-                            </p>
+                            <button
+                                type="button"
+                                class="activity-link"
+                                onclick="goToPage('decisions.html')"
+                            >
+                                عرض القرارات
+                            </button>
 
                         </div>
 
 
                         <button
-                            type="button"
                             class="arrow-btn"
+                            type="button"
                             onclick="goToPage('decisions.html')"
                             aria-label="عرض القرارات"
                         >
@@ -497,9 +509,9 @@
 <script>
 
 
-/* =========================================
-   Supabase
-========================================= */
+/* ==========================================
+   إعداد Supabase
+========================================== */
 
 const SUPABASE_URL =
     "https://avooyglxacytrfhvotsl.supabase.co";
@@ -517,18 +529,18 @@ const supabaseClient =
 
 
 
-/* =========================================
-   المسؤول
-========================================= */
+/* ==========================================
+   بريد المسؤول
+========================================== */
 
 const ADMIN_EMAIL =
     "admin@gmail.com";
 
 
 
-/* =========================================
+/* ==========================================
    البيانات
-========================================= */
+========================================== */
 
 let employeesList = [];
 
@@ -540,9 +552,9 @@ let decisionsList = [];
 
 
 
-/* =========================================
-   حماية الصفحة
-========================================= */
+/* ==========================================
+   حماية صفحة المسؤول
+========================================== */
 
 async function protectAdminPage() {
 
@@ -602,11 +614,6 @@ async function protectAdminPage() {
         clearSession();
 
 
-        alert(
-            "غير مصرح لك بالدخول إلى لوحة المسؤول"
-        );
-
-
         window.location.href =
             "login.html";
 
@@ -635,9 +642,9 @@ async function protectAdminPage() {
 
 
 
-/* =========================================
-   الموظفون
-========================================= */
+/* ==========================================
+   تحميل الموظفين
+========================================== */
 
 async function loadEmployees() {
 
@@ -672,7 +679,9 @@ async function loadEmployees() {
         );
 
 
-        employeesList = [];
+        employeesList =
+            [];
+
 
         return;
 
@@ -720,7 +729,6 @@ async function loadEmployees() {
                 status === "available"
             ) {
 
-
                 available++;
 
             }
@@ -732,7 +740,6 @@ async function loadEmployees() {
                 ||
                 status === "busy"
             ) {
-
 
                 busy++;
 
@@ -764,9 +771,9 @@ async function loadEmployees() {
 
 
 
-/* =========================================
-   المشاريع
-========================================= */
+/* ==========================================
+   تحميل المشاريع
+========================================== */
 
 async function loadProjects() {
 
@@ -800,7 +807,9 @@ async function loadProjects() {
         );
 
 
-        projectsList = [];
+        projectsList =
+            [];
+
 
         return;
 
@@ -824,9 +833,9 @@ async function loadProjects() {
 
 
 
-/* =========================================
-   المهام
-========================================= */
+/* ==========================================
+   تحميل المهام
+========================================== */
 
 async function loadTasks() {
 
@@ -862,7 +871,9 @@ async function loadTasks() {
         );
 
 
-        tasksList = [];
+        tasksList =
+            [];
+
 
         return;
 
@@ -884,7 +895,7 @@ async function loadTasks() {
 
 
 
-    const unassigned =
+    const unassignedTasks =
         tasksList.filter(
             function(task) {
 
@@ -914,15 +925,15 @@ async function loadTasks() {
             "unassignedCount"
         )
         .textContent =
-        unassigned.length;
+        unassignedTasks.length;
 
 }
 
 
 
-/* =========================================
-   تحميل القرارات
-========================================= */
+/* ==========================================
+   تحميل القرارات والترشيحات
+========================================== */
 
 async function loadDecisions() {
 
@@ -949,7 +960,7 @@ async function loadDecisions() {
                 ascending: false
             }
         )
-        .limit(6);
+        .limit(10);
 
 
 
@@ -962,10 +973,12 @@ async function loadDecisions() {
         );
 
 
-        decisionsList = [];
+        decisionsList =
+            [];
 
 
         renderMatchingActivity();
+
 
         renderDecisionsActivity();
 
@@ -983,25 +996,26 @@ async function loadDecisions() {
 
     renderMatchingActivity();
 
+
     renderDecisionsActivity();
 
 }
 
 
 
-/* =========================================
-   اسم الموظف
-========================================= */
+/* ==========================================
+   الحصول على اسم الموظف
+========================================== */
 
 function getEmployeeName(
-    id
+    employeeId
 ) {
 
 
     if (
-        id === null
+        employeeId === null
         ||
-        id === undefined
+        employeeId === undefined
     ) {
 
 
@@ -1017,9 +1031,11 @@ function getEmployeeName(
 
 
                 return (
+
                     Number(item.id)
                     ===
-                    Number(id)
+                    Number(employeeId)
+
                 );
 
 
@@ -1028,33 +1044,42 @@ function getEmployeeName(
 
 
 
-    return employee
-        ?
+    if (!employee) {
+
+
+        return "موظف غير معروف";
+
+    }
+
+
+
+    return (
         employee.name
-        :
-        "موظف غير معروف";
+        ||
+        "موظف غير معروف"
+    );
 
 }
 
 
 
-/* =========================================
-   اسم المهمة
-========================================= */
+/* ==========================================
+   الحصول على اسم المهمة
+========================================== */
 
 function getTaskName(
-    id
+    taskId
 ) {
 
 
     if (
-        id === null
+        taskId === null
         ||
-        id === undefined
+        taskId === undefined
     ) {
 
 
-        return "غير محددة";
+        return "مهمة غير محددة";
 
     }
 
@@ -1066,9 +1091,11 @@ function getTaskName(
 
 
                 return (
+
                     Number(item.id)
                     ===
-                    Number(id)
+                    Number(taskId)
+
                 );
 
 
@@ -1077,19 +1104,28 @@ function getTaskName(
 
 
 
-    return task
-        ?
+    if (!task) {
+
+
+        return "مهمة غير معروفة";
+
+    }
+
+
+
+    return (
         task.task_name
-        :
-        "مهمة غير معروفة";
+        ||
+        "مهمة بدون اسم"
+    );
 
 }
 
 
 
-/* =========================================
-   عرض آخر الترشيحات
-========================================= */
+/* ==========================================
+   آخر الترشيحات
+========================================== */
 
 function renderMatchingActivity() {
 
@@ -1100,36 +1136,32 @@ function renderMatchingActivity() {
         );
 
 
+
     container.innerHTML =
         "";
 
 
 
     const nominations =
-        decisionsList
-
-            .filter(
-                function(decision) {
+        decisionsList.filter(
+            function(decision) {
 
 
-                    return (
+                return (
 
-                        decision.system_candidate_id !== null
+                    decision.system_candidate_id
+                    !== null
 
-                        &&
+                    &&
 
-                        decision.system_candidate_id !== undefined
+                    decision.system_candidate_id
+                    !== undefined
 
-                    );
+                );
 
 
-                }
-            )
-
-            .slice(
-                0,
-                3
-            );
+            }
+        );
 
 
 
@@ -1155,109 +1187,97 @@ function renderMatchingActivity() {
 
 
 
-    nominations.forEach(
-        function(decision) {
+    nominations
+        .slice(
+            0,
+            3
+        )
+        .forEach(
+            function(decision) {
 
 
-            const candidate =
-                getEmployeeName(
-                    decision.system_candidate_id
-                );
+                const employeeName =
+                    getEmployeeName(
+                        decision.system_candidate_id
+                    );
 
 
-            const task =
-                getTaskName(
-                    decision.task_id
-                );
+                const taskName =
+                    getTaskName(
+                        decision.task_id
+                    );
 
 
-            const matchRate =
-                Math.round(
-                    Number(
-                        decision.match_rate || 0
-                    )
-                );
-
-
-
-            const item =
-                document.createElement(
-                    "div"
-                );
-
-
-            item.className =
-                "activity-item nomination-item";
+                const matchRate =
+                    decision.match_rate
+                    ??
+                    0;
 
 
 
-            item.innerHTML = `
-
-                <div class="activity-content">
-
-
-                    <span class="activity-type">
-                        ترشيح
-                    </span>
+                const row =
+                    document.createElement(
+                        "div"
+                    );
 
 
-                    <strong class="activity-name">
+                row.className =
+                    "dashboard-activity-row";
+
+
+
+                row.innerHTML = `
+
+                    <div class="activity-main">
+
+                        <strong>
+                            ${
+                                escapeHtml(
+                                    employeeName
+                                )
+                            }
+                        </strong>
+
+                        <span>
+                            ${
+                                escapeHtml(
+                                    taskName
+                                )
+                            }
+                        </span>
+
+                    </div>
+
+
+                    <div class="activity-value">
 
                         ${
                             escapeHtml(
-                                candidate
+                                matchRate
                             )
-                        }
+                        }%
 
-                    </strong>
+                    </div>
 
-
-                    <span class="activity-description">
-
-                        ${
-                            escapeHtml(
-                                task
-                            )
-                        }
-
-                    </span>
-
-
-                </div>
+                `;
 
 
 
-                <div class="match-box">
-
-                    <span>
-                        نسبة المطابقة
-                    </span>
-
-                    <strong>
-                        ${matchRate}%
-                    </strong>
-
-                </div>
-
-            `;
+                container.appendChild(
+                    row
+                );
 
 
-
-            container.appendChild(
-                item
-            );
-
-
-        }
-    );
+            }
+        );
 
 }
 
 
 
-/* =========================================
-   عرض آخر القرارات
-========================================= */
+/* ==========================================
+   آخر القرارات
+========================================== */
 
 function renderDecisionsActivity() {
 
@@ -1268,21 +1288,14 @@ function renderDecisionsActivity() {
         );
 
 
+
     container.innerHTML =
         "";
 
 
 
-    const recentDecisions =
-        decisionsList.slice(
-            0,
-            3
-        );
-
-
-
     if (
-        recentDecisions.length === 0
+        decisionsList.length === 0
     ) {
 
 
@@ -1303,87 +1316,74 @@ function renderDecisionsActivity() {
 
 
 
-    recentDecisions.forEach(
-        function(decision) {
+    decisionsList
+        .slice(
+            0,
+            3
+        )
+        .forEach(
+            function(decision) {
 
 
-            const task =
-                getTaskName(
-                    decision.task_id
-                );
+                const taskName =
+                    getTaskName(
+                        decision.task_id
+                    );
 
 
-            const employee =
-                getEmployeeName(
-                    decision.selected_employee_id
-                );
+                const employeeName =
+                    getEmployeeName(
+                        decision.selected_employee_id
+                    );
 
 
-            const date =
-                formatDate(
-                    decision.decision_date
-                    ||
-                    decision.created_at
-                );
-
-
-
-            const item =
-                document.createElement(
-                    "div"
-                );
-
-
-            item.className =
-                "activity-item decision-item";
+                const date =
+                    formatDate(
+                        decision.decision_date
+                        ||
+                        decision.created_at
+                    );
 
 
 
-            item.innerHTML = `
-
-                <div class="activity-content">
-
-
-                    <span class="activity-type">
-                        قرار إسناد
-                    </span>
+                const row =
+                    document.createElement(
+                        "div"
+                    );
 
 
-                    <strong class="activity-name">
-
-                        ${
-                            escapeHtml(
-                                task
-                            )
-                        }
-
-                    </strong>
-
-
-                    <span class="activity-description">
-
-                        تم الإسناد إلى
-
-                        ${
-                            escapeHtml(
-                                employee
-                            )
-                        }
-
-                    </span>
-
-
-                </div>
+                row.className =
+                    "dashboard-activity-row";
 
 
 
-                <div class="date-box">
+                row.innerHTML = `
 
-                    <span>
-                        تاريخ القرار
-                    </span>
+                    <div class="activity-main">
 
-                    <strong>
+                        <strong>
+                            ${
+                                escapeHtml(
+                                    taskName
+                                )
+                            }
+                        </strong>
+
+                        <span>
+
+                            تم الإسناد إلى
+                            ${
+                                escapeHtml(
+                                    employeeName
+                                )
+                            }
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="decision-date">
 
                         ${
                             escapeHtml(
@@ -1391,29 +1391,27 @@ function renderDecisionsActivity() {
                             )
                         }
 
-                    </strong>
+                    </div>
 
-                </div>
-
-            `;
+                `;
 
 
 
-            container.appendChild(
-                item
-            );
+                container.appendChild(
+                    row
+                );
 
 
-        }
-    );
+            }
+        );
 
 }
 
 
 
-/* =========================================
+/* ==========================================
    تنسيق التاريخ
-========================================= */
+========================================== */
 
 function formatDate(
     value
@@ -1469,9 +1467,9 @@ function formatDate(
 
 
 
-/* =========================================
+/* ==========================================
    تنظيف النص
-========================================= */
+========================================== */
 
 function normalizeText(
     value
@@ -1490,9 +1488,9 @@ function normalizeText(
 
 
 
-/* =========================================
-   حماية النصوص
-========================================= */
+/* ==========================================
+   حماية النص من HTML
+========================================== */
 
 function escapeHtml(
     value
@@ -1532,9 +1530,9 @@ function escapeHtml(
 
 
 
-/* =========================================
-   تحميل بيانات لوحة التحكم
-========================================= */
+/* ==========================================
+   تحميل كل بيانات الصفحة
+========================================== */
 
 async function loadDashboardData() {
 
@@ -1567,6 +1565,7 @@ async function loadDashboardData() {
             "خطأ تحميل لوحة التحكم:",
             error
         );
+
 
 
         document
@@ -1606,9 +1605,9 @@ async function loadDashboardData() {
 
 
 
-/* =========================================
-   السايد بار
-========================================= */
+/* ==========================================
+   القائمة الجانبية
+========================================== */
 
 const mobileMenuBtn =
     document.getElementById(
@@ -1706,9 +1705,9 @@ document
 
 
 
-/* =========================================
-   التنقل
-========================================= */
+/* ==========================================
+   الانتقال
+========================================== */
 
 function goToPage(
     page
@@ -1722,9 +1721,9 @@ function goToPage(
 
 
 
-/* =========================================
+/* ==========================================
    تنظيف الجلسة
-========================================= */
+========================================== */
 
 function clearSession() {
 
@@ -1752,9 +1751,9 @@ function clearSession() {
 
 
 
-/* =========================================
+/* ==========================================
    تسجيل الخروج
-========================================= */
+========================================== */
 
 async function logout() {
 
@@ -1798,10 +1797,6 @@ async function logout() {
 
 
 
-/* =========================================
-   زر الخروج
-========================================= */
-
 document
     .getElementById(
         "logoutBtn"
@@ -1813,9 +1808,9 @@ document
 
 
 
-/* =========================================
+/* ==========================================
    تشغيل الصفحة
-========================================= */
+========================================== */
 
 async function startDashboard() {
 
