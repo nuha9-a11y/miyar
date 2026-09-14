@@ -69,8 +69,6 @@
 
 
 
-    <!-- خلفية القائمة في الجوال -->
-
     <div
         class="sidebar-overlay"
         id="sidebarOverlay"
@@ -158,6 +156,16 @@
             </a>
 
 
+            <!-- الجديد -->
+
+            <a
+                href="leaves.html"
+                class="nav-link"
+            >
+                طلبات الإجازات
+            </a>
+
+
             <a
                 href="reports.html"
                 class="nav-link"
@@ -184,13 +192,11 @@
 
 
     <!-- ======================================
-         المحتوى الرئيسي
+         المحتوى
     ======================================= -->
 
     <main class="main-content">
 
-
-        <!-- رأس الصفحة -->
 
         <header class="topbar">
 
@@ -205,7 +211,7 @@
 
 
             <p>
-                عرض ملخص عام لأهم بيانات النظام
+                متابعة الموظفين والمشاريع والمهام والترشيحات وطلبات الإجازة من مكان واحد
             </p>
 
         </header>
@@ -226,7 +232,7 @@
                 </h2>
 
                 <p>
-                    نظرة عامة على الموظفين والمشاريع والمهام
+                    نظرة مباشرة على حالة العمل والموظفين
                 </p>
 
             </div>
@@ -235,6 +241,8 @@
 
             <div class="summary-grid">
 
+
+                <!-- الموظفون -->
 
                 <button
                     class="summary-card"
@@ -258,6 +266,8 @@
 
 
 
+                <!-- المشاريع -->
+
                 <button
                     class="summary-card"
                     type="button"
@@ -279,6 +289,8 @@
                 </button>
 
 
+
+                <!-- المهام -->
 
                 <button
                     class="summary-card"
@@ -302,6 +314,8 @@
 
 
 
+                <!-- المتاحون -->
+
                 <button
                     class="summary-card"
                     type="button"
@@ -317,12 +331,14 @@
                     </strong>
 
                     <small>
-                        عرض الموظفين
+                        بدون مهام نشطة أو إجازة حالية
                     </small>
 
                 </button>
 
 
+
+                <!-- المشغولون -->
 
                 <button
                     class="summary-card"
@@ -339,12 +355,38 @@
                     </strong>
 
                     <small>
-                        عرض الموظفين
+                        لديهم مهام حالية
                     </small>
 
                 </button>
 
 
+
+                <!-- في إجازة -->
+
+                <button
+                    class="summary-card"
+                    type="button"
+                    onclick="goToPage('leaves.html')"
+                >
+
+                    <span>
+                        موظفون في إجازة
+                    </span>
+
+                    <strong id="onLeaveCount">
+                        0
+                    </strong>
+
+                    <small>
+                        إجازات معتمدة حالياً
+                    </small>
+
+                </button>
+
+
+
+                <!-- المهام غير المسندة -->
 
                 <button
                     class="summary-card"
@@ -361,7 +403,31 @@
                     </strong>
 
                     <small>
-                        عرض المهام
+                        تحتاج إلى ترشيح موظف
+                    </small>
+
+                </button>
+
+
+
+                <!-- طلبات الإجازة -->
+
+                <button
+                    class="summary-card"
+                    type="button"
+                    onclick="goToPage('leaves.html')"
+                >
+
+                    <span>
+                        طلبات إجازة معلقة
+                    </span>
+
+                    <strong id="pendingLeavesCount">
+                        0
+                    </strong>
+
+                    <small>
+                        تحتاج اعتماد أو رفض
                     </small>
 
                 </button>
@@ -375,7 +441,7 @@
 
 
         <!-- ======================================
-             آخر النشاطات
+             النشاطات
         ======================================= -->
 
         <section class="activity-section">
@@ -384,7 +450,9 @@
             <div class="activity-grid">
 
 
-                <!-- آخر الترشيحات -->
+                <!-- =================================
+                     آخر الترشيحات
+                ================================== -->
 
                 <article class="activity-card">
 
@@ -439,7 +507,9 @@
 
 
 
-                <!-- آخر القرارات -->
+                <!-- =================================
+                     آخر القرارات
+                ================================== -->
 
                 <article class="activity-card">
 
@@ -493,6 +563,63 @@
                 </article>
 
 
+
+                <!-- =================================
+                     طلبات الإجازة
+                ================================== -->
+
+                <article class="activity-card">
+
+
+                    <div class="activity-header">
+
+
+                        <div>
+
+                            <h3>
+                                طلبات الإجازة
+                            </h3>
+
+                            <button
+                                type="button"
+                                class="activity-link"
+                                onclick="goToPage('leaves.html')"
+                            >
+                                إدارة طلبات الإجازة
+                            </button>
+
+                        </div>
+
+
+                        <button
+                            class="arrow-btn"
+                            type="button"
+                            onclick="goToPage('leaves.html')"
+                            aria-label="عرض طلبات الإجازة"
+                        >
+                            ←
+                        </button>
+
+
+                    </div>
+
+
+
+                    <div
+                        class="activity-list"
+                        id="leavesActivity"
+                    >
+
+                        <div class="empty-state">
+                            جارٍ تحميل طلبات الإجازة...
+                        </div>
+
+                    </div>
+
+
+                </article>
+
+
             </div>
 
 
@@ -521,20 +648,15 @@ const SUPABASE_KEY =
     "sb_publishable_NVlWEnA_w4KbSse_-70zdA_J9ut0Kyo";
 
 
+const ADMIN_EMAIL =
+    "admin@gmail.com";
+
+
 const supabaseClient =
     window.supabase.createClient(
         SUPABASE_URL,
         SUPABASE_KEY
     );
-
-
-
-/* ==========================================
-   بريد المسؤول
-========================================== */
-
-const ADMIN_EMAIL =
-    "admin@gmail.com";
 
 
 
@@ -550,6 +672,8 @@ let tasksList = [];
 
 let decisionsList = [];
 
+let leavesList = [];
+
 
 
 /* ==========================================
@@ -558,85 +682,89 @@ let decisionsList = [];
 
 async function protectAdminPage() {
 
+    try {
 
-    const {
-        data,
-        error
-    } =
-    await supabaseClient
-        .auth
-        .getSession();
-
-
-
-    if (
-        error
-        ||
-        !data.session
-    ) {
-
-
-        clearSession();
-
-
-        window.location.href =
-            "login.html";
-
-
-        return false;
-
-    }
-
-
-
-    const userEmail =
-        String(
-            data.session.user.email
-            ||
-            ""
-        )
-        .trim()
-        .toLowerCase();
-
-
-
-    if (
-        userEmail !==
-        ADMIN_EMAIL.toLowerCase()
-    ) {
-
-
+        const {
+            data,
+            error
+        } =
         await supabaseClient
             .auth
-            .signOut();
+            .getSession();
 
 
-        clearSession();
+        if (
+            error
+            ||
+            !data.session
+        ) {
+
+            clearSession();
+
+            window.location.href =
+                "login.html";
+
+            return false;
+        }
 
 
-        window.location.href =
-            "login.html";
+        const userEmail =
+            String(
+                data.session.user.email
+                ||
+                ""
+            )
+            .trim()
+            .toLowerCase();
 
 
-        return false;
+        if (
+            userEmail !==
+            ADMIN_EMAIL.toLowerCase()
+        ) {
+
+            await supabaseClient
+                .auth
+                .signOut();
+
+
+            clearSession();
+
+
+            window.location.href =
+                "login.html";
+
+
+            return false;
+        }
+
+
+        localStorage.setItem(
+            "miyarRole",
+            "admin"
+        );
+
+
+        localStorage.setItem(
+            "miyarEmail",
+            userEmail
+        );
+
+
+        return true;
 
     }
 
+    catch(error) {
+
+        console.error(
+            "خطأ حماية الصفحة:",
+            error
+        );
 
 
-    localStorage.setItem(
-        "miyarRole",
-        "admin"
-    );
-
-
-    localStorage.setItem(
-        "miyarEmail",
-        userEmail
-    );
-
-
-    return true;
+        return false;
+    }
 
 }
 
@@ -648,7 +776,6 @@ async function protectAdminPage() {
 
 async function loadEmployees() {
 
-
     const {
         data,
         error
@@ -659,7 +786,10 @@ async function loadEmployees() {
             id,
             name,
             email,
-            status
+            employee_number,
+            status,
+            availability,
+            workload
         `)
         .order(
             "id",
@@ -669,9 +799,7 @@ async function loadEmployees() {
         );
 
 
-
     if (error) {
-
 
         console.error(
             "خطأ تحميل الموظفين:",
@@ -679,19 +807,19 @@ async function loadEmployees() {
         );
 
 
-        employeesList =
-            [];
+        employeesList = [];
 
 
         return;
-
     }
 
 
-
     employeesList =
-        data || [];
-
+        Array.isArray(data)
+        ?
+        data
+        :
+        [];
 
 
     document
@@ -700,72 +828,6 @@ async function loadEmployees() {
         )
         .textContent =
         employeesList.length;
-
-
-
-    let available =
-        0;
-
-
-    let busy =
-        0;
-
-
-
-    employeesList.forEach(
-        function(employee) {
-
-
-            const status =
-                normalizeText(
-                    employee.status
-                );
-
-
-
-            if (
-                status === "متاح"
-                ||
-                status === "available"
-            ) {
-
-                available++;
-
-            }
-
-
-
-            if (
-                status === "مشغول"
-                ||
-                status === "busy"
-            ) {
-
-                busy++;
-
-            }
-
-
-        }
-    );
-
-
-
-    document
-        .getElementById(
-            "availableCount"
-        )
-        .textContent =
-        available;
-
-
-
-    document
-        .getElementById(
-            "busyCount"
-        )
-        .textContent =
-        busy;
 
 }
 
@@ -777,7 +839,6 @@ async function loadEmployees() {
 
 async function loadProjects() {
 
-
     const {
         data,
         error
@@ -787,7 +848,9 @@ async function loadProjects() {
         .select(`
             id,
             project_name,
-            status
+            status,
+            start_date,
+            end_date
         `)
         .order(
             "id",
@@ -797,9 +860,7 @@ async function loadProjects() {
         );
 
 
-
     if (error) {
-
 
         console.error(
             "خطأ تحميل المشاريع:",
@@ -807,19 +868,19 @@ async function loadProjects() {
         );
 
 
-        projectsList =
-            [];
+        projectsList = [];
 
 
         return;
-
     }
 
 
-
     projectsList =
-        data || [];
-
+        Array.isArray(data)
+        ?
+        data
+        :
+        [];
 
 
     document
@@ -839,7 +900,6 @@ async function loadProjects() {
 
 async function loadTasks() {
 
-
     const {
         data,
         error
@@ -851,7 +911,8 @@ async function loadTasks() {
             project_id,
             task_name,
             status,
-            assigned_employee_id
+            assigned_employee_id,
+            due_date
         `)
         .order(
             "id",
@@ -861,9 +922,7 @@ async function loadTasks() {
         );
 
 
-
     if (error) {
-
 
         console.error(
             "خطأ تحميل المهام:",
@@ -871,19 +930,19 @@ async function loadTasks() {
         );
 
 
-        tasksList =
-            [];
+        tasksList = [];
 
 
         return;
-
     }
 
 
-
     tasksList =
-        data || [];
-
+        Array.isArray(data)
+        ?
+        data
+        :
+        [];
 
 
     document
@@ -897,27 +956,27 @@ async function loadTasks() {
 
     const unassignedTasks =
         tasksList.filter(
-            function(task) {
-
+            task => {
 
                 return (
 
-                    task.assigned_employee_id === null
+                    task.assigned_employee_id
+                    === null
 
                     ||
 
-                    task.assigned_employee_id === undefined
+                    task.assigned_employee_id
+                    === undefined
 
                     ||
 
-                    task.assigned_employee_id === ""
+                    task.assigned_employee_id
+                    === ""
 
                 );
 
-
             }
         );
-
 
 
     document
@@ -932,11 +991,75 @@ async function loadTasks() {
 
 
 /* ==========================================
-   تحميل القرارات والترشيحات
+   تحميل الإجازات
+========================================== */
+
+async function loadLeaves() {
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("employee_leaves")
+        .select(`
+            id,
+            employee_id,
+            leave_type,
+            start_date,
+            end_date,
+            status,
+            notes,
+            created_at
+        `)
+        .order(
+            "created_at",
+            {
+                ascending: false
+            }
+        );
+
+
+    if (error) {
+
+        console.error(
+            "خطأ تحميل الإجازات:",
+            error
+        );
+
+
+        leavesList = [];
+
+
+        renderLeavesActivity();
+
+
+        return;
+    }
+
+
+    leavesList =
+        Array.isArray(data)
+        ?
+        data
+        :
+        [];
+
+
+    updateLeaveCounters();
+
+
+    renderLeavesActivity();
+
+}
+
+
+
+/* ==========================================
+   تحميل القرارات
 ========================================== */
 
 async function loadDecisions() {
-
 
     const {
         data,
@@ -963,9 +1086,7 @@ async function loadDecisions() {
         .limit(10);
 
 
-
     if (error) {
-
 
         console.error(
             "خطأ تحميل القرارات:",
@@ -973,29 +1094,27 @@ async function loadDecisions() {
         );
 
 
-        decisionsList =
-            [];
+        decisionsList = [];
 
 
         renderMatchingActivity();
-
 
         renderDecisionsActivity();
 
 
         return;
-
     }
 
 
-
     decisionsList =
-        data || [];
-
+        Array.isArray(data)
+        ?
+        data
+        :
+        [];
 
 
     renderMatchingActivity();
-
 
     renderDecisionsActivity();
 
@@ -1004,13 +1123,370 @@ async function loadDecisions() {
 
 
 /* ==========================================
-   الحصول على اسم الموظف
+   المهمة مكتملة؟
+========================================== */
+
+function isCompletedTask(task) {
+
+    const status =
+        normalizeText(
+            task.status
+        );
+
+
+    return (
+
+        status === "done"
+
+        ||
+
+        status === "completed"
+
+        ||
+
+        status === "مكتملة"
+
+        ||
+
+        status === "مكتمل"
+
+        ||
+
+        status === "منجزة"
+
+        ||
+
+        status === "منجز"
+
+        ||
+
+        status.includes(
+            "منته"
+        )
+
+    );
+
+}
+
+
+
+/* ==========================================
+   الإجازة معتمدة؟
+========================================== */
+
+function isApprovedLeave(leave) {
+
+    const status =
+        normalizeText(
+            leave.status
+        );
+
+
+    return (
+
+        status === "approved"
+
+        ||
+
+        status === "معتمد"
+
+        ||
+
+        status === "معتمدة"
+
+        ||
+
+        status === "مقبول"
+
+        ||
+
+        status === "مقبولة"
+
+    );
+
+}
+
+
+
+/* ==========================================
+   طلب الإجازة قيد المراجعة؟
+========================================== */
+
+function isPendingLeave(leave) {
+
+    const status =
+        normalizeText(
+            leave.status
+        );
+
+
+    return (
+
+        status === "pending"
+
+        ||
+
+        status === "قيد المراجعة"
+
+        ||
+
+        status === "قيد المراجعه"
+
+    );
+
+}
+
+
+
+/* ==========================================
+   هل الموظف في إجازة اليوم؟
+========================================== */
+
+function employeeOnLeaveToday(
+    employeeId
+) {
+
+    const today =
+        new Date();
+
+
+    today.setHours(
+        0,
+        0,
+        0,
+        0
+    );
+
+
+    return leavesList.some(
+        leave => {
+
+            if (
+                Number(
+                    leave.employee_id
+                )
+                !==
+                Number(
+                    employeeId
+                )
+            ) {
+
+                return false;
+            }
+
+
+            if (
+                !isApprovedLeave(
+                    leave
+                )
+            ) {
+
+                return false;
+            }
+
+
+            if (
+                !leave.start_date
+                ||
+                !leave.end_date
+            ) {
+
+                return false;
+            }
+
+
+            const start =
+                new Date(
+                    leave.start_date
+                    +
+                    "T00:00:00"
+                );
+
+
+            const end =
+                new Date(
+                    leave.end_date
+                    +
+                    "T23:59:59"
+                );
+
+
+            return (
+
+                today >= start
+
+                &&
+
+                today <= end
+
+            );
+
+        }
+    );
+
+}
+
+
+
+/* ==========================================
+   مهام الموظف النشطة
+========================================== */
+
+function getEmployeeActiveTasks(
+    employeeId
+) {
+
+    return tasksList.filter(
+        task => {
+
+            return (
+
+                Number(
+                    task.assigned_employee_id
+                )
+                ===
+                Number(
+                    employeeId
+                )
+
+                &&
+
+                !isCompletedTask(
+                    task
+                )
+
+            );
+
+        }
+    );
+
+}
+
+
+
+/* ==========================================
+   حساب حالة الموظفين
+========================================== */
+
+function updateEmployeeCounters() {
+
+    let available =
+        0;
+
+
+    let busy =
+        0;
+
+
+    let onLeave =
+        0;
+
+
+
+    employeesList.forEach(
+        employee => {
+
+            const isOnLeave =
+                employeeOnLeaveToday(
+                    employee.id
+                );
+
+
+            if (isOnLeave) {
+
+                onLeave++;
+
+                return;
+            }
+
+
+            const activeTasks =
+                getEmployeeActiveTasks(
+                    employee.id
+                );
+
+
+            if (
+                activeTasks.length === 0
+            ) {
+
+                available++;
+
+            }
+
+            else {
+
+                busy++;
+
+            }
+
+        }
+    );
+
+
+
+    document
+        .getElementById(
+            "availableCount"
+        )
+        .textContent =
+        available;
+
+
+
+    document
+        .getElementById(
+            "busyCount"
+        )
+        .textContent =
+        busy;
+
+
+
+    document
+        .getElementById(
+            "onLeaveCount"
+        )
+        .textContent =
+        onLeave;
+
+}
+
+
+
+/* ==========================================
+   عدادات الإجازات
+========================================== */
+
+function updateLeaveCounters() {
+
+    const pending =
+        leavesList.filter(
+            leave =>
+                isPendingLeave(
+                    leave
+                )
+        );
+
+
+    document
+        .getElementById(
+            "pendingLeavesCount"
+        )
+        .textContent =
+        pending.length;
+
+}
+
+
+
+/* ==========================================
+   اسم الموظف
 ========================================== */
 
 function getEmployeeName(
     employeeId
 ) {
-
 
     if (
         employeeId === null
@@ -1018,43 +1494,28 @@ function getEmployeeName(
         employeeId === undefined
     ) {
 
-
         return "غير محدد";
-
     }
-
 
 
     const employee =
         employeesList.find(
-            function(item) {
+            item =>
 
+                Number(
+                    item.id
+                )
 
-                return (
+                ===
 
-                    Number(item.id)
-                    ===
-                    Number(employeeId)
-
-                );
-
-
-            }
+                Number(
+                    employeeId
+                )
         );
 
 
-
-    if (!employee) {
-
-
-        return "موظف غير معروف";
-
-    }
-
-
-
     return (
-        employee.name
+        employee?.name
         ||
         "موظف غير معروف"
     );
@@ -1064,13 +1525,12 @@ function getEmployeeName(
 
 
 /* ==========================================
-   الحصول على اسم المهمة
+   اسم المهمة
 ========================================== */
 
 function getTaskName(
     taskId
 ) {
-
 
     if (
         taskId === null
@@ -1078,45 +1538,30 @@ function getTaskName(
         taskId === undefined
     ) {
 
-
         return "مهمة غير محددة";
-
     }
-
 
 
     const task =
         tasksList.find(
-            function(item) {
+            item =>
 
+                Number(
+                    item.id
+                )
 
-                return (
+                ===
 
-                    Number(item.id)
-                    ===
-                    Number(taskId)
-
-                );
-
-
-            }
+                Number(
+                    taskId
+                )
         );
 
 
-
-    if (!task) {
-
-
-        return "مهمة غير معروفة";
-
-    }
-
-
-
     return (
-        task.task_name
+        task?.task_name
         ||
-        "مهمة بدون اسم"
+        "مهمة غير معروفة"
     );
 
 }
@@ -1129,23 +1574,19 @@ function getTaskName(
 
 function renderMatchingActivity() {
 
-
     const container =
         document.getElementById(
             "matchingActivity"
         );
 
 
-
     container.innerHTML =
         "";
 
 
-
     const nominations =
         decisionsList.filter(
-            function(decision) {
-
+            decision => {
 
                 return (
 
@@ -1159,16 +1600,13 @@ function renderMatchingActivity() {
 
                 );
 
-
             }
         );
-
 
 
     if (
         nominations.length === 0
     ) {
-
 
         container.innerHTML = `
 
@@ -1182,9 +1620,7 @@ function renderMatchingActivity() {
 
 
         return;
-
     }
-
 
 
     nominations
@@ -1193,8 +1629,7 @@ function renderMatchingActivity() {
             3
         )
         .forEach(
-            function(decision) {
-
+            decision => {
 
                 const employeeName =
                     getEmployeeName(
@@ -1209,10 +1644,11 @@ function renderMatchingActivity() {
 
 
                 const matchRate =
-                    decision.match_rate
-                    ??
-                    0;
-
+                    Number(
+                        decision.match_rate
+                        ??
+                        0
+                    );
 
 
                 const row =
@@ -1222,51 +1658,64 @@ function renderMatchingActivity() {
 
 
                 row.className =
-                    "dashboard-activity-row";
-
+                    "activity-item";
 
 
                 row.innerHTML = `
 
-                    <div class="activity-main">
+                    <div class="activity-content">
 
-                        <strong>
+                        <span class="activity-type">
+                            ترشيح
+                        </span>
+
+                        <strong class="activity-name">
+
                             ${
                                 escapeHtml(
                                     employeeName
                                 )
                             }
+
                         </strong>
 
-                        <span>
+                        <span class="activity-description">
+
                             ${
                                 escapeHtml(
                                     taskName
                                 )
                             }
+
                         </span>
 
                     </div>
 
 
-                    <div class="activity-value">
+                    <div class="match-box">
 
-                        ${
-                            escapeHtml(
-                                matchRate
-                            )
-                        }%
+                        <span>
+                            المطابقة
+                        </span>
+
+                        <strong>
+
+                            ${
+                                escapeHtml(
+                                    matchRate
+                                )
+                            }%
+
+                        </strong>
 
                     </div>
 
                 `;
 
 
-
                 container.appendChild(
                     row
                 );
-
 
             }
         );
@@ -1281,23 +1730,19 @@ function renderMatchingActivity() {
 
 function renderDecisionsActivity() {
 
-
     const container =
         document.getElementById(
             "decisionsActivity"
         );
 
 
-
     container.innerHTML =
         "";
-
 
 
     if (
         decisionsList.length === 0
     ) {
-
 
         container.innerHTML = `
 
@@ -1311,9 +1756,7 @@ function renderDecisionsActivity() {
 
 
         return;
-
     }
-
 
 
     decisionsList
@@ -1322,8 +1765,7 @@ function renderDecisionsActivity() {
             3
         )
         .forEach(
-            function(decision) {
-
+            decision => {
 
                 const taskName =
                     getTaskName(
@@ -1345,7 +1787,6 @@ function renderDecisionsActivity() {
                     );
 
 
-
                 const row =
                     document.createElement(
                         "div"
@@ -1353,23 +1794,28 @@ function renderDecisionsActivity() {
 
 
                 row.className =
-                    "dashboard-activity-row";
-
+                    "activity-item";
 
 
                 row.innerHTML = `
 
-                    <div class="activity-main">
+                    <div class="activity-content">
 
-                        <strong>
+                        <span class="activity-type">
+                            قرار إسناد
+                        </span>
+
+                        <strong class="activity-name">
+
                             ${
                                 escapeHtml(
                                     taskName
                                 )
                             }
+
                         </strong>
 
-                        <span>
+                        <span class="activity-description">
 
                             تم الإسناد إلى
                             ${
@@ -1383,24 +1829,202 @@ function renderDecisionsActivity() {
                     </div>
 
 
-                    <div class="decision-date">
+                    <div class="date-box">
 
-                        ${
-                            escapeHtml(
-                                date
-                            )
-                        }
+                        <span>
+                            التاريخ
+                        </span>
+
+                        <strong>
+
+                            ${
+                                escapeHtml(
+                                    date
+                                )
+                            }
+
+                        </strong>
 
                     </div>
 
                 `;
 
 
-
                 container.appendChild(
                     row
                 );
 
+            }
+        );
+
+}
+
+
+
+/* ==========================================
+   آخر طلبات الإجازة
+========================================== */
+
+function renderLeavesActivity() {
+
+    const container =
+        document.getElementById(
+            "leavesActivity"
+        );
+
+
+    container.innerHTML =
+        "";
+
+
+    if (
+        leavesList.length === 0
+    ) {
+
+        container.innerHTML = `
+
+            <div class="empty-state">
+
+                لا توجد طلبات إجازة حالياً
+
+            </div>
+
+        `;
+
+
+        return;
+    }
+
+
+    leavesList
+        .slice(
+            0,
+            3
+        )
+        .forEach(
+            leave => {
+
+                const employeeName =
+                    getEmployeeName(
+                        leave.employee_id
+                    );
+
+
+                const leaveType =
+                    leave.leave_type
+                    ||
+                    "إجازة";
+
+
+                const status =
+                    leave.status
+                    ||
+                    "قيد المراجعة";
+
+
+                const startDate =
+                    formatDate(
+                        leave.start_date
+                    );
+
+
+                const endDate =
+                    formatDate(
+                        leave.end_date
+                    );
+
+
+                const row =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                row.className =
+                    "activity-item";
+
+
+                row.innerHTML = `
+
+                    <div class="activity-content">
+
+                        <span class="activity-type">
+
+                            ${
+                                escapeHtml(
+                                    status
+                                )
+                            }
+
+                        </span>
+
+
+                        <strong class="activity-name">
+
+                            ${
+                                escapeHtml(
+                                    employeeName
+                                )
+                            }
+
+                        </strong>
+
+
+                        <span class="activity-description">
+
+                            ${
+                                escapeHtml(
+                                    leaveType
+                                )
+                            }
+
+                            من
+
+                            ${
+                                escapeHtml(
+                                    startDate
+                                )
+                            }
+
+                            إلى
+
+                            ${
+                                escapeHtml(
+                                    endDate
+                                )
+                            }
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="date-box">
+
+                        <span>
+                            الطلب
+                        </span>
+
+                        <strong>
+
+                            ${
+                                escapeHtml(
+                                    formatDate(
+                                        leave.created_at
+                                    )
+                                )
+                            }
+
+                        </strong>
+
+                    </div>
+
+                `;
+
+
+                container.appendChild(
+                    row
+                );
 
             }
         );
@@ -1417,14 +2041,10 @@ function formatDate(
     value
 ) {
 
-
     if (!value) {
 
-
         return "—";
-
     }
-
 
 
     const date =
@@ -1433,18 +2053,14 @@ function formatDate(
         );
 
 
-
     if (
         Number.isNaN(
             date.getTime()
         )
     ) {
 
-
         return value;
-
     }
-
 
 
     return date.toLocaleDateString(
@@ -1475,7 +2091,6 @@ function normalizeText(
     value
 ) {
 
-
     return String(
         value
         ||
@@ -1489,16 +2104,17 @@ function normalizeText(
 
 
 /* ==========================================
-   حماية النص من HTML
+   حماية HTML
 ========================================== */
 
 function escapeHtml(
     value
 ) {
 
-
     return String(
-        value ?? ""
+        value
+        ??
+        ""
     )
 
     .replaceAll(
@@ -1531,14 +2147,16 @@ function escapeHtml(
 
 
 /* ==========================================
-   تحميل كل بيانات الصفحة
+   تحميل كل البيانات
 ========================================== */
 
 async function loadDashboardData() {
 
-
     try {
 
+        /*
+            أولاً نحمل البيانات الأساسية
+        */
 
         await Promise.all([
 
@@ -1546,26 +2164,37 @@ async function loadDashboardData() {
 
             loadProjects(),
 
-            loadTasks()
+            loadTasks(),
+
+            loadLeaves()
 
         ]);
 
 
+        /*
+            بعدها نحسب حالة الموظفين
+            لأن الحساب يحتاج المهام والإجازات.
+        */
+
+        updateEmployeeCounters();
+
+        updateLeaveCounters();
+
+
+        /*
+            ثم القرارات والترشيحات.
+        */
 
         await loadDecisions();
 
-
     }
 
-
     catch(error) {
-
 
         console.error(
             "خطأ تحميل لوحة التحكم:",
             error
         );
-
 
 
         document
@@ -1575,13 +2204,10 @@ async function loadDashboardData() {
             .innerHTML = `
 
                 <div class="empty-state">
-
                     تعذر تحميل الترشيحات
-
                 </div>
 
             `;
-
 
 
         document
@@ -1591,13 +2217,23 @@ async function loadDashboardData() {
             .innerHTML = `
 
                 <div class="empty-state">
-
                     تعذر تحميل القرارات
-
                 </div>
 
             `;
 
+
+        document
+            .getElementById(
+                "leavesActivity"
+            )
+            .innerHTML = `
+
+                <div class="empty-state">
+                    تعذر تحميل طلبات الإجازة
+                </div>
+
+            `;
 
     }
 
@@ -1630,20 +2266,25 @@ const sidebarOverlay =
 
 function openSidebar() {
 
-
-    sidebar.classList.add(
-        "show"
-    );
-
-
-    sidebarOverlay.classList.add(
-        "show"
-    );
+    sidebar
+        .classList
+        .add(
+            "show"
+        );
 
 
-    document.body.classList.add(
-        "menu-open"
-    );
+    sidebarOverlay
+        .classList
+        .add(
+            "show"
+        );
+
+
+    document.body
+        .classList
+        .add(
+            "menu-open"
+        );
 
 }
 
@@ -1651,20 +2292,25 @@ function openSidebar() {
 
 function closeSidebar() {
 
-
-    sidebar.classList.remove(
-        "show"
-    );
-
-
-    sidebarOverlay.classList.remove(
-        "show"
-    );
+    sidebar
+        .classList
+        .remove(
+            "show"
+        );
 
 
-    document.body.classList.remove(
-        "menu-open"
-    );
+    sidebarOverlay
+        .classList
+        .remove(
+            "show"
+        );
+
+
+    document.body
+        .classList
+        .remove(
+            "menu-open"
+        );
 
 }
 
@@ -1677,7 +2323,6 @@ mobileMenuBtn
     );
 
 
-
 sidebarOverlay
     .addEventListener(
         "click",
@@ -1685,20 +2330,17 @@ sidebarOverlay
     );
 
 
-
 document
     .querySelectorAll(
         ".nav-link"
     )
     .forEach(
-        function(link) {
-
+        link => {
 
             link.addEventListener(
                 "click",
                 closeSidebar
             );
-
 
         }
     );
@@ -1713,7 +2355,6 @@ function goToPage(
     page
 ) {
 
-
     window.location.href =
         page;
 
@@ -1722,11 +2363,10 @@ function goToPage(
 
 
 /* ==========================================
-   تنظيف الجلسة
+   تنظيف بيانات الجلسة
 ========================================== */
 
 function clearSession() {
-
 
     localStorage.removeItem(
         "miyarRole"
@@ -1757,39 +2397,30 @@ function clearSession() {
 
 async function logout() {
 
-
     try {
-
 
         await supabaseClient
             .auth
             .signOut();
 
-
     }
 
-
     catch(error) {
-
 
         console.error(
             "خطأ تسجيل الخروج:",
             error
         );
 
-
     }
 
-
     finally {
-
 
         clearSession();
 
 
         window.location.href =
             "login.html";
-
 
     }
 
@@ -1809,24 +2440,19 @@ document
 
 
 /* ==========================================
-   تشغيل الصفحة
+   تشغيل لوحة التحكم
 ========================================== */
 
 async function startDashboard() {
-
 
     const allowed =
         await protectAdminPage();
 
 
-
     if (!allowed) {
 
-
         return;
-
     }
-
 
 
     await loadDashboardData();
