@@ -6,27 +6,15 @@
 
 :root {
     --sidebar-width: 245px;
-
     --navy: #31586c;
     --navy-dark: #173f55;
     --navy-light: #456f82;
-
     --gold: #c69a5a;
     --gold-dark: #b98742;
-
-    --cream: #f7f3eb;
-    --white: #ffffff;
-
+    --cream: #f5f2ec;
     --text: #173f55;
     --muted: #74858e;
-
-    --border: rgba(185, 135, 66, 0.40);
 }
-
-
-/* =========================================================
-   الصفحة
-========================================================= */
 
 html {
     min-height: 100%;
@@ -35,19 +23,10 @@ html {
 
 body {
     min-height: 100vh;
-
     direction: rtl;
-
-    font-family:
-        "Segoe UI",
-        Tahoma,
-        Arial,
-        sans-serif;
-
+    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
     color: var(--text);
-
     background: #f5f2ec;
-
     overflow-x: hidden;
 }
 
@@ -62,86 +41,78 @@ button {
     cursor: pointer;
 }
 
+body.modal-open,
+body.menu-open {
+    overflow: hidden;
+}
+
 .employees-page {
     width: 100%;
     min-height: 100vh;
-
-    background: transparent;
 }
 
 
 /* =========================================================
-   السايدبار
+   SIDEBAR
 ========================================================= */
 
 .sidebar {
-    position: fixed;
+    width: 245px;
+    height: 100vh;
 
+    position: fixed;
     top: 0;
     right: 0;
 
-    width: var(--sidebar-width);
-    height: 100vh;
+    z-index: 1000;
 
     padding: 25px 17px;
 
     display: flex;
     flex-direction: column;
 
-    background:
-        linear-gradient(
-            180deg,
-            #31586c 0%,
-            #3c667a 50%,
-            #456f82 100%
-        );
-
-    box-shadow:
-        -8px 0 30px
-        rgba(20, 45, 60, 0.13);
-
-    z-index: 1000;
-
     overflow-y: auto;
+
+    background: linear-gradient(
+        180deg,
+        #31586c 0%,
+        #3c667a 52%,
+        #456f82 100%
+    );
+
+    box-shadow: -8px 0 28px rgba(38, 59, 70, 0.10);
 }
 
 
 /* =========================================================
-   اللوقو
+   LOGO
 ========================================================= */
 
 .sidebar-logo {
     display: flex;
     justify-content: center;
     align-items: center;
-
-    margin-bottom: 25px;
+    margin-bottom: 24px;
 }
 
 .sidebar-logo img {
-    width: 95px;
+    width: 92px;
     height: auto;
-
     object-fit: contain;
 
     transition:
-        transform 0.35s ease,
-        filter 0.35s ease;
+        transform 0.25s ease,
+        filter 0.25s ease;
 }
 
 .sidebar-logo img:hover {
-    transform: scale(1.08);
-
-    filter:
-        drop-shadow(
-            0 7px 12px
-            rgba(0, 0, 0, 0.15)
-        );
+    transform: scale(1.02);
+    filter: drop-shadow(0 4px 7px rgba(0, 0, 0, 0.08));
 }
 
 
 /* =========================================================
-   روابط السايدبار
+   SIDEBAR NAV
 ========================================================= */
 
 .sidebar-nav {
@@ -149,254 +120,190 @@ button {
 
     display: flex;
     flex-direction: column;
-
     gap: 6px;
 }
 
 .nav-link {
-    position: relative;
-
-    min-height: 43px;
-
-    padding: 0 15px;
+    width: 100%;
+    min-height: 42px;
 
     display: flex;
     align-items: center;
 
+    padding: 0 14px;
+
     border-radius: 10px;
+    border-right: 3px solid transparent;
 
-    border-right:
-        3px solid transparent;
-
-    color:
-        rgba(255, 255, 255, 0.80);
+    color: rgba(255, 255, 255, 0.78);
 
     text-decoration: none;
 
     font-size: 12px;
-    font-weight: 400;
 
     transition:
-        transform 0.30s ease,
-        background-color 0.30s ease,
-        color 0.30s ease,
-        border-color 0.30s ease,
-        box-shadow 0.30s ease;
+        transform 0.22s ease,
+        background-color 0.22s ease,
+        color 0.22s ease,
+        border-color 0.22s ease;
 }
 
 .nav-link:hover {
-    transform: translateX(-8px);
+    transform: translateX(-2px);
+
+    background: rgba(255, 255, 255, 0.09);
 
     color: #ffffff;
-
-    background:
-        rgba(255, 255, 255, 0.15);
-
-    box-shadow:
-        0 6px 15px
-        rgba(0, 0, 0, 0.07);
 }
 
 .nav-link.active {
+    background: rgba(255, 255, 255, 0.14);
+
     color: #ffffff;
 
     font-weight: 600;
 
-    background:
-        rgba(255, 255, 255, 0.14);
-
-    border-right-color: var(--gold);
+    border-right-color: #c69a5a;
 }
 
 .nav-link.active:hover {
-    transform: translateX(-6px);
+    transform: translateX(-2px);
 
-    background:
-        rgba(255, 255, 255, 0.20);
+    background: rgba(255, 255, 255, 0.17);
+}
 
-    border-right-color: #e1b66d;
+
+/* منع أي خط قديم معكوس */
+
+.nav-link.active::before,
+.nav-link.active::after {
+    display: none !important;
+    content: none !important;
 }
 
 
 /* =========================================================
-   تسجيل الخروج
+   LOGOUT
 ========================================================= */
 
 .logout-btn {
     width: 100%;
     min-height: 44px;
 
-    margin-top: 20px;
+    margin-top: 18px;
 
-    border:
-        1px solid
-        rgba(255, 255, 255, 0.28);
-
+    border: 1px solid rgba(255, 255, 255, 0.24);
     border-radius: 10px;
 
-    background:
-        rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.05);
 
     color: #ffffff;
 
     font-size: 11px;
-    font-weight: 600;
 
     transition:
-        transform 0.30s ease,
-        background-color 0.30s ease,
-        box-shadow 0.30s ease,
-        border-color 0.30s ease;
+        transform 0.22s ease,
+        background-color 0.22s ease,
+        border-color 0.22s ease;
 }
 
 .logout-btn:hover {
-    transform:
-        translateY(-4px)
-        scale(1.02);
+    transform: translateY(-2px);
 
     background: #b98a4d;
 
-    border-color: #d1aa69;
-
-    box-shadow:
-        0 10px 20px
-        rgba(20, 44, 56, 0.18);
+    border-color: #b98a4d;
 }
 
 
 /* =========================================================
-   المحتوى الرئيسي
+   MAIN
 ========================================================= */
 
 .main-content {
-    width:
-        calc(
-            100% - var(--sidebar-width)
-        );
-
+    width: calc(100% - 245px);
     min-height: 100vh;
 
-    margin-right:
-        var(--sidebar-width);
+    margin-right: 245px;
 
-    padding:
-        38px
-        42px
-        60px;
+    padding: 35px 40px 50px;
 
     background-color: #f5f2ec;
 
     background-image:
+        linear-gradient(
+            rgba(249, 247, 242, 0.14),
+            rgba(249, 247, 242, 0.14)
+        ),
         url("assets/background.jpeg");
 
     background-size: cover;
-
-    background-position: center top;
-
+    background-position: center center;
     background-repeat: no-repeat;
-
     background-attachment: fixed;
 }
 
 
 /* =========================================================
-   أعلى الصفحة
+   TOPBAR
 ========================================================= */
 
 .topbar {
-    min-height: 170px;
-
-    padding: 5px 0 25px;
-
-    display: flex;
-    flex-direction: column;
-
-    align-items: flex-start;
-
-    justify-content: flex-start;
-
-    background: transparent;
-
-    border: none;
-
-    box-shadow: none;
+    margin-bottom: 27px;
 }
-
-
-/* =========================================================
-   الشارة
-========================================================= */
 
 .page-badge {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
 
-    width: fit-content;
+    min-height: 28px;
 
-    padding: 7px 16px;
+    padding: 0 14px;
 
-    margin-bottom: 14px;
+    margin-bottom: 9px;
 
-    border:
-        1px solid
-        rgba(198, 154, 90, 0.65);
+    border-radius: 30px;
 
-    border-radius: 999px;
+    border: 1px solid rgba(185, 138, 77, 0.30);
 
-    background:
-        rgba(250, 247, 239, 0.78);
+    background: rgba(196, 154, 92, 0.13);
 
-    color: #936c37;
+    color: #9f733c;
 
-    font-size: 10px;
-    font-weight: 600;
+    font-size: 9px;
+    font-weight: 700;
 
     transition:
-        transform 0.30s ease,
-        background-color 0.30s ease,
-        box-shadow 0.30s ease;
+        transform 0.22s ease,
+        background-color 0.22s ease;
 }
 
 .page-badge:hover {
-    transform:
-        translateY(-4px)
-        scale(1.04);
-
-    background: #fffaf1;
-
-    box-shadow:
-        0 8px 17px
-        rgba(185, 135, 66, 0.15);
+    transform: translateY(-2px);
+    background: rgba(196, 154, 92, 0.18);
 }
 
-
-/* =========================================================
-   عنوان الصفحة
-========================================================= */
-
 .topbar h1 {
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 
-    color: #173f55;
+    color: #263f4f;
 
-    font-size: 31px;
-    font-weight: 800;
+    font-size: 27px;
+    font-weight: 700;
 }
 
 .topbar p {
-    max-width: 650px;
+    max-width: 760px;
 
-    color: #71838d;
+    color: #71828c;
 
     font-size: 11px;
-
     line-height: 1.8;
 }
 
 
 /* =========================================================
-   بطاقات الملخص
+   SUMMARY
 ========================================================= */
 
 .employees-summary {
@@ -404,120 +311,86 @@ button {
 
     display: grid;
 
-    grid-template-columns:
-        repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
 
-    gap: 16px;
+    gap: 14px;
 
-    margin-bottom: 23px;
-
-    perspective: 1000px;
+    margin-bottom: 26px;
 }
 
 .summary-item {
-    position: relative;
+    min-height: 120px;
 
-    min-height: 128px;
-
-    padding: 22px;
+    padding: 18px 19px;
 
     display: flex;
     flex-direction: column;
-
     justify-content: center;
-    align-items: flex-start;
 
-    border:
-        1px solid
-        rgba(185, 135, 66, 0.50);
+    border: 1.4px solid rgba(185, 138, 77, 0.56);
+    border-top: 3px solid #b98a4d;
 
-    border-top:
-        3px solid
-        #b98742;
+    border-radius: 15px;
 
-    border-radius: 14px;
+    background: rgba(249, 247, 242, 0.79);
 
-    background:
-        rgba(250, 248, 243, 0.88);
+    backdrop-filter: blur(7px);
 
     box-shadow:
-        0 7px 20px
-        rgba(26, 51, 64, 0.05);
-
-    cursor: pointer;
-
-    transform:
-        translateY(0)
-        scale(1);
+        0 6px 18px
+        rgba(38, 59, 70, 0.05);
 
     transition:
-        transform 0.35s ease,
-        box-shadow 0.35s ease,
-        background-color 0.35s ease,
-        border-color 0.35s ease;
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease,
+        background-color 0.25s ease;
 }
 
 
-/* الحركة الواضحة */
+/* تفاعل خفيف */
 
 .summary-item:hover {
-    transform:
-        translateY(-13px)
-        scale(1.035);
+    transform: translateY(-4px);
 
-    border-color: #c69a5a;
+    border-color: rgba(185, 138, 77, 0.78);
 
-    background:
-        rgba(255, 253, 248, 0.98);
+    background: rgba(252, 250, 246, 0.88);
 
     box-shadow:
-        0 22px 42px
-        rgba(23, 63, 85, 0.17);
-
-    z-index: 10;
+        0 10px 22px
+        rgba(38, 59, 70, 0.09);
 }
 
 .summary-item span {
-    margin-bottom: 12px;
+    margin-bottom: 9px;
 
-    color: #74858e;
+    color: #78878f;
 
     font-size: 10px;
     font-weight: 600;
-
-    transition:
-        color 0.30s ease,
-        transform 0.30s ease;
 }
 
 .summary-item strong {
-    display: inline-block;
+    color: #31586c;
 
-    color: #245369;
-
-    font-size: 29px;
-    font-weight: 800;
+    font-size: 27px;
+    font-weight: 700;
 
     transition:
-        transform 0.35s ease,
-        color 0.35s ease;
+        color 0.22s ease,
+        transform 0.22s ease;
 }
 
 .summary-item:hover strong {
-    transform: scale(1.16);
+    color: #263f4f;
 
-    color: #173f55;
-}
-
-.summary-item:hover span {
-    color: #9a713b;
-
-    transform: translateY(-2px);
+    transform: translateY(-1px);
 }
 
 
 /* =========================================================
-   Toolbar
+   TOOLBAR
 ========================================================= */
 
 .toolbar {
@@ -526,8 +399,8 @@ button {
     display: grid;
 
     grid-template-columns:
-        minmax(270px, 1.5fr)
-        minmax(300px, 1fr)
+        minmax(260px, 1.5fr)
+        minmax(280px, 1fr)
         auto;
 
     align-items: center;
@@ -536,44 +409,37 @@ button {
 
     padding: 15px;
 
-    margin-bottom: 19px;
+    margin-bottom: 18px;
 
-    border:
-        1px solid
-        rgba(194, 172, 136, 0.55);
+    border: 1px solid rgba(194, 172, 136, 0.52);
 
-    border-radius: 14px;
+    border-radius: 13px;
 
-    background:
-        rgba(250, 248, 243, 0.88);
+    background: rgba(250, 248, 243, 0.86);
 
     box-shadow:
         0 7px 20px
-        rgba(24, 49, 63, 0.04);
+        rgba(24, 49, 63, 0.035);
 
     transition:
-        transform 0.35s ease,
-        box-shadow 0.35s ease,
-        border-color 0.35s ease,
-        background-color 0.35s ease;
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
 }
 
 .toolbar:hover {
-    transform: translateY(-7px);
+    transform: translateY(-2px);
 
-    border-color: #c69a5a;
-
-    background:
-        rgba(255, 253, 248, 0.96);
+    border-color: rgba(185, 138, 77, 0.62);
 
     box-shadow:
-        0 17px 32px
-        rgba(23, 63, 85, 0.11);
+        0 9px 22px
+        rgba(30, 53, 66, 0.055);
 }
 
 
 /* =========================================================
-   البحث
+   SEARCH
 ========================================================= */
 
 .search-box {
@@ -586,57 +452,50 @@ button {
 
     padding: 0 15px;
 
-    outline: none;
-
-    border:
-        1px solid #ddd4c6;
-
+    border: 1px solid #ddd4c6;
     border-radius: 9px;
 
-    background:
-        rgba(255, 255, 255, 0.85);
+    outline: none;
+
+    background: rgba(255, 255, 255, 0.82);
 
     color: #173f55;
 
     font-size: 11px;
 
     transition:
-        transform 0.25s ease,
-        border-color 0.25s ease,
-        box-shadow 0.25s ease,
-        background-color 0.25s ease;
+        border-color 0.22s ease,
+        box-shadow 0.22s ease,
+        background-color 0.22s ease;
+}
+
+.search-box input::placeholder {
+    color: #9aa5aa;
 }
 
 .search-box input:hover {
-    transform: translateY(-2px);
-
-    border-color: #c69a5a;
-
-    background: #ffffff;
+    border-color: #c9a66b;
 }
 
 .search-box input:focus {
-    transform: translateY(-2px);
-
-    border-color: #b98742;
+    border-color: #b98a48;
 
     background: #ffffff;
 
     box-shadow:
-        0 0 0 4px
-        rgba(185, 135, 66, 0.12);
+        0 0 0 3px
+        rgba(185, 138, 72, 0.08);
 }
 
 
 /* =========================================================
-   الفلاتر
+   FILTERS
 ========================================================= */
 
 .filters {
     display: grid;
 
-    grid-template-columns:
-        repeat(2, minmax(130px, 1fr));
+    grid-template-columns: repeat(2, minmax(130px, 1fr));
 
     gap: 9px;
 }
@@ -647,103 +506,93 @@ button {
 
     padding: 0 12px;
 
-    outline: none;
-
-    border:
-        1px solid #ddd4c6;
-
+    border: 1px solid #ddd4c6;
     border-radius: 9px;
 
-    background:
-        rgba(255, 255, 255, 0.86);
+    outline: none;
+
+    background: rgba(255, 255, 255, 0.84);
 
     color: #506875;
 
     font-size: 10px;
 
     transition:
-        transform 0.25s ease,
-        border-color 0.25s ease,
-        box-shadow 0.25s ease;
+        border-color 0.22s ease,
+        box-shadow 0.22s ease;
 }
 
 .filters select:hover {
-    transform: translateY(-2px);
-
-    border-color: #c69a5a;
+    border-color: #c9a66b;
 }
 
 .filters select:focus {
-    border-color: #b98742;
+    border-color: #b98a48;
 
     box-shadow:
-        0 0 0 4px
-        rgba(185, 135, 66, 0.10);
+        0 0 0 3px
+        rgba(185, 138, 72, 0.08);
 }
 
 
 /* =========================================================
-   زر تعيين موظف
+   ADD BUTTON
 ========================================================= */
 
 .toolbar-actions {
     display: flex;
-
     justify-content: flex-end;
 }
 
 .add-btn {
-    min-width: 150px;
+    min-width: 145px;
     height: 43px;
 
-    padding: 0 18px;
+    padding: 0 17px;
 
-    border:
-        1px solid #31586c;
-
+    border: 1px solid #31586c;
     border-radius: 9px;
 
-    background:
-        linear-gradient(
-            135deg,
-            #31586c,
-            #456f82
-        );
+    background: linear-gradient(
+        135deg,
+        #31586c,
+        #456f82
+    );
 
     color: #ffffff;
 
     font-size: 10px;
     font-weight: 700;
 
+    white-space: nowrap;
+
     box-shadow:
         0 5px 13px
-        rgba(23, 63, 85, 0.13);
+        rgba(23, 63, 85, 0.12);
 
     transition:
-        transform 0.30s ease,
-        box-shadow 0.30s ease,
-        filter 0.30s ease;
+        transform 0.22s ease,
+        box-shadow 0.22s ease,
+        filter 0.22s ease;
 }
 
 .add-btn:hover {
-    transform:
-        translateY(-5px)
-        scale(1.04);
+    transform: translateY(-2px);
 
-    filter: brightness(1.08);
+    filter: brightness(1.04);
 
     box-shadow:
-        0 14px 25px
-        rgba(23, 63, 85, 0.25);
+        0 8px 16px
+        rgba(23, 63, 85, 0.17);
 }
 
 .add-btn:active {
-    transform: scale(0.97);
+    transform: translateY(0);
 }
 
 
 /* =========================================================
-   بطاقة الجدول
+   TABLE CARD
 ========================================================= */
 
 .table-card {
@@ -751,38 +600,35 @@ button {
 
     overflow: hidden;
 
-    border:
-        1px solid
-        rgba(194, 172, 136, 0.55);
+    border: 1px solid rgba(194, 172, 136, 0.52);
 
     border-radius: 14px;
 
-    background:
-        rgba(250, 248, 243, 0.92);
+    background: rgba(250, 248, 243, 0.90);
 
     box-shadow:
-        0 9px 25px
-        rgba(26, 49, 61, 0.05);
+        0 9px 26px
+        rgba(26, 49, 61, 0.045);
 
     transition:
-        transform 0.35s ease,
-        box-shadow 0.35s ease,
-        border-color 0.35s ease;
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
 }
 
 .table-card:hover {
-    transform: translateY(-7px);
+    transform: translateY(-2px);
 
-    border-color: #c69a5a;
+    border-color: rgba(185, 138, 77, 0.65);
 
     box-shadow:
-        0 20px 40px
-        rgba(23, 63, 85, 0.12);
+        0 11px 27px
+        rgba(26, 49, 61, 0.07);
 }
 
 
 /* =========================================================
-   رأس الجدول
+   TABLE HEADER
 ========================================================= */
 
 .table-header {
@@ -794,8 +640,7 @@ button {
     align-items: center;
     justify-content: space-between;
 
-    border-bottom:
-        1px solid #e4ddd1;
+    border-bottom: 1px solid #e4ddd1;
 }
 
 .table-header h2 {
@@ -815,12 +660,11 @@ button {
 
 
 /* =========================================================
-   الجدول
+   TABLE
 ========================================================= */
 
 .table-wrapper {
     width: 100%;
-
     overflow-x: auto;
 }
 
@@ -833,8 +677,7 @@ table {
 }
 
 thead {
-    background:
-        rgba(240, 235, 225, 0.85);
+    background: rgba(240, 235, 225, 0.82);
 }
 
 th {
@@ -849,12 +692,11 @@ th {
 
     white-space: nowrap;
 
-    border-bottom:
-        1px solid #ddd5c9;
+    border-bottom: 1px solid #ddd5c9;
 }
 
 td {
-    padding: 14px 12px;
+    padding: 13px 12px;
 
     color: #52636d;
 
@@ -864,44 +706,34 @@ td {
 
     border-bottom:
         1px solid
-        rgba(224, 217, 207, 0.75);
+        rgba(224, 217, 207, 0.72);
 }
 
-
-/* =========================================================
-   حركة صف الموظف
-========================================================= */
-
 tbody tr {
-    position: relative;
-
-    cursor: pointer;
-
     transition:
-        background-color 0.25s ease,
-        box-shadow 0.25s ease;
+        background-color 0.22s ease,
+        box-shadow 0.22s ease;
 }
 
 tbody tr:hover {
-    background:
-        rgba(241, 229, 209, 0.75);
+    background: rgba(244, 237, 224, 0.50);
 
     box-shadow:
-        inset -5px 0 0
-        #c69a5a;
+        inset -3px 0 0
+        rgba(185, 138, 77, 0.55);
 }
 
 tbody tr:last-child td {
-    border-bottom: none;
+    border-bottom: 0;
 }
 
 
 /* =========================================================
-   اسم الموظف
+   EMPLOYEE
 ========================================================= */
 
 .employee-name {
-    min-width: 185px;
+    min-width: 190px;
 
     display: flex;
     align-items: center;
@@ -910,8 +742,8 @@ tbody tr:last-child td {
 }
 
 .avatar {
-    width: 36px;
-    height: 36px;
+    width: 35px;
+    height: 35px;
 
     flex-shrink: 0;
 
@@ -921,7 +753,7 @@ tbody tr:last-child td {
 
     border:
         1px solid
-        rgba(185, 135, 66, 0.45);
+        rgba(185, 135, 66, 0.40);
 
     border-radius: 50%;
 
@@ -933,21 +765,17 @@ tbody tr:last-child td {
     font-weight: 800;
 
     transition:
-        transform 0.30s ease,
-        background-color 0.30s ease,
-        box-shadow 0.30s ease;
+        transform 0.22s ease,
+        background-color 0.22s ease,
+        border-color 0.22s ease;
 }
 
 tbody tr:hover .avatar {
-    transform:
-        scale(1.20)
-        rotate(4deg);
+    transform: scale(1.04);
 
-    background: #ead9bd;
+    border-color: #c69a5a;
 
-    box-shadow:
-        0 7px 15px
-        rgba(185, 135, 66, 0.23);
+    background: #eee3d0;
 }
 
 .employee-main-info {
@@ -961,14 +789,6 @@ tbody tr:hover .avatar {
     color: #244e63;
 
     font-size: 10px;
-
-    transition:
-        color 0.25s ease,
-        transform 0.25s ease;
-}
-
-tbody tr:hover .employee-main-info strong {
-    color: #173f55;
 }
 
 .employee-main-info small {
@@ -979,12 +799,12 @@ tbody tr:hover .employee-main-info strong {
 
 
 /* =========================================================
-   عدد المهام
+   COUNT
 ========================================================= */
 
 .count-badge {
-    min-width: 28px;
-    height: 28px;
+    min-width: 27px;
+    height: 27px;
 
     padding: 0 7px;
 
@@ -992,9 +812,7 @@ tbody tr:hover .employee-main-info strong {
     align-items: center;
     justify-content: center;
 
-    border:
-        1px solid #d8c8ae;
-
+    border: 1px solid #d8c8ae;
     border-radius: 8px;
 
     background: #f6f0e5;
@@ -1005,26 +823,19 @@ tbody tr:hover .employee-main-info strong {
     font-weight: 800;
 
     transition:
-        transform 0.25s ease,
-        background-color 0.25s ease,
-        box-shadow 0.25s ease;
+        transform 0.20s ease,
+        background-color 0.20s ease;
 }
 
 .count-badge:hover {
-    transform:
-        translateY(-4px)
-        scale(1.10);
+    transform: translateY(-1px);
 
-    background: #eadabd;
-
-    box-shadow:
-        0 6px 13px
-        rgba(185, 135, 66, 0.17);
+    background: #f1e5d1;
 }
 
 
 /* =========================================================
-   ضغط العمل
+   WORKLOAD
 ========================================================= */
 
 .workload-cell {
@@ -1043,7 +854,7 @@ tbody tr:hover .employee-main-info strong {
 .workload-label {
     width: fit-content;
 
-    padding: 4px 8px;
+    padding: 4px 7px;
 
     border-radius: 999px;
 
@@ -1071,11 +882,6 @@ tbody tr:hover .employee-main-info strong {
     color: #756e68;
 }
 
-
-/* =========================================================
-   التفرغ
-========================================================= */
-
 .availability-value {
     color: #3f6d5a;
 
@@ -1085,13 +891,13 @@ tbody tr:hover .employee-main-info strong {
 
 
 /* =========================================================
-   الحالة
+   STATUS
 ========================================================= */
 
 .status-badge {
-    min-width: 65px;
+    min-width: 64px;
 
-    padding: 6px 10px;
+    padding: 6px 9px;
 
     display: inline-flex;
     align-items: center;
@@ -1102,9 +908,11 @@ tbody tr:hover .employee-main-info strong {
     font-size: 8px;
     font-weight: 700;
 
+    white-space: nowrap;
+
     transition:
-        transform 0.25s ease,
-        box-shadow 0.25s ease;
+        transform 0.20s ease,
+        box-shadow 0.20s ease;
 }
 
 .status-badge.available {
@@ -1123,33 +931,32 @@ tbody tr:hover .employee-main-info strong {
 }
 
 .status-badge:hover {
-    transform:
-        translateY(-4px)
-        scale(1.06);
+    transform: translateY(-1px);
 
     box-shadow:
-        0 7px 14px
-        rgba(35, 61, 74, 0.12);
+        0 3px 7px
+        rgba(35, 61, 74, 0.07);
 }
 
 
 /* =========================================================
-   أزرار عرض وتعديل
+   ACTIONS
 ========================================================= */
 
 .actions {
     display: flex;
-
     align-items: center;
 
     gap: 6px;
+
+    white-space: nowrap;
 }
 
 .view-btn,
 .edit-btn {
-    height: 31px;
+    height: 30px;
 
-    padding: 0 11px;
+    padding: 0 10px;
 
     border-radius: 7px;
 
@@ -1157,14 +964,14 @@ tbody tr:hover .employee-main-info strong {
     font-weight: 700;
 
     transition:
-        transform 0.25s ease,
-        box-shadow 0.25s ease,
-        background-color 0.25s ease;
+        transform 0.20s ease,
+        background-color 0.20s ease,
+        border-color 0.20s ease,
+        box-shadow 0.20s ease;
 }
 
 .view-btn {
-    border:
-        1px solid #cbb894;
+    border: 1px solid #cbb894;
 
     background: #faf6ee;
 
@@ -1172,20 +979,19 @@ tbody tr:hover .employee-main-info strong {
 }
 
 .view-btn:hover {
-    transform:
-        translateY(-4px)
-        scale(1.07);
+    transform: translateY(-2px);
 
-    background: #f0e1c8;
+    border-color: #b98a48;
+
+    background: #f2e6d3;
 
     box-shadow:
-        0 8px 16px
-        rgba(185, 138, 72, 0.18);
+        0 4px 9px
+        rgba(185, 138, 72, 0.10);
 }
 
 .edit-btn {
-    border:
-        1px solid #31586c;
+    border: 1px solid #31586c;
 
     background: #31586c;
 
@@ -1193,20 +999,18 @@ tbody tr:hover .employee-main-info strong {
 }
 
 .edit-btn:hover {
-    transform:
-        translateY(-4px)
-        scale(1.07);
+    transform: translateY(-2px);
 
-    background: #234b60;
+    background: #294f63;
 
     box-shadow:
-        0 8px 16px
-        rgba(23, 63, 85, 0.22);
+        0 4px 9px
+        rgba(49, 88, 108, 0.14);
 }
 
 
 /* =========================================================
-   رسالة الجدول
+   TABLE MESSAGE
 ========================================================= */
 
 .table-message {
@@ -1221,7 +1025,7 @@ tbody tr:hover .employee-main-info strong {
 
 
 /* =========================================================
-   Modal
+   MODAL
 ========================================================= */
 
 .modal {
@@ -1234,9 +1038,9 @@ tbody tr:hover .employee-main-info strong {
     align-items: center;
     justify-content: center;
 
-    padding: 25px;
+    padding: 24px;
 
-    z-index: 5000;
+    z-index: 3000;
 }
 
 .modal.show {
@@ -1248,10 +1052,9 @@ tbody tr:hover .employee-main-info strong {
 
     inset: 0;
 
-    background:
-        rgba(12, 34, 46, 0.50);
+    background: rgba(12, 34, 46, 0.48);
 
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(3px);
 }
 
 .modal-box {
@@ -1268,19 +1071,17 @@ tbody tr:hover .employee-main-info strong {
 
     border:
         1px solid
-        rgba(185, 135, 66, 0.45);
+        rgba(185, 135, 66, 0.42);
 
     border-radius: 16px;
 
     background: #faf8f3;
 
     box-shadow:
-        0 25px 65px
-        rgba(13, 35, 47, 0.25);
+        0 24px 60px
+        rgba(13, 35, 47, 0.22);
 
-    animation:
-        modalOpen
-        0.30s ease;
+    animation: modalOpen 0.22s ease;
 }
 
 @keyframes modalOpen {
@@ -1289,8 +1090,8 @@ tbody tr:hover .employee-main-info strong {
         opacity: 0;
 
         transform:
-            translateY(20px)
-            scale(0.97);
+            translateY(8px)
+            scale(0.99);
     }
 
     to {
@@ -1308,7 +1109,7 @@ tbody tr:hover .employee-main-info strong {
 
 
 /* =========================================================
-   رأس النافذة
+   MODAL HEADER
 ========================================================= */
 
 .modal-header {
@@ -1323,8 +1124,7 @@ tbody tr:hover .employee-main-info strong {
 
     margin-bottom: 20px;
 
-    border-bottom:
-        1px solid #e2dacd;
+    border-bottom: 1px solid #e2dacd;
 }
 
 .modal-header h2 {
@@ -1340,6 +1140,8 @@ tbody tr:hover .employee-main-info strong {
     color: #7d8c93;
 
     font-size: 10px;
+
+    line-height: 1.7;
 }
 
 .close-btn {
@@ -1350,9 +1152,7 @@ tbody tr:hover .employee-main-info strong {
     align-items: center;
     justify-content: center;
 
-    border:
-        1px solid #d7ccbc;
-
+    border: 1px solid #d7ccbc;
     border-radius: 8px;
 
     background: #f4efe6;
@@ -1362,21 +1162,19 @@ tbody tr:hover .employee-main-info strong {
     font-size: 20px;
 
     transition:
-        transform 0.25s ease,
-        background-color 0.25s ease;
+        transform 0.20s ease,
+        background-color 0.20s ease;
 }
 
 .close-btn:hover {
-    transform:
-        rotate(10deg)
-        scale(1.10);
+    transform: scale(1.03);
 
-    background: #e9dfd0;
+    background: #ebe2d4;
 }
 
 
 /* =========================================================
-   الفورم
+   FORM
 ========================================================= */
 
 .form-grid {
@@ -1411,12 +1209,10 @@ tbody tr:hover .employee-main-info strong {
 
     padding: 0 12px;
 
-    outline: none;
-
-    border:
-        1px solid #d9d0c3;
-
+    border: 1px solid #d9d0c3;
     border-radius: 8px;
+
+    outline: none;
 
     background: #fffdfa;
 
@@ -1425,9 +1221,8 @@ tbody tr:hover .employee-main-info strong {
     font-size: 10px;
 
     transition:
-        transform 0.22s ease,
-        border-color 0.22s ease,
-        box-shadow 0.22s ease;
+        border-color 0.20s ease,
+        box-shadow 0.20s ease;
 }
 
 .form-group textarea {
@@ -1441,26 +1236,24 @@ tbody tr:hover .employee-main-info strong {
 .form-group input:hover,
 .form-group select:hover,
 .form-group textarea:hover {
-    transform: translateY(-2px);
-
-    border-color: #c69a5a;
+    border-color: #c9a66b;
 }
 
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
-    transform: translateY(-2px);
+    border-color: #b98a48;
 
-    border-color: #b98742;
+    background: #ffffff;
 
     box-shadow:
-        0 0 0 4px
-        rgba(185, 135, 66, 0.10);
+        0 0 0 3px
+        rgba(185, 138, 72, 0.08);
 }
 
 
 /* =========================================================
-   المهارات
+   SKILLS
 ========================================================= */
 
 .skills-section {
@@ -1470,7 +1263,7 @@ tbody tr:hover .employee-main-info strong {
 
     border:
         1px solid
-        rgba(185, 135, 66, 0.40);
+        rgba(185, 135, 66, 0.38);
 
     border-radius: 12px;
 
@@ -1482,11 +1275,12 @@ tbody tr:hover .employee-main-info strong {
 }
 
 .skills-section-header h3 {
-    margin-bottom: 5px;
+    margin-bottom: 4px;
 
     color: #173f55;
 
     font-size: 14px;
+    font-weight: 800;
 }
 
 .skills-section-header p {
@@ -1510,18 +1304,15 @@ tbody tr:hover .employee-main-info strong {
 
 .skill-add-button-wrap {
     display: flex;
-
     align-items: flex-end;
 }
 
 .add-skill-btn {
     height: 42px;
 
-    padding: 0 15px;
+    padding: 0 14px;
 
-    border:
-        1px solid #b98742;
-
+    border: 1px solid #b98742;
     border-radius: 8px;
 
     background: #f5ecdd;
@@ -1532,26 +1323,19 @@ tbody tr:hover .employee-main-info strong {
     font-weight: 700;
 
     transition:
-        transform 0.25s ease,
-        background-color 0.25s ease,
-        box-shadow 0.25s ease;
+        transform 0.20s ease,
+        background-color 0.20s ease;
 }
 
 .add-skill-btn:hover {
-    transform:
-        translateY(-4px)
-        scale(1.04);
+    transform: translateY(-2px);
 
-    background: #ead9bc;
-
-    box-shadow:
-        0 8px 16px
-        rgba(185, 135, 66, 0.16);
+    background: #ebdcc2;
 }
 
 
 /* =========================================================
-   المهارات المختارة
+   SELECTED SKILLS
 ========================================================= */
 
 .selected-skills {
@@ -1576,55 +1360,68 @@ tbody tr:hover .employee-main-info strong {
 
     gap: 10px;
 
-    border:
-        1px solid #ded3c1;
-
+    border: 1px solid #ded3c1;
     border-radius: 9px;
 
     background: #fffdfa;
 
     transition:
-        transform 0.25s ease,
-        border-color 0.25s ease,
-        box-shadow 0.25s ease;
+        transform 0.20s ease,
+        border-color 0.20s ease,
+        box-shadow 0.20s ease;
 }
 
 .selected-skill-item:hover {
-    transform:
-        translateY(-5px)
-        scale(1.02);
+    transform: translateY(-2px);
 
-    border-color: #c69a5a;
+    border-color: #c9a66b;
 
     box-shadow:
-        0 10px 20px
-        rgba(23, 63, 85, 0.10);
+        0 4px 10px
+        rgba(185, 138, 72, 0.07);
+}
+
+.selected-skill-item > div {
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+.selected-skill-item strong {
+    color: #244e63;
+
+    font-size: 10px;
+}
+
+.selected-skill-item span {
+    color: #8b969b;
+
+    font-size: 8px;
 }
 
 .remove-skill-btn {
     width: 27px;
     height: 27px;
 
-    border:
-        1px solid #e0c7c3;
-
+    border: 1px solid #e0c7c3;
     border-radius: 7px;
 
     background: #f8ecea;
 
     color: #a3615a;
 
+    font-size: 15px;
+
     transition:
-        transform 0.25s ease,
-        background-color 0.25s ease;
+        transform 0.20s ease,
+        background-color 0.20s ease;
 }
 
 .remove-skill-btn:hover {
-    transform:
-        rotate(8deg)
-        scale(1.15);
+    transform: scale(1.04);
 
-    background: #efd9d6;
+    background: #f1ddda;
 }
 
 .empty-skills {
@@ -1632,9 +1429,7 @@ tbody tr:hover .employee-main-info strong {
 
     padding: 17px;
 
-    border:
-        1px dashed #d6cbbb;
-
+    border: 1px dashed #d6cbbb;
     border-radius: 9px;
 
     text-align: center;
@@ -1646,12 +1441,13 @@ tbody tr:hover .employee-main-info strong {
 
 
 /* =========================================================
-   أزرار النافذة
+   MODAL ACTIONS
 ========================================================= */
 
 .modal-actions {
     display: flex;
 
+    align-items: center;
     justify-content: flex-end;
 
     gap: 9px;
@@ -1660,14 +1456,13 @@ tbody tr:hover .employee-main-info strong {
 
     margin-top: 20px;
 
-    border-top:
-        1px solid #e2dacd;
+    border-top: 1px solid #e2dacd;
 }
 
 .cancel-btn,
 .save-btn {
-    min-width: 95px;
-    height: 40px;
+    min-width: 90px;
+    height: 39px;
 
     padding: 0 16px;
 
@@ -1677,14 +1472,13 @@ tbody tr:hover .employee-main-info strong {
     font-weight: 700;
 
     transition:
-        transform 0.25s ease,
-        box-shadow 0.25s ease,
-        background-color 0.25s ease;
+        transform 0.20s ease,
+        background-color 0.20s ease,
+        box-shadow 0.20s ease;
 }
 
 .cancel-btn {
-    border:
-        1px solid #d4cabd;
+    border: 1px solid #d4cabd;
 
     background: #f4efe7;
 
@@ -1692,14 +1486,13 @@ tbody tr:hover .employee-main-info strong {
 }
 
 .cancel-btn:hover {
-    transform: translateY(-4px);
+    transform: translateY(-1px);
 
-    background: #e9dfd1;
+    background: #ece4d8;
 }
 
 .save-btn {
-    border:
-        1px solid #31586c;
+    border: 1px solid #31586c;
 
     background:
         linear-gradient(
@@ -1712,18 +1505,16 @@ tbody tr:hover .employee-main-info strong {
 }
 
 .save-btn:hover {
-    transform:
-        translateY(-4px)
-        scale(1.03);
+    transform: translateY(-2px);
 
     box-shadow:
-        0 9px 18px
-        rgba(49, 88, 108, 0.22);
+        0 5px 11px
+        rgba(49, 88, 108, 0.14);
 }
 
 
 /* =========================================================
-   تفاصيل الموظف
+   DETAILS
 ========================================================= */
 
 .details-grid {
@@ -1738,16 +1529,14 @@ tbody tr:hover .employee-main-info strong {
 .details-grid p {
     min-height: 50px;
 
-    padding: 12px;
+    padding: 12px 13px;
 
     display: flex;
     flex-direction: column;
 
     gap: 4px;
 
-    border:
-        1px solid #e1d8cb;
-
+    border: 1px solid #e1d8cb;
     border-radius: 9px;
 
     background: #fffdfa;
@@ -1757,21 +1546,20 @@ tbody tr:hover .employee-main-info strong {
     font-size: 9px;
 
     transition:
-        transform 0.25s ease,
-        border-color 0.25s ease,
-        box-shadow 0.25s ease;
+        transform 0.20s ease,
+        border-color 0.20s ease;
 }
 
 .details-grid p:hover {
-    transform:
-        translateY(-5px)
-        scale(1.01);
+    transform: translateY(-2px);
 
-    border-color: #c69a5a;
+    border-color: #cfb888;
+}
 
-    box-shadow:
-        0 8px 17px
-        rgba(23, 63, 85, 0.09);
+.details-grid p strong {
+    color: #244e63;
+
+    font-size: 9px;
 }
 
 .employee-details-skills {
@@ -1779,9 +1567,7 @@ tbody tr:hover .employee-main-info strong {
 
     padding: 15px;
 
-    border:
-        1px solid #ded3c1;
-
+    border: 1px solid #ded3c1;
     border-radius: 10px;
 
     background: #f7f3eb;
@@ -1797,7 +1583,6 @@ tbody tr:hover .employee-main-info strong {
 
 .details-skills-list {
     display: flex;
-
     flex-wrap: wrap;
 
     gap: 7px;
@@ -1806,9 +1591,12 @@ tbody tr:hover .employee-main-info strong {
 .detail-skill-badge {
     padding: 7px 10px;
 
-    border:
-        1px solid #d9c7aa;
+    display: inline-flex;
+    align-items: center;
 
+    gap: 6px;
+
+    border: 1px solid #d9c7aa;
     border-radius: 999px;
 
     background: #fffaf2;
@@ -1816,25 +1604,22 @@ tbody tr:hover .employee-main-info strong {
     color: #725b38;
 
     font-size: 9px;
+    font-weight: 700;
 
     transition:
-        transform 0.25s ease,
-        box-shadow 0.25s ease;
+        transform 0.20s ease,
+        background-color 0.20s ease;
 }
 
 .detail-skill-badge:hover {
-    transform:
-        translateY(-4px)
-        scale(1.05);
+    transform: translateY(-1px);
 
-    box-shadow:
-        0 7px 14px
-        rgba(185, 135, 66, 0.15);
+    background: #f7eddd;
 }
 
 
 /* =========================================================
-   هيدر الجوال
+   MOBILE HEADER
 ========================================================= */
 
 .mobile-header {
@@ -1848,8 +1633,9 @@ tbody tr:hover .employee-main-info strong {
 
     display: none;
 
-    background:
-        rgba(12, 32, 43, 0.45);
+    background: rgba(12, 32, 43, 0.45);
+
+    backdrop-filter: blur(2px);
 
     z-index: 900;
 }
@@ -1860,10 +1646,17 @@ tbody tr:hover .employee-main-info strong {
 
 
 /* =========================================================
-   Responsive
+   TABLET
 ========================================================= */
 
-@media (max-width: 1100px) {
+@media (max-width: 1100px) and (min-width: 801px) {
+
+    .main-content {
+        padding:
+            32px
+            27px
+            45px;
+    }
 
     .employees-summary {
         grid-template-columns:
@@ -1871,7 +1664,13 @@ tbody tr:hover .employee-main-info strong {
     }
 
     .toolbar {
-        grid-template-columns: 1fr;
+        grid-template-columns:
+            1fr
+            1fr;
+    }
+
+    .toolbar-actions {
+        grid-column: 1 / -1;
     }
 
     .add-btn {
@@ -1881,7 +1680,7 @@ tbody tr:hover .employee-main-info strong {
 
 
 /* =========================================================
-   الجوال
+   MOBILE
 ========================================================= */
 
 @media (max-width: 800px) {
@@ -1915,6 +1714,10 @@ tbody tr:hover .employee-main-info strong {
                 #456f82
             );
 
+        border-bottom:
+            1px solid
+            rgba(198, 154, 90, 0.22);
+
         z-index: 4000;
     }
 
@@ -1924,7 +1727,7 @@ tbody tr:hover .employee-main-info strong {
 
         border:
             1px solid
-            rgba(255,255,255,.25);
+            rgba(255,255,255,.24);
 
         border-radius: 8px;
 
@@ -1944,26 +1747,45 @@ tbody tr:hover .employee-main-info strong {
 
     .mobile-header-title span {
         color:
-            rgba(255,255,255,.70);
+            rgba(255,255,255,.68);
 
         font-size: 8px;
     }
 
     .mobile-logo {
         width: 44px;
+        height: 44px;
+
+        object-fit: contain;
     }
 
     .sidebar {
         right: -300px;
 
         width: 275px;
+        max-width: 83vw;
 
-        transition:
-            right 0.30s ease;
+        padding: 23px 18px;
+
+        background:
+            linear-gradient(
+                180deg,
+                #536f7e 0%,
+                #45687a 48%,
+                #355a6d 100%
+            );
+
+        transition: right 0.30s ease;
+
+        z-index: 5000;
     }
 
     .sidebar.show {
         right: 0;
+    }
+
+    .sidebar-logo img {
+        width: 88px;
     }
 
     .main-content {
@@ -1977,10 +1799,14 @@ tbody tr:hover .employee-main-info strong {
             40px;
 
         background-attachment: scroll;
+
+        background-size: auto 100%;
+
+        background-position: center top;
     }
 
     .topbar {
-        min-height: 140px;
+        margin-bottom: 22px;
     }
 
     .topbar h1 {
@@ -2006,7 +1832,6 @@ tbody tr:hover .employee-main-info strong {
 
     .toolbar {
         display: flex;
-
         flex-direction: column;
 
         align-items: stretch;
@@ -2016,11 +1841,8 @@ tbody tr:hover .employee-main-info strong {
         grid-template-columns: 1fr;
     }
 
-    .form-grid,
-    .selected-skills,
-    .details-grid,
-    .skill-add-row {
-        grid-template-columns: 1fr;
+    .add-btn {
+        width: 100%;
     }
 
     .modal {
@@ -2030,32 +1852,36 @@ tbody tr:hover .employee-main-info strong {
     .modal-box {
         width: 100%;
 
-        padding: 18px;
+        padding: 19px;
     }
 
-    /*
-       في الجوال لا يوجد ماوس
-       لذلك نوقف حركات Hover الكبيرة
-    */
+    .form-grid,
+    .selected-skills,
+    .details-grid,
+    .skill-add-row {
+        grid-template-columns: 1fr;
+    }
+
+    /* ما نحتاج حركة Hover على الجوال */
 
     .summary-item:hover,
     .toolbar:hover,
     .table-card:hover,
     .nav-link:hover,
+    .nav-link.active:hover,
     .add-btn:hover,
     .view-btn:hover,
     .edit-btn:hover,
     .logout-btn:hover,
-    .page-badge:hover,
-    .details-grid p:hover,
-    .selected-skill-item:hover {
+    .selected-skill-item:hover,
+    .details-grid p:hover {
         transform: none;
     }
 }
 
 
 /* =========================================================
-   جوال صغير
+   SMALL MOBILE
 ========================================================= */
 
 @media (max-width: 480px) {
@@ -2072,9 +1898,6 @@ tbody tr:hover .employee-main-info strong {
     }
 
     .employees-summary {
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr));
-
         gap: 8px;
     }
 
