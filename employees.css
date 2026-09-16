@@ -1,8 +1,3 @@
-/* =========================================================
-   معيار | employees.css
-   صفحة الموظفين - متناسقة مع لوحة التحكم
-========================================================= */
-
 * {
     margin: 0;
     padding: 0;
@@ -17,15 +12,13 @@
     --navy-light: #456f82;
 
     --gold: #c69a5a;
-    --gold-light: #dec18e;
+    --gold-dark: #b98742;
 
     --cream: #f5f2ec;
     --cream-light: #fbf9f5;
 
     --text: #173f55;
     --muted: #748690;
-
-    --border: #ddd2c1;
 
     --green-bg: #e6f1e9;
     --green-text: #4c775d;
@@ -35,9 +28,6 @@
 
     --leave-bg: #eeeae5;
     --leave-text: #746b64;
-
-    --danger-bg: #f7e6e4;
-    --danger: #a85e58;
 }
 
 
@@ -94,7 +84,6 @@ body.menu-open {
 
 /* =========================================================
    SIDEBAR
-   مطابق للوحة التحكم
 ========================================================= */
 
 .sidebar {
@@ -130,15 +119,15 @@ body.menu-open {
 
 
 /* =========================================================
-   شعار القائمة
+   شعار السايدبار
 ========================================================= */
 
 .sidebar-logo {
-    height: auto;
-
     display: flex;
     align-items: center;
     justify-content: center;
+
+    height: auto;
 
     margin-bottom: 24px;
 }
@@ -151,11 +140,25 @@ body.menu-open {
     max-height: none;
 
     object-fit: contain;
+
+    transition:
+        transform 0.30s ease,
+        filter 0.30s ease;
+}
+
+.sidebar-logo img:hover {
+    transform: scale(1.04);
+
+    filter:
+        drop-shadow(
+            0 5px 8px
+            rgba(0, 0, 0, 0.10)
+        );
 }
 
 
 /* =========================================================
-   روابط القائمة
+   روابط السايدبار
 ========================================================= */
 
 .sidebar-nav {
@@ -180,16 +183,13 @@ body.menu-open {
 
     border: none;
 
-    /*
-       مهم:
-       الخط الذهبي من اليمين
-       مثل لوحة التحكم
-    */
+    /* الخط الذهبي من اليمين */
     border-right: 3px solid transparent;
 
     border-radius: 10px;
 
-    color: rgba(255, 255, 255, 0.78);
+    color:
+        rgba(255, 255, 255, 0.78);
 
     text-decoration: none;
 
@@ -197,16 +197,20 @@ body.menu-open {
     font-weight: 400;
 
     transition:
-        background 0.2s ease,
-        color 0.2s ease,
-        border-color 0.2s ease;
+        transform 0.22s ease,
+        background-color 0.22s ease,
+        color 0.22s ease,
+        border-color 0.22s ease,
+        box-shadow 0.22s ease;
 }
 
 .nav-link:hover {
     color: #ffffff;
 
     background:
-        rgba(255, 255, 255, 0.09);
+        rgba(255, 255, 255, 0.10);
+
+    transform: translateX(-4px);
 }
 
 .nav-link.active {
@@ -220,12 +224,18 @@ body.menu-open {
     font-weight: 600;
 }
 
-/*
-   إلغاء الخط القديم الذي كان يظهر
-   في الجهة العكسية
-*/
-.nav-link.active::after,
-.nav-link.active::before {
+.nav-link.active:hover {
+    background:
+        rgba(255, 255, 255, 0.18);
+
+    border-right-color: #e0b464;
+
+    transform: translateX(-3px);
+}
+
+/* يلغي الخط القديم المعكوس */
+.nav-link.active::before,
+.nav-link.active::after {
     display: none !important;
     content: none !important;
 }
@@ -256,36 +266,45 @@ body.menu-open {
     font-weight: 600;
 
     transition:
-        background 0.2s ease,
-        border-color 0.2s ease;
+        transform 0.22s ease,
+        background-color 0.22s ease,
+        border-color 0.22s ease,
+        box-shadow 0.22s ease;
 }
 
 .logout-btn:hover {
+    transform: translateY(-2px);
+
     background: #b98a4d;
-    border-color: #b98a4d;
+
+    border-color: #cda564;
+
+    box-shadow:
+        0 7px 16px
+        rgba(20, 44, 56, 0.14);
 }
 
 
 /* =========================================================
-   المحتوى الرئيسي
+   المحتوى الرئيسي + الخلفية
 ========================================================= */
 
 .main-content {
-    width: calc(100% - var(--sidebar-width));
+    width:
+        calc(
+            100% - var(--sidebar-width)
+        );
 
     min-height: 100vh;
 
-    margin-right: var(--sidebar-width);
+    margin-right:
+        var(--sidebar-width);
 
     padding:
         35px
         40px
         55px;
 
-    /*
-       نفس خلفية لوحة التحكم
-       بدون طبقة بيضاء قوية
-    */
     background-color: #f5f2ec;
 
     background-image:
@@ -332,7 +351,7 @@ body.menu-open {
 
 
 /* =========================================================
-   شارة إدارة الموظفين
+   الشارة
 ========================================================= */
 
 .page-badge {
@@ -359,6 +378,20 @@ body.menu-open {
 
     font-size: 10px;
     font-weight: 600;
+
+    transition:
+        transform 0.22s ease,
+        background-color 0.22s ease,
+        border-color 0.22s ease;
+}
+
+.page-badge:hover {
+    transform: translateY(-2px);
+
+    background:
+        rgba(255, 252, 245, 0.95);
+
+    border-color: #c69a5a;
 }
 
 
@@ -391,7 +424,7 @@ body.menu-open {
 
 
 /* =========================================================
-   بطاقات الملخص
+   بطاقات الإحصائيات
 ========================================================= */
 
 .employees-summary {
@@ -434,11 +467,33 @@ body.menu-open {
     box-shadow:
         0 7px 22px
         rgba(26, 51, 64, 0.04);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        background-color 0.25s ease,
+        border-color 0.25s ease;
 }
 
 .summary-item::before,
 .summary-item::after {
     display: none !important;
+}
+
+.summary-item:hover {
+    transform: translateY(-5px);
+
+    border-color:
+        rgba(185, 135, 66, 0.75);
+
+    border-top-color: #b98742;
+
+    background:
+        rgba(255, 253, 248, 0.95);
+
+    box-shadow:
+        0 13px 28px
+        rgba(32, 58, 72, 0.10);
 }
 
 .summary-item span {
@@ -457,6 +512,16 @@ body.menu-open {
     font-weight: 800;
 
     line-height: 1;
+
+    transition:
+        color 0.22s ease,
+        transform 0.22s ease;
+}
+
+.summary-item:hover strong {
+    color: #173f55;
+
+    transform: scale(1.04);
 }
 
 
@@ -494,6 +559,23 @@ body.menu-open {
     box-shadow:
         0 7px 20px
         rgba(24, 49, 63, 0.035);
+
+    transition:
+        border-color 0.25s ease,
+        box-shadow 0.25s ease,
+        background-color 0.25s ease;
+}
+
+.toolbar:hover {
+    border-color:
+        rgba(185, 135, 66, 0.65);
+
+    background:
+        rgba(252, 250, 246, 0.93);
+
+    box-shadow:
+        0 10px 25px
+        rgba(30, 53, 66, 0.06);
 }
 
 .search-box {
@@ -506,7 +588,10 @@ body.menu-open {
 
     padding: 0 15px;
 
-    border: 1px solid #ddd4c6;
+    border:
+        1px solid
+        #ddd4c6;
+
     border-radius: 9px;
 
     outline: none;
@@ -518,19 +603,31 @@ body.menu-open {
 
     font-size: 11px;
 
-    transition: 0.2s ease;
+    transition:
+        border-color 0.22s ease,
+        background-color 0.22s ease,
+        box-shadow 0.22s ease;
 }
 
 .search-box input::placeholder {
     color: #9aa5aa;
 }
 
+.search-box input:hover {
+    border-color: #c9a66b;
+
+    background:
+        rgba(255, 255, 255, 0.95);
+}
+
 .search-box input:focus {
     border-color: #b98a48;
 
+    background: #ffffff;
+
     box-shadow:
         0 0 0 3px
-        rgba(185, 138, 72, 0.09);
+        rgba(185, 138, 72, 0.10);
 }
 
 
@@ -553,7 +650,10 @@ body.menu-open {
 
     padding: 0 12px;
 
-    border: 1px solid #ddd4c6;
+    border:
+        1px solid
+        #ddd4c6;
+
     border-radius: 9px;
 
     outline: none;
@@ -564,10 +664,28 @@ body.menu-open {
     color: #506875;
 
     font-size: 10px;
+
+    transition:
+        border-color 0.22s ease,
+        background-color 0.22s ease,
+        box-shadow 0.22s ease;
+}
+
+.filters select:hover {
+    border-color: #c9a66b;
+
+    background:
+        rgba(255, 255, 255, 0.96);
 }
 
 .filters select:focus {
     border-color: #b98a48;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(185, 138, 72, 0.08);
 }
 
 
@@ -586,7 +704,10 @@ body.menu-open {
 
     padding: 0 17px;
 
-    border: 1px solid #31586c;
+    border:
+        1px solid
+        #31586c;
+
     border-radius: 9px;
 
     background:
@@ -608,21 +729,33 @@ body.menu-open {
         rgba(23, 63, 85, 0.12);
 
     transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
+        transform 0.22s ease,
+        box-shadow 0.22s ease,
+        background 0.22s ease;
 }
 
 .add-btn:hover {
-    transform: translateY(-1px);
+    transform: translateY(-3px);
+
+    background:
+        linear-gradient(
+            135deg,
+            #294f63,
+            #3c687c
+        );
 
     box-shadow:
-        0 7px 16px
-        rgba(23, 63, 85, 0.16);
+        0 10px 20px
+        rgba(23, 63, 85, 0.20);
+}
+
+.add-btn:active {
+    transform: translateY(0);
 }
 
 
 /* =========================================================
-   بطاقة قائمة الموظفين
+   بطاقة الجدول
 ========================================================= */
 
 .table-card {
@@ -642,6 +775,19 @@ body.menu-open {
     box-shadow:
         0 9px 26px
         rgba(26, 49, 61, 0.045);
+
+    transition:
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.table-card:hover {
+    border-color:
+        rgba(185, 135, 66, 0.68);
+
+    box-shadow:
+        0 13px 30px
+        rgba(26, 49, 61, 0.08);
 }
 
 
@@ -738,12 +884,18 @@ td {
 }
 
 tbody tr {
-    transition: background 0.18s ease;
+    transition:
+        background-color 0.22s ease,
+        box-shadow 0.22s ease;
 }
 
 tbody tr:hover {
     background:
-        rgba(247, 242, 232, 0.68);
+        rgba(244, 237, 224, 0.72);
+
+    box-shadow:
+        inset 3px 0 0
+        rgba(185, 135, 66, 0.65);
 }
 
 tbody tr:last-child td {
@@ -752,7 +904,7 @@ tbody tr:last-child td {
 
 
 /* =========================================================
-   اسم الموظف
+   بيانات الموظف
 ========================================================= */
 
 .employee-name {
@@ -786,6 +938,24 @@ tbody tr:last-child td {
 
     font-size: 12px;
     font-weight: 800;
+
+    transition:
+        transform 0.22s ease,
+        background-color 0.22s ease,
+        border-color 0.22s ease,
+        box-shadow 0.22s ease;
+}
+
+tbody tr:hover .avatar {
+    transform: scale(1.08);
+
+    border-color: #c69a5a;
+
+    background: #eee0c8;
+
+    box-shadow:
+        0 4px 10px
+        rgba(185, 135, 66, 0.15);
 }
 
 .employee-main-info {
@@ -802,6 +972,12 @@ tbody tr:last-child td {
 
     font-size: 10px;
     font-weight: 700;
+
+    transition: color 0.22s ease;
+}
+
+tbody tr:hover .employee-main-info strong {
+    color: #173f55;
 }
 
 .employee-main-info small {
@@ -831,7 +1007,10 @@ tbody tr:last-child td {
     align-items: center;
     justify-content: center;
 
-    border: 1px solid #d8c8ae;
+    border:
+        1px solid
+        #d8c8ae;
+
     border-radius: 8px;
 
     background: #f6f0e5;
@@ -840,6 +1019,19 @@ tbody tr:last-child td {
 
     font-size: 9px;
     font-weight: 800;
+
+    transition:
+        transform 0.22s ease,
+        background-color 0.22s ease,
+        border-color 0.22s ease;
+}
+
+.count-badge:hover {
+    transform: translateY(-2px);
+
+    border-color: #c69a5a;
+
+    background: #f1e5d1;
 }
 
 
@@ -925,6 +1117,10 @@ tbody tr:last-child td {
     font-weight: 700;
 
     white-space: nowrap;
+
+    transition:
+        transform 0.20s ease,
+        box-shadow 0.20s ease;
 }
 
 .status-badge.available {
@@ -942,9 +1138,17 @@ tbody tr:last-child td {
     color: var(--leave-text);
 }
 
+.status-badge:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 4px 10px
+        rgba(35, 61, 74, 0.08);
+}
+
 
 /* =========================================================
-   الإجراءات
+   أزرار الجدول
 ========================================================= */
 
 .actions {
@@ -967,28 +1171,57 @@ tbody tr:last-child td {
     font-size: 8px;
     font-weight: 700;
 
-    transition: 0.18s ease;
+    transition:
+        transform 0.20s ease,
+        background-color 0.20s ease,
+        border-color 0.20s ease,
+        box-shadow 0.20s ease;
 }
 
 .view-btn {
-    border: 1px solid #cbb894;
+    border:
+        1px solid
+        #cbb894;
 
     background: #faf6ee;
 
     color: #7e623b;
 }
 
+.view-btn:hover {
+    transform: translateY(-2px);
+
+    border-color: #b98a48;
+
+    background: #f2e6d3;
+
+    color: #76552b;
+
+    box-shadow:
+        0 5px 12px
+        rgba(185, 138, 72, 0.12);
+}
+
 .edit-btn {
-    border: 1px solid #31586c;
+    border:
+        1px solid
+        #31586c;
 
     background: #31586c;
 
     color: #ffffff;
 }
 
-.view-btn:hover,
 .edit-btn:hover {
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+
+    border-color: #294f63;
+
+    background: #294f63;
+
+    box-shadow:
+        0 5px 12px
+        rgba(49, 88, 108, 0.18);
 }
 
 
@@ -1072,7 +1305,7 @@ tbody tr:last-child td {
 
 
 /* =========================================================
-   رأس النافذة
+   رأس Modal
 ========================================================= */
 
 .modal-header {
@@ -1121,7 +1354,10 @@ tbody tr:last-child td {
     align-items: center;
     justify-content: center;
 
-    border: 1px solid #d7ccbc;
+    border:
+        1px solid
+        #d7ccbc;
+
     border-radius: 8px;
 
     background: #f4efe6;
@@ -1130,11 +1366,17 @@ tbody tr:last-child td {
 
     font-size: 20px;
 
-    transition: 0.18s ease;
+    transition:
+        transform 0.20s ease,
+        background-color 0.20s ease;
 }
 
 .close-btn:hover {
-    background: #ece5d9;
+    transform:
+        rotate(5deg)
+        scale(1.05);
+
+    background: #ebe2d4;
 }
 
 
@@ -1174,7 +1416,10 @@ tbody tr:last-child td {
 
     padding: 0 12px;
 
-    border: 1px solid #d9d0c3;
+    border:
+        1px solid
+        #d9d0c3;
+
     border-radius: 8px;
 
     outline: none;
@@ -1185,7 +1430,10 @@ tbody tr:last-child td {
 
     font-size: 10px;
 
-    transition: 0.18s ease;
+    transition:
+        border-color 0.18s ease,
+        box-shadow 0.18s ease,
+        background-color 0.18s ease;
 }
 
 .form-group textarea {
@@ -1196,10 +1444,18 @@ tbody tr:last-child td {
     resize: vertical;
 }
 
+.form-group input:hover,
+.form-group select:hover,
+.form-group textarea:hover {
+    border-color: #c9a66b;
+}
+
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
     border-color: #b98a48;
+
+    background: #ffffff;
 
     box-shadow:
         0 0 0 3px
@@ -1216,7 +1472,7 @@ tbody tr:last-child td {
 
 
 /* =========================================================
-   المهارات
+   قسم المهارات
 ========================================================= */
 
 .skills-section {
@@ -1277,7 +1533,10 @@ tbody tr:last-child td {
 
     padding: 0 14px;
 
-    border: 1px solid #b98742;
+    border:
+        1px solid
+        #b98742;
+
     border-radius: 8px;
 
     background: #f5ecdd;
@@ -1288,10 +1547,24 @@ tbody tr:last-child td {
     font-weight: 700;
 
     white-space: nowrap;
+
+    transition:
+        transform 0.20s ease,
+        background-color 0.20s ease,
+        border-color 0.20s ease,
+        box-shadow 0.20s ease;
 }
 
 .add-skill-btn:hover {
-    background: #eee0c9;
+    transform: translateY(-2px);
+
+    border-color: #a97735;
+
+    background: #ebdcc2;
+
+    box-shadow:
+        0 5px 12px
+        rgba(185, 135, 66, 0.10);
 }
 
 
@@ -1321,10 +1594,31 @@ tbody tr:last-child td {
 
     gap: 10px;
 
-    border: 1px solid #ded3c1;
+    border:
+        1px solid
+        #ded3c1;
+
     border-radius: 9px;
 
     background: #fffdfa;
+
+    transition:
+        transform 0.22s ease,
+        background-color 0.22s ease,
+        border-color 0.22s ease,
+        box-shadow 0.22s ease;
+}
+
+.selected-skill-item:hover {
+    transform: translateY(-2px);
+
+    border-color: #c9a66b;
+
+    background: #fffaf1;
+
+    box-shadow:
+        0 5px 13px
+        rgba(185, 138, 72, 0.08);
 }
 
 .selected-skill-item > div {
@@ -1356,7 +1650,10 @@ tbody tr:last-child td {
     align-items: center;
     justify-content: center;
 
-    border: 1px solid #e0c7c3;
+    border:
+        1px solid
+        #e0c7c3;
+
     border-radius: 7px;
 
     background: #f8ecea;
@@ -1364,6 +1661,19 @@ tbody tr:last-child td {
     color: #a3615a;
 
     font-size: 15px;
+
+    transition:
+        transform 0.20s ease,
+        background-color 0.20s ease,
+        border-color 0.20s ease;
+}
+
+.remove-skill-btn:hover {
+    transform: scale(1.08);
+
+    background: #f1ddda;
+
+    border-color: #d5aaa5;
 }
 
 .empty-skills {
@@ -1371,7 +1681,10 @@ tbody tr:last-child td {
 
     padding: 17px;
 
-    border: 1px dashed #d6cbbb;
+    border:
+        1px dashed
+        #d6cbbb;
+
     border-radius: 9px;
 
     text-align: center;
@@ -1383,7 +1696,7 @@ tbody tr:last-child td {
 
 
 /* =========================================================
-   أزرار النافذة
+   أزرار Modal
 ========================================================= */
 
 .modal-actions {
@@ -1414,18 +1727,33 @@ tbody tr:last-child td {
 
     font-size: 9px;
     font-weight: 700;
+
+    transition:
+        transform 0.20s ease,
+        background-color 0.20s ease,
+        box-shadow 0.20s ease;
 }
 
 .cancel-btn {
-    border: 1px solid #d4cabd;
+    border:
+        1px solid
+        #d4cabd;
 
     background: #f4efe7;
 
     color: #687a83;
 }
 
+.cancel-btn:hover {
+    transform: translateY(-2px);
+
+    background: #ece4d8;
+}
+
 .save-btn {
-    border: 1px solid #31586c;
+    border:
+        1px solid
+        #31586c;
 
     background:
         linear-gradient(
@@ -1437,10 +1765,27 @@ tbody tr:last-child td {
     color: #ffffff;
 }
 
+.save-btn:hover {
+    transform: translateY(-2px);
+
+    background:
+        linear-gradient(
+            135deg,
+            #294f63,
+            #3d687b
+        );
+
+    box-shadow:
+        0 6px 14px
+        rgba(49, 88, 108, 0.17);
+}
+
 .save-btn:disabled {
     opacity: 0.65;
 
     cursor: not-allowed;
+
+    transform: none;
 }
 
 
@@ -1467,7 +1812,10 @@ tbody tr:last-child td {
 
     gap: 4px;
 
-    border: 1px solid #e1d8cb;
+    border:
+        1px solid
+        #e1d8cb;
+
     border-radius: 9px;
 
     background: #fffdfa;
@@ -1475,6 +1823,21 @@ tbody tr:last-child td {
     color: #65757d;
 
     font-size: 9px;
+
+    transition:
+        transform 0.20s ease,
+        border-color 0.20s ease,
+        box-shadow 0.20s ease;
+}
+
+.details-grid p:hover {
+    transform: translateY(-2px);
+
+    border-color: #cfb888;
+
+    box-shadow:
+        0 4px 12px
+        rgba(40, 61, 72, 0.05);
 }
 
 .details-grid p strong {
@@ -1488,7 +1851,10 @@ tbody tr:last-child td {
 
     padding: 15px;
 
-    border: 1px solid #ded3c1;
+    border:
+        1px solid
+        #ded3c1;
+
     border-radius: 10px;
 
     background: #f7f3eb;
@@ -1517,7 +1883,10 @@ tbody tr:last-child td {
 
     gap: 6px;
 
-    border: 1px solid #d9c7aa;
+    border:
+        1px solid
+        #d9c7aa;
+
     border-radius: 999px;
 
     background: #fffaf2;
@@ -1526,6 +1895,19 @@ tbody tr:last-child td {
 
     font-size: 9px;
     font-weight: 700;
+
+    transition:
+        transform 0.20s ease,
+        background-color 0.20s ease,
+        border-color 0.20s ease;
+}
+
+.detail-skill-badge:hover {
+    transform: translateY(-2px);
+
+    border-color: #c69a5a;
+
+    background: #f7eddd;
 }
 
 .detail-skill-badge small {
@@ -1536,7 +1918,7 @@ tbody tr:last-child td {
 
 
 /* =========================================================
-   Mobile Header
+   هيدر الجوال
 ========================================================= */
 
 .mobile-header {
@@ -1606,7 +1988,8 @@ tbody tr:last-child td {
     }
 
     .sidebar {
-        width: var(--sidebar-width);
+        width:
+            var(--sidebar-width);
 
         padding:
             22px
@@ -1662,9 +2045,6 @@ tbody tr:last-child td {
     body {
         background: #f5f2ec;
     }
-
-
-    /* ---------- الهيدر ---------- */
 
     .mobile-header {
         position: fixed;
@@ -1758,7 +2138,7 @@ tbody tr:last-child td {
     }
 
 
-    /* ---------- Sidebar ---------- */
+    /* Sidebar */
 
     .sidebar {
         position: fixed;
@@ -1824,14 +2204,7 @@ tbody tr:last-child td {
     }
 
 
-    /* ---------- Overlay ---------- */
-
-    .sidebar-overlay {
-        z-index: 4500;
-    }
-
-
-    /* ---------- المحتوى ---------- */
+    /* المحتوى */
 
     .main-content {
         width: 100%;
@@ -1864,7 +2237,7 @@ tbody tr:last-child td {
     }
 
 
-    /* ---------- عنوان الصفحة ---------- */
+    /* العنوان */
 
     .topbar {
         min-height: 140px;
@@ -1884,7 +2257,7 @@ tbody tr:last-child td {
     }
 
 
-    /* ---------- الملخص ---------- */
+    /* البطاقات */
 
     .employees-summary {
         grid-template-columns:
@@ -1904,7 +2277,7 @@ tbody tr:last-child td {
     }
 
 
-    /* ---------- البحث ---------- */
+    /* البحث */
 
     .toolbar {
         display: flex;
@@ -1928,7 +2301,7 @@ tbody tr:last-child td {
     }
 
 
-    /* ---------- Modal ---------- */
+    /* Modal */
 
     .modal {
         padding: 12px;
@@ -1960,6 +2333,33 @@ tbody tr:last-child td {
 
     .details-grid {
         grid-template-columns: 1fr;
+    }
+
+
+    /* نوقف حركة Hover على الجوال */
+
+    .nav-link:hover,
+    .nav-link.active:hover,
+    .page-badge:hover,
+    .summary-item:hover,
+    .add-btn:hover,
+    .view-btn:hover,
+    .edit-btn:hover,
+    .logout-btn:hover,
+    .selected-skill-item:hover,
+    .detail-skill-badge:hover,
+    .add-skill-btn:hover,
+    .save-btn:hover,
+    .cancel-btn:hover,
+    .close-btn:hover,
+    .count-badge:hover,
+    .status-badge:hover,
+    .details-grid p:hover {
+        transform: none;
+    }
+
+    tbody tr:hover .avatar {
+        transform: none;
     }
 }
 
