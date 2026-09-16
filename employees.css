@@ -1,3 +1,8 @@
+/* =========================================================
+   معيار | employees.css
+   صفحة الموظفين - متناسقة مع لوحة التحكم
+========================================================= */
+
 * {
     margin: 0;
     padding: 0;
@@ -5,22 +10,22 @@
 }
 
 :root {
-    --sidebar-width: 250px;
+    --sidebar-width: 245px;
 
-    --navy: #173f55;
-    --navy-dark: #123547;
-    --navy-light: #557d8f;
+    --navy: #31586c;
+    --navy-dark: #294f63;
+    --navy-light: #456f82;
 
-    --gold: #b98742;
-    --gold-light: #dfc18c;
+    --gold: #c69a5a;
+    --gold-light: #dec18e;
 
-    --cream: #f7f3eb;
-    --cream-light: #fcfaf6;
+    --cream: #f5f2ec;
+    --cream-light: #fbf9f5;
 
     --text: #173f55;
-    --muted: #71838d;
+    --muted: #748690;
 
-    --border: rgba(184, 142, 75, 0.42);
+    --border: #ddd2c1;
 
     --green-bg: #e6f1e9;
     --green-text: #4c775d;
@@ -58,16 +63,9 @@ body {
 
     color: var(--text);
 
-    background-color: #f6f2e9;
+    font-size: 12px;
 
-    /* نفس خلفية صفحات المشروع */
-    background-image: url("assets/background.jpeg");
-    background-size: cover;
-    background-position: center top;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-
-    font-size: 13px;
+    background-color: #f5f2ec;
 }
 
 button,
@@ -87,14 +85,16 @@ body.menu-open {
 }
 
 .employees-page {
-    min-height: 100vh;
     width: 100%;
+    min-height: 100vh;
+
     background: transparent;
 }
 
 
 /* =========================================================
-   Sidebar
+   SIDEBAR
+   مطابق للوحة التحكم
 ========================================================= */
 
 .sidebar {
@@ -102,56 +102,60 @@ body.menu-open {
 
     top: 0;
     right: 0;
-    bottom: 0;
 
     width: var(--sidebar-width);
+    height: 100vh;
 
-    padding: 18px 16px 20px;
+    padding: 25px 17px;
 
     display: flex;
     flex-direction: column;
 
+    overflow-y: auto;
+
     background:
         linear-gradient(
             180deg,
-            #173f55 0%,
-            #245268 48%,
-            #557d8f 100%
+            #31586c 0%,
+            #3c667a 52%,
+            #456f82 100%
         );
 
     box-shadow:
-        -5px 0 20px rgba(18, 46, 61, 0.12);
+        -8px 0 28px
+        rgba(38, 59, 70, 0.10);
 
     z-index: 1000;
 }
 
 
 /* =========================================================
-   شعار Sidebar
+   شعار القائمة
 ========================================================= */
 
 .sidebar-logo {
-    height: 125px;
+    height: auto;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    margin-bottom: 8px;
+    margin-bottom: 24px;
 }
 
 .sidebar-logo img {
-    width: 115px;
-    max-width: 100%;
+    width: 92px;
+    height: auto;
 
-    max-height: 105px;
+    max-width: none;
+    max-height: none;
 
     object-fit: contain;
 }
 
 
 /* =========================================================
-   روابط Sidebar
+   روابط القائمة
 ========================================================= */
 
 .sidebar-nav {
@@ -160,65 +164,70 @@ body.menu-open {
     display: flex;
     flex-direction: column;
 
-    gap: 5px;
+    gap: 6px;
 }
 
 .nav-link {
     position: relative;
 
     width: 100%;
-    min-height: 46px;
-
-    padding: 0 17px;
+    min-height: 42px;
 
     display: flex;
     align-items: center;
 
-    border: 1px solid transparent;
-    border-radius: 9px;
+    padding: 0 14px;
 
-    color: rgba(255, 255, 255, 0.83);
+    border: none;
+
+    /*
+       مهم:
+       الخط الذهبي من اليمين
+       مثل لوحة التحكم
+    */
+    border-right: 3px solid transparent;
+
+    border-radius: 10px;
+
+    color: rgba(255, 255, 255, 0.78);
 
     text-decoration: none;
 
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 400;
 
     transition:
         background 0.2s ease,
-        border-color 0.2s ease,
-        color 0.2s ease;
+        color 0.2s ease,
+        border-color 0.2s ease;
 }
 
 .nav-link:hover {
-    color: #fff;
-    background: rgba(255, 255, 255, 0.07);
+    color: #ffffff;
+
+    background:
+        rgba(255, 255, 255, 0.09);
 }
 
 .nav-link.active {
-    color: #fff;
+    color: #ffffff;
 
-    background: rgba(255, 255, 255, 0.13);
+    background:
+        rgba(255, 255, 255, 0.14);
 
-    border-color: rgba(222, 191, 133, 0.50);
+    border-right-color: #c69a5a;
 
-    font-weight: 700;
+    font-weight: 600;
 }
 
-.nav-link.active::after {
-    content: "";
-
-    position: absolute;
-
-    left: -1px;
-    top: 7px;
-    bottom: 7px;
-
-    width: 3px;
-
-    border-radius: 4px;
-
-    background: #d9ae5c;
+/*
+   إلغاء الخط القديم الذي كان يظهر
+   في الجهة العكسية
+*/
+.nav-link.active::after,
+.nav-link.active::before {
+    display: none !important;
+    content: none !important;
 }
 
 
@@ -228,25 +237,32 @@ body.menu-open {
 
 .logout-btn {
     width: 100%;
-    height: 46px;
+    min-height: 44px;
 
-    margin-top: 14px;
+    margin-top: 18px;
 
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    border-radius: 9px;
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.24);
 
-    background: rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
 
-    color: #fff;
+    background:
+        rgba(255, 255, 255, 0.05);
+
+    color: #ffffff;
 
     font-size: 11px;
-    font-weight: 700;
+    font-weight: 600;
 
-    transition: 0.2s ease;
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
 }
 
 .logout-btn:hover {
-    background: rgba(255, 255, 255, 0.14);
+    background: #b98a4d;
+    border-color: #b98a4d;
 }
 
 
@@ -255,13 +271,34 @@ body.menu-open {
 ========================================================= */
 
 .main-content {
+    width: calc(100% - var(--sidebar-width));
+
     min-height: 100vh;
 
     margin-right: var(--sidebar-width);
 
-    padding: 38px 42px 55px;
+    padding:
+        35px
+        40px
+        55px;
 
-    background: transparent;
+    /*
+       نفس خلفية لوحة التحكم
+       بدون طبقة بيضاء قوية
+    */
+    background-color: #f5f2ec;
+
+    background-image:
+        linear-gradient(
+            rgba(249, 247, 242, 0.12),
+            rgba(249, 247, 242, 0.12)
+        ),
+        url("assets/background.jpeg");
+
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
 
@@ -274,6 +311,7 @@ body.menu-open {
 
     display: flex;
     flex-direction: column;
+
     align-items: flex-start;
     justify-content: flex-start;
 
@@ -283,13 +321,13 @@ body.menu-open {
 
     background: transparent;
 
-    border: 0;
+    border: none;
     box-shadow: none;
 }
 
 .topbar::before,
 .topbar::after {
-    display: none;
+    display: none !important;
 }
 
 
@@ -298,27 +336,29 @@ body.menu-open {
 ========================================================= */
 
 .page-badge {
+    width: fit-content;
+
     display: inline-flex;
     align-items: center;
     justify-content: center;
-
-    width: fit-content;
 
     padding: 7px 16px;
 
     margin-bottom: 14px;
 
-    border: 1px solid rgba(185, 135, 66, 0.55);
+    border:
+        1px solid
+        rgba(198, 154, 90, 0.60);
+
     border-radius: 999px;
 
-    background: rgba(250, 247, 239, 0.72);
+    background:
+        rgba(250, 247, 239, 0.74);
 
-    backdrop-filter: blur(3px);
-
-    color: #966d35;
+    color: #936c37;
 
     font-size: 10px;
-    font-weight: 700;
+    font-weight: 600;
 }
 
 
@@ -327,7 +367,7 @@ body.menu-open {
 ========================================================= */
 
 .topbar h1 {
-    margin-bottom: 8px;
+    margin: 0 0 8px;
 
     color: #173f55;
 
@@ -339,6 +379,8 @@ body.menu-open {
 
 .topbar p {
     max-width: 650px;
+
+    margin: 0;
 
     color: #71838d;
 
@@ -366,8 +408,6 @@ body.menu-open {
 }
 
 .summary-item {
-    position: relative;
-
     min-height: 128px;
 
     padding: 21px 22px;
@@ -378,24 +418,27 @@ body.menu-open {
     justify-content: center;
     align-items: flex-start;
 
-    border: 1px solid rgba(185, 135, 66, 0.45);
-    border-top: 2px solid #b98742;
+    border:
+        1px solid
+        rgba(185, 135, 66, 0.48);
+
+    border-top:
+        2px solid
+        #b98742;
 
     border-radius: 13px;
 
-    background: rgba(250, 248, 243, 0.82);
-
-    backdrop-filter: blur(5px);
+    background:
+        rgba(250, 248, 243, 0.84);
 
     box-shadow:
-        0 7px 22px rgba(26, 51, 64, 0.04);
-
-    overflow: hidden;
+        0 7px 22px
+        rgba(26, 51, 64, 0.04);
 }
 
 .summary-item::before,
 .summary-item::after {
-    display: none;
+    display: none !important;
 }
 
 .summary-item span {
@@ -431,23 +474,26 @@ body.menu-open {
         minmax(300px, 1fr)
         auto;
 
-    gap: 12px;
-
     align-items: center;
+
+    gap: 12px;
 
     padding: 15px;
 
     margin-bottom: 18px;
 
-    border: 1px solid rgba(194, 172, 136, 0.48);
+    border:
+        1px solid
+        rgba(194, 172, 136, 0.52);
+
     border-radius: 13px;
 
-    background: rgba(250, 248, 243, 0.82);
-
-    backdrop-filter: blur(6px);
+    background:
+        rgba(250, 248, 243, 0.86);
 
     box-shadow:
-        0 7px 20px rgba(24, 49, 63, 0.035);
+        0 7px 20px
+        rgba(24, 49, 63, 0.035);
 }
 
 .search-box {
@@ -465,7 +511,8 @@ body.menu-open {
 
     outline: none;
 
-    background: rgba(255, 255, 255, 0.78);
+    background:
+        rgba(255, 255, 255, 0.82);
 
     color: var(--text);
 
@@ -482,7 +529,8 @@ body.menu-open {
     border-color: #b98a48;
 
     box-shadow:
-        0 0 0 3px rgba(185, 138, 72, 0.09);
+        0 0 0 3px
+        rgba(185, 138, 72, 0.09);
 }
 
 
@@ -510,7 +558,8 @@ body.menu-open {
 
     outline: none;
 
-    background: rgba(255, 255, 255, 0.80);
+    background:
+        rgba(255, 255, 255, 0.84);
 
     color: #506875;
 
@@ -537,17 +586,17 @@ body.menu-open {
 
     padding: 0 17px;
 
-    border: 1px solid #173f55;
+    border: 1px solid #31586c;
     border-radius: 9px;
 
     background:
         linear-gradient(
             135deg,
-            #173f55,
-            #315f73
+            #31586c,
+            #456f82
         );
 
-    color: #fff;
+    color: #ffffff;
 
     font-size: 10px;
     font-weight: 700;
@@ -555,7 +604,8 @@ body.menu-open {
     white-space: nowrap;
 
     box-shadow:
-        0 5px 13px rgba(23, 63, 85, 0.12);
+        0 5px 13px
+        rgba(23, 63, 85, 0.12);
 
     transition:
         transform 0.2s ease,
@@ -566,28 +616,32 @@ body.menu-open {
     transform: translateY(-1px);
 
     box-shadow:
-        0 7px 16px rgba(23, 63, 85, 0.16);
+        0 7px 16px
+        rgba(23, 63, 85, 0.16);
 }
 
 
 /* =========================================================
-   بطاقة الجدول
+   بطاقة قائمة الموظفين
 ========================================================= */
 
 .table-card {
     width: 100%;
 
-    border: 1px solid rgba(194, 172, 136, 0.50);
+    overflow: hidden;
+
+    border:
+        1px solid
+        rgba(194, 172, 136, 0.52);
+
     border-radius: 14px;
 
-    background: rgba(250, 248, 243, 0.88);
-
-    backdrop-filter: blur(7px);
+    background:
+        rgba(250, 248, 243, 0.90);
 
     box-shadow:
-        0 9px 26px rgba(26, 49, 61, 0.045);
-
-    overflow: hidden;
+        0 9px 26px
+        rgba(26, 49, 61, 0.045);
 }
 
 
@@ -604,11 +658,13 @@ body.menu-open {
     align-items: center;
     justify-content: space-between;
 
-    border-bottom: 1px solid #e4ddd1;
+    border-bottom:
+        1px solid
+        #e4ddd1;
 }
 
 .table-header h2 {
-    margin-bottom: 5px;
+    margin: 0 0 5px;
 
     color: #173f55;
 
@@ -617,6 +673,8 @@ body.menu-open {
 }
 
 .table-header p {
+    margin: 0;
+
     color: #87949a;
 
     font-size: 10px;
@@ -644,7 +702,8 @@ table {
 }
 
 thead {
-    background: rgba(240, 235, 225, 0.78);
+    background:
+        rgba(240, 235, 225, 0.82);
 }
 
 th {
@@ -659,7 +718,9 @@ th {
 
     white-space: nowrap;
 
-    border-bottom: 1px solid #ddd5c9;
+    border-bottom:
+        1px solid
+        #ddd5c9;
 }
 
 td {
@@ -671,7 +732,9 @@ td {
 
     vertical-align: middle;
 
-    border-bottom: 1px solid rgba(224, 217, 207, 0.72);
+    border-bottom:
+        1px solid
+        rgba(224, 217, 207, 0.72);
 }
 
 tbody tr {
@@ -679,7 +742,8 @@ tbody tr {
 }
 
 tbody tr:hover {
-    background: rgba(247, 242, 232, 0.68);
+    background:
+        rgba(247, 242, 232, 0.68);
 }
 
 tbody tr:last-child td {
@@ -710,7 +774,10 @@ tbody tr:last-child td {
     align-items: center;
     justify-content: center;
 
-    border: 1px solid rgba(185, 135, 66, 0.35);
+    border:
+        1px solid
+        rgba(185, 135, 66, 0.40);
+
     border-radius: 50%;
 
     background: #f1e8d9;
@@ -840,7 +907,7 @@ tbody tr:last-child td {
 
 
 /* =========================================================
-   حالة الموظف
+   الحالة
 ========================================================= */
 
 .status-badge {
@@ -877,7 +944,7 @@ tbody tr:last-child td {
 
 
 /* =========================================================
-   أزرار الجدول
+   الإجراءات
 ========================================================= */
 
 .actions {
@@ -912,11 +979,11 @@ tbody tr:last-child td {
 }
 
 .edit-btn {
-    border: 1px solid #315d70;
+    border: 1px solid #31586c;
 
-    background: #315d70;
+    background: #31586c;
 
-    color: #fff;
+    color: #ffffff;
 }
 
 .view-btn:hover,
@@ -968,13 +1035,16 @@ tbody tr:last-child td {
 
     inset: 0;
 
-    background: rgba(12, 34, 46, 0.48);
+    background:
+        rgba(12, 34, 46, 0.48);
 
     backdrop-filter: blur(3px);
 }
 
 .modal-box {
     position: relative;
+
+    z-index: 1;
 
     width: min(800px, 95vw);
     max-height: 90vh;
@@ -983,15 +1053,17 @@ tbody tr:last-child td {
 
     padding: 25px;
 
-    border: 1px solid rgba(185, 135, 66, 0.42);
+    border:
+        1px solid
+        rgba(185, 135, 66, 0.42);
+
     border-radius: 16px;
 
     background: #faf8f3;
 
     box-shadow:
-        0 24px 60px rgba(13, 35, 47, 0.22);
-
-    z-index: 1;
+        0 24px 60px
+        rgba(13, 35, 47, 0.22);
 }
 
 .details-box {
@@ -1000,24 +1072,28 @@ tbody tr:last-child td {
 
 
 /* =========================================================
-   Modal Header
+   رأس النافذة
 ========================================================= */
 
 .modal-header {
     display: flex;
+
     align-items: flex-start;
     justify-content: space-between;
 
     gap: 20px;
 
     padding-bottom: 17px;
+
     margin-bottom: 20px;
 
-    border-bottom: 1px solid #e2dacd;
+    border-bottom:
+        1px solid
+        #e2dacd;
 }
 
 .modal-header h2 {
-    margin-bottom: 5px;
+    margin: 0 0 5px;
 
     color: #173f55;
 
@@ -1026,6 +1102,8 @@ tbody tr:last-child td {
 }
 
 .modal-header p {
+    margin: 0;
+
     color: #7d8c93;
 
     font-size: 10px;
@@ -1091,6 +1169,7 @@ tbody tr:last-child td {
 .form-group select,
 .form-group textarea {
     width: 100%;
+
     min-height: 42px;
 
     padding: 0 12px;
@@ -1123,7 +1202,8 @@ tbody tr:last-child td {
     border-color: #b98a48;
 
     box-shadow:
-        0 0 0 3px rgba(185, 138, 72, 0.08);
+        0 0 0 3px
+        rgba(185, 138, 72, 0.08);
 }
 
 .form-group input[readonly] {
@@ -1136,7 +1216,7 @@ tbody tr:last-child td {
 
 
 /* =========================================================
-   قسم المهارات
+   المهارات
 ========================================================= */
 
 .skills-section {
@@ -1144,7 +1224,10 @@ tbody tr:last-child td {
 
     padding: 18px;
 
-    border: 1px solid rgba(185, 135, 66, 0.38);
+    border:
+        1px solid
+        rgba(185, 135, 66, 0.38);
+
     border-radius: 12px;
 
     background: #f7f3eb;
@@ -1155,7 +1238,7 @@ tbody tr:last-child td {
 }
 
 .skills-section-header h3 {
-    margin-bottom: 4px;
+    margin: 0 0 4px;
 
     color: #173f55;
 
@@ -1164,6 +1247,8 @@ tbody tr:last-child td {
 }
 
 .skills-section-header p {
+    margin: 0;
+
     color: #7c8b92;
 
     font-size: 9px;
@@ -1298,20 +1383,24 @@ tbody tr:last-child td {
 
 
 /* =========================================================
-   أزرار Modal
+   أزرار النافذة
 ========================================================= */
 
 .modal-actions {
     display: flex;
+
     align-items: center;
     justify-content: flex-end;
 
     gap: 9px;
 
     padding-top: 20px;
+
     margin-top: 20px;
 
-    border-top: 1px solid #e2dacd;
+    border-top:
+        1px solid
+        #e2dacd;
 }
 
 .cancel-btn,
@@ -1336,16 +1425,16 @@ tbody tr:last-child td {
 }
 
 .save-btn {
-    border: 1px solid #173f55;
+    border: 1px solid #31586c;
 
     background:
         linear-gradient(
             135deg,
-            #173f55,
-            #315f73
+            #31586c,
+            #456f82
         );
 
-    color: #fff;
+    color: #ffffff;
 }
 
 .save-btn:disabled {
@@ -1447,7 +1536,7 @@ tbody tr:last-child td {
 
 
 /* =========================================================
-   هيدر الجوال
+   Mobile Header
 ========================================================= */
 
 .mobile-header {
@@ -1461,7 +1550,8 @@ tbody tr:last-child td {
 
     display: none;
 
-    background: rgba(12, 32, 43, 0.45);
+    background:
+        rgba(12, 32, 43, 0.45);
 
     backdrop-filter: blur(2px);
 
@@ -1478,14 +1568,16 @@ tbody tr:last-child td {
 ========================================================= */
 
 .table-wrapper::-webkit-scrollbar,
-.modal-box::-webkit-scrollbar {
-    width: 7px;
-    height: 7px;
+.modal-box::-webkit-scrollbar,
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
 }
 
 .table-wrapper::-webkit-scrollbar-track,
-.modal-box::-webkit-scrollbar-track {
-    background: #eee8de;
+.modal-box::-webkit-scrollbar-track,
+.sidebar::-webkit-scrollbar-track {
+    background: transparent;
 }
 
 .table-wrapper::-webkit-scrollbar-thumb,
@@ -1495,18 +1587,45 @@ tbody tr:last-child td {
     border-radius: 10px;
 }
 
+.sidebar::-webkit-scrollbar-thumb {
+    background:
+        rgba(255, 255, 255, 0.22);
+
+    border-radius: 10px;
+}
+
 
 /* =========================================================
    لابتوب
 ========================================================= */
 
-@media (max-width: 1200px) {
+@media (max-width: 1200px) and (min-width: 801px) {
 
     :root {
         --sidebar-width: 225px;
     }
 
+    .sidebar {
+        width: var(--sidebar-width);
+
+        padding:
+            22px
+            15px;
+    }
+
+    .sidebar-logo img {
+        width: 86px;
+    }
+
     .main-content {
+        width:
+            calc(
+                100% - var(--sidebar-width)
+            );
+
+        margin-right:
+            var(--sidebar-width);
+
         padding:
             32px
             27px
@@ -1541,25 +1660,31 @@ tbody tr:last-child td {
 @media (max-width: 800px) {
 
     body {
-        background-attachment: scroll;
-        background-position: center top;
+        background: #f5f2ec;
     }
 
+
+    /* ---------- الهيدر ---------- */
+
     .mobile-header {
-        position: sticky;
+        position: fixed;
 
         top: 0;
+        right: 0;
+        left: 0;
 
-        height: 67px;
+        height: 70px;
 
-        padding: 0 14px;
+        padding:
+            0
+            15px;
 
         display: grid;
 
         grid-template-columns:
-            40px
+            42px
             1fr
-            45px;
+            48px;
 
         align-items: center;
 
@@ -1568,30 +1693,39 @@ tbody tr:last-child td {
         background:
             linear-gradient(
                 135deg,
-                #173f55,
-                #315f73
+                #31586c,
+                #456f82
             );
 
-        box-shadow:
-            0 5px 15px rgba(15, 42, 57, 0.12);
+        border-bottom:
+            1px solid
+            rgba(198, 154, 90, 0.22);
 
-        z-index: 800;
+        box-shadow:
+            0 5px 18px
+            rgba(15, 42, 57, 0.15);
+
+        z-index: 4000;
     }
 
     .mobile-menu-btn {
-        width: 37px;
-        height: 37px;
+        width: 38px;
+        height: 38px;
 
         display: flex;
         align-items: center;
         justify-content: center;
 
-        border: 1px solid rgba(255, 255, 255, 0.22);
+        border:
+            1px solid
+            rgba(255, 255, 255, 0.24);
+
         border-radius: 8px;
 
-        background: rgba(255, 255, 255, 0.08);
+        background:
+            rgba(255, 255, 255, 0.08);
 
-        color: #fff;
+        color: #ffffff;
 
         font-size: 20px;
     }
@@ -1604,57 +1738,141 @@ tbody tr:last-child td {
     }
 
     .mobile-header-title h2 {
-        color: #fff;
+        color: #ffffff;
 
         font-size: 13px;
     }
 
     .mobile-header-title span {
-        color: rgba(255, 255, 255, 0.65);
+        color:
+            rgba(255, 255, 255, 0.68);
 
         font-size: 8px;
     }
 
     .mobile-logo {
-        width: 42px;
-        height: 42px;
+        width: 44px;
+        height: 44px;
 
         object-fit: contain;
     }
 
 
-    /* Sidebar */
+    /* ---------- Sidebar ---------- */
 
     .sidebar {
-        right: -270px;
+        position: fixed;
 
-        width: 250px;
+        top: 0;
+        right: -300px;
 
-        transition: right 0.25s ease;
+        width: 275px;
+        max-width: 83vw;
 
-        z-index: 1000;
+        height: 100dvh;
+
+        padding:
+            23px
+            18px;
+
+        background:
+            linear-gradient(
+                180deg,
+                #536f7e 0%,
+                #45687a 48%,
+                #355a6d 100%
+            );
+
+        border-left:
+            1px solid
+            rgba(198, 154, 90, 0.22);
+
+        box-shadow:
+            -12px 0 32px
+            rgba(30, 48, 58, 0.22);
+
+        transition:
+            right 0.30s ease;
+
+        z-index: 5000;
     }
 
     .sidebar.show {
         right: 0;
     }
 
+    .sidebar-logo {
+        margin-bottom: 20px;
+    }
 
-    /* المحتوى */
+    .sidebar-logo img {
+        width: 88px;
+    }
+
+    .nav-link {
+        min-height: 44px;
+
+        padding:
+            0
+            14px;
+
+        font-size: 12px;
+    }
+
+    .logout-btn {
+        min-height: 46px;
+    }
+
+
+    /* ---------- Overlay ---------- */
+
+    .sidebar-overlay {
+        z-index: 4500;
+    }
+
+
+    /* ---------- المحتوى ---------- */
 
     .main-content {
+        width: 100%;
+
+        min-height: 100vh;
+
         margin-right: 0;
 
         padding:
-            24px
+            100px
             15px
             40px;
+
+        background-color: #f5f2ec;
+
+        background-image:
+            linear-gradient(
+                rgba(250, 248, 244, 0.12),
+                rgba(250, 248, 244, 0.12)
+            ),
+            url("assets/background.jpeg");
+
+        background-size: auto 100%;
+
+        background-position: center top;
+
+        background-repeat: no-repeat;
+
+        background-attachment: scroll;
     }
 
-    .topbar {
-        min-height: 145px;
 
-        padding-top: 4px;
+    /* ---------- عنوان الصفحة ---------- */
+
+    .topbar {
+        min-height: 140px;
+
+        padding:
+            4px
+            0
+            20px;
     }
 
     .topbar h1 {
@@ -1666,7 +1884,7 @@ tbody tr:last-child td {
     }
 
 
-    /* الملخص */
+    /* ---------- الملخص ---------- */
 
     .employees-summary {
         grid-template-columns:
@@ -1686,7 +1904,7 @@ tbody tr:last-child td {
     }
 
 
-    /* البحث */
+    /* ---------- البحث ---------- */
 
     .toolbar {
         display: flex;
@@ -1698,8 +1916,7 @@ tbody tr:last-child td {
     }
 
     .filters {
-        grid-template-columns:
-            1fr;
+        grid-template-columns: 1fr;
     }
 
     .toolbar-actions {
@@ -1711,7 +1928,7 @@ tbody tr:last-child td {
     }
 
 
-    /* Modal */
+    /* ---------- Modal ---------- */
 
     .modal {
         padding: 12px;
@@ -1726,13 +1943,11 @@ tbody tr:last-child td {
     }
 
     .form-grid {
-        grid-template-columns:
-            1fr;
+        grid-template-columns: 1fr;
     }
 
     .skill-add-row {
-        grid-template-columns:
-            1fr;
+        grid-template-columns: 1fr;
     }
 
     .add-skill-btn {
@@ -1740,13 +1955,11 @@ tbody tr:last-child td {
     }
 
     .selected-skills {
-        grid-template-columns:
-            1fr;
+        grid-template-columns: 1fr;
     }
 
     .details-grid {
-        grid-template-columns:
-            1fr;
+        grid-template-columns: 1fr;
     }
 }
 
@@ -1759,17 +1972,19 @@ tbody tr:last-child td {
 
     .main-content {
         padding:
-            20px
+            92px
             11px
             35px;
     }
 
     .topbar {
-        min-height: 130px;
+        min-height: 125px;
     }
 
     .page-badge {
-        padding: 6px 12px;
+        padding:
+            6px
+            12px;
 
         font-size: 9px;
     }
@@ -1778,9 +1993,13 @@ tbody tr:last-child td {
         font-size: 22px;
     }
 
+    .topbar p {
+        font-size: 9px;
+    }
+
     .employees-summary {
         grid-template-columns:
-            1fr 1fr;
+            repeat(2, minmax(0, 1fr));
 
         gap: 8px;
     }
