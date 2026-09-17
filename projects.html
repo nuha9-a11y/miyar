@@ -10,13 +10,354 @@
     <link rel="stylesheet" href="projects.css">
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!--
+        إصلاحات تنسيق بسيطة فوق projects.css
+        بدون حذف ملف CSS الأساسي
+    -->
+    <style>
+
+        /* =========================
+           مربعات الملخص العلوية
+        ========================== */
+
+        .projects-summary .summary-item {
+            background: rgba(255, 255, 255, 0.84) !important;
+            border: 1px solid rgba(198, 154, 90, 0.48) !important;
+            border-right: 3px solid #c69a5a !important;
+            box-shadow: 0 8px 22px rgba(38, 59, 70, 0.07) !important;
+        }
+
+        .projects-summary .summary-item:hover {
+            border-color: rgba(198, 154, 90, 0.70) !important;
+            transform: translateY(-2px);
+        }
+
+
+        /* =========================
+           بطاقات المشاريع
+        ========================== */
+
+        .project-card {
+            background: rgba(255, 255, 255, 0.88) !important;
+            border: 1px solid rgba(198, 154, 90, 0.35) !important;
+            border-top: 2px solid rgba(198, 154, 90, 0.75) !important;
+            box-shadow: 0 10px 26px rgba(38, 59, 70, 0.07) !important;
+        }
+
+        .project-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .project-card-top > div {
+            min-width: 0;
+        }
+
+        .project-label {
+            display: inline-block;
+            color: #b18145;
+            font-size: 8px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .project-card h3 {
+            margin: 0;
+            color: #263f4f;
+            font-size: 14px;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        .project-status {
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 25px;
+            padding: 0 10px;
+            border-radius: 20px;
+            font-size: 8px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .project-status.running {
+            background: rgba(66, 121, 145, 0.10);
+            border: 1px solid rgba(66, 121, 145, 0.25);
+            color: #31586c;
+        }
+
+        .project-status.completed {
+            background: rgba(83, 132, 104, 0.10);
+            border: 1px solid rgba(83, 132, 104, 0.25);
+            color: #527b61;
+        }
+
+        .project-status.stopped {
+            background: rgba(169, 93, 93, 0.08);
+            border: 1px solid rgba(169, 93, 93, 0.22);
+            color: #a15b5b;
+        }
+
+        .project-status.planned {
+            background: rgba(198, 154, 90, 0.11);
+            border: 1px solid rgba(198, 154, 90, 0.28);
+            color: #9f733c;
+        }
+
+        .project-description {
+            min-height: 42px;
+            margin: 12px 0;
+            color: #71828c;
+            font-size: 10px;
+            line-height: 1.8;
+        }
+
+
+        /* =========================
+           بيانات المشروع
+        ========================== */
+
+        .project-info {
+            display: grid !important;
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            gap: 8px !important;
+            margin: 12px 0 !important;
+        }
+
+        .project-info .info-item {
+            min-width: 0;
+            padding: 9px 10px;
+            border-radius: 9px;
+            background: rgba(249, 247, 242, 0.78);
+            border: 1px solid rgba(198, 154, 90, 0.22);
+        }
+
+        .project-info .info-item span {
+            display: block;
+            margin-bottom: 4px;
+            color: #89969d;
+            font-size: 8px;
+        }
+
+        .project-info .info-item strong {
+            display: block;
+            color: #2d4857;
+            font-size: 9px;
+            font-weight: 700;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .project-date {
+            direction: ltr;
+            text-align: right;
+            white-space: nowrap;
+        }
+
+
+        /* =========================
+           معاينة المهارات
+        ========================== */
+
+        .project-requirements-preview {
+            padding: 10px 11px !important;
+            border-radius: 9px !important;
+            background: rgba(249, 247, 242, 0.72) !important;
+            border: 1px solid rgba(198, 154, 90, 0.22) !important;
+            border-right: 2px solid #c69a5a !important;
+        }
+
+        .project-requirements-preview > span {
+            display: block;
+            margin-bottom: 6px;
+            color: #9f733c;
+            font-size: 8px;
+            font-weight: 700;
+        }
+
+        .project-requirements-preview > strong {
+            display: block;
+            color: #526b78;
+            font-size: 9px;
+            font-weight: 600;
+            line-height: 1.8;
+        }
+
+
+        /* =========================
+           أزرار البطاقة
+        ========================== */
+
+        .project-actions {
+            display: flex !important;
+            align-items: center;
+            gap: 6px !important;
+            margin-top: 13px !important;
+        }
+
+        .project-actions button {
+            min-height: 32px;
+            padding: 0 12px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 9px;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .view-btn {
+            background: #31586c;
+            color: #ffffff;
+            border: 1px solid #31586c;
+        }
+
+        .edit-btn {
+            background: rgba(198, 154, 90, 0.10);
+            color: #946a36;
+            border: 1px solid rgba(198, 154, 90, 0.40);
+        }
+
+        .delete-btn {
+            background: transparent;
+            color: #a35d5d;
+            border: 1px solid rgba(163, 93, 93, 0.28);
+        }
+
+        .project-actions button:hover {
+            transform: translateY(-1px);
+        }
+
+
+        /* =========================
+           التفاصيل
+        ========================== */
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .detail-item {
+            padding: 13px;
+            border-radius: 10px;
+            background: rgba(249, 247, 242, 0.72);
+            border: 1px solid rgba(198, 154, 90, 0.24);
+        }
+
+        .detail-item.full-detail {
+            grid-column: 1 / -1;
+        }
+
+        .detail-item > span {
+            display: block;
+            color: #9f733c;
+            font-size: 9px;
+            margin-bottom: 6px;
+        }
+
+        .detail-item > strong {
+            color: #2d4857;
+            font-size: 11px;
+            line-height: 1.8;
+        }
+
+        .detail-description-text {
+            margin: 0;
+            color: #667a85;
+            font-size: 10px;
+            line-height: 1.9;
+        }
+
+        .project-requirements-details,
+        .project-tasks-list {
+            display: grid;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .project-requirement-detail,
+        .project-task-item {
+            padding: 11px;
+            border-radius: 9px;
+            background: #ffffff;
+            border: 1px solid rgba(198, 154, 90, 0.22);
+        }
+
+        .project-requirement-detail strong,
+        .project-task-item strong {
+            display: block;
+            color: #2e4a59;
+            font-size: 10px;
+            margin-bottom: 5px;
+        }
+
+        .requirement-detail-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .requirement-detail-meta span,
+        .project-task-item small {
+            color: #75868f;
+            font-size: 8px;
+        }
+
+        .empty-mini {
+            padding: 12px;
+            border-radius: 8px;
+            background: rgba(249, 247, 242, 0.75);
+            color: #89969d;
+            font-size: 9px;
+            text-align: center;
+        }
+
+
+        /* =========================
+           الجوال
+        ========================== */
+
+        @media (max-width: 700px) {
+
+            .project-info {
+                grid-template-columns: 1fr !important;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .project-actions {
+                flex-wrap: wrap;
+            }
+
+            .project-actions button {
+                flex: 1;
+            }
+
+        }
+
+    </style>
+
 </head>
+
 
 <body>
 
+
 <div class="projects-page">
 
-    <!-- هيدر الجوال -->
+
+    <!-- =========================
+         هيدر الجوال
+    ========================== -->
+
     <header class="mobile-header">
 
         <button
@@ -48,18 +389,24 @@
     ></div>
 
 
-    <!-- القائمة الجانبية -->
+    <!-- =========================
+         القائمة الجانبية
+    ========================== -->
+
     <aside
         class="sidebar"
         id="sidebar"
     >
 
         <div class="sidebar-logo">
+
             <img
                 src="assets/logo.png"
                 alt="معيار"
             >
+
         </div>
+
 
         <nav class="sidebar-nav">
 
@@ -101,6 +448,7 @@
 
         </nav>
 
+
         <button
             class="logout-btn"
             type="button"
@@ -112,8 +460,12 @@
     </aside>
 
 
-    <!-- المحتوى -->
+    <!-- =========================
+         المحتوى
+    ========================== -->
+
     <main class="main-content">
+
 
         <header class="topbar">
 
@@ -121,7 +473,9 @@
                 إدارة المشاريع
             </span>
 
-            <h1>المشاريع</h1>
+            <h1>
+                المشاريع
+            </h1>
 
             <p>
                 إنشاء المشاريع وتحليل وصفها لاستخراج المهارات المطلوبة
@@ -131,42 +485,85 @@
         </header>
 
 
-        <!-- الملخص -->
+        <!-- =========================
+             الملخص
+        ========================== -->
+
         <section class="projects-summary">
 
-            <div class="summary-item">
-                <span>إجمالي المشاريع</span>
-                <strong id="summaryTotal">0</strong>
-            </div>
 
             <div class="summary-item">
-                <span>قيد التنفيذ</span>
-                <strong id="summaryRunning">0</strong>
+
+                <span>
+                    إجمالي المشاريع
+                </span>
+
+                <strong id="summaryTotal">
+                    0
+                </strong>
+
             </div>
 
-            <div class="summary-item">
-                <span>مخطط</span>
-                <strong id="summaryPlanned">0</strong>
-            </div>
 
             <div class="summary-item">
-                <span>مكتمل</span>
-                <strong id="summaryCompleted">0</strong>
+
+                <span>
+                    قيد التنفيذ
+                </span>
+
+                <strong id="summaryRunning">
+                    0
+                </strong>
+
             </div>
+
+
+            <div class="summary-item">
+
+                <span>
+                    مخطط
+                </span>
+
+                <strong id="summaryPlanned">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="summary-item">
+
+                <span>
+                    مكتمل
+                </span>
+
+                <strong id="summaryCompleted">
+                    0
+                </strong>
+
+            </div>
+
 
         </section>
 
 
-        <!-- البحث -->
+        <!-- =========================
+             البحث والفلترة
+        ========================== -->
+
         <section class="toolbar">
 
+
             <div class="search-box">
+
                 <input
                     type="text"
                     id="searchInput"
                     placeholder="ابحث باسم المشروع أو مدير المشروع..."
                 >
+
             </div>
+
 
             <div class="filters">
 
@@ -196,6 +593,7 @@
 
             </div>
 
+
             <button
                 class="add-btn"
                 type="button"
@@ -204,33 +602,51 @@
                 + إضافة مشروع
             </button>
 
+
         </section>
 
 
-        <!-- قائمة المشاريع -->
+        <!-- =========================
+             قائمة المشاريع
+        ========================== -->
+
         <section class="projects-container">
+
 
             <div class="section-title">
 
                 <div>
-                    <h2>قائمة المشاريع</h2>
-                    <p id="projectsCount">-</p>
+
+                    <h2>
+                        قائمة المشاريع
+                    </h2>
+
+                    <p id="projectsCount">
+                        -
+                    </p>
+
                 </div>
 
             </div>
+
 
             <div
                 class="projects-grid"
                 id="projectsGrid"
             >
+
                 <div class="empty-state">
                     جارٍ تحميل المشاريع...
                 </div>
+
             </div>
+
 
         </section>
 
+
     </main>
+
 
 </div>
 
@@ -244,14 +660,18 @@
     id="projectModal"
 >
 
+
     <div
         class="modal-overlay"
         id="projectModalOverlay"
     ></div>
 
+
     <div class="modal-box project-modal-box">
 
+
         <div class="modal-header">
+
 
             <div>
 
@@ -266,6 +686,7 @@
 
             </div>
 
+
             <button
                 class="close-btn"
                 type="button"
@@ -274,10 +695,12 @@
                 ×
             </button>
 
+
         </div>
 
 
         <form id="projectForm">
+
 
             <input
                 type="hidden"
@@ -285,22 +708,32 @@
             >
 
 
-            <!-- بيانات المشروع -->
+            <!-- =========================
+                 بيانات المشروع
+            ========================== -->
+
             <div class="form-section">
+
 
                 <div class="form-section-heading">
 
                     <div>
-                        <h3>بيانات المشروع</h3>
+
+                        <h3>
+                            بيانات المشروع
+                        </h3>
+
                         <p>
                             البيانات الأساسية الخاصة بالمشروع.
                         </p>
+
                     </div>
 
                 </div>
 
 
                 <div class="form-grid">
+
 
                     <div class="form-group">
 
@@ -429,15 +862,22 @@
 
                     </div>
 
+
                 </div>
+
 
             </div>
 
 
-            <!-- المتطلبات الذكية -->
+            <!-- =========================
+                 المتطلبات الذكية
+            ========================== -->
+
             <div class="form-section requirements-section">
 
+
                 <div class="form-section-heading requirements-heading">
+
 
                     <div>
 
@@ -456,6 +896,7 @@
 
                     <div class="requirements-actions">
 
+
                         <button
                             type="button"
                             class="analyze-requirements-btn"
@@ -463,6 +904,7 @@
                         >
                             تحليل المتطلبات تلقائيًا
                         </button>
+
 
                         <button
                             type="button"
@@ -472,16 +914,20 @@
                             + إضافة يدوية
                         </button>
 
+
                     </div>
+
 
                 </div>
 
 
                 <!-- نتيجة الذكاء الاصطناعي -->
+
                 <div
                     class="smart-analysis-box"
                     id="smartAnalysisBox"
                 >
+
 
                     <div class="smart-analysis-head">
 
@@ -495,10 +941,12 @@
 
                     </div>
 
+
                     <div
                         class="smart-analysis-result"
                         id="smartAnalysisResult"
                     ></div>
+
 
                 </div>
 
@@ -517,10 +965,12 @@
                     استخدم التحليل التلقائي أو أضف متطلبًا يدويًا.
                 </div>
 
+
             </div>
 
 
             <div class="modal-actions">
+
 
                 <button
                     type="button"
@@ -530,6 +980,7 @@
                     إلغاء
                 </button>
 
+
                 <button
                     type="submit"
                     class="save-btn"
@@ -538,17 +989,21 @@
                     حفظ المشروع
                 </button>
 
+
             </div>
+
 
         </form>
 
+
     </div>
+
 
 </div>
 
 
 <!-- =====================================================
-     تفاصيل المشروع
+     نافذة تفاصيل المشروع
 ===================================================== -->
 
 <div
@@ -556,14 +1011,18 @@
     id="detailsModal"
 >
 
+
     <div
         class="modal-overlay"
         id="detailsModalOverlay"
     ></div>
 
+
     <div class="modal-box details-box">
 
+
         <div class="modal-header">
+
 
             <div>
 
@@ -577,6 +1036,7 @@
 
             </div>
 
+
             <button
                 class="close-btn"
                 type="button"
@@ -585,19 +1045,24 @@
                 ×
             </button>
 
+
         </div>
+
 
         <div
             id="projectDetails"
             class="details-grid"
         ></div>
 
+
     </div>
+
 
 </div>
 
 
 <script>
+
 
 /* =====================================================
    إعداد Supabase
@@ -606,11 +1071,14 @@
 const SUPABASE_URL =
     "https://avooyglxacytrfhvotsl.supabase.co";
 
+
 const SUPABASE_KEY =
     "sb_publishable_NVlWEnA_w4KbSse_-70zdA_J9ut0Kyo";
 
+
 const ADMIN_EMAIL =
     "admin@gmail.com";
+
 
 const supabaseClient =
     window.supabase.createClient(
@@ -624,8 +1092,11 @@ const supabaseClient =
 ===================================================== */
 
 let projects = [];
+
 let tasks = [];
+
 let skills = [];
+
 let projectRequirements = [];
 
 
@@ -634,28 +1105,51 @@ let projectRequirements = [];
 ===================================================== */
 
 const projectsGrid =
-    document.getElementById("projectsGrid");
+    document.getElementById(
+        "projectsGrid"
+    );
+
 
 const projectsCount =
-    document.getElementById("projectsCount");
+    document.getElementById(
+        "projectsCount"
+    );
+
 
 const projectModal =
-    document.getElementById("projectModal");
+    document.getElementById(
+        "projectModal"
+    );
+
 
 const detailsModal =
-    document.getElementById("detailsModal");
+    document.getElementById(
+        "detailsModal"
+    );
+
 
 const sidebar =
-    document.getElementById("sidebar");
+    document.getElementById(
+        "sidebar"
+    );
+
 
 const sidebarOverlay =
-    document.getElementById("sidebarOverlay");
+    document.getElementById(
+        "sidebarOverlay"
+    );
+
 
 const requirementsList =
-    document.getElementById("requirementsList");
+    document.getElementById(
+        "requirementsList"
+    );
+
 
 const requirementsEmpty =
-    document.getElementById("requirementsEmpty");
+    document.getElementById(
+        "requirementsEmpty"
+    );
 
 
 /* =====================================================
@@ -664,12 +1158,101 @@ const requirementsEmpty =
 
 function escapeHtml(value) {
 
-    return String(value ?? "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+    return String(
+        value ?? ""
+    )
+
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
+
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
+
+        .replaceAll(
+            ">",
+            "&gt;"
+        )
+
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
+
+        .replaceAll(
+            "'",
+            "&#039;"
+        );
+
+}
+
+
+/* =====================================================
+   تنسيق التاريخ
+===================================================== */
+
+function formatDate(value) {
+
+    if (!value) {
+        return "-";
+    }
+
+
+    const parts =
+        String(value).split("-");
+
+
+    if (
+        parts.length === 3
+    ) {
+
+        return (
+            parts[2]
+            + "/"
+            + parts[1]
+            + "/"
+            + parts[0]
+        );
+
+    }
+
+
+    return String(value);
+
+}
+
+
+/* =====================================================
+   Class حالة المشروع
+===================================================== */
+
+function getStatusClass(status) {
+
+    if (
+        status === "قيد التنفيذ"
+    ) {
+        return "running";
+    }
+
+
+    if (
+        status === "مكتمل"
+    ) {
+        return "completed";
+    }
+
+
+    if (
+        status === "متوقف"
+    ) {
+        return "stopped";
+    }
+
+
+    return "planned";
 
 }
 
@@ -721,10 +1304,13 @@ async function protectPage() {
                 .auth
                 .signOut();
 
+
             localStorage.clear();
+
 
             window.location.href =
                 "login.html";
+
 
             return false;
 
@@ -735,6 +1321,7 @@ async function protectPage() {
             "miyarRole",
             "admin"
         );
+
 
         localStorage.setItem(
             "miyarEmail",
@@ -753,6 +1340,7 @@ async function protectPage() {
             error
         );
 
+
         return false;
 
     }
@@ -766,14 +1354,18 @@ async function protectPage() {
 
 async function loadProjects() {
 
+
     projectsGrid.innerHTML = `
+
         <div class="empty-state">
             جارٍ تحميل المشاريع...
         </div>
+
     `;
 
 
     try {
+
 
         const [
             projectsResult,
@@ -782,6 +1374,7 @@ async function loadProjects() {
             requirementsResult
         ] =
         await Promise.all([
+
 
             supabaseClient
                 .from("projects")
@@ -801,6 +1394,7 @@ async function loadProjects() {
                     }
                 ),
 
+
             supabaseClient
                 .from("tasks")
                 .select(`
@@ -810,6 +1404,7 @@ async function loadProjects() {
                     status,
                     assigned_employee_id
                 `),
+
 
             supabaseClient
                 .from("skills")
@@ -825,8 +1420,11 @@ async function loadProjects() {
                     }
                 ),
 
+
             supabaseClient
-                .from("project_requirements")
+                .from(
+                    "project_requirements"
+                )
                 .select(`
                     id,
                     project_id,
@@ -836,23 +1434,40 @@ async function loadProjects() {
                     importance_weight
                 `)
 
+
         ]);
 
 
-        if (projectsResult.error) {
+        if (
+            projectsResult.error
+        ) {
+
             throw projectsResult.error;
+
         }
 
-        if (skillsResult.error) {
+
+        if (
+            skillsResult.error
+        ) {
+
             throw skillsResult.error;
+
         }
 
-        if (requirementsResult.error) {
+
+        if (
+            requirementsResult.error
+        ) {
+
             throw requirementsResult.error;
+
         }
 
 
-        if (tasksResult.error) {
+        if (
+            tasksResult.error
+        ) {
 
             console.warn(
                 "تعذر تحميل المهام:",
@@ -865,8 +1480,10 @@ async function loadProjects() {
         tasks =
             tasksResult.data || [];
 
+
         skills =
             skillsResult.data || [];
+
 
         projectRequirements =
             requirementsResult.data || [];
@@ -876,61 +1493,85 @@ async function loadProjects() {
             (projectsResult.data || [])
                 .map(project => {
 
+
                     const projectTasks =
-                        tasks.filter(task =>
-                            Number(task.project_id) ===
-                            Number(project.id)
+                        tasks.filter(
+                            task =>
+                                Number(
+                                    task.project_id
+                                )
+                                ===
+                                Number(
+                                    project.id
+                                )
                         );
 
 
                     const requirements =
                         projectRequirements
 
-                            .filter(requirement =>
-                                Number(requirement.project_id) ===
-                                Number(project.id)
+                            .filter(
+                                requirement =>
+                                    Number(
+                                        requirement.project_id
+                                    )
+                                    ===
+                                    Number(
+                                        project.id
+                                    )
                             )
 
-                            .map(requirement => {
-
-                                const skill =
-                                    skills.find(item =>
-                                        Number(item.id) ===
-                                        Number(requirement.skill_id)
-                                    );
+                            .map(
+                                requirement => {
 
 
-                                return {
+                                    const skill =
+                                        skills.find(
+                                            item =>
+                                                Number(
+                                                    item.id
+                                                )
+                                                ===
+                                                Number(
+                                                    requirement.skill_id
+                                                )
+                                        );
 
-                                    id:
-                                        requirement.id,
 
-                                    skillId:
-                                        requirement.skill_id,
+                                    return {
 
-                                    skillName:
-                                        skill
-                                            ? skill.skill_name
-                                            : "مهارة غير محددة",
+                                        id:
+                                            requirement.id,
 
-                                    level:
-                                        Number(
-                                            requirement.required_level
-                                        ) || 1,
+                                        skillId:
+                                            requirement.skill_id,
 
-                                    members:
-                                        Number(
-                                            requirement.required_members
-                                        ) || 1,
+                                        skillName:
+                                            skill
+                                                ?
+                                                skill.skill_name
+                                                :
+                                                "مهارة غير محددة",
 
-                                    weight:
-                                        Number(
-                                            requirement.importance_weight
-                                        ) || 1
+                                        level:
+                                            Number(
+                                                requirement.required_level
+                                            ) || 1,
 
-                                };
+                                        members:
+                                            Number(
+                                                requirement.required_members
+                                            ) || 1,
 
-                            });
+                                        weight:
+                                            Number(
+                                                requirement.importance_weight
+                                            ) || 1
+
+                                    };
+
+                                }
+                            );
 
 
                     return {
@@ -978,6 +1619,7 @@ async function loadProjects() {
 
     catch (error) {
 
+
         console.error(
             "خطأ تحميل المشاريع:",
             error
@@ -1010,6 +1652,7 @@ async function loadProjects() {
 ===================================================== */
 
 function updateSummary() {
+
 
     document.getElementById(
         "summaryTotal"
@@ -1055,10 +1698,12 @@ function updateSummary() {
 
 function renderProjects(list) {
 
+
     if (
         !Array.isArray(list) ||
         list.length === 0
     ) {
+
 
         projectsGrid.innerHTML = `
 
@@ -1068,8 +1713,10 @@ function renderProjects(list) {
 
         `;
 
+
         projectsCount.textContent =
             "0 مشروع";
+
 
         return;
 
@@ -1083,59 +1730,44 @@ function renderProjects(list) {
     projectsGrid.innerHTML =
         list.map(project => {
 
+
             const requirements =
-                Array.isArray(project.requirements)
-                    ? project.requirements
-                    : [];
+                Array.isArray(
+                    project.requirements
+                )
+                    ?
+                    project.requirements
+                    :
+                    [];
 
 
-            const requirementsHtml =
+            const requirementsText =
                 requirements.length > 0
                     ?
                     requirements
-                        .slice(0, 4)
-                        .map(requirement => `
-
-                            <span class="project-skill-tag">
-                                ${escapeHtml(
+                        .map(
+                            requirement =>
+                                escapeHtml(
                                     requirement.skillName
-                                )}
-                            </span>
-
-                        `)
-                        .join("")
+                                )
+                        )
+                        .join("، ")
                     :
-                    `
-                        <span class="project-skill-tag">
-                            لا توجد متطلبات
-                        </span>
-                    `;
-
-
-            const more =
-                requirements.length > 4
-                    ?
-                    `
-                        <span class="project-skill-tag">
-                            +${requirements.length - 4}
-                        </span>
-                    `
-                    :
-                    "";
+                    "لا توجد متطلبات";
 
 
             return `
 
                 <article class="project-card">
 
-                    <div class="project-card-head">
+
+                    <div class="project-card-top">
+
 
                         <div>
 
-                            <span class="project-status">
-                                ${escapeHtml(
-                                    project.status
-                                )}
+                            <span class="project-label">
+                                مشروع
                             </span>
 
                             <h3>
@@ -1145,6 +1777,21 @@ function renderProjects(list) {
                             </h3>
 
                         </div>
+
+
+                        <span
+                            class="
+                                project-status
+                                ${getStatusClass(
+                                    project.status
+                                )}
+                            "
+                        >
+                            ${escapeHtml(
+                                project.status
+                            )}
+                        </span>
+
 
                     </div>
 
@@ -1164,9 +1811,24 @@ function renderProjects(list) {
                     </p>
 
 
+                    <div class="project-requirements-preview">
+
+                        <span>
+                            المهارات المطلوبة
+                        </span>
+
+                        <strong>
+                            ${requirementsText}
+                        </strong>
+
+                    </div>
+
+
                     <div class="project-info">
 
-                        <div>
+
+                        <div class="info-item">
+
                             <span>
                                 مدير المشروع
                             </span>
@@ -1176,10 +1838,12 @@ function renderProjects(list) {
                                     project.manager
                                 )}
                             </strong>
+
                         </div>
 
 
-                        <div>
+                        <div class="info-item">
+
                             <span>
                                 عدد المهام
                             </span>
@@ -1187,59 +1851,53 @@ function renderProjects(list) {
                             <strong>
                                 ${project.tasks}
                             </strong>
+
                         </div>
 
 
-                        <div>
+                        <div class="info-item">
+
                             <span>
                                 تاريخ البداية
                             </span>
 
-                            <strong>
+                            <strong class="project-date">
                                 ${escapeHtml(
-                                    project.start || "-"
+                                    formatDate(
+                                        project.start
+                                    )
                                 )}
                             </strong>
+
                         </div>
 
 
-                        <div>
+                        <div class="info-item">
+
                             <span>
                                 تاريخ النهاية
                             </span>
 
-                            <strong>
+                            <strong class="project-date">
                                 ${escapeHtml(
-                                    project.end || "-"
+                                    formatDate(
+                                        project.end
+                                    )
                                 )}
                             </strong>
+
                         </div>
+
 
                     </div>
 
 
-                    <div class="project-requirements-preview">
+                    <div class="project-actions">
 
-                        <span class="preview-title">
-                            المهارات المطلوبة
-                        </span>
-
-                        <div class="project-skills">
-
-                            ${requirementsHtml}
-
-                            ${more}
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="project-card-actions">
 
                         <button
                             type="button"
-                            class="details-btn"
+                            class="view-btn"
                             onclick="openProjectDetails(${Number(project.id)})"
                         >
                             التفاصيل
@@ -1263,7 +1921,9 @@ function renderProjects(list) {
                             حذف
                         </button>
 
+
                     </div>
+
 
                 </article>
 
@@ -1280,9 +1940,12 @@ function renderProjects(list) {
 
 function filterProjects() {
 
+
     const search =
         document
-            .getElementById("searchInput")
+            .getElementById(
+                "searchInput"
+            )
             .value
             .trim()
             .toLowerCase();
@@ -1290,52 +1953,59 @@ function filterProjects() {
 
     const status =
         document
-            .getElementById("statusFilter")
+            .getElementById(
+                "statusFilter"
+            )
             .value;
 
 
     const filtered =
-        projects.filter(project => {
-
-            const name =
-                String(
-                    project.name || ""
-                ).toLowerCase();
+        projects.filter(
+            project => {
 
 
-            const manager =
-                String(
-                    project.manager || ""
-                ).toLowerCase();
+                const name =
+                    String(
+                        project.name || ""
+                    ).toLowerCase();
 
 
-            const description =
-                String(
-                    project.description || ""
-                ).toLowerCase();
+                const manager =
+                    String(
+                        project.manager || ""
+                    ).toLowerCase();
 
 
-            const matchesSearch =
-                !search ||
-                name.includes(search) ||
-                manager.includes(search) ||
-                description.includes(search);
+                const description =
+                    String(
+                        project.description || ""
+                    ).toLowerCase();
 
 
-            const matchesStatus =
-                !status ||
-                project.status === status;
+                const matchesSearch =
+                    !search ||
+                    name.includes(search) ||
+                    manager.includes(search) ||
+                    description.includes(search);
 
 
-            return (
-                matchesSearch &&
-                matchesStatus
-            );
-
-        });
+                const matchesStatus =
+                    !status ||
+                    project.status === status;
 
 
-    renderProjects(filtered);
+                return (
+                    matchesSearch &&
+                    matchesStatus
+                );
+
+            }
+        );
+
+
+    renderProjects(
+        filtered
+    );
 
 }
 
@@ -1348,6 +2018,7 @@ function getSkillOptions(
     selectedSkillId = ""
 ) {
 
+
     let html = `
 
         <option value="">
@@ -1357,29 +2028,39 @@ function getSkillOptions(
     `;
 
 
-    skills.forEach(skill => {
-
-        const selected =
-            Number(selectedSkillId) ===
-            Number(skill.id)
-                ? "selected"
-                : "";
+    skills.forEach(
+        skill => {
 
 
-        html += `
+            const selected =
+                Number(
+                    selectedSkillId
+                )
+                ===
+                Number(
+                    skill.id
+                )
+                    ?
+                    "selected"
+                    :
+                    "";
 
-            <option
-                value="${skill.id}"
-                ${selected}
-            >
-                ${escapeHtml(
-                    skill.skill_name
-                )}
-            </option>
 
-        `;
+            html += `
 
-    });
+                <option
+                    value="${skill.id}"
+                    ${selected}
+                >
+                    ${escapeHtml(
+                        skill.skill_name
+                    )}
+                </option>
+
+            `;
+
+        }
+    );
 
 
     return html;
@@ -1395,12 +2076,15 @@ function addRequirementRow(
     requirement = null
 ) {
 
+
     requirementsEmpty.style.display =
         "none";
 
 
     const row =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
 
     row.className =
@@ -1408,6 +2092,7 @@ function addRequirementRow(
 
 
     row.innerHTML = `
+
 
         <div class="requirement-field requirement-skill">
 
@@ -1419,13 +2104,13 @@ function addRequirementRow(
                 class="requirement-skill-select"
                 required
             >
-
                 ${getSkillOptions(
                     requirement
-                        ? requirement.skillId
-                        : ""
+                        ?
+                        requirement.skillId
+                        :
+                        ""
                 )}
-
             </select>
 
         </div>
@@ -1480,8 +2165,10 @@ function addRequirementRow(
                 max="10"
                 value="${
                     requirement
-                        ? requirement.members
-                        : 1
+                        ?
+                        requirement.members
+                        :
+                        1
                 }"
                 required
             >
@@ -1502,8 +2189,10 @@ function addRequirementRow(
                 max="100"
                 value="${
                     requirement
-                        ? requirement.weight
-                        : 50
+                        ?
+                        requirement.weight
+                        :
+                        50
                 }"
                 required
             >
@@ -1519,10 +2208,13 @@ function addRequirementRow(
             ×
         </button>
 
+
     `;
 
 
-    requirementsList.appendChild(row);
+    requirementsList.appendChild(
+        row
+    );
 
 
     if (requirement) {
@@ -1560,6 +2252,7 @@ function addRequirementRow(
 
 function updateRequirementsEmpty() {
 
+
     const count =
         requirementsList
             .querySelectorAll(
@@ -1570,8 +2263,10 @@ function updateRequirementsEmpty() {
 
     requirementsEmpty.style.display =
         count === 0
-            ? "block"
-            : "none";
+            ?
+            "block"
+            :
+            "none";
 
 }
 
@@ -1582,6 +2277,7 @@ function updateRequirementsEmpty() {
 
 function collectRequirements() {
 
+
     const rows =
         [
             ...requirementsList
@@ -1591,37 +2287,44 @@ function collectRequirements() {
         ];
 
 
-    return rows.map(row => ({
+    return rows.map(
+        row => ({
 
-        skill_id:
-            Number(
-                row.querySelector(
-                    ".requirement-skill-select"
-                ).value
-            ),
 
-        required_level:
-            Number(
-                row.querySelector(
-                    ".requirement-level"
-                ).value
-            ),
+            skill_id:
+                Number(
+                    row.querySelector(
+                        ".requirement-skill-select"
+                    ).value
+                ),
 
-        required_members:
-            Number(
-                row.querySelector(
-                    ".requirement-members"
-                ).value
-            ),
 
-        importance_weight:
-            Number(
-                row.querySelector(
-                    ".requirement-weight"
-                ).value
-            )
+            required_level:
+                Number(
+                    row.querySelector(
+                        ".requirement-level"
+                    ).value
+                ),
 
-    }));
+
+            required_members:
+                Number(
+                    row.querySelector(
+                        ".requirement-members"
+                    ).value
+                ),
+
+
+            importance_weight:
+                Number(
+                    row.querySelector(
+                        ".requirement-weight"
+                    ).value
+                )
+
+
+        })
+    );
 
 }
 
@@ -1633,6 +2336,7 @@ function collectRequirements() {
 function validateRequirements(
     requirements
 ) {
+
 
     if (
         requirements.length === 0
@@ -1670,7 +2374,9 @@ function validateRequirements(
 
 
     if (
-        new Set(skillIds).size !==
+        new Set(
+            skillIds
+        ).size !==
         skillIds.length
     ) {
 
@@ -1744,6 +2450,7 @@ function validateRequirements(
 ===================================================== */
 
 async function analyzeProjectRequirements() {
+
 
     const button =
         document.getElementById(
@@ -1820,6 +2527,7 @@ async function analyzeProjectRequirements() {
 
     try {
 
+
         const {
             data,
             error
@@ -1844,6 +2552,7 @@ async function analyzeProjectRequirements() {
 
         if (error) {
 
+
             console.error(
                 "Edge Function Error:",
                 error
@@ -1857,14 +2566,17 @@ async function analyzeProjectRequirements() {
 
             try {
 
+
                 if (
                     error.context &&
                     typeof error.context.json ===
                     "function"
                 ) {
 
+
                     const errorBody =
                         await error.context.json();
+
 
                     if (
                         errorBody &&
@@ -1879,6 +2591,7 @@ async function analyzeProjectRequirements() {
                 }
 
             }
+
             catch (readError) {
 
                 console.warn(
@@ -1889,7 +2602,9 @@ async function analyzeProjectRequirements() {
             }
 
 
-            throw new Error(message);
+            throw new Error(
+                message
+            );
 
         }
 
@@ -1919,8 +2634,10 @@ async function analyzeProjectRequirements() {
             Array.isArray(
                 data.requirements
             )
-                ? data.requirements
-                : [];
+                ?
+                data.requirements
+                :
+                [];
 
 
         if (
@@ -1945,6 +2662,7 @@ async function analyzeProjectRequirements() {
         aiRequirements.forEach(
             requirement => {
 
+
                 const skillId =
                     Number(
                         requirement.skill_id
@@ -1954,23 +2672,33 @@ async function analyzeProjectRequirements() {
                 const existingSkill =
                     skills.find(
                         skill =>
-                            Number(skill.id) ===
+                            Number(
+                                skill.id
+                            )
+                            ===
                             skillId
                     );
 
 
-                if (!existingSkill) {
+                if (
+                    !existingSkill
+                ) {
+
                     return;
+
                 }
 
 
                 const normalized = {
 
+
                     skillId:
                         skillId,
 
+
                     skillName:
                         existingSkill.skill_name,
+
 
                     level:
                         Math.min(
@@ -1983,6 +2711,7 @@ async function analyzeProjectRequirements() {
                             )
                         ),
 
+
                     members:
                         Math.min(
                             10,
@@ -1993,6 +2722,7 @@ async function analyzeProjectRequirements() {
                                 ) || 1
                             )
                         ),
+
 
                     weight:
                         Math.min(
@@ -2005,10 +2735,12 @@ async function analyzeProjectRequirements() {
                             )
                         ),
 
+
                     reason:
                         String(
                             requirement.reason || ""
                         ).trim()
+
 
                 };
 
@@ -2052,60 +2784,72 @@ async function analyzeProjectRequirements() {
 
         const skillsHtml =
             validRequirements
-                .map(requirement => `
+                .map(
+                    requirement => `
 
-                    <div class="analysis-skill">
 
-                        <strong>
-                            ${escapeHtml(
-                                requirement.skillName
-                            )}
-                        </strong>
+                        <div class="analysis-skill">
 
-                        <span>
 
-                            المستوى المطلوب:
-                            ${requirement.level}
-                            من 5
+                            <strong>
+                                ${escapeHtml(
+                                    requirement.skillName
+                                )}
+                            </strong>
 
-                            —
 
-                            عدد الأفراد:
-                            ${requirement.members}
+                            <span>
 
-                            —
+                                المستوى المطلوب:
+                                ${requirement.level}
+                                من 5
 
-                            الأهمية:
-                            ${requirement.weight}%
+                                —
 
-                        </span>
+                                عدد الأفراد:
+                                ${requirement.members}
 
-                        ${
-                            requirement.reason
-                                ?
-                                `
-                                    <span>
-                                        ${escapeHtml(
-                                            requirement.reason
-                                        )}
-                                    </span>
-                                `
-                                :
-                                ""
-                        }
+                                —
 
-                    </div>
+                                الأهمية:
+                                ${requirement.weight}%
 
-                `)
+                            </span>
+
+
+                            ${
+                                requirement.reason
+                                    ?
+                                    `
+
+                                        <span>
+                                            ${escapeHtml(
+                                                requirement.reason
+                                            )}
+                                        </span>
+
+                                    `
+                                    :
+                                    ""
+                            }
+
+
+                        </div>
+
+
+                    `
+                )
                 .join("");
 
 
         resultElement.innerHTML = `
 
+
             ${
                 projectSummary
                     ?
                     `
+
                         <div class="analysis-skill">
 
                             <strong>
@@ -2119,18 +2863,22 @@ async function analyzeProjectRequirements() {
                             </span>
 
                         </div>
+
                     `
                     :
                     ""
             }
 
+
             ${skillsHtml}
+
 
         `;
 
     }
 
     catch (error) {
+
 
         console.error(
             "خطأ تحليل المشروع:",
@@ -2159,6 +2907,7 @@ async function analyzeProjectRequirements() {
 
     finally {
 
+
         button.disabled =
             false;
 
@@ -2176,6 +2925,7 @@ async function analyzeProjectRequirements() {
 ===================================================== */
 
 function resetProjectForm() {
+
 
     document.getElementById(
         "projectForm"
@@ -2233,11 +2983,14 @@ function resetProjectForm() {
 
 function openAddProject() {
 
+
     resetProjectForm();
+
 
     projectModal.classList.add(
         "show"
     );
+
 
     document.body.classList.add(
         "modal-open"
@@ -2252,9 +3005,11 @@ function openAddProject() {
 
 function closeProjectModal() {
 
+
     projectModal.classList.remove(
         "show"
     );
+
 
     document.body.classList.remove(
         "modal-open"
@@ -2271,15 +3026,23 @@ function openEditProject(
     projectId
 ) {
 
+
     const project =
         projects.find(
             item =>
-                Number(item.id) ===
-                Number(projectId)
+                Number(
+                    item.id
+                )
+                ===
+                Number(
+                    projectId
+                )
         );
 
 
-    if (!project) {
+    if (
+        !project
+    ) {
 
         alert(
             "تعذر العثور على المشروع."
@@ -2315,8 +3078,10 @@ function openEditProject(
         "projectManager"
     ).value =
         project.manager === "-"
-            ? ""
-            : project.manager || "";
+            ?
+            ""
+            :
+            project.manager || "";
 
 
     document.getElementById(
@@ -2359,23 +3124,30 @@ function openEditProject(
         )
     ) {
 
+
         project.requirements
             .forEach(
                 requirement => {
 
+
                     addRequirementRow({
+
 
                         skillId:
                             requirement.skillId,
 
+
                         level:
                             requirement.level,
+
 
                         members:
                             requirement.members,
 
+
                         weight:
                             requirement.weight
+
 
                     });
 
@@ -2417,6 +3189,7 @@ function openEditProject(
 async function saveProject(
     event
 ) {
+
 
     event.preventDefault();
 
@@ -2488,8 +3261,13 @@ async function saveProject(
 
     if (
         endDate &&
-        new Date(endDate) <
-        new Date(startDate)
+        new Date(
+            endDate
+        )
+        <
+        new Date(
+            startDate
+        )
     ) {
 
         alert(
@@ -2530,25 +3308,33 @@ async function saveProject(
 
     try {
 
+
         const payload = {
+
 
             project_name:
                 projectName,
 
+
             project_manager:
                 projectManager,
+
 
             description:
                 description,
 
+
             start_date:
                 startDate,
+
 
             end_date:
                 endDate || null,
 
+
             status:
                 projectStatus
+
 
         };
 
@@ -2556,25 +3342,40 @@ async function saveProject(
         let projectId;
 
 
-        if (editProjectId) {
+        if (
+            editProjectId
+        ) {
+
 
             const {
                 data,
                 error
             } =
             await supabaseClient
-                .from("projects")
-                .update(payload)
+                .from(
+                    "projects"
+                )
+                .update(
+                    payload
+                )
                 .eq(
                     "id",
-                    Number(editProjectId)
+                    Number(
+                        editProjectId
+                    )
                 )
-                .select("id")
+                .select(
+                    "id"
+                )
                 .single();
 
 
-            if (error) {
+            if (
+                error
+            ) {
+
                 throw error;
+
             }
 
 
@@ -2609,21 +3410,30 @@ async function saveProject(
 
         else {
 
+
             const {
                 data,
                 error
             } =
             await supabaseClient
-                .from("projects")
+                .from(
+                    "projects"
+                )
                 .insert([
                     payload
                 ])
-                .select("id")
+                .select(
+                    "id"
+                )
                 .single();
 
 
-            if (error) {
+            if (
+                error
+            ) {
+
                 throw error;
+
             }
 
 
@@ -2637,20 +3447,26 @@ async function saveProject(
             requirements.map(
                 requirement => ({
 
+
                     project_id:
                         projectId,
+
 
                     skill_id:
                         requirement.skill_id,
 
+
                     required_level:
                         requirement.required_level,
+
 
                     required_members:
                         requirement.required_members,
 
+
                     importance_weight:
                         requirement.importance_weight
+
 
                 })
             );
@@ -2696,6 +3512,7 @@ async function saveProject(
 
     catch (error) {
 
+
         console.error(
             "خطأ حفظ المشروع:",
             error
@@ -2714,6 +3531,7 @@ async function saveProject(
     }
 
     finally {
+
 
         saveButton.disabled =
             false;
@@ -2735,16 +3553,26 @@ async function deleteProject(
     projectId
 ) {
 
+
     const project =
         projects.find(
             item =>
-                Number(item.id) ===
-                Number(projectId)
+                Number(
+                    item.id
+                )
+                ===
+                Number(
+                    projectId
+                )
         );
 
 
-    if (!project) {
+    if (
+        !project
+    ) {
+
         return;
+
     }
 
 
@@ -2767,12 +3595,17 @@ async function deleteProject(
         );
 
 
-    if (!confirmed) {
+    if (
+        !confirmed
+    ) {
+
         return;
+
     }
 
 
     try {
+
 
         const {
             error:
@@ -2785,7 +3618,9 @@ async function deleteProject(
             .delete()
             .eq(
                 "project_id",
-                Number(projectId)
+                Number(
+                    projectId
+                )
             );
 
 
@@ -2803,11 +3638,15 @@ async function deleteProject(
             projectError
         } =
         await supabaseClient
-            .from("projects")
+            .from(
+                "projects"
+            )
             .delete()
             .eq(
                 "id",
-                Number(projectId)
+                Number(
+                    projectId
+                )
             );
 
 
@@ -2830,6 +3669,7 @@ async function deleteProject(
     }
 
     catch (error) {
+
 
         console.error(
             "خطأ حذف المشروع:",
@@ -2859,15 +3699,23 @@ function openProjectDetails(
     projectId
 ) {
 
+
     const project =
         projects.find(
             item =>
-                Number(item.id) ===
-                Number(projectId)
+                Number(
+                    item.id
+                )
+                ===
+                Number(
+                    projectId
+                )
         );
 
 
-    if (!project) {
+    if (
+        !project
+    ) {
 
         alert(
             "تعذر العثور على المشروع."
@@ -2882,16 +3730,20 @@ function openProjectDetails(
         Array.isArray(
             project.requirements
         )
-            ? project.requirements
-            : [];
+            ?
+            project.requirements
+            :
+            [];
 
 
     const taskList =
         Array.isArray(
             project.taskList
         )
-            ? project.taskList
-            : [];
+            ?
+            project.taskList
+            :
+            [];
 
 
     const requirementsHtml =
@@ -2901,40 +3753,55 @@ function openProjectDetails(
                 .map(
                     requirement => `
 
-                        <div class="detail-requirement">
 
-                            <strong>
-                                ${escapeHtml(
-                                    requirement.skillName
-                                )}
-                            </strong>
+                        <div class="project-requirement-detail">
 
-                            <span>
-                                المستوى المطلوب:
-                                ${requirement.level}
-                                من 5
-                            </span>
 
-                            <span>
-                                عدد الأفراد:
-                                ${requirement.members}
-                            </span>
+                            <div>
 
-                            <span>
-                                الأهمية:
-                                ${requirement.weight}%
-                            </span>
+                                <strong>
+                                    ${escapeHtml(
+                                        requirement.skillName
+                                    )}
+                                </strong>
+
+                            </div>
+
+
+                            <div class="requirement-detail-meta">
+
+                                <span>
+                                    المستوى المطلوب:
+                                    ${requirement.level}
+                                    من 5
+                                </span>
+
+                                <span>
+                                    عدد الأفراد:
+                                    ${requirement.members}
+                                </span>
+
+                                <span>
+                                    الأهمية:
+                                    ${requirement.weight}%
+                                </span>
+
+                            </div>
+
 
                         </div>
+
 
                     `
                 )
                 .join("")
             :
             `
-                <div class="empty-state">
+
+                <div class="empty-mini">
                     لا توجد متطلبات مسجلة.
                 </div>
+
             `;
 
 
@@ -2945,7 +3812,8 @@ function openProjectDetails(
                 .map(
                     task => `
 
-                        <div class="detail-task">
+
+                        <div class="project-task-item">
 
                             <strong>
                                 ${escapeHtml(
@@ -2954,22 +3822,26 @@ function openProjectDetails(
                                 )}
                             </strong>
 
-                            <span>
+                            <small>
+                                الحالة:
                                 ${escapeHtml(
                                     task.status || "-"
                                 )}
-                            </span>
+                            </small>
 
                         </div>
+
 
                     `
                 )
                 .join("")
             :
             `
-                <div class="empty-state">
+
+                <div class="empty-mini">
                     لا توجد مهام مرتبطة بهذا المشروع.
                 </div>
+
             `;
 
 
@@ -2977,13 +3849,14 @@ function openProjectDetails(
         "projectDetails"
     ).innerHTML = `
 
-        <div class="detail-card full-width">
 
-            <span class="detail-label">
+        <div class="detail-item full-detail">
+
+            <span>
                 اسم المشروع
             </span>
 
-            <strong class="detail-value">
+            <strong>
                 ${escapeHtml(
                     project.name
                 )}
@@ -2992,13 +3865,13 @@ function openProjectDetails(
         </div>
 
 
-        <div class="detail-card">
+        <div class="detail-item">
 
-            <span class="detail-label">
+            <span>
                 مدير المشروع
             </span>
 
-            <strong class="detail-value">
+            <strong>
                 ${escapeHtml(
                     project.manager
                 )}
@@ -3007,13 +3880,13 @@ function openProjectDetails(
         </div>
 
 
-        <div class="detail-card">
+        <div class="detail-item">
 
-            <span class="detail-label">
+            <span>
                 الحالة
             </span>
 
-            <strong class="detail-value">
+            <strong>
                 ${escapeHtml(
                     project.status
                 )}
@@ -3022,43 +3895,51 @@ function openProjectDetails(
         </div>
 
 
-        <div class="detail-card">
+        <div class="detail-item">
 
-            <span class="detail-label">
+            <span>
                 تاريخ البداية
             </span>
 
-            <strong class="detail-value">
+            <strong
+                class="project-date"
+            >
                 ${escapeHtml(
-                    project.start || "-"
+                    formatDate(
+                        project.start
+                    )
                 )}
             </strong>
 
         </div>
 
 
-        <div class="detail-card">
+        <div class="detail-item">
 
-            <span class="detail-label">
+            <span>
                 تاريخ النهاية
             </span>
 
-            <strong class="detail-value">
+            <strong
+                class="project-date"
+            >
                 ${escapeHtml(
-                    project.end || "-"
+                    formatDate(
+                        project.end
+                    )
                 )}
             </strong>
 
         </div>
 
 
-        <div class="detail-card full-width">
+        <div class="detail-item full-detail">
 
-            <span class="detail-label">
+            <span>
                 وصف المشروع
             </span>
 
-            <p class="detail-description">
+            <p class="detail-description-text">
 
                 ${
                     project.description
@@ -3075,46 +3956,37 @@ function openProjectDetails(
         </div>
 
 
-        <div class="detail-card full-width">
+        <div class="detail-item full-detail">
 
-            <div class="detail-section-title">
+            <span>
+                متطلبات المشروع
+                (${requirements.length})
+            </span>
 
-                <h3>
-                    متطلبات المشروع
-                </h3>
+            <div class="project-requirements-details">
 
-                <span>
-                    ${requirements.length} مهارة
-                </span>
-
-            </div>
-
-            <div class="details-requirements-list">
                 ${requirementsHtml}
+
             </div>
 
         </div>
 
 
-        <div class="detail-card full-width">
+        <div class="detail-item full-detail">
 
-            <div class="detail-section-title">
+            <span>
+                مهام المشروع
+                (${taskList.length})
+            </span>
 
-                <h3>
-                    مهام المشروع
-                </h3>
+            <div class="project-tasks-list">
 
-                <span>
-                    ${taskList.length} مهمة
-                </span>
-
-            </div>
-
-            <div class="details-tasks-list">
                 ${tasksHtml}
+
             </div>
 
         </div>
+
 
     `;
 
@@ -3137,9 +4009,11 @@ function openProjectDetails(
 
 function closeDetailsModal() {
 
+
     detailsModal.classList.remove(
         "show"
     );
+
 
     document.body.classList.remove(
         "modal-open"
@@ -3154,9 +4028,11 @@ function closeDetailsModal() {
 
 function openSidebar() {
 
+
     sidebar.classList.add(
         "show"
     );
+
 
     sidebarOverlay.classList.add(
         "show"
@@ -3167,9 +4043,11 @@ function openSidebar() {
 
 function closeSidebar() {
 
+
     sidebar.classList.remove(
         "show"
     );
+
 
     sidebarOverlay.classList.remove(
         "show"
@@ -3184,20 +4062,25 @@ function closeSidebar() {
 
 async function logout() {
 
+
     try {
+
 
         await supabaseClient
             .auth
             .signOut();
 
+
     }
 
     catch (error) {
+
 
         console.error(
             "خطأ تسجيل الخروج:",
             error
         );
+
 
     }
 
@@ -3333,15 +4216,19 @@ document.addEventListener(
     "keydown",
     function (event) {
 
+
         if (
-            event.key === "Escape"
+            event.key ===
+            "Escape"
         ) {
+
 
             closeProjectModal();
 
             closeDetailsModal();
 
             closeSidebar();
+
 
         }
 
@@ -3355,12 +4242,17 @@ document.addEventListener(
 
 async function initializePage() {
 
+
     const allowed =
         await protectPage();
 
 
-    if (!allowed) {
+    if (
+        !allowed
+    ) {
+
         return;
+
     }
 
 
@@ -3371,7 +4263,9 @@ async function initializePage() {
 
 initializePage();
 
+
 </script>
+
 
 </body>
 
