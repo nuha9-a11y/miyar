@@ -10,350 +10,13 @@
     <link rel="stylesheet" href="projects.css">
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-    <style>
-
-        /* =========================
-           مربعات الملخص العلوية
-        ========================== */
-
-        .projects-summary .summary-item {
-            background: rgba(255, 255, 255, 0.84) !important;
-            border: 1px solid rgba(198, 154, 90, 0.48) !important;
-            border-right: 3px solid #c69a5a !important;
-            box-shadow: 0 8px 22px rgba(38, 59, 70, 0.07) !important;
-        }
-
-        .projects-summary .summary-item:hover {
-            border-color: rgba(198, 154, 90, 0.70) !important;
-            transform: translateY(-2px);
-        }
-
-
-        /* =========================
-           بطاقات المشاريع
-        ========================== */
-
-        .project-card {
-            background: rgba(255, 255, 255, 0.88) !important;
-            border: 1px solid rgba(198, 154, 90, 0.35) !important;
-            border-top: 2px solid rgba(198, 154, 90, 0.75) !important;
-            box-shadow: 0 10px 26px rgba(38, 59, 70, 0.07) !important;
-        }
-
-        .project-card-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 12px;
-        }
-
-        .project-card-top > div {
-            min-width: 0;
-        }
-
-        .project-label {
-            display: inline-block;
-            color: #b18145;
-            font-size: 8px;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .project-card h3 {
-            margin: 0;
-            color: #263f4f;
-            font-size: 14px;
-            line-height: 1.6;
-            overflow-wrap: anywhere;
-        }
-
-        .project-status {
-            flex-shrink: 0;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 25px;
-            padding: 0 10px;
-            border-radius: 20px;
-            font-size: 8px;
-            font-weight: 700;
-            white-space: nowrap;
-        }
-
-        .project-status.running {
-            background: rgba(66, 121, 145, 0.10);
-            border: 1px solid rgba(66, 121, 145, 0.25);
-            color: #31586c;
-        }
-
-        .project-status.completed {
-            background: rgba(83, 132, 104, 0.10);
-            border: 1px solid rgba(83, 132, 104, 0.25);
-            color: #527b61;
-        }
-
-        .project-status.stopped {
-            background: rgba(169, 93, 93, 0.08);
-            border: 1px solid rgba(169, 93, 93, 0.22);
-            color: #a15b5b;
-        }
-
-        .project-status.planned {
-            background: rgba(198, 154, 90, 0.11);
-            border: 1px solid rgba(198, 154, 90, 0.28);
-            color: #9f733c;
-        }
-
-        .project-description {
-            min-height: 42px;
-            margin: 12px 0;
-            color: #71828c;
-            font-size: 10px;
-            line-height: 1.8;
-        }
-
-
-        /* =========================
-           بيانات المشروع
-        ========================== */
-
-        .project-info {
-            display: grid !important;
-            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-            gap: 8px !important;
-            margin: 12px 0 !important;
-        }
-
-        .project-info .info-item {
-            min-width: 0;
-            padding: 9px 10px;
-            border-radius: 9px;
-            background: rgba(249, 247, 242, 0.78);
-            border: 1px solid rgba(198, 154, 90, 0.22);
-        }
-
-        .project-info .info-item span {
-            display: block;
-            margin-bottom: 4px;
-            color: #89969d;
-            font-size: 8px;
-        }
-
-        .project-info .info-item strong {
-            display: block;
-            color: #2d4857;
-            font-size: 9px;
-            font-weight: 700;
-            line-height: 1.5;
-            overflow-wrap: anywhere;
-        }
-
-        .project-date {
-            direction: ltr;
-            text-align: right;
-            white-space: nowrap;
-        }
-
-
-        /* =========================
-           معاينة المهارات
-        ========================== */
-
-        .project-requirements-preview {
-            padding: 10px 11px !important;
-            border-radius: 9px !important;
-            background: rgba(249, 247, 242, 0.72) !important;
-            border: 1px solid rgba(198, 154, 90, 0.22) !important;
-            border-right: 2px solid #c69a5a !important;
-        }
-
-        .project-requirements-preview > span {
-            display: block;
-            margin-bottom: 6px;
-            color: #9f733c;
-            font-size: 8px;
-            font-weight: 700;
-        }
-
-        .project-requirements-preview > strong {
-            display: block;
-            color: #526b78;
-            font-size: 9px;
-            font-weight: 600;
-            line-height: 1.8;
-        }
-
-
-        /* =========================
-           أزرار البطاقة
-        ========================== */
-
-        .project-actions {
-            display: flex !important;
-            align-items: center;
-            gap: 6px !important;
-            margin-top: 13px !important;
-        }
-
-        .project-actions button {
-            min-height: 32px;
-            padding: 0 12px;
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 9px;
-            cursor: pointer;
-            transition: 0.2s ease;
-        }
-
-        .view-btn {
-            background: #31586c;
-            color: #ffffff;
-            border: 1px solid #31586c;
-        }
-
-        .edit-btn {
-            background: rgba(198, 154, 90, 0.10);
-            color: #946a36;
-            border: 1px solid rgba(198, 154, 90, 0.40);
-        }
-
-        .delete-btn {
-            background: transparent;
-            color: #a35d5d;
-            border: 1px solid rgba(163, 93, 93, 0.28);
-        }
-
-        .project-actions button:hover {
-            transform: translateY(-1px);
-        }
-
-
-        /* =========================
-           التفاصيل
-        ========================== */
-
-        .details-grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 10px;
-        }
-
-        .detail-item {
-            padding: 13px;
-            border-radius: 10px;
-            background: rgba(249, 247, 242, 0.72);
-            border: 1px solid rgba(198, 154, 90, 0.24);
-        }
-
-        .detail-item.full-detail {
-            grid-column: 1 / -1;
-        }
-
-        .detail-item > span {
-            display: block;
-            color: #9f733c;
-            font-size: 9px;
-            margin-bottom: 6px;
-        }
-
-        .detail-item > strong {
-            color: #2d4857;
-            font-size: 11px;
-            line-height: 1.8;
-        }
-
-        .detail-description-text {
-            margin: 0;
-            color: #667a85;
-            font-size: 10px;
-            line-height: 1.9;
-        }
-
-        .project-requirements-details,
-        .project-tasks-list {
-            display: grid;
-            gap: 8px;
-            margin-top: 10px;
-        }
-
-        .project-requirement-detail,
-        .project-task-item {
-            padding: 11px;
-            border-radius: 9px;
-            background: #ffffff;
-            border: 1px solid rgba(198, 154, 90, 0.22);
-        }
-
-        .project-requirement-detail strong,
-        .project-task-item strong {
-            display: block;
-            color: #2e4a59;
-            font-size: 10px;
-            margin-bottom: 5px;
-        }
-
-        .requirement-detail-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .requirement-detail-meta span,
-        .project-task-item small {
-            color: #75868f;
-            font-size: 8px;
-        }
-
-        .empty-mini {
-            padding: 12px;
-            border-radius: 8px;
-            background: rgba(249, 247, 242, 0.75);
-            color: #89969d;
-            font-size: 9px;
-            text-align: center;
-        }
-
-
-        /* =========================
-           الجوال
-        ========================== */
-
-        @media (max-width: 700px) {
-
-            .project-info {
-                grid-template-columns: 1fr !important;
-            }
-
-            .details-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .project-actions {
-                flex-wrap: wrap;
-            }
-
-            .project-actions button {
-                flex: 1;
-            }
-
-        }
-
-    </style>
-
 </head>
-
 
 <body>
 
-
 <div class="projects-page">
 
-
-    <!-- =========================
-         هيدر الجوال
-    ========================== -->
-
+    <!-- هيدر الجوال -->
     <header class="mobile-header">
 
         <button
@@ -378,31 +41,24 @@
 
     </header>
 
-
     <div
         class="sidebar-overlay"
         id="sidebarOverlay"
     ></div>
 
 
-    <!-- =========================
-         القائمة الجانبية
-    ========================== -->
-
+    <!-- القائمة الجانبية -->
     <aside
         class="sidebar"
         id="sidebar"
     >
 
         <div class="sidebar-logo">
-
             <img
                 src="assets/logo.png"
                 alt="معيار"
             >
-
         </div>
-
 
         <nav class="sidebar-nav">
 
@@ -444,7 +100,6 @@
 
         </nav>
 
-
         <button
             class="logout-btn"
             type="button"
@@ -456,12 +111,8 @@
     </aside>
 
 
-    <!-- =========================
-         المحتوى
-    ========================== -->
-
+    <!-- المحتوى -->
     <main class="main-content">
-
 
         <header class="topbar">
 
@@ -469,9 +120,7 @@
                 إدارة المشاريع
             </span>
 
-            <h1>
-                المشاريع
-            </h1>
+            <h1>المشاريع</h1>
 
             <p>
                 إنشاء المشاريع وتحليل وصفها لاستخراج المهارات المطلوبة
@@ -481,85 +130,42 @@
         </header>
 
 
-        <!-- =========================
-             الملخص
-        ========================== -->
-
+        <!-- الملخص -->
         <section class="projects-summary">
 
-
             <div class="summary-item">
-
-                <span>
-                    إجمالي المشاريع
-                </span>
-
-                <strong id="summaryTotal">
-                    0
-                </strong>
-
+                <span>إجمالي المشاريع</span>
+                <strong id="summaryTotal">0</strong>
             </div>
 
-
             <div class="summary-item">
-
-                <span>
-                    قيد التنفيذ
-                </span>
-
-                <strong id="summaryRunning">
-                    0
-                </strong>
-
+                <span>قيد التنفيذ</span>
+                <strong id="summaryRunning">0</strong>
             </div>
 
-
             <div class="summary-item">
-
-                <span>
-                    مخطط
-                </span>
-
-                <strong id="summaryPlanned">
-                    0
-                </strong>
-
+                <span>مخطط</span>
+                <strong id="summaryPlanned">0</strong>
             </div>
 
-
             <div class="summary-item">
-
-                <span>
-                    مكتمل
-                </span>
-
-                <strong id="summaryCompleted">
-                    0
-                </strong>
-
+                <span>مكتمل</span>
+                <strong id="summaryCompleted">0</strong>
             </div>
-
 
         </section>
 
 
-        <!-- =========================
-             البحث والفلترة
-        ========================== -->
-
+        <!-- البحث والفلترة -->
         <section class="toolbar">
 
-
             <div class="search-box">
-
                 <input
                     type="text"
                     id="searchInput"
                     placeholder="ابحث باسم المشروع أو مدير المشروع..."
                 >
-
             </div>
-
 
             <div class="filters">
 
@@ -589,7 +195,6 @@
 
             </div>
 
-
             <button
                 class="add-btn"
                 type="button"
@@ -598,51 +203,33 @@
                 + إضافة مشروع
             </button>
 
-
         </section>
 
 
-        <!-- =========================
-             قائمة المشاريع
-        ========================== -->
-
+        <!-- قائمة المشاريع -->
         <section class="projects-container">
-
 
             <div class="section-title">
 
                 <div>
-
-                    <h2>
-                        قائمة المشاريع
-                    </h2>
-
-                    <p id="projectsCount">
-                        -
-                    </p>
-
+                    <h2>قائمة المشاريع</h2>
+                    <p id="projectsCount">-</p>
                 </div>
 
             </div>
-
 
             <div
                 class="projects-grid"
                 id="projectsGrid"
             >
-
                 <div class="empty-state">
                     جارٍ تحميل المشاريع...
                 </div>
-
             </div>
-
 
         </section>
 
-
     </main>
-
 
 </div>
 
@@ -656,18 +243,14 @@
     id="projectModal"
 >
 
-
     <div
         class="modal-overlay"
         id="projectModalOverlay"
     ></div>
 
-
     <div class="modal-box project-modal-box">
 
-
         <div class="modal-header">
-
 
             <div>
 
@@ -682,7 +265,6 @@
 
             </div>
 
-
             <button
                 class="close-btn"
                 type="button"
@@ -691,12 +273,10 @@
                 ×
             </button>
 
-
         </div>
 
 
         <form id="projectForm">
-
 
             <input
                 type="hidden"
@@ -704,12 +284,8 @@
             >
 
 
-            <!-- =========================
-                 بيانات المشروع
-            ========================== -->
-
+            <!-- بيانات المشروع -->
             <div class="form-section">
-
 
                 <div class="form-section-heading">
 
@@ -729,7 +305,6 @@
 
 
                 <div class="form-grid">
-
 
                     <div class="form-group">
 
@@ -858,22 +433,15 @@
 
                     </div>
 
-
                 </div>
-
 
             </div>
 
 
-            <!-- =========================
-                 المتطلبات الذكية
-            ========================== -->
-
+            <!-- المتطلبات الذكية -->
             <div class="form-section requirements-section">
 
-
                 <div class="form-section-heading requirements-heading">
-
 
                     <div>
 
@@ -892,7 +460,6 @@
 
                     <div class="requirements-actions">
 
-
                         <button
                             type="button"
                             class="analyze-requirements-btn"
@@ -900,7 +467,6 @@
                         >
                             تحليل المتطلبات تلقائيًا
                         </button>
-
 
                         <button
                             type="button"
@@ -910,20 +476,16 @@
                             + إضافة يدوية
                         </button>
 
-
                     </div>
-
 
                 </div>
 
 
                 <!-- نتيجة الذكاء الاصطناعي -->
-
                 <div
                     class="smart-analysis-box"
                     id="smartAnalysisBox"
                 >
-
 
                     <div class="smart-analysis-head">
 
@@ -937,12 +499,10 @@
 
                     </div>
 
-
                     <div
                         class="smart-analysis-result"
                         id="smartAnalysisResult"
                     ></div>
-
 
                 </div>
 
@@ -961,12 +521,10 @@
                     استخدم التحليل التلقائي أو أضف متطلبًا يدويًا.
                 </div>
 
-
             </div>
 
 
             <div class="modal-actions">
-
 
                 <button
                     type="button"
@@ -976,7 +534,6 @@
                     إلغاء
                 </button>
 
-
                 <button
                     type="submit"
                     class="save-btn"
@@ -985,15 +542,11 @@
                     حفظ المشروع
                 </button>
 
-
             </div>
-
 
         </form>
 
-
     </div>
-
 
 </div>
 
@@ -1007,18 +560,14 @@
     id="detailsModal"
 >
 
-
     <div
         class="modal-overlay"
         id="detailsModalOverlay"
     ></div>
 
-
     <div class="modal-box details-box">
 
-
         <div class="modal-header">
-
 
             <div>
 
@@ -1032,7 +581,6 @@
 
             </div>
 
-
             <button
                 class="close-btn"
                 type="button"
@@ -1041,24 +589,19 @@
                 ×
             </button>
 
-
         </div>
-
 
         <div
             id="projectDetails"
             class="details-grid"
         ></div>
 
-
     </div>
-
 
 </div>
 
 
 <script>
-
 
 /* =====================================================
    إعداد Supabase
@@ -1067,14 +610,11 @@
 const SUPABASE_URL =
     "https://avooyglxacytrfhvotsl.supabase.co";
 
-
 const SUPABASE_KEY =
     "sb_publishable_NVlWEnA_w4KbSse_-70zdA_J9ut0Kyo";
 
-
 const ADMIN_EMAIL =
     "admin@gmail.com";
-
 
 const supabaseClient =
     window.supabase.createClient(
@@ -1088,11 +628,8 @@ const supabaseClient =
 ===================================================== */
 
 let projects = [];
-
 let tasks = [];
-
 let skills = [];
-
 let projectRequirements = [];
 
 
@@ -1101,51 +638,28 @@ let projectRequirements = [];
 ===================================================== */
 
 const projectsGrid =
-    document.getElementById(
-        "projectsGrid"
-    );
-
+    document.getElementById("projectsGrid");
 
 const projectsCount =
-    document.getElementById(
-        "projectsCount"
-    );
-
+    document.getElementById("projectsCount");
 
 const projectModal =
-    document.getElementById(
-        "projectModal"
-    );
-
+    document.getElementById("projectModal");
 
 const detailsModal =
-    document.getElementById(
-        "detailsModal"
-    );
-
+    document.getElementById("detailsModal");
 
 const sidebar =
-    document.getElementById(
-        "sidebar"
-    );
-
+    document.getElementById("sidebar");
 
 const sidebarOverlay =
-    document.getElementById(
-        "sidebarOverlay"
-    );
-
+    document.getElementById("sidebarOverlay");
 
 const requirementsList =
-    document.getElementById(
-        "requirementsList"
-    );
-
+    document.getElementById("requirementsList");
 
 const requirementsEmpty =
-    document.getElementById(
-        "requirementsEmpty"
-    );
+    document.getElementById("requirementsEmpty");
 
 
 /* =====================================================
@@ -1154,34 +668,12 @@ const requirementsEmpty =
 
 function escapeHtml(value) {
 
-    return String(
-        value ?? ""
-    )
-
-        .replaceAll(
-            "&",
-            "&amp;"
-        )
-
-        .replaceAll(
-            "<",
-            "&lt;"
-        )
-
-        .replaceAll(
-            ">",
-            "&gt;"
-        )
-
-        .replaceAll(
-            '"',
-            "&quot;"
-        )
-
-        .replaceAll(
-            "'",
-            "&#039;"
-        );
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
 
 }
 
@@ -1196,14 +688,10 @@ function formatDate(value) {
         return "-";
     }
 
-
     const parts =
         String(value).split("-");
 
-
-    if (
-        parts.length === 3
-    ) {
+    if (parts.length === 3) {
 
         return (
             parts[2]
@@ -1214,7 +702,6 @@ function formatDate(value) {
         );
 
     }
-
 
     return String(value);
 
@@ -1227,26 +714,17 @@ function formatDate(value) {
 
 function getStatusClass(status) {
 
-    if (
-        status === "قيد التنفيذ"
-    ) {
+    if (status === "قيد التنفيذ") {
         return "running";
     }
 
-
-    if (
-        status === "مكتمل"
-    ) {
+    if (status === "مكتمل") {
         return "completed";
     }
 
-
-    if (
-        status === "متوقف"
-    ) {
+    if (status === "متوقف") {
         return "stopped";
     }
-
 
     return "planned";
 
@@ -1269,7 +747,6 @@ async function protectPage() {
             .auth
             .getSession();
 
-
         if (
             error ||
             !data.session
@@ -1279,9 +756,7 @@ async function protectPage() {
                 "login.html";
 
             return false;
-
         }
-
 
         const email =
             String(
@@ -1289,7 +764,6 @@ async function protectPage() {
             )
             .trim()
             .toLowerCase();
-
 
         if (
             email !==
@@ -1300,30 +774,23 @@ async function protectPage() {
                 .auth
                 .signOut();
 
-
             localStorage.clear();
-
 
             window.location.href =
                 "login.html";
 
-
             return false;
-
         }
-
 
         localStorage.setItem(
             "miyarRole",
             "admin"
         );
 
-
         localStorage.setItem(
             "miyarEmail",
             email
         );
-
 
         return true;
 
@@ -1336,9 +803,7 @@ async function protectPage() {
             error
         );
 
-
         return false;
-
     }
 
 }
@@ -1350,18 +815,13 @@ async function protectPage() {
 
 async function loadProjects() {
 
-
     projectsGrid.innerHTML = `
-
         <div class="empty-state">
             جارٍ تحميل المشاريع...
         </div>
-
     `;
 
-
     try {
-
 
         const [
             projectsResult,
@@ -1370,7 +830,6 @@ async function loadProjects() {
             requirementsResult
         ] =
         await Promise.all([
-
 
             supabaseClient
                 .from("projects")
@@ -1390,7 +849,6 @@ async function loadProjects() {
                     }
                 ),
 
-
             supabaseClient
                 .from("tasks")
                 .select(`
@@ -1400,7 +858,6 @@ async function loadProjects() {
                     status,
                     assigned_employee_id
                 `),
-
 
             supabaseClient
                 .from("skills")
@@ -1416,1577 +873,471 @@ async function loadProjects() {
                     }
                 ),
 
-
             supabaseClient
-                .from(
-                    "project_requirements"
-                )
-                .select(`
-                    id,
-                    project_id,
-                    skill_id,
-                    required_level,
-                    required_members,
-                    importance_weight
-                `)
-
+                .from("project_requirements")
+                .select("*")
 
         ]);
 
-
-        if (
-            projectsResult.error
-        ) {
-
+        if (projectsResult.error) {
             throw projectsResult.error;
-
         }
 
-
-        if (
-            skillsResult.error
-        ) {
-
-            throw skillsResult.error;
-
-        }
-
-
-        if (
-            requirementsResult.error
-        ) {
-
-            throw requirementsResult.error;
-
-        }
-
-
-        if (
-            tasksResult.error
-        ) {
-
+        if (tasksResult.error) {
             console.warn(
                 "تعذر تحميل المهام:",
                 tasksResult.error
             );
-
         }
 
+        if (skillsResult.error) {
+            console.warn(
+                "تعذر تحميل المهارات:",
+                skillsResult.error
+            );
+        }
+
+        if (requirementsResult.error) {
+            console.warn(
+                "تعذر تحميل متطلبات المشاريع:",
+                requirementsResult.error
+            );
+        }
+
+        projects =
+            projectsResult.data || [];
 
         tasks =
             tasksResult.data || [];
 
-
         skills =
             skillsResult.data || [];
-
 
         projectRequirements =
             requirementsResult.data || [];
 
-
-        projects =
-            (projectsResult.data || [])
-                .map(project => {
-
-
-                    const projectTasks =
-                        tasks.filter(
-                            task =>
-                                Number(
-                                    task.project_id
-                                )
-                                ===
-                                Number(
-                                    project.id
-                                )
-                        );
-
-
-                    const requirements =
-                        projectRequirements
-
-                            .filter(
-                                requirement =>
-                                    Number(
-                                        requirement.project_id
-                                    )
-                                    ===
-                                    Number(
-                                        project.id
-                                    )
-                            )
-
-                            .map(
-                                requirement => {
-
-
-                                    const skill =
-                                        skills.find(
-                                            item =>
-                                                Number(
-                                                    item.id
-                                                )
-                                                ===
-                                                Number(
-                                                    requirement.skill_id
-                                                )
-                                        );
-
-
-                                    return {
-
-                                        id:
-                                            requirement.id,
-
-                                        skillId:
-                                            requirement.skill_id,
-
-                                        skillName:
-                                            skill
-                                                ?
-                                                skill.skill_name
-                                                :
-                                                "مهارة غير محددة",
-
-                                        level:
-                                            Number(
-                                                requirement.required_level
-                                            ) || 1,
-
-                                        members:
-                                            Number(
-                                                requirement.required_members
-                                            ) || 1,
-
-                                        weight:
-                                            Number(
-                                                requirement.importance_weight
-                                            ) || 1
-
-                                    };
-
-                                }
-                            );
-
-
-                    return {
-
-                        id:
-                            project.id,
-
-                        name:
-                            project.project_name,
-
-                        manager:
-                            project.project_manager || "-",
-
-                        status:
-                            project.status || "مخطط",
-
-                        tasks:
-                            projectTasks.length,
-
-                        taskList:
-                            projectTasks,
-
-                        requirements:
-                            requirements,
-
-                        start:
-                            project.start_date,
-
-                        end:
-                            project.end_date,
-
-                        description:
-                            project.description || ""
-
-                    };
-
-                });
-
-
+        renderProjects();
         updateSummary();
-
-        filterProjects();
 
     }
 
     catch (error) {
-
 
         console.error(
             "خطأ تحميل المشاريع:",
             error
         );
 
-
         projectsGrid.innerHTML = `
-
             <div class="empty-state error-state">
-
-                تعذر تحميل المشاريع
-
+                تعذر تحميل المشاريع.
                 <small>
-                    ${escapeHtml(
-                        error.message || ""
-                    )}
+                    ${escapeHtml(error.message || "")}
                 </small>
-
             </div>
-
         `;
-
     }
 
 }
 
 
 /* =====================================================
-   تحديث الملخص
+   إحصائيات المشاريع
 ===================================================== */
 
 function updateSummary() {
 
+    const total =
+        projects.length;
+
+    const running =
+        projects.filter(
+            project =>
+                project.status === "قيد التنفيذ"
+        ).length;
+
+    const planned =
+        projects.filter(
+            project =>
+                project.status === "مخطط"
+        ).length;
+
+    const completed =
+        projects.filter(
+            project =>
+                project.status === "مكتمل"
+        ).length;
 
     document.getElementById(
         "summaryTotal"
-    ).textContent =
-        projects.length;
-
+    ).textContent = total;
 
     document.getElementById(
         "summaryRunning"
-    ).textContent =
-        projects.filter(
-            project =>
-                project.status ===
-                "قيد التنفيذ"
-        ).length;
-
+    ).textContent = running;
 
     document.getElementById(
         "summaryPlanned"
-    ).textContent =
-        projects.filter(
-            project =>
-                project.status ===
-                "مخطط"
-        ).length;
-
+    ).textContent = planned;
 
     document.getElementById(
         "summaryCompleted"
-    ).textContent =
-        projects.filter(
-            project =>
-                project.status ===
-                "مكتمل"
-        ).length;
+    ).textContent = completed;
 
 }
 
 
 /* =====================================================
-   عرض المشاريع
+   متطلبات مشروع محدد
 ===================================================== */
 
-function renderProjects(list) {
-
-
-    if (
-        !Array.isArray(list) ||
-        list.length === 0
-    ) {
-
-
-        projectsGrid.innerHTML = `
-
-            <div class="empty-state">
-                لا توجد مشاريع.
-            </div>
-
-        `;
-
-
-        projectsCount.textContent =
-            "0 مشروع";
-
-
-        return;
-
-    }
-
-
-    projectsCount.textContent =
-        `${list.length} مشروع`;
-
-
-    projectsGrid.innerHTML =
-        list.map(project => {
-
-
-            const requirements =
-                Array.isArray(
-                    project.requirements
-                )
-                    ?
-                    project.requirements
-                    :
-                    [];
-
-
-            const requirementsText =
-                requirements.length > 0
-                    ?
-                    requirements
-                        .map(
-                            requirement =>
-                                escapeHtml(
-                                    requirement.skillName
-                                )
-                        )
-                        .join("، ")
-                    :
-                    "لا توجد متطلبات";
-
-
-            return `
-
-                <article class="project-card">
-
-
-                    <div class="project-card-top">
-
-
-                        <div>
-
-                            <span class="project-label">
-                                مشروع
-                            </span>
-
-                            <h3>
-                                ${escapeHtml(
-                                    project.name
-                                )}
-                            </h3>
-
-                        </div>
-
-
-                        <span
-                            class="
-                                project-status
-                                ${getStatusClass(
-                                    project.status
-                                )}
-                            "
-                        >
-                            ${escapeHtml(
-                                project.status
-                            )}
-                        </span>
-
-
-                    </div>
-
-
-                    <p class="project-description">
-
-                        ${
-                            project.description
-                                ?
-                                escapeHtml(
-                                    project.description
-                                )
-                                :
-                                "لا يوجد وصف للمشروع."
-                        }
-
-                    </p>
-
-
-                    <div class="project-requirements-preview">
-
-                        <span>
-                            المهارات المطلوبة
-                        </span>
-
-                        <strong>
-                            ${requirementsText}
-                        </strong>
-
-                    </div>
-
-
-                    <div class="project-info">
-
-
-                        <div class="info-item">
-
-                            <span>
-                                مدير المشروع
-                            </span>
-
-                            <strong>
-                                ${escapeHtml(
-                                    project.manager
-                                )}
-                            </strong>
-
-                        </div>
-
-
-                        <div class="info-item">
-
-                            <span>
-                                عدد المهام
-                            </span>
-
-                            <strong>
-                                ${project.tasks}
-                            </strong>
-
-                        </div>
-
-
-                        <div class="info-item">
-
-                            <span>
-                                تاريخ البداية
-                            </span>
-
-                            <strong class="project-date">
-                                ${escapeHtml(
-                                    formatDate(
-                                        project.start
-                                    )
-                                )}
-                            </strong>
-
-                        </div>
-
-
-                        <div class="info-item">
-
-                            <span>
-                                تاريخ النهاية
-                            </span>
-
-                            <strong class="project-date">
-                                ${escapeHtml(
-                                    formatDate(
-                                        project.end
-                                    )
-                                )}
-                            </strong>
-
-                        </div>
-
-
-                    </div>
-
-
-                    <div class="project-actions">
-
-
-                        <button
-                            type="button"
-                            class="view-btn"
-                            onclick="openProjectDetails(${Number(project.id)})"
-                        >
-                            التفاصيل
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="edit-btn"
-                            onclick="openEditProject(${Number(project.id)})"
-                        >
-                            تعديل
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="delete-btn"
-                            onclick="deleteProject(${Number(project.id)})"
-                        >
-                            حذف
-                        </button>
-
-
-                    </div>
-
-
-                </article>
-
-            `;
-
-        }).join("");
+function getRequirementsForProject(projectId) {
+
+    return projectRequirements.filter(
+        requirement =>
+            String(requirement.project_id) ===
+            String(projectId)
+    );
 
 }
 
 
 /* =====================================================
-   البحث والفلترة
+   مهام مشروع محدد
 ===================================================== */
 
-function filterProjects() {
+function getTasksForProject(projectId) {
+
+    return tasks.filter(
+        task =>
+            String(task.project_id) ===
+            String(projectId)
+    );
+
+}
 
 
-    const search =
+/* =====================================================
+   اسم المهارة
+===================================================== */
+
+function getSkillName(skillId) {
+
+    const skill =
+        skills.find(
+            item =>
+                String(item.id) ===
+                String(skillId)
+        );
+
+    return skill
+        ? skill.skill_name
+        : "مهارة";
+
+}
+
+
+/* =====================================================
+   رسم المشاريع
+===================================================== */
+
+function renderProjects() {
+
+    const searchValue =
         document
-            .getElementById(
-                "searchInput"
-            )
+            .getElementById("searchInput")
             .value
             .trim()
             .toLowerCase();
 
-
-    const status =
+    const statusValue =
         document
-            .getElementById(
-                "statusFilter"
-            )
+            .getElementById("statusFilter")
             .value;
 
-
-    const filtered =
-        projects.filter(
-            project => {
-
-
-                const name =
-                    String(
-                        project.name || ""
-                    ).toLowerCase();
-
-
-                const manager =
-                    String(
-                        project.manager || ""
-                    ).toLowerCase();
-
-
-                const description =
-                    String(
-                        project.description || ""
-                    ).toLowerCase();
-
-
-                const matchesSearch =
-                    !search ||
-                    name.includes(search) ||
-                    manager.includes(search) ||
-                    description.includes(search);
-
-
-                const matchesStatus =
-                    !status ||
-                    project.status === status;
-
-
-                return (
-                    matchesSearch &&
-                    matchesStatus
-                );
-
-            }
-        );
-
-
-    renderProjects(
-        filtered
-    );
-
-}
-
-
-/* =====================================================
-   خيارات المهارات
-===================================================== */
-
-function getSkillOptions(
-    selectedSkillId = ""
-) {
-
-
-    let html = `
-
-        <option value="">
-            اختر المهارة
-        </option>
-
-    `;
-
-
-    skills.forEach(
-        skill => {
-
-
-            const selected =
-                Number(
-                    selectedSkillId
-                )
-                ===
-                Number(
-                    skill.id
-                )
-                    ?
-                    "selected"
-                    :
-                    "";
-
-
-            html += `
-
-                <option
-                    value="${skill.id}"
-                    ${selected}
-                >
-                    ${escapeHtml(
-                        skill.skill_name
-                    )}
-                </option>
-
-            `;
-
-        }
-    );
-
-
-    return html;
-
-}
-
-
-/* =====================================================
-   إضافة متطلب
-===================================================== */
-
-function addRequirementRow(
-    requirement = null
-) {
-
-
-    requirementsEmpty.style.display =
-        "none";
-
-
-    const row =
-        document.createElement(
-            "div"
-        );
-
-
-    row.className =
-        "requirement-row";
-
-
-    row.innerHTML = `
-
-
-        <div class="requirement-field requirement-skill">
-
-            <label>
-                المهارة المطلوبة
-            </label>
-
-            <select
-                class="requirement-skill-select"
-                required
-            >
-                ${getSkillOptions(
-                    requirement
-                        ?
-                        requirement.skillId
-                        :
-                        ""
-                )}
-            </select>
-
-        </div>
-
-
-        <div class="requirement-field">
-
-            <label>
-                المستوى
-            </label>
-
-            <select
-                class="requirement-level"
-                required
-            >
-
-                <option value="1">
-                    1 - مبتدئ
-                </option>
-
-                <option value="2">
-                    2 - أساسي
-                </option>
-
-                <option value="3">
-                    3 - متوسط
-                </option>
-
-                <option value="4">
-                    4 - متقدم
-                </option>
-
-                <option value="5">
-                    5 - خبير
-                </option>
-
-            </select>
-
-        </div>
-
-
-        <div class="requirement-field">
-
-            <label>
-                عدد الأفراد
-            </label>
-
-            <input
-                type="number"
-                class="requirement-members"
-                min="1"
-                max="10"
-                value="${
-                    requirement
-                        ?
-                        requirement.members
-                        :
-                        1
-                }"
-                required
-            >
-
-        </div>
-
-
-        <div class="requirement-field">
-
-            <label>
-                الأهمية %
-            </label>
-
-            <input
-                type="number"
-                class="requirement-weight"
-                min="1"
-                max="100"
-                value="${
-                    requirement
-                        ?
-                        requirement.weight
-                        :
-                        50
-                }"
-                required
-            >
-
-        </div>
-
-
-        <button
-            type="button"
-            class="remove-requirement-btn"
-            title="حذف المتطلب"
-        >
-            ×
-        </button>
-
-
-    `;
-
-
-    requirementsList.appendChild(
-        row
-    );
-
-
-    if (requirement) {
-
-        row.querySelector(
-            ".requirement-level"
-        ).value =
-            String(
-                requirement.level || 3
+    const filteredProjects =
+        projects.filter(project => {
+
+            const projectName =
+                String(
+                    project.project_name || ""
+                ).toLowerCase();
+
+            const manager =
+                String(
+                    project.project_manager || ""
+                ).toLowerCase();
+
+            const matchesSearch =
+                !searchValue ||
+                projectName.includes(searchValue) ||
+                manager.includes(searchValue);
+
+            const matchesStatus =
+                !statusValue ||
+                project.status === statusValue;
+
+            return (
+                matchesSearch &&
+                matchesStatus
             );
 
-    }
+        });
 
+    projectsCount.textContent =
+        `${filteredProjects.length} مشروع`;
 
-    row.querySelector(
-        ".remove-requirement-btn"
-    )
-    .addEventListener(
-        "click",
-        function () {
+    if (!filteredProjects.length) {
 
-            row.remove();
-
-            updateRequirementsEmpty();
-
-        }
-    );
-
-}
-
-
-/* =====================================================
-   تحديث حالة المتطلبات
-===================================================== */
-
-function updateRequirementsEmpty() {
-
-
-    const count =
-        requirementsList
-            .querySelectorAll(
-                ".requirement-row"
-            )
-            .length;
-
-
-    requirementsEmpty.style.display =
-        count === 0
-            ?
-            "block"
-            :
-            "none";
-
-}
-
-
-/* =====================================================
-   قراءة المتطلبات
-===================================================== */
-
-function collectRequirements() {
-
-
-    const rows =
-        [
-            ...requirementsList
-                .querySelectorAll(
-                    ".requirement-row"
-                )
-        ];
-
-
-    return rows.map(
-        row => ({
-
-
-            skill_id:
-                Number(
-                    row.querySelector(
-                        ".requirement-skill-select"
-                    ).value
-                ),
-
-
-            required_level:
-                Number(
-                    row.querySelector(
-                        ".requirement-level"
-                    ).value
-                ),
-
-
-            required_members:
-                Number(
-                    row.querySelector(
-                        ".requirement-members"
-                    ).value
-                ),
-
-
-            importance_weight:
-                Number(
-                    row.querySelector(
-                        ".requirement-weight"
-                    ).value
-                )
-
-
-        })
-    );
-
-}
-
-
-/* =====================================================
-   التحقق من المتطلبات
-===================================================== */
-
-function validateRequirements(
-    requirements
-) {
-
-
-    if (
-        requirements.length === 0
-    ) {
-
-        alert(
-            "حلل المشروع أو أضف متطلبًا واحدًا على الأقل."
-        );
-
-        return false;
-
-    }
-
-
-    const skillIds =
-        requirements.map(
-            requirement =>
-                requirement.skill_id
-        );
-
-
-    if (
-        skillIds.some(
-            id => !id
-        )
-    ) {
-
-        alert(
-            "اختر المهارة في جميع المتطلبات."
-        );
-
-        return false;
-
-    }
-
-
-    if (
-        new Set(
-            skillIds
-        ).size !==
-        skillIds.length
-    ) {
-
-        alert(
-            "لا يمكن إضافة نفس المهارة أكثر من مرة."
-        );
-
-        return false;
-
-    }
-
-
-    if (
-        requirements.some(
-            requirement =>
-                requirement.required_level < 1 ||
-                requirement.required_level > 5
-        )
-    ) {
-
-        alert(
-            "مستوى المهارة يجب أن يكون من 1 إلى 5."
-        );
-
-        return false;
-
-    }
-
-
-    if (
-        requirements.some(
-            requirement =>
-                requirement.required_members < 1 ||
-                requirement.required_members > 10
-        )
-    ) {
-
-        alert(
-            "عدد الأفراد يجب أن يكون من 1 إلى 10."
-        );
-
-        return false;
-
-    }
-
-
-    if (
-        requirements.some(
-            requirement =>
-                requirement.importance_weight < 1 ||
-                requirement.importance_weight > 100
-        )
-    ) {
-
-        alert(
-            "الأهمية يجب أن تكون من 1 إلى 100."
-        );
-
-        return false;
-
-    }
-
-
-    return true;
-
-}
-
-
-/* =====================================================
-   تحليل المشروع بالذكاء الاصطناعي
-===================================================== */
-
-async function analyzeProjectRequirements() {
-
-
-    const button =
-        document.getElementById(
-            "analyzeRequirementsBtn"
-        );
-
-
-    const statusElement =
-        document.getElementById(
-            "smartAnalysisStatus"
-        );
-
-
-    const resultElement =
-        document.getElementById(
-            "smartAnalysisResult"
-        );
-
-
-    const projectName =
-        document.getElementById(
-            "projectName"
-        ).value.trim();
-
-
-    const description =
-        document.getElementById(
-            "projectDescription"
-        ).value.trim();
-
-
-    if (
-        !projectName ||
-        !description
-    ) {
-
-        alert(
-            "اكتب اسم المشروع ووصف المشروع أولًا."
-        );
+        projectsGrid.innerHTML = `
+            <div class="empty-state">
+                لا توجد مشاريع مطابقة.
+            </div>
+        `;
 
         return;
-
     }
 
-
-    if (
-        skills.length === 0
-    ) {
-
-        alert(
-            "لا توجد مهارات مسجلة في النظام."
-        );
-
-        return;
-
-    }
-
-
-    button.disabled =
-        true;
-
-
-    button.textContent =
-        "جارٍ التحليل...";
-
-
-    statusElement.textContent =
-        "يقوم معيار الآن بفهم المشروع وتحليل احتياجاته بالذكاء الاصطناعي...";
-
-
-    resultElement.innerHTML =
-        "";
-
-
-    try {
-
-
-        const {
-            data,
-            error
-        } =
-        await supabaseClient
-            .functions
-            .invoke(
-                "analyze-project",
-                {
-                    body: {
-
-                        project_name:
-                            projectName,
-
-                        description:
-                            description
-
-                    }
-                }
-            );
-
-
-        if (error) {
-
-
-            console.error(
-                "Edge Function Error:",
-                error
-            );
-
-
-            let message =
-                error.message ||
-                "تعذر الاتصال بخدمة التحليل.";
-
-
-            try {
-
-
-                if (
-                    error.context &&
-                    typeof error.context.json ===
-                    "function"
-                ) {
-
-
-                    const errorBody =
-                        await error.context.json();
-
-
-                    if (
-                        errorBody &&
-                        errorBody.error
-                    ) {
-
-                        message =
-                            errorBody.error;
-
-                    }
-
-                }
-
-            }
-
-            catch (readError) {
-
-                console.warn(
-                    "تعذر قراءة تفاصيل الخطأ:",
-                    readError
-                );
-
-            }
-
-
-            throw new Error(
-                message
-            );
-
-        }
-
-
-        if (!data) {
-
-            throw new Error(
-                "لم يتم استلام نتيجة من خدمة التحليل."
-            );
-
-        }
-
-
-        if (
-            data.success !== true
-        ) {
-
-            throw new Error(
-                data.error ||
-                "تعذر تحليل المشروع."
-            );
-
-        }
-
-
-        const aiRequirements =
-            Array.isArray(
-                data.requirements
-            )
-                ?
-                data.requirements
-                :
-                [];
-
-
-        if (
-            aiRequirements.length === 0
-        ) {
-
-            throw new Error(
-                "لم يستطع معيار تحديد مهارات مناسبة للمشروع."
-            );
-
-        }
-
-
-        requirementsList.innerHTML =
-            "";
-
-
-        const validRequirements =
-            [];
-
-
-        aiRequirements.forEach(
-            requirement => {
-
-
-                const skillId =
-                    Number(
-                        requirement.skill_id
+    projectsGrid.innerHTML =
+        filteredProjects
+            .map(project => {
+
+                const projectTasks =
+                    getTasksForProject(
+                        project.id
                     );
 
-
-                const existingSkill =
-                    skills.find(
-                        skill =>
-                            Number(
-                                skill.id
-                            )
-                            ===
-                            skillId
+                const requirements =
+                    getRequirementsForProject(
+                        project.id
                     );
 
+                const requirementNames =
+                    requirements
+                        .slice(0, 4)
+                        .map(requirement => {
 
-                if (
-                    !existingSkill
-                ) {
-
-                    return;
-
-                }
-
-
-                const normalized = {
-
-
-                    skillId:
-                        skillId,
-
-
-                    skillName:
-                        existingSkill.skill_name,
-
-
-                    level:
-                        Math.min(
-                            5,
-                            Math.max(
-                                1,
-                                Number(
-                                    requirement.required_level
-                                ) || 3
-                            )
-                        ),
-
-
-                    members:
-                        Math.min(
-                            10,
-                            Math.max(
-                                1,
-                                Number(
-                                    requirement.required_members
-                                ) || 1
-                            )
-                        ),
-
-
-                    weight:
-                        Math.min(
-                            100,
-                            Math.max(
-                                1,
-                                Number(
-                                    requirement.importance_weight
-                                ) || 50
-                            )
-                        ),
-
-
-                    reason:
-                        String(
-                            requirement.reason || ""
-                        ).trim()
-
-
-                };
-
-
-                validRequirements.push(
-                    normalized
-                );
-
-
-                addRequirementRow(
-                    normalized
-                );
-
-            }
-        );
-
-
-        updateRequirementsEmpty();
-
-
-        if (
-            validRequirements.length === 0
-        ) {
-
-            throw new Error(
-                "لم يتم العثور على مهارات مسجلة مناسبة لهذا المشروع."
-            );
-
-        }
-
-
-        const projectSummary =
-            String(
-                data.project_summary || ""
-            ).trim();
-
-
-        statusElement.textContent =
-            `تم تحليل المشروع واقتراح ${validRequirements.length} متطلبات. يمكنك مراجعتها وتعديلها قبل الحفظ.`;
-
-
-        const skillsHtml =
-            validRequirements
-                .map(
-                    requirement => `
-
-
-                        <div class="analysis-skill">
-
-
-                            <strong>
-                                ${escapeHtml(
-                                    requirement.skillName
-                                )}
-                            </strong>
-
-
-                            <span>
-
-                                المستوى المطلوب:
-                                ${requirement.level}
-                                من 5
-
-                                —
-
-                                عدد الأفراد:
-                                ${requirement.members}
-
-                                —
-
-                                الأهمية:
-                                ${requirement.weight}%
-
-                            </span>
-
-
-                            ${
-                                requirement.reason
-                                    ?
-                                    `
-
-                                        <span>
-                                            ${escapeHtml(
-                                                requirement.reason
-                                            )}
-                                        </span>
-
-                                    `
-                                    :
-                                    ""
+                            if (
+                                requirement.skill_name
+                            ) {
+                                return requirement.skill_name;
                             }
 
+                            return getSkillName(
+                                requirement.skill_id
+                            );
 
-                        </div>
+                        })
+                        .filter(Boolean);
 
+                const requirementsText =
+                    requirementNames.length
+                        ? requirementNames.join("، ")
+                        : "لا توجد مهارات معتمدة";
 
-                    `
-                )
-                .join("");
+                return `
 
+                    <article class="project-card">
 
-        resultElement.innerHTML = `
+                        <div class="project-card-top">
 
+                            <div>
 
-            ${
-                projectSummary
-                    ?
-                    `
+                                <span class="project-label">
+                                    مشروع
+                                </span>
 
-                        <div class="analysis-skill">
+                                <h3>
+                                    ${escapeHtml(
+                                        project.project_name
+                                    )}
+                                </h3>
 
-                            <strong>
-                                فهم معيار للمشروع
-                            </strong>
+                            </div>
 
-                            <span>
+                            <span
+                                class="
+                                    project-status
+                                    ${getStatusClass(
+                                        project.status
+                                    )}
+                                "
+                            >
                                 ${escapeHtml(
-                                    projectSummary
+                                    project.status || "مخطط"
                                 )}
                             </span>
 
                         </div>
 
-                    `
-                    :
-                    ""
-            }
+
+                        <p class="project-description">
+                            ${escapeHtml(
+                                project.description ||
+                                "لا يوجد وصف للمشروع."
+                            )}
+                        </p>
 
 
-            ${skillsHtml}
+                        <div class="project-requirements-preview">
+
+                            <span>
+                                المهارات المطلوبة
+                            </span>
+
+                            <strong>
+                                ${escapeHtml(
+                                    requirementsText
+                                )}
+                            </strong>
+
+                        </div>
 
 
-        `;
+                        <div class="project-info">
 
-    }
+                            <div class="info-item">
 
-    catch (error) {
+                                <span>
+                                    مدير المشروع
+                                </span>
 
+                                <strong>
+                                    ${escapeHtml(
+                                        project.project_manager || "-"
+                                    )}
+                                </strong>
 
-        console.error(
-            "خطأ تحليل المشروع:",
-            error
-        );
-
-
-        statusElement.textContent =
-            "تعذر إكمال تحليل المشروع حاليًا.";
-
-
-        resultElement.innerHTML = `
-
-            <span class="analysis-warning">
-
-                ${escapeHtml(
-                    error.message ||
-                    "حدث خطأ أثناء تحليل المشروع."
-                )}
-
-            </span>
-
-        `;
-
-    }
-
-    finally {
+                            </div>
 
 
-        button.disabled =
-            false;
+                            <div class="info-item">
+
+                                <span>
+                                    عدد المهام
+                                </span>
+
+                                <strong>
+                                    ${projectTasks.length}
+                                </strong>
+
+                            </div>
 
 
-        button.textContent =
-            "تحليل المتطلبات تلقائيًا";
+                            <div class="info-item">
 
-    }
+                                <span>
+                                    تاريخ البداية
+                                </span>
+
+                                <strong class="project-date">
+                                    ${formatDate(
+                                        project.start_date
+                                    )}
+                                </strong>
+
+                            </div>
+
+
+                            <div class="info-item">
+
+                                <span>
+                                    تاريخ النهاية
+                                </span>
+
+                                <strong class="project-date">
+                                    ${formatDate(
+                                        project.end_date
+                                    )}
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="project-actions">
+
+                            <button
+                                type="button"
+                                class="view-btn"
+                                data-project-id="${project.id}"
+                            >
+                                التفاصيل
+                            </button>
+
+                            <button
+                                type="button"
+                                class="edit-btn"
+                                data-project-id="${project.id}"
+                            >
+                                تعديل
+                            </button>
+
+                            <button
+                                type="button"
+                                class="delete-btn"
+                                data-project-id="${project.id}"
+                            >
+                                حذف
+                            </button>
+
+                        </div>
+
+                    </article>
+
+                `;
+
+            })
+            .join("");
 
 }
 
 
 /* =====================================================
-   إعادة ضبط النموذج
+   فتح نافذة المشروع
 ===================================================== */
 
-function resetProjectForm() {
-
-
-    document.getElementById(
-        "projectForm"
-    ).reset();
-
-
-    document.getElementById(
-        "editProjectId"
-    ).value =
-        "";
-
-
-    document.getElementById(
-        "projectTasks"
-    ).value =
-        "0";
-
-
-    document.getElementById(
-        "projectStatus"
-    ).value =
-        "مخطط";
-
+function openProjectModal() {
 
     document.getElementById(
         "modalTitle"
     ).textContent =
         "إضافة مشروع";
 
+    document.getElementById(
+        "projectForm"
+    ).reset();
 
-    requirementsList.innerHTML =
-        "";
+    document.getElementById(
+        "editProjectId"
+    ).value = "";
 
+    document.getElementById(
+        "projectTasks"
+    ).value = "0";
 
-    updateRequirementsEmpty();
+    document.getElementById(
+        "projectStatus"
+    ).value = "مخطط";
 
+    requirementsList.innerHTML = "";
+
+    requirementsEmpty.style.display =
+        "block";
 
     document.getElementById(
         "smartAnalysisStatus"
     ).textContent =
         "اكتب وصفًا واضحًا للمشروع ثم اضغط تحليل المتطلبات تلقائيًا.";
 
-
     document.getElementById(
         "smartAnalysisResult"
-    ).innerHTML =
-        "";
-
-}
-
-
-/* =====================================================
-   فتح إضافة مشروع
-===================================================== */
-
-function openAddProject() {
-
-
-    resetProjectForm();
-
+    ).innerHTML = "";
 
     projectModal.classList.add(
         "show"
     );
-
 
     document.body.classList.add(
         "modal-open"
@@ -3001,11 +1352,9 @@ function openAddProject() {
 
 function closeProjectModal() {
 
-
     projectModal.classList.remove(
         "show"
     );
-
 
     document.body.classList.remove(
         "modal-open"
@@ -3015,41 +1364,852 @@ function closeProjectModal() {
 
 
 /* =====================================================
-   تعديل مشروع
+   إضافة متطلب للواجهة
 ===================================================== */
 
-function openEditProject(
-    projectId
-) {
+function addRequirementRow(data = {}) {
 
+    requirementsEmpty.style.display =
+        "none";
+
+    const row =
+        document.createElement("div");
+
+    row.className =
+        "requirement-row";
+
+    const options =
+        skills
+            .map(skill => {
+
+                const selected =
+                    String(skill.id) ===
+                    String(data.skill_id)
+                        ? "selected"
+                        : "";
+
+                return `
+                    <option
+                        value="${skill.id}"
+                        ${selected}
+                    >
+                        ${escapeHtml(
+                            skill.skill_name
+                        )}
+                    </option>
+                `;
+
+            })
+            .join("");
+
+    row.innerHTML = `
+
+        <div class="requirement-field skill-field">
+
+            <label>
+                المهارة
+            </label>
+
+            <select
+                class="requirement-skill"
+                required
+            >
+
+                <option value="">
+                    اختر المهارة
+                </option>
+
+                ${options}
+
+            </select>
+
+        </div>
+
+
+        <div class="requirement-field">
+
+            <label>
+                المستوى المطلوب
+            </label>
+
+            <select class="requirement-level">
+
+                <option
+                    value="مبتدئ"
+                    ${
+                        data.required_level === "مبتدئ"
+                            ? "selected"
+                            : ""
+                    }
+                >
+                    مبتدئ
+                </option>
+
+                <option
+                    value="متوسط"
+                    ${
+                        data.required_level === "متوسط"
+                            ? "selected"
+                            : ""
+                    }
+                >
+                    متوسط
+                </option>
+
+                <option
+                    value="متقدم"
+                    ${
+                        data.required_level === "متقدم"
+                            ? "selected"
+                            : ""
+                    }
+                >
+                    متقدم
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="requirement-field">
+
+            <label>
+                الوزن %
+            </label>
+
+            <input
+                type="number"
+                class="requirement-weight"
+                min="0"
+                max="100"
+                value="${
+                    data.weight ?? 20
+                }"
+            >
+
+        </div>
+
+
+        <button
+            type="button"
+            class="remove-requirement-btn"
+            title="حذف المتطلب"
+        >
+            ×
+        </button>
+
+    `;
+
+    requirementsList.appendChild(
+        row
+    );
+
+}
+
+
+/* =====================================================
+   قراءة المتطلبات من النموذج
+===================================================== */
+
+function collectRequirements() {
+
+    const rows =
+        [
+            ...requirementsList
+                .querySelectorAll(
+                    ".requirement-row"
+                )
+        ];
+
+    return rows
+        .map(row => {
+
+            const skillId =
+                row
+                    .querySelector(
+                        ".requirement-skill"
+                    )
+                    .value;
+
+            const level =
+                row
+                    .querySelector(
+                        ".requirement-level"
+                    )
+                    .value;
+
+            const weight =
+                Number(
+                    row
+                        .querySelector(
+                            ".requirement-weight"
+                        )
+                        .value || 0
+                );
+
+            if (!skillId) {
+                return null;
+            }
+
+            return {
+                skill_id: skillId,
+                required_level: level,
+                weight: weight
+            };
+
+        })
+        .filter(Boolean);
+
+}
+
+
+/* =====================================================
+   تحليل المتطلبات
+===================================================== */
+
+async function analyzeRequirements() {
+
+    const projectName =
+        document
+            .getElementById("projectName")
+            .value
+            .trim();
+
+    const description =
+        document
+            .getElementById(
+                "projectDescription"
+            )
+            .value
+            .trim();
+
+    const button =
+        document.getElementById(
+            "analyzeRequirementsBtn"
+        );
+
+    const status =
+        document.getElementById(
+            "smartAnalysisStatus"
+        );
+
+    const result =
+        document.getElementById(
+            "smartAnalysisResult"
+        );
+
+    if (!projectName && !description) {
+
+        status.textContent =
+            "اكتب اسم المشروع أو وصفه أولًا.";
+
+        return;
+    }
+
+    if (!skills.length) {
+
+        status.textContent =
+            "لا توجد مهارات مسجلة في النظام لتحليل المشروع.";
+
+        return;
+    }
+
+    button.disabled = true;
+
+    button.textContent =
+        "جارٍ التحليل...";
+
+    status.textContent =
+        "يقوم معيار بتحليل المشروع والبحث عن المهارات المناسبة...";
+
+    result.innerHTML = "";
+
+    try {
+
+        /*
+        =================================================
+        التحليل الذكي
+
+        إذا كان Gemini مربوطًا عندك من خلال
+        Supabase Edge Function باسم:
+        analyze-project
+
+        سيستخدمه النظام.
+
+        وإذا لم تكن الدالة موجودة، ينتقل النظام
+        للتحليل المحلي من المهارات المسجلة.
+        =================================================
+        */
+
+        let suggestedSkillIds = [];
+
+        try {
+
+            const {
+                data,
+                error
+            } =
+            await supabaseClient
+                .functions
+                .invoke(
+                    "analyze-project",
+                    {
+                        body: {
+                            project_name:
+                                projectName,
+                            description:
+                                description,
+                            skills:
+                                skills.map(
+                                    skill => ({
+                                        id:
+                                            skill.id,
+                                        name:
+                                            skill.skill_name,
+                                        description:
+                                            skill.description || ""
+                                    })
+                                )
+                        }
+                    }
+                );
+
+            if (!error && data) {
+
+                const rawSuggestions =
+                    data.skills ||
+                    data.suggested_skills ||
+                    data.requirements ||
+                    [];
+
+                suggestedSkillIds =
+                    rawSuggestions
+                        .map(item => {
+
+                            if (
+                                typeof item ===
+                                "string"
+                            ) {
+
+                                const found =
+                                    skills.find(
+                                        skill =>
+                                            skill
+                                                .skill_name
+                                                .toLowerCase() ===
+                                            item
+                                                .toLowerCase()
+                                    );
+
+                                return found
+                                    ? found.id
+                                    : null;
+                            }
+
+                            return (
+                                item.skill_id ||
+                                item.id ||
+                                null
+                            );
+
+                        })
+                        .filter(Boolean);
+            }
+
+        }
+
+        catch (geminiError) {
+
+            console.warn(
+                "تعذر استخدام التحليل الخارجي، سيتم استخدام التحليل المحلي:",
+                geminiError
+            );
+
+        }
+
+
+        /* التحليل المحلي الاحتياطي */
+
+        if (!suggestedSkillIds.length) {
+
+            const sourceText =
+                (
+                    projectName +
+                    " " +
+                    description
+                )
+                .toLowerCase();
+
+            suggestedSkillIds =
+                skills
+                    .filter(skill => {
+
+                        const skillName =
+                            String(
+                                skill.skill_name || ""
+                            )
+                            .toLowerCase()
+                            .trim();
+
+                        if (!skillName) {
+                            return false;
+                        }
+
+                        return sourceText.includes(
+                            skillName
+                        );
+
+                    })
+                    .map(
+                        skill => skill.id
+                    );
+
+        }
+
+
+        suggestedSkillIds =
+            [
+                ...new Set(
+                    suggestedSkillIds
+                        .map(String)
+                )
+            ];
+
+
+        if (!suggestedSkillIds.length) {
+
+            status.textContent =
+                "انتهى التحليل، لكن لم يتم العثور على مهارات مطابقة بشكل واضح.";
+
+            result.innerHTML = `
+                <p>
+                    يمكنك إضافة المهارات المطلوبة يدويًا من زر
+                    "إضافة يدوية".
+                </p>
+            `;
+
+            return;
+        }
+
+
+        requirementsList.innerHTML =
+            "";
+
+        const defaultWeight =
+            Math.floor(
+                100 /
+                suggestedSkillIds.length
+            );
+
+        suggestedSkillIds.forEach(
+            skillId => {
+
+                addRequirementRow({
+                    skill_id:
+                        skillId,
+                    required_level:
+                        "متوسط",
+                    weight:
+                        defaultWeight
+                });
+
+            }
+        );
+
+
+        const names =
+            suggestedSkillIds
+                .map(
+                    skillId =>
+                        getSkillName(
+                            skillId
+                        )
+                )
+                .filter(Boolean);
+
+
+        status.textContent =
+            "تم تحليل المشروع واقتراح المتطلبات. راجعها قبل الحفظ.";
+
+        result.innerHTML = `
+
+            <p>
+                اقترح معيار
+                <strong>
+                    ${names.length}
+                </strong>
+                مهارة للمشروع:
+            </p>
+
+            <div class="analysis-tags">
+
+                ${names
+                    .map(
+                        name => `
+                            <span>
+                                ${escapeHtml(name)}
+                            </span>
+                        `
+                    )
+                    .join("")}
+
+            </div>
+
+        `;
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "خطأ تحليل المتطلبات:",
+            error
+        );
+
+        status.textContent =
+            "تعذر تحليل المتطلبات حاليًا.";
+
+        result.innerHTML = `
+            <p class="analysis-error">
+                ${escapeHtml(
+                    error.message || ""
+                )}
+            </p>
+        `;
+
+    }
+
+    finally {
+
+        button.disabled = false;
+
+        button.textContent =
+            "تحليل المتطلبات تلقائيًا";
+
+    }
+
+}
+
+
+/* =====================================================
+   حفظ المشروع
+===================================================== */
+
+async function saveProject(event) {
+
+    event.preventDefault();
+
+    const saveButton =
+        document.getElementById(
+            "saveProjectBtn"
+        );
+
+    const editProjectId =
+        document
+            .getElementById(
+                "editProjectId"
+            )
+            .value;
+
+    const projectName =
+        document
+            .getElementById(
+                "projectName"
+            )
+            .value
+            .trim();
+
+    const projectManager =
+        document
+            .getElementById(
+                "projectManager"
+            )
+            .value
+            .trim();
+
+    const status =
+        document
+            .getElementById(
+                "projectStatus"
+            )
+            .value;
+
+    const startDate =
+        document
+            .getElementById(
+                "projectStart"
+            )
+            .value;
+
+    const endDate =
+        document
+            .getElementById(
+                "projectEnd"
+            )
+            .value;
+
+    const description =
+        document
+            .getElementById(
+                "projectDescription"
+            )
+            .value
+            .trim();
+
+    if (
+        !projectName ||
+        !projectManager ||
+        !startDate ||
+        !description
+    ) {
+
+        alert(
+            "أكملي البيانات المطلوبة."
+        );
+
+        return;
+    }
+
+
+    if (
+        endDate &&
+        endDate < startDate
+    ) {
+
+        alert(
+            "تاريخ النهاية لا يمكن أن يكون قبل تاريخ البداية."
+        );
+
+        return;
+    }
+
+
+    const requirements =
+        collectRequirements();
+
+
+    saveButton.disabled =
+        true;
+
+    saveButton.textContent =
+        "جارٍ الحفظ...";
+
+
+    try {
+
+        const projectData = {
+
+            project_name:
+                projectName,
+
+            project_manager:
+                projectManager,
+
+            description:
+                description,
+
+            start_date:
+                startDate,
+
+            end_date:
+                endDate || null,
+
+            status:
+                status
+
+        };
+
+
+        let projectId =
+            editProjectId;
+
+
+        /* تعديل مشروع */
+
+        if (editProjectId) {
+
+            const {
+                error
+            } =
+            await supabaseClient
+                .from("projects")
+                .update(
+                    projectData
+                )
+                .eq(
+                    "id",
+                    editProjectId
+                );
+
+            if (error) {
+                throw error;
+            }
+
+
+            const {
+                error:
+                    deleteRequirementsError
+            } =
+            await supabaseClient
+                .from(
+                    "project_requirements"
+                )
+                .delete()
+                .eq(
+                    "project_id",
+                    editProjectId
+                );
+
+            if (
+                deleteRequirementsError
+            ) {
+
+                console.warn(
+                    "تعذر حذف المتطلبات القديمة:",
+                    deleteRequirementsError
+                );
+
+            }
+
+        }
+
+
+        /* إضافة مشروع */
+
+        else {
+
+            const {
+                data,
+                error
+            } =
+            await supabaseClient
+                .from("projects")
+                .insert(
+                    projectData
+                )
+                .select("id")
+                .single();
+
+            if (error) {
+                throw error;
+            }
+
+            projectId =
+                data.id;
+
+        }
+
+
+        /* حفظ المتطلبات */
+
+        if (
+            requirements.length
+        ) {
+
+            const requirementRows =
+                requirements.map(
+                    requirement => ({
+
+                        project_id:
+                            projectId,
+
+                        skill_id:
+                            requirement.skill_id,
+
+                        required_level:
+                            requirement.required_level,
+
+                        weight:
+                            requirement.weight
+
+                    })
+                );
+
+
+            const {
+                error:
+                    requirementsError
+            } =
+            await supabaseClient
+                .from(
+                    "project_requirements"
+                )
+                .insert(
+                    requirementRows
+                );
+
+
+            if (
+                requirementsError
+            ) {
+
+                console.error(
+                    "خطأ حفظ المتطلبات:",
+                    requirementsError
+                );
+
+                alert(
+                    "تم حفظ المشروع، لكن حدث خطأ أثناء حفظ بعض المتطلبات."
+                );
+
+            }
+
+        }
+
+
+        closeProjectModal();
+
+        await loadProjects();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "خطأ حفظ المشروع:",
+            error
+        );
+
+        alert(
+            "تعذر حفظ المشروع: " +
+            (
+                error.message ||
+                "خطأ غير معروف"
+            )
+        );
+
+    }
+
+    finally {
+
+        saveButton.disabled =
+            false;
+
+        saveButton.textContent =
+            "حفظ المشروع";
+
+    }
+
+}
+
+
+/* =====================================================
+   فتح تعديل المشروع
+===================================================== */
+
+function editProject(projectId) {
 
     const project =
         projects.find(
             item =>
-                Number(
-                    item.id
-                )
-                ===
-                Number(
-                    projectId
-                )
+                String(item.id) ===
+                String(projectId)
         );
 
-
-    if (
-        !project
-    ) {
-
-        alert(
-            "تعذر العثور على المشروع."
-        );
-
+    if (!project) {
         return;
-
     }
-
-
-    resetProjectForm();
 
 
     document.getElementById(
@@ -3067,17 +2227,13 @@ function openEditProject(
     document.getElementById(
         "projectName"
     ).value =
-        project.name || "";
+        project.project_name || "";
 
 
     document.getElementById(
         "projectManager"
     ).value =
-        project.manager === "-"
-            ?
-            ""
-            :
-            project.manager || "";
+        project.project_manager || "";
 
 
     document.getElementById(
@@ -3087,21 +2243,15 @@ function openEditProject(
 
 
     document.getElementById(
-        "projectTasks"
-    ).value =
-        project.tasks || 0;
-
-
-    document.getElementById(
         "projectStart"
     ).value =
-        project.start || "";
+        project.start_date || "";
 
 
     document.getElementById(
         "projectEnd"
     ).value =
-        project.end || "";
+        project.end_date || "";
 
 
     document.getElementById(
@@ -3110,60 +2260,74 @@ function openEditProject(
         project.description || "";
 
 
+    const projectTasks =
+        getTasksForProject(
+            project.id
+        );
+
+
+    document.getElementById(
+        "projectTasks"
+    ).value =
+        projectTasks.length;
+
+
     requirementsList.innerHTML =
         "";
 
 
+    const existingRequirements =
+        getRequirementsForProject(
+            project.id
+        );
+
+
     if (
-        Array.isArray(
-            project.requirements
-        )
+        existingRequirements.length
     ) {
 
+        existingRequirements.forEach(
+            requirement => {
 
-        project.requirements
-            .forEach(
-                requirement => {
+                addRequirementRow({
 
+                    skill_id:
+                        requirement.skill_id,
 
-                    addRequirementRow({
+                    required_level:
+                        requirement.required_level ||
+                        requirement.level ||
+                        "متوسط",
 
+                    weight:
+                        requirement.weight ??
+                        20
 
-                        skillId:
-                            requirement.skillId,
+                });
 
-
-                        level:
-                            requirement.level,
-
-
-                        members:
-                            requirement.members,
-
-
-                        weight:
-                            requirement.weight
-
-
-                    });
-
-                }
-            );
+            }
+        );
 
     }
 
+    else {
 
-    updateRequirementsEmpty();
+        requirementsEmpty.style.display =
+            "block";
+
+    }
 
 
     document.getElementById(
         "smartAnalysisStatus"
     ).textContent =
-        project.requirements.length > 0
-            ?
-            `يوجد ${project.requirements.length} متطلبات محفوظة لهذا المشروع.`
-            :
-            "يمكنك تحليل وصف المشروع لاستخراج المتطلبات.";
+        "يمكنك إعادة تحليل وصف المشروع أو تعديل المتطلبات يدويًا.";
+
+
+    document.getElementById(
+        "smartAnalysisResult"
+    ).innerHTML =
+        "";
 
 
     projectModal.classList.add(
@@ -3179,434 +2343,55 @@ function openEditProject(
 
 
 /* =====================================================
-   حفظ المشروع
-===================================================== */
-
-async function saveProject(
-    event
-) {
-
-
-    event.preventDefault();
-
-
-    const saveButton =
-        document.getElementById(
-            "saveProjectBtn"
-        );
-
-
-    const editProjectId =
-        document.getElementById(
-            "editProjectId"
-        ).value;
-
-
-    const projectName =
-        document.getElementById(
-            "projectName"
-        ).value.trim();
-
-
-    const projectManager =
-        document.getElementById(
-            "projectManager"
-        ).value.trim();
-
-
-    const projectStatus =
-        document.getElementById(
-            "projectStatus"
-        ).value;
-
-
-    const startDate =
-        document.getElementById(
-            "projectStart"
-        ).value;
-
-
-    const endDate =
-        document.getElementById(
-            "projectEnd"
-        ).value;
-
-
-    const description =
-        document.getElementById(
-            "projectDescription"
-        ).value.trim();
-
-
-    if (
-        !projectName ||
-        !projectManager ||
-        !projectStatus ||
-        !startDate ||
-        !description
-    ) {
-
-        alert(
-            "أكمل بيانات المشروع المطلوبة."
-        );
-
-        return;
-
-    }
-
-
-    if (
-        endDate &&
-        new Date(
-            endDate
-        )
-        <
-        new Date(
-            startDate
-        )
-    ) {
-
-        alert(
-            "تاريخ النهاية لا يمكن أن يكون قبل تاريخ البداية."
-        );
-
-        return;
-
-    }
-
-
-    const requirements =
-        collectRequirements();
-
-
-    if (
-        !validateRequirements(
-            requirements
-        )
-    ) {
-
-        return;
-
-    }
-
-
-    saveButton.disabled =
-        true;
-
-
-    saveButton.textContent =
-        editProjectId
-            ?
-            "جارٍ حفظ التعديلات..."
-            :
-            "جارٍ حفظ المشروع...";
-
-
-    try {
-
-
-        const payload = {
-
-
-            project_name:
-                projectName,
-
-
-            project_manager:
-                projectManager,
-
-
-            description:
-                description,
-
-
-            start_date:
-                startDate,
-
-
-            end_date:
-                endDate || null,
-
-
-            status:
-                projectStatus
-
-
-        };
-
-
-        let projectId;
-
-
-        if (
-            editProjectId
-        ) {
-
-
-            const {
-                data,
-                error
-            } =
-            await supabaseClient
-                .from(
-                    "projects"
-                )
-                .update(
-                    payload
-                )
-                .eq(
-                    "id",
-                    Number(
-                        editProjectId
-                    )
-                )
-                .select(
-                    "id"
-                )
-                .single();
-
-
-            if (
-                error
-            ) {
-
-                throw error;
-
-            }
-
-
-            projectId =
-                data.id;
-
-
-            const {
-                error:
-                deleteRequirementsError
-            } =
-            await supabaseClient
-                .from(
-                    "project_requirements"
-                )
-                .delete()
-                .eq(
-                    "project_id",
-                    projectId
-                );
-
-
-            if (
-                deleteRequirementsError
-            ) {
-
-                throw deleteRequirementsError;
-
-            }
-
-        }
-
-        else {
-
-
-            const {
-                data,
-                error
-            } =
-            await supabaseClient
-                .from(
-                    "projects"
-                )
-                .insert([
-                    payload
-                ])
-                .select(
-                    "id"
-                )
-                .single();
-
-
-            if (
-                error
-            ) {
-
-                throw error;
-
-            }
-
-
-            projectId =
-                data.id;
-
-        }
-
-
-        const requirementsPayload =
-            requirements.map(
-                requirement => ({
-
-
-                    project_id:
-                        projectId,
-
-
-                    skill_id:
-                        requirement.skill_id,
-
-
-                    required_level:
-                        requirement.required_level,
-
-
-                    required_members:
-                        requirement.required_members,
-
-
-                    importance_weight:
-                        requirement.importance_weight
-
-
-                })
-            );
-
-
-        const {
-            error:
-            requirementsError
-        } =
-        await supabaseClient
-            .from(
-                "project_requirements"
-            )
-            .insert(
-                requirementsPayload
-            );
-
-
-        if (
-            requirementsError
-        ) {
-
-            throw requirementsError;
-
-        }
-
-
-        alert(
-            editProjectId
-                ?
-                "تم تحديث المشروع بنجاح."
-                :
-                "تمت إضافة المشروع بنجاح."
-        );
-
-
-        closeProjectModal();
-
-
-        await loadProjects();
-
-    }
-
-    catch (error) {
-
-
-        console.error(
-            "خطأ حفظ المشروع:",
-            error
-        );
-
-
-        alert(
-            "تعذر حفظ المشروع: "
-            +
-            (
-                error.message ||
-                "حدث خطأ غير معروف"
-            )
-        );
-
-    }
-
-    finally {
-
-
-        saveButton.disabled =
-            false;
-
-
-        saveButton.textContent =
-            "حفظ المشروع";
-
-    }
-
-}
-
-
-/* =====================================================
    حذف المشروع
 ===================================================== */
 
-async function deleteProject(
-    projectId
-) {
-
+async function deleteProject(projectId) {
 
     const project =
         projects.find(
             item =>
-                Number(
-                    item.id
-                )
-                ===
-                Number(
-                    projectId
-                )
+                String(item.id) ===
+                String(projectId)
         );
 
 
-    if (
-        !project
-    ) {
-
+    if (!project) {
         return;
-
-    }
-
-
-    if (
-        project.tasks > 0
-    ) {
-
-        alert(
-            "لا يمكن حذف المشروع لأنه يحتوي على مهام مرتبطة."
-        );
-
-        return;
-
     }
 
 
     const confirmed =
         confirm(
-            `هل أنت متأكد من حذف مشروع "${project.name}"؟`
+            `هل أنت متأكد من حذف مشروع "${project.project_name}"؟`
         );
 
 
-    if (
-        !confirmed
-    ) {
-
+    if (!confirmed) {
         return;
-
     }
 
 
     try {
 
+        const relatedTasks =
+            getTasksForProject(
+                projectId
+            );
 
-        const {
-            error:
-            requirementsError
-        } =
+
+        if (
+            relatedTasks.length
+        ) {
+
+            alert(
+                "لا يمكن حذف المشروع لأنه مرتبط بمهام. احذف أو انقل المهام أولًا."
+            );
+
+            return;
+        }
+
+
         await supabaseClient
             .from(
                 "project_requirements"
@@ -3614,50 +2399,25 @@ async function deleteProject(
             .delete()
             .eq(
                 "project_id",
-                Number(
-                    projectId
-                )
+                projectId
             );
-
-
-        if (
-            requirementsError
-        ) {
-
-            throw requirementsError;
-
-        }
 
 
         const {
-            error:
-            projectError
+            error
         } =
         await supabaseClient
-            .from(
-                "projects"
-            )
+            .from("projects")
             .delete()
             .eq(
                 "id",
-                Number(
-                    projectId
-                )
+                projectId
             );
 
 
-        if (
-            projectError
-        ) {
-
-            throw projectError;
-
+        if (error) {
+            throw error;
         }
-
-
-        alert(
-            "تم حذف المشروع بنجاح."
-        );
 
 
         await loadProjects();
@@ -3665,7 +2425,6 @@ async function deleteProject(
     }
 
     catch (error) {
-
 
         console.error(
             "خطأ حذف المشروع:",
@@ -3674,11 +2433,10 @@ async function deleteProject(
 
 
         alert(
-            "تعذر حذف المشروع: "
-            +
+            "تعذر حذف المشروع: " +
             (
                 error.message ||
-                "حدث خطأ غير معروف"
+                "خطأ غير معروف"
             )
         );
 
@@ -3691,130 +2449,110 @@ async function deleteProject(
    تفاصيل المشروع
 ===================================================== */
 
-function openProjectDetails(
-    projectId
-) {
-
+function showProjectDetails(projectId) {
 
     const project =
         projects.find(
             item =>
-                Number(
-                    item.id
-                )
-                ===
-                Number(
-                    projectId
-                )
+                String(item.id) ===
+                String(projectId)
         );
 
 
-    if (
-        !project
-    ) {
-
-        alert(
-            "تعذر العثور على المشروع."
-        );
-
+    if (!project) {
         return;
-
     }
 
 
+    const projectTasks =
+        getTasksForProject(
+            project.id
+        );
+
+
     const requirements =
-        Array.isArray(
-            project.requirements
-        )
-            ?
-            project.requirements
-            :
-            [];
-
-
-    const taskList =
-        Array.isArray(
-            project.taskList
-        )
-            ?
-            project.taskList
-            :
-            [];
+        getRequirementsForProject(
+            project.id
+        );
 
 
     const requirementsHtml =
-        requirements.length > 0
-            ?
-            requirements
+        requirements.length
+
+            ? requirements
                 .map(
-                    requirement => `
+                    requirement => {
 
+                        const skillName =
+                            requirement.skill_name ||
+                            getSkillName(
+                                requirement.skill_id
+                            );
 
-                        <div class="project-requirement-detail">
+                        const level =
+                            requirement.required_level ||
+                            requirement.level ||
+                            "-";
 
+                        const weight =
+                            requirement.weight ??
+                            "-";
 
-                            <div>
+                        return `
+
+                            <div class="project-requirement-detail">
 
                                 <strong>
                                     ${escapeHtml(
-                                        requirement.skillName
+                                        skillName
                                     )}
                                 </strong>
 
-                            </div>
+                                <div class="requirement-detail-meta">
 
+                                    <span>
+                                        المستوى:
+                                        ${escapeHtml(
+                                            level
+                                        )}
+                                    </span>
 
-                            <div class="requirement-detail-meta">
+                                    <span>
+                                        الوزن:
+                                        ${escapeHtml(
+                                            weight
+                                        )}%
+                                    </span>
 
-                                <span>
-                                    المستوى المطلوب:
-                                    ${requirement.level}
-                                    من 5
-                                </span>
-
-                                <span>
-                                    عدد الأفراد:
-                                    ${requirement.members}
-                                </span>
-
-                                <span>
-                                    الأهمية:
-                                    ${requirement.weight}%
-                                </span>
+                                </div>
 
                             </div>
 
+                        `;
 
-                        </div>
-
-
-                    `
+                    }
                 )
                 .join("")
-            :
-            `
 
+            : `
                 <div class="empty-mini">
                     لا توجد متطلبات مسجلة.
                 </div>
-
             `;
 
 
     const tasksHtml =
-        taskList.length > 0
-            ?
-            taskList
+        projectTasks.length
+
+            ? projectTasks
                 .map(
                     task => `
-
 
                         <div class="project-task-item">
 
                             <strong>
                                 ${escapeHtml(
-                                    task.task_name ||
-                                    "مهمة"
+                                    task.task_name
                                 )}
                             </strong>
 
@@ -3827,17 +2565,14 @@ function openProjectDetails(
 
                         </div>
 
-
                     `
                 )
                 .join("")
-            :
-            `
 
+            : `
                 <div class="empty-mini">
-                    لا توجد مهام مرتبطة بهذا المشروع.
+                    لا توجد مهام مرتبطة بالمشروع.
                 </div>
-
             `;
 
 
@@ -3845,8 +2580,7 @@ function openProjectDetails(
         "projectDetails"
     ).innerHTML = `
 
-
-        <div class="detail-item full-detail">
+        <div class="detail-item">
 
             <span>
                 اسم المشروع
@@ -3854,7 +2588,7 @@ function openProjectDetails(
 
             <strong>
                 ${escapeHtml(
-                    project.name
+                    project.project_name
                 )}
             </strong>
 
@@ -3869,7 +2603,7 @@ function openProjectDetails(
 
             <strong>
                 ${escapeHtml(
-                    project.manager
+                    project.project_manager || "-"
                 )}
             </strong>
 
@@ -3884,8 +2618,21 @@ function openProjectDetails(
 
             <strong>
                 ${escapeHtml(
-                    project.status
+                    project.status || "-"
                 )}
+            </strong>
+
+        </div>
+
+
+        <div class="detail-item">
+
+            <span>
+                عدد المهام
+            </span>
+
+            <strong>
+                ${projectTasks.length}
             </strong>
 
         </div>
@@ -3897,13 +2644,9 @@ function openProjectDetails(
                 تاريخ البداية
             </span>
 
-            <strong
-                class="project-date"
-            >
-                ${escapeHtml(
-                    formatDate(
-                        project.start
-                    )
+            <strong>
+                ${formatDate(
+                    project.start_date
                 )}
             </strong>
 
@@ -3916,13 +2659,9 @@ function openProjectDetails(
                 تاريخ النهاية
             </span>
 
-            <strong
-                class="project-date"
-            >
-                ${escapeHtml(
-                    formatDate(
-                        project.end
-                    )
+            <strong>
+                ${formatDate(
+                    project.end_date
                 )}
             </strong>
 
@@ -3936,17 +2675,10 @@ function openProjectDetails(
             </span>
 
             <p class="detail-description-text">
-
-                ${
-                    project.description
-                        ?
-                        escapeHtml(
-                            project.description
-                        )
-                        :
-                        "لا يوجد وصف."
-                }
-
+                ${escapeHtml(
+                    project.description ||
+                    "لا يوجد وصف."
+                )}
             </p>
 
         </div>
@@ -3955,14 +2687,11 @@ function openProjectDetails(
         <div class="detail-item full-detail">
 
             <span>
-                متطلبات المشروع
-                (${requirements.length})
+                المتطلبات والمهارات
             </span>
 
             <div class="project-requirements-details">
-
                 ${requirementsHtml}
-
             </div>
 
         </div>
@@ -3971,18 +2700,14 @@ function openProjectDetails(
         <div class="detail-item full-detail">
 
             <span>
-                مهام المشروع
-                (${taskList.length})
+                المهام التابعة
             </span>
 
             <div class="project-tasks-list">
-
                 ${tasksHtml}
-
             </div>
 
         </div>
-
 
     `;
 
@@ -4005,11 +2730,9 @@ function openProjectDetails(
 
 function closeDetailsModal() {
 
-
     detailsModal.classList.remove(
         "show"
     );
-
 
     document.body.classList.remove(
         "modal-open"
@@ -4019,19 +2742,21 @@ function closeDetailsModal() {
 
 
 /* =====================================================
-   القائمة الجانبية
+   القائمة الجانبية للجوال
 ===================================================== */
 
 function openSidebar() {
-
 
     sidebar.classList.add(
         "show"
     );
 
-
     sidebarOverlay.classList.add(
         "show"
+    );
+
+    document.body.classList.add(
+        "menu-open"
     );
 
 }
@@ -4039,14 +2764,16 @@ function openSidebar() {
 
 function closeSidebar() {
 
-
     sidebar.classList.remove(
         "show"
     );
 
-
     sidebarOverlay.classList.remove(
         "show"
+    );
+
+    document.body.classList.remove(
+        "menu-open"
     );
 
 }
@@ -4058,31 +2785,24 @@ function closeSidebar() {
 
 async function logout() {
 
-
     try {
-
 
         await supabaseClient
             .auth
             .signOut();
 
-
     }
 
     catch (error) {
-
 
         console.error(
             "خطأ تسجيل الخروج:",
             error
         );
 
-
     }
 
-
     localStorage.clear();
-
 
     window.location.href =
         "login.html";
@@ -4098,7 +2818,7 @@ document.getElementById(
     "addProjectBtn"
 ).addEventListener(
     "click",
-    openAddProject
+    openProjectModal
 );
 
 
@@ -4151,10 +2871,26 @@ document.getElementById(
 
 
 document.getElementById(
+    "searchInput"
+).addEventListener(
+    "input",
+    renderProjects
+);
+
+
+document.getElementById(
+    "statusFilter"
+).addEventListener(
+    "change",
+    renderProjects
+);
+
+
+document.getElementById(
     "addRequirementBtn"
 ).addEventListener(
     "click",
-    function () {
+    () => {
 
         addRequirementRow();
 
@@ -4166,31 +2902,97 @@ document.getElementById(
     "analyzeRequirementsBtn"
 ).addEventListener(
     "click",
-    analyzeProjectRequirements
+    analyzeRequirements
 );
 
 
-document.getElementById(
-    "searchInput"
-).addEventListener(
-    "input",
-    filterProjects
-);
-
-
-document.getElementById(
-    "statusFilter"
-).addEventListener(
-    "change",
-    filterProjects
-);
-
-
-document.getElementById(
-    "logoutBtn"
-).addEventListener(
+requirementsList.addEventListener(
     "click",
-    logout
+    event => {
+
+        const removeButton =
+            event.target.closest(
+                ".remove-requirement-btn"
+            );
+
+        if (!removeButton) {
+            return;
+        }
+
+        const row =
+            removeButton.closest(
+                ".requirement-row"
+            );
+
+        if (row) {
+            row.remove();
+        }
+
+        if (
+            !requirementsList
+                .querySelector(
+                    ".requirement-row"
+                )
+        ) {
+
+            requirementsEmpty.style.display =
+                "block";
+
+        }
+
+    }
+);
+
+
+projectsGrid.addEventListener(
+    "click",
+    event => {
+
+        const viewButton =
+            event.target.closest(
+                ".view-btn"
+            );
+
+        const editButton =
+            event.target.closest(
+                ".edit-btn"
+            );
+
+        const deleteButton =
+            event.target.closest(
+                ".delete-btn"
+            );
+
+
+        if (viewButton) {
+
+            showProjectDetails(
+                viewButton.dataset.projectId
+            );
+
+            return;
+        }
+
+
+        if (editButton) {
+
+            editProject(
+                editButton.dataset.projectId
+            );
+
+            return;
+        }
+
+
+        if (deleteButton) {
+
+            deleteProject(
+                deleteButton.dataset.projectId
+            );
+
+        }
+
+    }
 );
 
 
@@ -4208,23 +3010,26 @@ sidebarOverlay.addEventListener(
 );
 
 
+document.getElementById(
+    "logoutBtn"
+).addEventListener(
+    "click",
+    logout
+);
+
+
 document.addEventListener(
     "keydown",
-    function (event) {
-
+    event => {
 
         if (
             event.key ===
             "Escape"
         ) {
 
-
             closeProjectModal();
-
             closeDetailsModal();
-
             closeSidebar();
-
 
         }
 
@@ -4233,36 +3038,26 @@ document.addEventListener(
 
 
 /* =====================================================
-   تشغيل الصفحة
+   بدء الصفحة
 ===================================================== */
 
-async function initializePage() {
+document.addEventListener(
+    "DOMContentLoaded",
+    async () => {
 
+        const allowed =
+            await protectPage();
 
-    const allowed =
-        await protectPage();
+        if (!allowed) {
+            return;
+        }
 
-
-    if (
-        !allowed
-    ) {
-
-        return;
+        await loadProjects();
 
     }
-
-
-    await loadProjects();
-
-}
-
-
-initializePage();
-
+);
 
 </script>
 
-
 </body>
-
 </html>
