@@ -68,12 +68,10 @@
     </header>
 
 
-
     <div
         class="sidebar-overlay"
         id="sidebarOverlay"
     ></div>
-
 
 
     <!-- =========================================
@@ -94,7 +92,6 @@
             >
 
         </div>
-
 
 
         <nav class="sidebar-nav">
@@ -175,7 +172,6 @@
         </nav>
 
 
-
         <button
             class="logout-btn"
             id="logoutBtn"
@@ -186,7 +182,6 @@
 
 
     </aside>
-
 
 
     <!-- =========================================
@@ -213,7 +208,6 @@
             </p>
 
         </header>
-
 
 
         <!-- =========================================
@@ -278,7 +272,6 @@
         </section>
 
 
-
         <!-- =========================================
              الأدوات
         ========================================== -->
@@ -295,7 +288,6 @@
                 >
 
             </div>
-
 
 
             <div class="filters">
@@ -331,7 +323,6 @@
             </div>
 
 
-
             <button
                 class="add-btn"
                 id="addEvaluationBtn"
@@ -342,7 +333,6 @@
 
 
         </section>
-
 
 
         <!-- =========================================
@@ -374,7 +364,6 @@
             </div>
 
 
-
             <div
                 class="evaluations-grid"
                 id="evaluationsGrid"
@@ -396,10 +385,9 @@
 </div>
 
 
-
 <!-- =========================================
      إضافة / تعديل تقييم
-========================================= -->
+========================================== -->
 
 <div
     class="modal"
@@ -411,7 +399,6 @@
         class="modal-overlay"
         id="evaluationModalOverlay"
     ></div>
-
 
 
     <div class="modal-box">
@@ -445,7 +432,6 @@
         </div>
 
 
-
         <form id="evaluationForm">
 
 
@@ -453,7 +439,6 @@
                 type="hidden"
                 id="editEvaluationId"
             >
-
 
 
             <div class="form-grid">
@@ -482,7 +467,6 @@
                 </div>
 
 
-
                 <!-- المهمة -->
 
                 <div class="form-group">
@@ -498,18 +482,17 @@
                     >
 
                         <option value="">
-                            جارٍ تحميل المهام...
+                            اختر الموظف أولاً
                         </option>
 
                     </select>
 
 
                     <small>
-                        يفضل تقييم الموظف بعد إنجاز المهمة أو اكتمالها.
+                        تظهر فقط المهام المسندة للموظف المختار.
                     </small>
 
                 </div>
-
 
 
                 <!-- الإنجاز -->
@@ -555,8 +538,7 @@
                 </div>
 
 
-
-                <!-- التقييم -->
+                <!-- تقييم الأداء -->
 
                 <div class="form-group">
 
@@ -599,7 +581,6 @@
                 </div>
 
 
-
                 <!-- التاريخ -->
 
                 <div class="form-group">
@@ -616,7 +597,6 @@
                     >
 
                 </div>
-
 
 
                 <!-- الملاحظات -->
@@ -639,7 +619,6 @@
             </div>
 
 
-
             <div class="evaluation-note">
 
                 <strong>
@@ -647,11 +626,10 @@
                 </strong>
 
                 <p>
-                    نتيجة التقييم تعتبر جزءاً من السجل السابق للموظف ويمكن الاستفادة منها لاحقاً عند تحليل المرشحين للمهام الجديدة.
+                    نتيجة التقييم تعتبر جزءاً من السجل السابق للموظف ويتم استخدام متوسط تقييماته مستقبلاً في المطابقة والترشيح.
                 </p>
 
             </div>
-
 
 
             <div class="modal-actions">
@@ -687,10 +665,9 @@
 </div>
 
 
-
 <!-- =========================================
      تفاصيل التقييم
-========================================= -->
+========================================== -->
 
 <div
     class="modal"
@@ -702,7 +679,6 @@
         class="modal-overlay"
         id="detailsModalOverlay"
     ></div>
-
 
 
     <div class="modal-box details-box">
@@ -736,7 +712,6 @@
         </div>
 
 
-
         <div
             class="details-grid"
             id="evaluationDetails"
@@ -749,12 +724,11 @@
 </div>
 
 
-
 <script>
 
 
 /* =====================================================
-   Supabase
+   SUPABASE
 ===================================================== */
 
 const SUPABASE_URL =
@@ -776,7 +750,6 @@ const supabaseClient =
     );
 
 
-
 /* =====================================================
    البيانات
 ===================================================== */
@@ -786,7 +759,6 @@ let evaluations = [];
 let employees = [];
 
 let tasks = [];
-
 
 
 /* =====================================================
@@ -829,7 +801,6 @@ const mobileMenuBtn =
     );
 
 
-
 /* =====================================================
    حماية الصفحة
 ===================================================== */
@@ -847,19 +818,14 @@ async function protectPage() {
             .getSession();
 
 
-        if (error) {
-
-            throw error;
-        }
-
-
         if (
+            error
+            ||
             !data.session
         ) {
 
             window.location.href =
                 "login.html";
-
 
             return false;
         }
@@ -885,7 +851,7 @@ async function protectPage() {
                 .signOut();
 
 
-            localStorage.clear();
+            clearLocalSession();
 
 
             window.location.href =
@@ -924,7 +890,6 @@ async function protectPage() {
     }
 
 }
-
 
 
 /* =====================================================
@@ -989,7 +954,7 @@ async function loadEmployees() {
 
 
     employees.forEach(
-        function(employee) {
+        employee => {
 
 
             const option =
@@ -1022,7 +987,6 @@ async function loadEmployees() {
     );
 
 }
-
 
 
 /* =====================================================
@@ -1077,9 +1041,9 @@ async function loadTasks() {
 }
 
 
-
 /* =====================================================
-   تعبئة قائمة المهام
+   تعبئة المهام
+   تظهر فقط مهام الموظف المختار
 ===================================================== */
 
 function fillTaskSelect(
@@ -1102,46 +1066,86 @@ function fillTaskSelect(
     `;
 
 
-    let filteredTasks =
-        tasks;
-
-
-    /*
-        إذا تم اختيار موظف:
-        نظهر مهامه هو أولاً.
-        وإذا ما عنده مهام، نظهر جميع المهام حتى لا تتعطل الصفحة.
-    */
-
     if (
-        employeeId
+        !employeeId
     ) {
 
-        const employeeTasks =
-            tasks.filter(
-                task =>
-                    Number(
-                        task.assigned_employee_id
-                    )
-                    ===
-                    Number(
-                        employeeId
-                    )
+        const option =
+            document.createElement(
+                "option"
             );
 
 
-        if (
-            employeeTasks.length > 0
-        ) {
+        option.value =
+            "";
 
-            filteredTasks =
-                employeeTasks;
-        }
 
+        option.disabled =
+            true;
+
+
+        option.textContent =
+            "اختر الموظف أولاً";
+
+
+        select.appendChild(
+            option
+        );
+
+
+        return;
     }
 
 
-    filteredTasks.forEach(
-        function(task) {
+    const employeeTasks =
+        tasks.filter(
+            task =>
+
+                Number(
+                    task.assigned_employee_id
+                )
+
+                ===
+
+                Number(
+                    employeeId
+                )
+        );
+
+
+    if (
+        employeeTasks.length === 0
+    ) {
+
+        const option =
+            document.createElement(
+                "option"
+            );
+
+
+        option.value =
+            "";
+
+
+        option.disabled =
+            true;
+
+
+        option.textContent =
+            "لا توجد مهام مسندة لهذا الموظف";
+
+
+        select.appendChild(
+            option
+        );
+
+
+        return;
+    }
+
+
+    employeeTasks.forEach(
+        task => {
 
 
             const option =
@@ -1186,7 +1190,6 @@ function fillTaskSelect(
     }
 
 }
-
 
 
 /* =====================================================
@@ -1252,7 +1255,9 @@ async function loadEvaluations() {
                 </strong>
 
                 <small>
-                    ${escapeHtml(error.message)}
+                    ${escapeHtml(
+                        error.message
+                    )}
                 </small>
 
             </div>
@@ -1276,9 +1281,8 @@ async function loadEvaluations() {
 }
 
 
-
 /* =====================================================
-   الملخص
+   ملخص التقييمات
 ===================================================== */
 
 function updateSummary() {
@@ -1297,7 +1301,10 @@ function updateSummary() {
 
         const sum =
             evaluations.reduce(
-                function(result, evaluation) {
+                (
+                    result,
+                    evaluation
+                ) => {
 
                     return (
                         result
@@ -1323,11 +1330,13 @@ function updateSummary() {
     const excellent =
         evaluations.filter(
             evaluation =>
+
                 Number(
                     evaluation.performance_rating
                 )
                 ===
                 5
+
         ).length;
 
 
@@ -1393,7 +1402,6 @@ function updateSummary() {
         needsImprovement;
 
 }
-
 
 
 /* =====================================================
@@ -1466,7 +1474,6 @@ function openEvaluationModal() {
 }
 
 
-
 /* =====================================================
    تعديل تقييم
 ===================================================== */
@@ -1475,19 +1482,15 @@ function editEvaluation(id) {
 
     const evaluation =
         evaluations.find(
-            function(item) {
+            item =>
 
-                return (
-                    Number(
-                        item.id
-                    )
-                    ===
-                    Number(
-                        id
-                    )
-                );
-
-            }
+                Number(
+                    item.id
+                )
+                ===
+                Number(
+                    id
+                )
         );
 
 
@@ -1587,7 +1590,6 @@ function editEvaluation(id) {
 }
 
 
-
 /* =====================================================
    حفظ التقييم
 ===================================================== */
@@ -1643,6 +1645,7 @@ async function saveEvaluation(event) {
     const selectedTask =
         tasks.find(
             task =>
+
                 Number(
                     task.id
                 )
@@ -1651,25 +1654,83 @@ async function saveEvaluation(event) {
         );
 
 
+    if (
+        !selectedTask
+    ) {
+
+        alert(
+            "تعذر العثور على المهمة."
+        );
+
+
+        return;
+    }
+
+
     /*
-        إذا المهمة مسندة لموظف مختلف
-        نمنع حفظ تقييم لشخص لم ينفذ المهمة.
+        لا يمكن تقييم موظف
+        على مهمة غير مسندة له
     */
 
     if (
-        selectedTask
-        &&
-        selectedTask.assigned_employee_id
-        &&
+
+        !selectedTask.assigned_employee_id
+
+        ||
+
         Number(
             selectedTask.assigned_employee_id
         )
         !==
         employeeId
+
     ) {
 
         alert(
-            "هذه المهمة مسندة لموظف آخر، لا يمكن تسجيل التقييم لهذا الموظف."
+            "لا يمكن تسجيل التقييم. هذه المهمة غير مسندة لهذا الموظف."
+        );
+
+
+        return;
+    }
+
+
+    const achievementLevel =
+        document
+            .getElementById(
+                "achievementLevel"
+            )
+            .value;
+
+
+    const performanceRating =
+        Number(
+            document
+                .getElementById(
+                    "performanceRating"
+                )
+                .value
+        );
+
+
+    const evaluationDate =
+        document
+            .getElementById(
+                "evaluationDate"
+            )
+            .value;
+
+
+    if (
+        !achievementLevel
+        ||
+        !performanceRating
+        ||
+        !evaluationDate
+    ) {
+
+        alert(
+            "أكمل جميع البيانات المطلوبة."
         );
 
 
@@ -1703,21 +1764,11 @@ async function saveEvaluation(event) {
 
 
         achievement_level:
-            document
-                .getElementById(
-                    "achievementLevel"
-                )
-                .value,
+            achievementLevel,
 
 
         performance_rating:
-            Number(
-                document
-                    .getElementById(
-                        "performanceRating"
-                    )
-                    .value
-            ),
+            performanceRating,
 
 
         notes:
@@ -1732,11 +1783,7 @@ async function saveEvaluation(event) {
 
 
         evaluation_date:
-            document
-                .getElementById(
-                    "evaluationDate"
-                )
-                .value
+            evaluationDate
 
     };
 
@@ -1784,8 +1831,8 @@ async function saveEvaluation(event) {
 
 
             /*
-                منع تكرار تقييم نفس الموظف
-                لنفس المهمة.
+                منع تكرار تقييم
+                نفس الموظف لنفس المهمة
             */
 
             const {
@@ -1821,7 +1868,7 @@ async function saveEvaluation(event) {
             ) {
 
                 alert(
-                    "يوجد تقييم مسجل مسبقاً لهذا الموظف في هذه المهمة. يمكنك تعديل التقييم الموجود بدلاً من إنشاء تقييم جديد."
+                    "يوجد تقييم مسجل مسبقاً لهذا الموظف في هذه المهمة. يمكنك تعديل التقييم الموجود."
                 );
 
 
@@ -1859,7 +1906,6 @@ async function saveEvaluation(event) {
 
         await loadEvaluations();
 
-
     }
 
     catch(error) {
@@ -1881,7 +1927,6 @@ async function saveEvaluation(event) {
             )
         );
 
-
     }
 
     finally {
@@ -1901,7 +1946,6 @@ async function saveEvaluation(event) {
     }
 
 }
-
 
 
 /* =====================================================
@@ -1945,7 +1989,7 @@ function renderEvaluations(list) {
 
 
     list.forEach(
-        function(evaluation) {
+        evaluation => {
 
 
             const employeeName =
@@ -1984,16 +2028,19 @@ function renderEvaluations(list) {
 
 
                         <h3>
-                            ${escapeHtml(employeeName)}
+                            ${escapeHtml(
+                                employeeName
+                            )}
                         </h3>
 
 
                         <p class="task-name">
-                            ${escapeHtml(taskName)}
+                            ${escapeHtml(
+                                taskName
+                            )}
                         </p>
 
                     </div>
-
 
 
                     <div
@@ -2010,18 +2057,13 @@ function renderEvaluations(list) {
                         </span>
 
                         <strong>
-
-                            ${
-                                evaluation.performance_rating
-                            }/5
-
+                            ${evaluation.performance_rating}/5
                         </strong>
 
                     </div>
 
 
                 </div>
-
 
 
                 <div class="evaluation-info">
@@ -2034,15 +2076,12 @@ function renderEvaluations(list) {
                         </span>
 
                         <strong>
-
                             ${escapeHtml(
                                 evaluation.achievement_level
                             )}
-
                         </strong>
 
                     </div>
-
 
 
                     <div class="info-item">
@@ -2052,18 +2091,15 @@ function renderEvaluations(list) {
                         </span>
 
                         <strong>
-
                             ${formatDate(
                                 evaluation.evaluation_date
                             )}
-
                         </strong>
 
                     </div>
 
 
                 </div>
-
 
 
                 <div class="notes-preview">
@@ -2073,17 +2109,14 @@ function renderEvaluations(list) {
                     </span>
 
                     <p>
-
                         ${escapeHtml(
                             evaluation.notes
                             ||
                             "لا توجد ملاحظات"
                         )}
-
                     </p>
 
                 </div>
-
 
 
                 <div class="evaluation-actions">
@@ -2136,14 +2169,11 @@ function renderEvaluations(list) {
 }
 
 
-
 /* =====================================================
    لون التقييم
 ===================================================== */
 
-function getRatingClass(
-    rating
-) {
+function getRatingClass(rating) {
 
     const value =
         Number(
@@ -2188,7 +2218,6 @@ function getRatingClass(
 }
 
 
-
 /* =====================================================
    عرض التفاصيل
 ===================================================== */
@@ -2197,19 +2226,15 @@ function viewEvaluation(id) {
 
     const evaluation =
         evaluations.find(
-            function(item) {
+            item =>
 
-                return (
-                    Number(
-                        item.id
-                    )
-                    ===
-                    Number(
-                        id
-                    )
-                );
-
-            }
+                Number(
+                    item.id
+                )
+                ===
+                Number(
+                    id
+                )
         );
 
 
@@ -2235,17 +2260,14 @@ function viewEvaluation(id) {
                 </span>
 
                 <strong>
-
                     ${escapeHtml(
                         evaluation.employees?.name
                         ||
                         "-"
                     )}
-
                 </strong>
 
             </div>
-
 
 
             <div class="detail-item">
@@ -2255,17 +2277,14 @@ function viewEvaluation(id) {
                 </span>
 
                 <strong>
-
                     ${escapeHtml(
                         evaluation.employees?.employee_number
                         ||
                         "-"
                     )}
-
                 </strong>
 
             </div>
-
 
 
             <div class="detail-item">
@@ -2275,17 +2294,14 @@ function viewEvaluation(id) {
                 </span>
 
                 <strong>
-
                     ${escapeHtml(
                         evaluation.tasks?.task_name
                         ||
                         "-"
                     )}
-
                 </strong>
 
             </div>
-
 
 
             <div class="detail-item">
@@ -2295,15 +2311,12 @@ function viewEvaluation(id) {
                 </span>
 
                 <strong>
-
                     ${escapeHtml(
                         evaluation.achievement_level
                     )}
-
                 </strong>
 
             </div>
-
 
 
             <div class="detail-item">
@@ -2313,17 +2326,34 @@ function viewEvaluation(id) {
                 </span>
 
                 <strong>
-
-                    ${
-                        evaluation.performance_rating
-                    }
-
+                    ${evaluation.performance_rating}
                     من 5
-
                 </strong>
 
             </div>
 
+
+            <div class="detail-item">
+
+                <span>
+                    نسبة الأداء
+                </span>
+
+                <strong>
+                    ${
+                        Math.round(
+                            Number(
+                                evaluation.performance_rating
+                            )
+                            /
+                            5
+                            *
+                            100
+                        )
+                    }%
+                </strong>
+
+            </div>
 
 
             <div class="detail-item">
@@ -2333,15 +2363,12 @@ function viewEvaluation(id) {
                 </span>
 
                 <strong>
-
                     ${formatDate(
                         evaluation.evaluation_date
                     )}
-
                 </strong>
 
             </div>
-
 
 
             <div class="detail-item full-detail">
@@ -2351,13 +2378,11 @@ function viewEvaluation(id) {
                 </span>
 
                 <strong>
-
                     ${escapeHtml(
                         evaluation.notes
                         ||
                         "لا توجد ملاحظات"
                     )}
-
                 </strong>
 
             </div>
@@ -2382,7 +2407,6 @@ function viewEvaluation(id) {
 }
 
 
-
 /* =====================================================
    حذف تقييم
 ===================================================== */
@@ -2392,6 +2416,7 @@ async function deleteEvaluation(id) {
     const evaluation =
         evaluations.find(
             item =>
+
                 Number(
                     item.id
                 )
@@ -2469,7 +2494,6 @@ async function deleteEvaluation(id) {
 }
 
 
-
 /* =====================================================
    البحث والتصفية
 ===================================================== */
@@ -2496,7 +2520,7 @@ function filterEvaluations() {
 
     const filtered =
         evaluations.filter(
-            function(evaluation) {
+            evaluation => {
 
 
                 const employee =
@@ -2571,7 +2595,6 @@ function filterEvaluations() {
 }
 
 
-
 /* =====================================================
    إغلاق النوافذ
 ===================================================== */
@@ -2594,7 +2617,6 @@ function closeEvaluationModal() {
 }
 
 
-
 function closeDetailsModal() {
 
     detailsModal
@@ -2611,7 +2633,6 @@ function closeDetailsModal() {
         );
 
 }
-
 
 
 /* =====================================================
@@ -2666,7 +2687,6 @@ function formatDate(value) {
 }
 
 
-
 /* =====================================================
    حماية النص
 ===================================================== */
@@ -2700,7 +2720,6 @@ function escapeHtml(value) {
 }
 
 
-
 /* =====================================================
    السايد بار
 ===================================================== */
@@ -2730,7 +2749,6 @@ function openSidebar() {
 }
 
 
-
 function closeSidebar() {
 
     sidebar
@@ -2756,6 +2774,33 @@ function closeSidebar() {
 }
 
 
+/* =====================================================
+   تنظيف الجلسة
+===================================================== */
+
+function clearLocalSession() {
+
+    localStorage.removeItem(
+        "miyarRole"
+    );
+
+
+    localStorage.removeItem(
+        "miyarEmail"
+    );
+
+
+    localStorage.removeItem(
+        "pendingDecision"
+    );
+
+
+    localStorage.removeItem(
+        "selectedTaskId"
+    );
+
+}
+
 
 /* =====================================================
    تسجيل الخروج
@@ -2780,14 +2825,13 @@ async function logout() {
     }
 
 
-    localStorage.clear();
+    clearLocalSession();
 
 
     window.location.href =
         "login.html";
 
 }
-
 
 
 /* =====================================================
@@ -2925,7 +2969,7 @@ document
         ".nav-link"
     )
     .forEach(
-        function(link) {
+        link => {
 
             link.addEventListener(
                 "click",
@@ -2949,7 +2993,7 @@ document
 evaluationsGrid
     .addEventListener(
         "click",
-        function(event) {
+        event => {
 
 
             const button =
@@ -3014,7 +3058,6 @@ evaluationsGrid
 
         }
     );
-
 
 
 /* =====================================================
