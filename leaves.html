@@ -68,12 +68,10 @@
     </header>
 
 
-
     <div
         class="sidebar-overlay"
         id="sidebarOverlay"
     ></div>
-
 
 
     <!-- =========================================
@@ -94,7 +92,6 @@
             >
 
         </div>
-
 
 
         <nav class="sidebar-nav">
@@ -175,7 +172,6 @@
         </nav>
 
 
-
         <button
             type="button"
             class="logout-btn"
@@ -186,7 +182,6 @@
 
 
     </aside>
-
 
 
     <!-- =========================================
@@ -215,7 +210,6 @@
         </header>
 
 
-
         <!-- =========================================
              ملخص الإجازات
         ========================================== -->
@@ -236,7 +230,6 @@
             </div>
 
 
-
             <div class="summary-card pending-card">
 
                 <span>
@@ -248,7 +241,6 @@
                 </strong>
 
             </div>
-
 
 
             <div class="summary-card approved-card">
@@ -264,7 +256,6 @@
             </div>
 
 
-
             <div class="summary-card rejected-card">
 
                 <span>
@@ -276,7 +267,6 @@
                 </strong>
 
             </div>
-
 
 
             <div class="summary-card current-card">
@@ -295,7 +285,6 @@
         </section>
 
 
-
         <!-- =========================================
              البحث والتصفية
         ========================================== -->
@@ -312,7 +301,6 @@
                 >
 
             </div>
-
 
 
             <div class="filters">
@@ -337,7 +325,6 @@
                     </option>
 
                 </select>
-
 
 
                 <select id="leaveTypeFilter">
@@ -375,7 +362,6 @@
         </section>
 
 
-
         <!-- =========================================
              قائمة الطلبات
         ========================================== -->
@@ -400,7 +386,6 @@
             </div>
 
 
-
             <div
                 class="requests-list"
                 id="requestsList"
@@ -422,10 +407,9 @@
 </div>
 
 
-
 <!-- =========================================
      نافذة مراجعة الطلب
-========================================= -->
+========================================== -->
 
 <div
     class="modal"
@@ -437,7 +421,6 @@
         class="modal-overlay"
         id="decisionModalOverlay"
     ></div>
-
 
 
     <div class="modal-box">
@@ -472,12 +455,16 @@
         </div>
 
 
-
         <div
             class="decision-request-info"
             id="decisionRequestInfo"
         ></div>
 
+
+        <div
+            id="taskConflictBox"
+            style="display:none; margin-bottom:18px;"
+        ></div>
 
 
         <div class="form-group">
@@ -500,12 +487,10 @@
         </div>
 
 
-
         <div
             class="form-error"
             id="decisionError"
         ></div>
-
 
 
         <div class="decision-actions">
@@ -547,7 +532,6 @@
 </div>
 
 
-
 <script>
 
 
@@ -574,22 +558,19 @@ const supabaseClient =
     );
 
 
-
 /* =====================================================
    البيانات
 ===================================================== */
 
-let leaveRequests =
-    [];
+let leaveRequests = [];
 
+let employees = [];
 
-let employees =
-    [];
+let tasks = [];
 
+let selectedRequest = null;
 
-let selectedRequest =
-    null;
-
+let selectedRequestConflicts = [];
 
 
 /* =====================================================
@@ -644,6 +625,11 @@ const sidebarOverlay =
     );
 
 
+const taskConflictBox =
+    document.getElementById(
+        "taskConflictBox"
+    );
+
 
 /* =====================================================
    حماية النصوص
@@ -676,7 +662,6 @@ function escapeHtml(value) {
     );
 
 }
-
 
 
 /* =====================================================
@@ -772,7 +757,6 @@ async function protectPage() {
 }
 
 
-
 /* =====================================================
    تحميل الموظفين
 ===================================================== */
@@ -816,6 +800,70 @@ async function loadEmployees() {
 
 }
 
+
+/* =====================================================
+   تحميل المهام
+
+   نحتاجها فقط لفحص هل الموظف لديه مهام مسندة
+   أثناء فترة الإجازة.
+===================================================== */
+
+async function loadTasks() {
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+        await supabaseClient
+            .from("tasks")
+            .select(`
+                id,
+                task_name,
+                status,
+                assigned_employee_id
+            `)
+            .order(
+                "id",
+                {
+                    ascending: false
+                }
+            );
+
+
+        if (error) {
+
+            throw error;
+        }
+
+
+        tasks =
+            Array.isArray(data)
+            ?
+            data
+            :
+            [];
+
+    }
+
+    catch(error) {
+
+        /*
+            لا نوقف صفحة الإجازات إذا تعذر تحميل المهام.
+            فقط لن يظهر فحص التعارض.
+        */
+
+        console.warn(
+            "تعذر تحميل المهام لفحص التعارض:",
+            error
+        );
+
+
+        tasks = [];
+    }
+
+}
 
 
 /* =====================================================
@@ -917,7 +965,6 @@ async function loadLeaves() {
 }
 
 
-
 /* =====================================================
    ربط الطلب ببيانات الموظف
 ===================================================== */
@@ -957,6 +1004,224 @@ function enrichRequests() {
 }
 
 
+/* =====================================================
+   فحص المهام المسندة للموظف
+
+   ملاحظة:
+   جدول tasks الموجود في مشروعك لا يحتوي حسب الكود الحالي
+   على تاريخ بداية ونهاية للمهمة.
+
+   لذلك لا نخترع تعارضاً زمنياً غير موجود في قاعدة البيانات.
+   نعرض للمسؤول المهام النشطة المسندة للموظف حتى يراجعها
+   قبل اعتماد الإجازة.
+===================================================== */
+
+function getEmployeeAssignedTasks(employeeId) {
+
+    return tasks.filter(
+        task => {
+
+            if (
+                Number(
+                    task.assigned_employee_id
+                )
+                !==
+                Number(
+                    employeeId
+                )
+            ) {
+
+                return false;
+            }
+
+
+            return !isFinishedTaskStatus(
+                task.status
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   هل المهمة منتهية؟
+===================================================== */
+
+function isFinishedTaskStatus(status) {
+
+    const value =
+        String(
+            status || ""
+        )
+        .trim()
+        .toLowerCase();
+
+
+    const finishedStatuses = [
+
+        "مكتملة",
+
+        "مكتمل",
+
+        "منجزة",
+
+        "منجز",
+
+        "تم الإنجاز",
+
+        "تم الانجاز",
+
+        "completed",
+
+        "done",
+
+        "finished",
+
+        "closed"
+
+    ];
+
+
+    return finishedStatuses.includes(
+        value
+    );
+
+}
+
+
+/* =====================================================
+   عرض تنبيه المهام
+===================================================== */
+
+function renderTaskConflictWarning(request) {
+
+    selectedRequestConflicts =
+        getEmployeeAssignedTasks(
+            request.employee_id
+        );
+
+
+    if (
+        selectedRequestConflicts.length === 0
+    ) {
+
+        taskConflictBox.style.display =
+            "block";
+
+
+        taskConflictBox.innerHTML = `
+
+            <div
+                style="
+                    padding:14px;
+                    border-radius:12px;
+                    background:rgba(46, 125, 50, 0.08);
+                    border:1px solid rgba(46, 125, 50, 0.20);
+                "
+            >
+
+                <strong>
+                    لا توجد مهام نشطة مسندة للموظف حالياً
+                </strong>
+
+                <p
+                    style="
+                        margin:6px 0 0;
+                        font-size:13px;
+                    "
+                >
+                    يمكن مراجعة طلب الإجازة واتخاذ القرار.
+                </p>
+
+            </div>
+
+        `;
+
+
+        return;
+    }
+
+
+    const tasksHtml =
+        selectedRequestConflicts
+        .map(
+            task => `
+
+                <li
+                    style="
+                        margin-bottom:6px;
+                    "
+                >
+                    ${escapeHtml(
+                        task.task_name
+                        ||
+                        "مهمة بدون اسم"
+                    )}
+
+                    ${
+                        task.status
+                        ?
+                        ` — ${escapeHtml(task.status)}`
+                        :
+                        ""
+                    }
+                </li>
+
+            `
+        )
+        .join("");
+
+
+    taskConflictBox.style.display =
+        "block";
+
+
+    taskConflictBox.innerHTML = `
+
+        <div
+            style="
+                padding:14px;
+                border-radius:12px;
+                background:rgba(194, 122, 0, 0.08);
+                border:1px solid rgba(194, 122, 0, 0.25);
+            "
+        >
+
+            <strong>
+                تنبيه قبل اعتماد الإجازة
+            </strong>
+
+            <p
+                style="
+                    margin:7px 0;
+                    font-size:13px;
+                    line-height:1.8;
+                "
+            >
+                لدى الموظف
+                ${selectedRequestConflicts.length}
+                مهمة نشطة مسندة إليه حالياً.
+                راجع المهام قبل اعتماد الإجازة.
+            </p>
+
+            <ul
+                style="
+                    margin:8px 18px 0 0;
+                    padding:0;
+                    font-size:13px;
+                "
+            >
+                ${tasksHtml}
+            </ul>
+
+        </div>
+
+    `;
+
+}
+
 
 /* =====================================================
    عرض الطلبات
@@ -991,7 +1256,6 @@ function renderRequests(list) {
     }
 
 
-
     list.forEach(
         request => {
 
@@ -1023,6 +1287,12 @@ function renderRequests(list) {
                 calculateDays(
                     request.start_date,
                     request.end_date
+                );
+
+
+            const assignedTasks =
+                getEmployeeAssignedTasks(
+                    request.employee_id
                 );
 
 
@@ -1095,7 +1365,6 @@ function renderRequests(list) {
                     </div>
 
 
-
                     <span
                         class="
                             status-badge
@@ -1107,7 +1376,9 @@ function renderRequests(list) {
 
                         ${
                             escapeHtml(
-                                request.status
+                                normalizeStatus(
+                                    request.status
+                                )
                                 ||
                                 "-"
                             )
@@ -1117,7 +1388,6 @@ function renderRequests(list) {
 
 
                 </div>
-
 
 
                 <div class="request-info-grid">
@@ -1242,6 +1512,33 @@ function renderRequests(list) {
                 </div>
 
 
+                ${
+                    assignedTasks.length > 0
+                    ?
+
+                    `
+
+                        <div class="request-note">
+
+                            <span>
+                                المهام النشطة المسندة حالياً
+                            </span>
+
+                            <p>
+                                لدى الموظف
+                                ${assignedTasks.length}
+                                مهمة نشطة. ستظهر التفاصيل عند مراجعة الطلب.
+                            </p>
+
+                        </div>
+
+                    `
+
+                    :
+
+                    ""
+                }
+
 
                 ${
                     request.notes
@@ -1274,7 +1571,6 @@ function renderRequests(list) {
 
                     ""
                 }
-
 
 
                 ${
@@ -1310,7 +1606,6 @@ function renderRequests(list) {
                 }
 
 
-
                 ${
                     request.reviewed_at
 
@@ -1340,7 +1635,6 @@ function renderRequests(list) {
 
                     ""
                 }
-
 
 
                 ${
@@ -1382,7 +1676,6 @@ function renderRequests(list) {
     );
 
 }
-
 
 
 /* =====================================================
@@ -1463,6 +1756,7 @@ function openDecisionModal(id) {
                 </strong>
 
                 <small>
+
                     ${
                         escapeHtml(
                             employee.job_title
@@ -1470,6 +1764,7 @@ function openDecisionModal(id) {
                             "-"
                         )
                     }
+
                 </small>
 
             </div>
@@ -1488,7 +1783,6 @@ function openDecisionModal(id) {
             </span>
 
         </div>
-
 
 
         <div class="decision-grid">
@@ -1578,7 +1872,6 @@ function openDecisionModal(id) {
         </div>
 
 
-
         ${
             request.notes
 
@@ -1614,6 +1907,11 @@ function openDecisionModal(id) {
     `;
 
 
+    renderTaskConflictWarning(
+        request
+    );
+
+
     decisionModal
         .classList
         .add(
@@ -1628,7 +1926,6 @@ function openDecisionModal(id) {
         );
 
 }
-
 
 
 /* =====================================================
@@ -1641,12 +1938,24 @@ function closeDecisionModal() {
         null;
 
 
+    selectedRequestConflicts =
+        [];
+
+
     decisionNote.value =
         "";
 
 
     decisionError.textContent =
         "";
+
+
+    taskConflictBox.innerHTML =
+        "";
+
+
+    taskConflictBox.style.display =
+        "none";
 
 
     decisionModal
@@ -1664,6 +1973,61 @@ function closeDecisionModal() {
 
 }
 
+
+/* =====================================================
+   تأكيد اعتماد إجازة لموظف لديه مهام
+===================================================== */
+
+function confirmApprovalWithTasks() {
+
+    if (
+        selectedRequestConflicts.length === 0
+    ) {
+
+        return true;
+    }
+
+
+    const taskNames =
+        selectedRequestConflicts
+        .slice(
+            0,
+            5
+        )
+        .map(
+            task =>
+                "• "
+                +
+                (
+                    task.task_name
+                    ||
+                    "مهمة بدون اسم"
+                )
+        )
+        .join("\n");
+
+
+    const extra =
+        selectedRequestConflicts.length > 5
+        ?
+        `\nو${selectedRequestConflicts.length - 5} مهام أخرى.`
+        :
+        "";
+
+
+    return confirm(
+
+        "تنبيه: الموظف لديه مهام نشطة مسندة إليه حالياً:\n\n"
+        +
+        taskNames
+        +
+        extra
+        +
+        "\n\nاعتماد الإجازة سيجعل الإجازة المعتمدة تؤثر على توفر الموظف في المطابقة خلال مدتها.\n\nهل تريد اعتماد الطلب؟"
+
+    );
+
+}
 
 
 /* =====================================================
@@ -1713,8 +2077,8 @@ async function updateLeaveStatus(
 
 
     /*
-        في نظام الشركة:
-        إذا تم الرفض يجب توضيح السبب.
+        في حالة الرفض:
+        سبب الرفض إلزامي.
     */
 
     if (
@@ -1734,26 +2098,33 @@ async function updateLeaveStatus(
     }
 
 
+    /*
+        قبل اعتماد الإجازة:
+        نعرض تنبيهاً إذا لدى الموظف مهام نشطة.
+    */
+
+    if (
+        newStatus === "معتمدة"
+        &&
+        selectedRequestConflicts.length > 0
+    ) {
+
+        const approved =
+            confirmApprovalWithTasks();
+
+
+        if (
+            !approved
+        ) {
+
+            return;
+        }
+
+    }
+
+
     decisionError.textContent =
         "";
-
-
-    const approveButton =
-        document.getElementById(
-            "approveLeaveBtn"
-        );
-
-
-    const rejectButton =
-        document.getElementById(
-            "rejectLeaveBtn"
-        );
-
-
-    const cancelButton =
-        document.getElementById(
-            "cancelDecisionBtn"
-        );
 
 
     setDecisionButtonsState(
@@ -1805,8 +2176,7 @@ async function updateLeaveStatus(
 
 
         /*
-            لو شخص ثاني اتخذ القرار قبله
-            لن يرجع صف محدث.
+            حماية من اتخاذ القرار مرتين.
         */
 
         if (
@@ -1834,7 +2204,7 @@ async function updateLeaveStatus(
         ) {
 
             alert(
-                "تم اعتماد طلب الإجازة بنجاح."
+                "تم اعتماد طلب الإجازة بنجاح. ستُستخدم الإجازة المعتمدة عند حساب توفر الموظف في المطابقة."
             );
 
         }
@@ -1866,21 +2236,13 @@ async function updateLeaveStatus(
 
     finally {
 
-        approveButton.disabled =
-            false;
-
-
-        rejectButton.disabled =
-            false;
-
-
-        cancelButton.disabled =
-            false;
+        setDecisionButtonsState(
+            false
+        );
 
     }
 
 }
-
 
 
 /* =====================================================
@@ -1915,7 +2277,6 @@ function setDecisionButtonsState(
         disabled;
 
 }
-
 
 
 /* =====================================================
@@ -1957,23 +2318,39 @@ function updateSummary() {
         ).length;
 
 
-    const current =
-        leaveRequests.filter(
-            item =>
+    /*
+        نحسب الموظفين الموجودين في إجازة حالياً،
+        وليس عدد الطلبات فقط.
 
-                normalizeStatus(
-                    item.status
+        إذا كان لنفس الموظف أكثر من طلب متداخل
+        لا نعده مرتين.
+    */
+
+    const currentEmployeeIds =
+        new Set(
+            leaveRequests
+                .filter(
+                    item =>
+
+                        normalizeStatus(
+                            item.status
+                        )
+                        ===
+                        "معتمدة"
+
+                        &&
+
+                        isCurrentLeave(
+                            item
+                        )
                 )
-                ===
-                "معتمدة"
-
-                &&
-
-                isCurrentLeave(
-                    item
+                .map(
+                    item =>
+                        Number(
+                            item.employee_id
+                        )
                 )
-        ).length;
-
+        );
 
 
     document
@@ -2013,10 +2390,9 @@ function updateSummary() {
             "summaryCurrent"
         )
         .textContent =
-        current;
+        currentEmployeeIds.size;
 
 }
-
 
 
 /* =====================================================
@@ -2072,7 +2448,13 @@ function filterRequests() {
 
                         employee.department,
 
-                        employee.job_title
+                        employee.job_title,
+
+                        request.leave_type,
+
+                        request.notes,
+
+                        request.decision_note
 
                     ]
                     .join(
@@ -2132,7 +2514,6 @@ function filterRequests() {
 }
 
 
-
 /* =====================================================
    توحيد حالة الطلب
 ===================================================== */
@@ -2162,6 +2543,10 @@ function normalizeStatus(status) {
         value === "approved"
         ||
         value === "معتمد"
+        ||
+        value === "مقبولة"
+        ||
+        value === "مقبول"
     ) {
 
         return "معتمدة";
@@ -2181,7 +2566,6 @@ function normalizeStatus(status) {
     return value;
 
 }
-
 
 
 /* =====================================================
@@ -2243,7 +2627,6 @@ function isCurrentLeave(
 }
 
 
-
 /* =====================================================
    لون الحالة
 ===================================================== */
@@ -2281,7 +2664,6 @@ function getStatusClass(
     return "pending";
 
 }
-
 
 
 /* =====================================================
@@ -2322,7 +2704,7 @@ function formatDate(value) {
 
 
     return date.toLocaleDateString(
-        "ar-SA",
+        "ar-SA-u-ca-gregory",
         {
 
             year:
@@ -2338,7 +2720,6 @@ function formatDate(value) {
     );
 
 }
-
 
 
 function formatDateTime(value) {
@@ -2366,7 +2747,7 @@ function formatDateTime(value) {
 
 
     return date.toLocaleString(
-        "ar-SA",
+        "ar-SA-u-ca-gregory",
         {
 
             year:
@@ -2388,7 +2769,6 @@ function formatDateTime(value) {
     );
 
 }
-
 
 
 function calculateDays(
@@ -2451,7 +2831,6 @@ function calculateDays(
 }
 
 
-
 /* =====================================================
    Sidebar
 ===================================================== */
@@ -2481,7 +2860,6 @@ function openSidebar() {
 }
 
 
-
 function closeSidebar() {
 
     sidebar
@@ -2505,7 +2883,6 @@ function closeSidebar() {
         );
 
 }
-
 
 
 /* =====================================================
@@ -2534,7 +2911,6 @@ function clearLocalSession() {
     );
 
 }
-
 
 
 /* =====================================================
@@ -2571,7 +2947,6 @@ async function logout() {
     }
 
 }
-
 
 
 /* =====================================================
@@ -2738,7 +3113,6 @@ document
     );
 
 
-
 /* =====================================================
    تشغيل الصفحة
 ===================================================== */
@@ -2760,7 +3134,18 @@ document
 
             try {
 
-                await loadEmployees();
+                /*
+                    نحمل الموظفين والمهام أولاً،
+                    ثم طلبات الإجازة.
+                */
+
+                await Promise.all([
+
+                    loadEmployees(),
+
+                    loadTasks()
+
+                ]);
 
 
                 await loadLeaves();
@@ -2784,11 +3169,15 @@ document
                         </strong>
 
                         <span>
-                            ${escapeHtml(
-                                error.message
-                                ||
-                                ""
-                            )}
+
+                            ${
+                                escapeHtml(
+                                    error.message
+                                    ||
+                                    ""
+                                )
+                            }
+
                         </span>
 
                     </div>
