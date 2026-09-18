@@ -1,25 +1,36 @@
 * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
 }
 
-html,
-body {
-    width: 100%;
-    min-height: 100%;
+html {
+    scroll-behavior: smooth;
 }
 
 body {
-    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
-    color: #263f4f;
-    background: #f5f2ec;
+    font-family:
+        "Segoe UI",
+        Tahoma,
+        Arial,
+        sans-serif;
+
+    direction: rtl;
+
+    min-height: 100vh;
+
+    color: #2f4858;
+
+    background:
+        linear-gradient(
+            rgba(246, 243, 236, 0.90),
+            rgba(246, 243, 236, 0.90)
+        ),
+        url("assets/background.jpeg")
+        center / cover
+        fixed;
+
     overflow-x: hidden;
-}
-
-body.menu-open,
-body.modal-open {
-    overflow: hidden;
 }
 
 button,
@@ -29,145 +40,222 @@ textarea {
     font-family: inherit;
 }
 
+button {
+    border: none;
+}
 
-/* الصفحة */
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+body.modal-open,
+body.menu-open {
+    overflow: hidden;
+}
+
+
+/* =====================================================
+   الصفحة
+===================================================== */
 
 .tasks-page {
     width: 100%;
     min-height: 100vh;
-    display: flex;
 }
 
 
-/* الجوال */
-
-.mobile-header,
-.mobile-menu-btn,
-.sidebar-overlay {
-    display: none;
-}
-
-
-/* Sidebar */
+/* =====================================================
+   Sidebar
+===================================================== */
 
 .sidebar {
-    width: 245px;
-    height: 100vh;
-
     position: fixed;
+
     top: 0;
     right: 0;
+    bottom: 0;
 
-    z-index: 1000;
-
-    padding: 25px 17px;
+    width: 245px;
+    height: 100vh;
 
     display: flex;
     flex-direction: column;
 
-    overflow-y: auto;
+    padding:
+        24px
+        17px
+        20px;
 
     background:
         linear-gradient(
             180deg,
             #31586c 0%,
-            #3c667a 52%,
+            #3b6578 50%,
             #456f82 100%
         );
 
+    border-left:
+        1px solid
+        rgba(255, 255, 255, 0.10);
+
     box-shadow:
-        -8px 0 28px
-        rgba(38, 59, 70, 0.10);
+        -8px 0 30px
+        rgba(35, 57, 68, 0.10);
+
+    z-index: 1000;
 }
+
+
+/* =====================================================
+   شعار Sidebar
+===================================================== */
 
 .sidebar-logo {
     display: flex;
+
     justify-content: center;
     align-items: center;
 
-    margin-bottom: 25px;
+    min-height: 115px;
+
+    padding-bottom: 18px;
+
+    margin-bottom: 12px;
+
+    border-bottom:
+        1px solid
+        rgba(255, 255, 255, 0.12);
 }
 
 .sidebar-logo img {
     width: 92px;
-    height: auto;
+    max-width: 100%;
+
+    display: block;
+
     object-fit: contain;
 }
 
+
+/* =====================================================
+   روابط Sidebar
+===================================================== */
+
 .sidebar-nav {
+    flex: 1;
+
     display: flex;
     flex-direction: column;
-    gap: 7px;
+
+    gap: 5px;
+
+    overflow-y: auto;
+
+    padding-left: 3px;
+}
+
+.sidebar-nav::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+    background:
+        rgba(255, 255, 255, 0.16);
+
+    border-radius: 20px;
 }
 
 .nav-link {
-    width: 100%;
-    min-height: 44px;
+    min-height: 40px;
 
     display: flex;
     align-items: center;
 
-    padding: 0 14px;
+    padding:
+        0
+        15px;
 
-    border-radius: 10px;
-    border-right: 3px solid transparent;
+    border-radius: 8px;
 
-    color: rgba(255,255,255,0.78);
+    border-right:
+        3px solid transparent;
 
-    text-decoration: none;
+    color:
+        rgba(255, 255, 255, 0.79);
+
     font-size: 12px;
+    font-weight: 500;
 
-    transition: 0.2s ease;
+    transition:
+        background 0.18s ease,
+        color 0.18s ease,
+        border-color 0.18s ease;
 }
 
 .nav-link:hover {
     background:
-        rgba(255,255,255,0.09);
+        rgba(255, 255, 255, 0.08);
 
     color: #ffffff;
 }
 
 .nav-link.active {
     background:
-        rgba(255,255,255,0.14);
+        rgba(255, 255, 255, 0.11);
 
     color: #ffffff;
-    font-weight: 700;
 
     border-right-color:
-        #c69a5a;
+        #d1aa70;
+
+    font-weight: 700;
 }
+
+
+/* =====================================================
+   تسجيل الخروج
+===================================================== */
 
 .logout-btn {
     width: 100%;
-    min-height: 44px;
 
-    margin-top: auto;
+    min-height: 39px;
 
-    border-radius: 10px;
+    margin-top: 15px;
+
+    border-radius: 8px;
 
     border:
         1px solid
-        rgba(255,255,255,0.24);
+        rgba(255, 255, 255, 0.18);
 
     background:
-        rgba(255,255,255,0.05);
+        rgba(255, 255, 255, 0.07);
 
-    color: white;
+    color: #ffffff;
+
     font-size: 11px;
+    font-weight: 600;
 
     cursor: pointer;
+
+    transition: 0.18s ease;
 }
 
 .logout-btn:hover {
-    background: #b98a4d;
+    background:
+        rgba(255, 255, 255, 0.13);
 }
 
 
-/* المحتوى */
+/* =====================================================
+   Main Content
+===================================================== */
 
 .main-content {
-    width: calc(100% - 245px);
+    width:
+        calc(100% - 245px);
 
     min-height: 100vh;
 
@@ -175,65 +263,63 @@ textarea {
 
     padding:
         35px
-        42px
-        50px;
-
-    background-color: #f5f2ec;
-
-    background-image:
-        linear-gradient(
-            rgba(249,247,242,0.10),
-            rgba(249,247,242,0.10)
-        ),
-        url("assets/background.jpeg");
-
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+        40px
+        55px;
 }
 
 
-/* العنوان */
+/* =====================================================
+   Topbar
+===================================================== */
 
 .topbar {
-    margin-bottom: 24px;
+    margin-bottom: 25px;
 }
 
 .page-badge {
     display: inline-flex;
+
     align-items: center;
+    justify-content: center;
 
-    min-height: 28px;
+    min-height: 25px;
 
-    padding: 0 14px;
+    padding:
+        0
+        11px;
 
     margin-bottom: 9px;
 
-    border-radius: 30px;
+    border-radius: 20px;
+
+    background:
+        rgba(198, 154, 90, 0.10);
 
     border:
         1px solid
-        rgba(185,138,77,0.30);
+        rgba(198, 154, 90, 0.30);
 
-    background:
-        rgba(196,154,92,0.13);
-
-    color: #9f733c;
+    color: #9b713d;
 
     font-size: 9px;
+    font-weight: 700;
 }
 
 .topbar h1 {
+    color: #294959;
+
+    font-size: 27px;
+    font-weight: 700;
+
+    line-height: 1.4;
+
     margin-bottom: 6px;
-
-    color: #274d62;
-
-    font-size: 28px;
 }
 
 .topbar p {
-    color: #778a95;
+    max-width: 680px;
+
+    color: #758790;
 
     font-size: 11px;
 
@@ -241,108 +327,168 @@ textarea {
 }
 
 
-/* ملخص المهام */
+/* =====================================================
+   ملخص المهام
+===================================================== */
 
 .tasks-summary {
     display: grid;
 
     grid-template-columns:
         repeat(
-            5,
+            6,
             minmax(0, 1fr)
         );
 
-    gap: 12px;
+    gap: 11px;
 
-    margin-bottom: 20px;
+    margin-bottom: 22px;
 }
 
 .summary-item {
-    min-height: 100px;
-
-    padding: 17px;
+    min-height: 92px;
 
     display: flex;
     flex-direction: column;
+
     justify-content: center;
 
-    gap: 8px;
+    padding:
+        16px
+        17px;
 
-    border-radius: 15px;
-
-    border:
-        1.5px solid
-        #c69a5a;
+    border-radius: 12px;
 
     background:
-        rgba(249,247,242,0.80);
+        rgba(255, 255, 255, 0.83);
 
-    backdrop-filter: blur(5px);
+    border:
+        1px solid
+        rgba(198, 154, 90, 0.30);
+
+    border-top:
+        2px solid
+        rgba(198, 154, 90, 0.72);
+
+    box-shadow:
+        0 8px 24px
+        rgba(42, 65, 77, 0.05);
+
+    transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+.summary-item:hover {
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 11px 27px
+        rgba(42, 65, 77, 0.08);
 }
 
 .summary-item span {
-    color: #7d8c95;
+    color: #7c8b93;
 
     font-size: 9px;
+
+    margin-bottom: 6px;
 }
 
 .summary-item strong {
     color: #31586c;
 
-    font-size: 24px;
+    font-size: 23px;
+    font-weight: 700;
+}
+
+.summary-item.late-summary {
+    border-top-color:
+        rgba(168, 91, 91, 0.68);
+}
+
+.summary-item.late-summary strong {
+    color: #a35d5d;
 }
 
 
-/* Toolbar */
+/* =====================================================
+   Toolbar
+===================================================== */
 
 .toolbar {
-    width: 100%;
-
-    display: grid;
-
-    grid-template-columns:
-        minmax(280px, 1fr)
-        auto
-        auto;
+    display: flex;
 
     align-items: center;
 
     gap: 10px;
 
-    padding: 14px;
+    padding:
+        12px;
 
     margin-bottom: 20px;
 
-    border-radius: 15px;
+    border-radius: 12px;
+
+    background:
+        rgba(255, 255, 255, 0.76);
 
     border:
         1px solid
-        rgba(49,88,108,0.12);
+        rgba(198, 154, 90, 0.26);
 
-    background:
-        rgba(249,247,242,0.80);
+    box-shadow:
+        0 7px 22px
+        rgba(42, 65, 77, 0.04);
 }
 
-.search-box input {
-    width: 100%;
-    height: 43px;
+.search-box {
+    flex: 1;
+}
 
-    padding: 0 13px;
+.search-box input,
+.filters select {
+    width: 100%;
+
+    height: 39px;
+
+    padding:
+        0
+        12px;
+
+    border-radius: 8px;
 
     border:
         1px solid
-        rgba(49,88,108,0.15);
-
-    border-radius: 9px;
-
-    background:
-        rgba(255,255,255,0.80);
-
-    color: #31586c;
-
-    font-size: 9px;
+        rgba(49, 88, 108, 0.15);
 
     outline: none;
+
+    background:
+        rgba(255, 255, 255, 0.92);
+
+    color: #365361;
+
+    font-size: 10px;
+
+    transition:
+        border-color 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+.search-box input:focus,
+.filters select:focus {
+    border-color:
+        rgba(198, 154, 90, 0.75);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(198, 154, 90, 0.08);
+}
+
+.search-box input::placeholder {
+    color: #9aa6ac;
 }
 
 .filters {
@@ -353,107 +499,121 @@ textarea {
 
 .filters select {
     width: 145px;
-    height: 43px;
-
-    padding: 0 10px;
-
-    border:
-        1px solid
-        rgba(49,88,108,0.15);
-
-    border-radius: 9px;
-
-    background:
-        rgba(255,255,255,0.80);
-
-    color: #536f7e;
-
-    font-size: 9px;
-}
-
-.search-box input:focus,
-.filters select:focus {
-    border-color: #c49a5c;
-
-    box-shadow:
-        0 0 0 3px
-        rgba(196,154,92,0.08);
-}
-
-.add-btn {
-    min-width: 120px;
-    height: 43px;
-
-    padding: 0 16px;
-
-    border: none;
-
-    border-radius: 9px;
-
-    background: #31586c;
-
-    color: white;
-
-    font-size: 9px;
-
-    font-weight: 600;
 
     cursor: pointer;
 }
 
 
-/* حاوية المهام */
+/* =====================================================
+   زر إضافة مهمة
+===================================================== */
+
+.add-btn {
+    min-width: 125px;
+    height: 39px;
+
+    padding:
+        0
+        18px;
+
+    border-radius: 8px;
+
+    background: #31586c;
+
+    color: #ffffff;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.18s ease,
+        transform 0.18s ease;
+}
+
+.add-btn:hover {
+    background: #294f62;
+
+    transform:
+        translateY(-1px);
+}
+
+
+/* =====================================================
+   حاوية المهام
+===================================================== */
 
 .tasks-container {
-    width: 100%;
+    padding:
+        20px;
 
-    padding: 20px;
+    border-radius: 14px;
 
-    border-radius: 17px;
+    background:
+        rgba(255, 255, 255, 0.62);
 
     border:
         1px solid
-        rgba(49,88,108,0.12);
+        rgba(198, 154, 90, 0.23);
 
-    border-top:
-        3px solid
-        #c69a5a;
-
-    background:
-        rgba(249,247,242,0.80);
-
-    backdrop-filter: blur(6px);
+    box-shadow:
+        0 10px 28px
+        rgba(42, 65, 77, 0.05);
 }
 
 .section-title {
     display: flex;
 
-    align-items: flex-end;
-
+    align-items: center;
     justify-content: space-between;
 
-    gap: 10px;
+    gap: 15px;
 
-    margin-bottom: 18px;
+    margin-bottom: 17px;
 }
 
 .section-title h2 {
+    color: #31586c;
+
+    font-size: 16px;
+
     margin-bottom: 4px;
-
-    color: #31576b;
-
-    font-size: 17px;
 }
 
-.section-title p,
+.section-title p {
+    color: #839199;
+
+    font-size: 9px;
+}
+
 .section-title > span {
-    color: #87949a;
+    display: inline-flex;
 
-    font-size: 8px;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 27px;
+
+    padding:
+        0
+        10px;
+
+    border-radius: 20px;
+
+    background:
+        rgba(49, 88, 108, 0.07);
+
+    color: #526e7d;
+
+    font-size: 9px;
+    font-weight: 700;
 }
 
 
-/* شبكة المهام */
+/* =====================================================
+   Grid المهام
+===================================================== */
 
 .tasks-grid {
     display: grid;
@@ -464,35 +624,44 @@ textarea {
             minmax(0, 1fr)
         );
 
-    gap: 15px;
+    gap: 14px;
 }
 
 
-/* بطاقة المهمة */
+/* =====================================================
+   بطاقة المهمة
+===================================================== */
 
 .task-card {
     min-width: 0;
 
-    padding: 18px;
+    display: flex;
+    flex-direction: column;
 
-    border-radius: 14px;
+    padding:
+        16px;
+
+    border-radius: 12px;
+
+    background:
+        rgba(255, 255, 255, 0.91);
 
     border:
         1px solid
-        rgba(60,85,98,0.12);
+        rgba(198, 154, 90, 0.30);
 
-    border-right:
-        3px solid
-        #c49a5c;
-
-    background:
-        rgba(255,255,255,0.52);
+    border-top:
+        2px solid
+        rgba(198, 154, 90, 0.72);
 
     box-shadow:
-        0 7px 20px
-        rgba(37,59,70,0.04);
+        0 8px 24px
+        rgba(42, 65, 77, 0.05);
 
-    transition: 0.2s ease;
+    transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease,
+        border-color 0.18s ease;
 }
 
 .task-card:hover {
@@ -500,90 +669,204 @@ textarea {
         translateY(-2px);
 
     box-shadow:
-        0 11px 24px
-        rgba(37,59,70,0.08);
+        0 12px 27px
+        rgba(42, 65, 77, 0.08);
+
+    border-color:
+        rgba(198, 154, 90, 0.47);
 }
+
+
+/* =====================================================
+   المهمة المتأخرة
+===================================================== */
+
+.task-card.task-late {
+    border:
+        1px solid
+        rgba(164, 91, 91, 0.34);
+
+    border-top:
+        2px solid
+        rgba(164, 91, 91, 0.78);
+
+    background:
+        rgba(255, 252, 251, 0.94);
+}
+
+
+/* =====================================================
+   أعلى البطاقة
+===================================================== */
 
 .task-card-top {
     display: flex;
 
+    justify-content: space-between;
     align-items: flex-start;
 
-    justify-content: space-between;
-
     gap: 10px;
+}
 
-    margin-bottom: 12px;
+.task-card-top > div:first-child {
+    min-width: 0;
 }
 
 .task-label {
     display: block;
 
-    margin-bottom: 4px;
+    margin-bottom: 5px;
 
-    color: #b18650;
+    color: #a57943;
 
     font-size: 8px;
+    font-weight: 700;
 }
 
 .task-card h3 {
-    color: #2f5367;
+    color: #2d4b5a;
 
-    font-size: 14px;
+    font-size: 13px;
+    font-weight: 700;
 
     line-height: 1.6;
+
+    overflow-wrap: anywhere;
 }
 
+.task-card-badges {
+    flex-shrink: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: flex-end;
+
+    gap: 5px;
+}
+
+
+/* =====================================================
+   الأولوية
+===================================================== */
+
+.priority-badge {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 24px;
+
+    padding:
+        0
+        9px;
+
+    border-radius: 20px;
+
+    font-size: 8px;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+.priority-badge.high {
+    color: #a35d5d;
+
+    background:
+        rgba(163, 93, 93, 0.08);
+
+    border:
+        1px solid
+        rgba(163, 93, 93, 0.23);
+}
+
+.priority-badge.medium {
+    color: #986f3d;
+
+    background:
+        rgba(198, 154, 90, 0.10);
+
+    border:
+        1px solid
+        rgba(198, 154, 90, 0.30);
+}
+
+.priority-badge.low {
+    color: #557866;
+
+    background:
+        rgba(83, 132, 104, 0.08);
+
+    border:
+        1px solid
+        rgba(83, 132, 104, 0.22);
+}
+
+
+/* =====================================================
+   شارة التأخير
+===================================================== */
+
+.late-badge {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 24px;
+
+    padding:
+        0
+        9px;
+
+    border-radius: 20px;
+
+    color: #9f5656;
+
+    background:
+        rgba(163, 93, 93, 0.09);
+
+    border:
+        1px solid
+        rgba(163, 93, 93, 0.27);
+
+    font-size: 8px;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+/* =====================================================
+   وصف المهمة
+===================================================== */
+
 .task-description {
-    min-height: 48px;
+    min-height: 43px;
 
-    margin-bottom: 15px;
+    margin:
+        12px
+        0;
 
-    color: #71838c;
+    color: #71828b;
 
     font-size: 9px;
 
     line-height: 1.8;
+
+    display: -webkit-box;
+
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
 }
 
 
-/* الأولوية */
-
-.priority-badge {
-    flex-shrink: 0;
-
-    padding: 5px 9px;
-
-    border-radius: 20px;
-
-    font-size: 7px;
-
-    font-weight: 600;
-}
-
-.priority-badge.high {
-    background:
-        rgba(157,78,78,0.11);
-
-    color: #995555;
-}
-
-.priority-badge.medium {
-    background:
-        rgba(190,144,79,0.13);
-
-    color: #a8793f;
-}
-
-.priority-badge.low {
-    background:
-        rgba(70,126,97,0.11);
-
-    color: #497e65;
-}
-
-
-/* معلومات المهمة */
+/* =====================================================
+   معلومات المهمة
+===================================================== */
 
 .task-info {
     display: grid;
@@ -591,21 +874,28 @@ textarea {
     grid-template-columns:
         repeat(
             2,
-            1fr
+            minmax(0, 1fr)
         );
 
-    gap: 8px;
+    gap: 7px;
 
-    margin-bottom: 16px;
+    margin-bottom: 13px;
 }
 
 .info-item {
-    padding: 9px;
+    min-width: 0;
 
-    border-radius: 9px;
+    padding:
+        9px;
+
+    border-radius: 8px;
 
     background:
-        rgba(239,239,234,0.65);
+        rgba(248, 246, 240, 0.72);
+
+    border:
+        1px solid
+        rgba(198, 154, 90, 0.18);
 }
 
 .info-item span {
@@ -613,120 +903,199 @@ textarea {
 
     margin-bottom: 4px;
 
-    color: #8a979d;
+    color: #8b989f;
 
-    font-size: 7px;
+    font-size: 8px;
 }
 
 .info-item strong {
-    color: #516c79;
+    display: block;
+
+    color: #3c5967;
 
     font-size: 9px;
+    font-weight: 700;
 
-    font-weight: 600;
+    line-height: 1.5;
 
-    word-break: break-word;
+    overflow-wrap: anywhere;
 }
 
 
-/* أزرار المهمة */
+/* =====================================================
+   أزرار المهمة
+===================================================== */
 
 .task-actions {
     display: grid;
 
     grid-template-columns:
         repeat(
-            4,
-            1fr
+            5,
+            minmax(0, 1fr)
         );
 
-    gap: 6px;
+    gap: 5px;
 
-    padding-top: 13px;
+    margin-top: auto;
+
+    padding-top: 12px;
 
     border-top:
         1px solid
-        rgba(60,85,98,0.09);
+        rgba(49, 88, 108, 0.07);
 }
 
 .task-actions button {
-    min-width: 0;
-    height: 34px;
+    min-height: 31px;
 
-    border: none;
+    padding:
+        0
+        7px;
 
-    border-radius: 8px;
+    border-radius: 7px;
 
-    font-size: 7px;
+    font-size: 8px;
+    font-weight: 700;
 
     cursor: pointer;
+
+    white-space: nowrap;
+
+    transition:
+        background 0.18s ease,
+        transform 0.18s ease;
+}
+
+.task-actions button:hover {
+    transform:
+        translateY(-1px);
 }
 
 .view-btn {
-    background:
-        rgba(49,88,108,0.10);
+    background: #31586c;
 
-    color: #31586c;
+    color: #ffffff;
+
+    border:
+        1px solid #31586c;
+}
+
+.view-btn:hover {
+    background: #294f62;
 }
 
 .edit-btn {
-    background:
-        rgba(190,144,79,0.11);
+    color: #936b39;
 
-    color: #a27640;
+    background:
+        rgba(198, 154, 90, 0.10);
+
+    border:
+        1px solid
+        rgba(198, 154, 90, 0.35);
+}
+
+.edit-btn:hover {
+    background:
+        rgba(198, 154, 90, 0.17);
 }
 
 .matching-btn {
-    background: #31586c;
+    color: #45697b;
 
-    color: white;
+    background:
+        rgba(69, 111, 130, 0.08);
+
+    border:
+        1px solid
+        rgba(69, 111, 130, 0.25);
+}
+
+.matching-btn:hover {
+    background:
+        rgba(69, 111, 130, 0.14);
+}
+
+.extend-btn {
+    color: #8e6a3d;
+
+    background:
+        rgba(198, 154, 90, 0.08);
+
+    border:
+        1px solid
+        rgba(198, 154, 90, 0.29);
+}
+
+.extend-btn:hover {
+    background:
+        rgba(198, 154, 90, 0.15);
 }
 
 .delete-btn {
-    background:
-        rgba(151,77,77,0.09);
+    color: #a05c5c;
 
-    color: #985454;
+    background: transparent;
+
+    border:
+        1px solid
+        rgba(160, 92, 92, 0.25);
+}
+
+.delete-btn:hover {
+    background:
+        rgba(160, 92, 92, 0.07);
 }
 
 
-/* الحالة الفارغة */
+/* =====================================================
+   Empty State
+===================================================== */
 
 .empty-state {
     grid-column: 1 / -1;
 
-    min-height: 230px;
+    width: 100%;
 
-    display: flex;
+    padding:
+        40px
+        20px;
 
-    align-items: center;
+    border-radius: 11px;
 
-    justify-content: center;
+    background:
+        rgba(255, 255, 255, 0.65);
 
-    text-align: center;
+    border:
+        1px dashed
+        rgba(198, 154, 90, 0.32);
 
     color: #87959c;
 
     font-size: 10px;
+
+    text-align: center;
 }
 
 
-/* Modal */
+/* =====================================================
+   Modal
+===================================================== */
 
 .modal {
-    display: none;
-
     position: fixed;
 
     inset: 0;
 
-    z-index: 7000;
+    display: none;
 
     align-items: center;
-
     justify-content: center;
 
-    padding: 20px;
+    padding: 25px;
+
+    z-index: 3000;
 }
 
 .modal.show {
@@ -739,9 +1108,10 @@ textarea {
     inset: 0;
 
     background:
-        rgba(37,56,66,0.40);
+        rgba(27, 43, 52, 0.50);
 
-    backdrop-filter: blur(5px);
+    backdrop-filter:
+        blur(2px);
 }
 
 .modal-box {
@@ -749,94 +1119,128 @@ textarea {
 
     z-index: 2;
 
-    width:
-        min(
-            780px,
-            100%
-        );
+    width: min(
+        850px,
+        96vw
+    );
 
     max-height: 90vh;
 
     overflow-y: auto;
 
-    padding: 24px;
+    padding:
+        22px;
 
-    border-radius: 18px;
+    border-radius: 15px;
 
-    border-top:
-        3px solid
-        #c49a5c;
+    background: #fbfaf7;
 
-    background:
-        rgba(248,246,241,0.99);
+    border:
+        1px solid
+        rgba(198, 154, 90, 0.37);
 
     box-shadow:
-        0 22px 55px
-        rgba(38,57,68,0.18);
+        0 24px 70px
+        rgba(30, 49, 59, 0.20);
+}
+
+.modal-box::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal-box::-webkit-scrollbar-thumb {
+    background:
+        rgba(49, 88, 108, 0.20);
+
+    border-radius: 20px;
+}
+
+.small-modal {
+    width: min(
+        520px,
+        95vw
+    );
 }
 
 .details-box {
-    width:
-        min(
-            720px,
-            100%
-        );
+    width: min(
+        880px,
+        96vw
+    );
 }
+
+
+/* =====================================================
+   Modal Header
+===================================================== */
 
 .modal-header {
     display: flex;
 
-    justify-content: space-between;
-
     align-items: flex-start;
+    justify-content: space-between;
 
     gap: 15px;
 
-    margin-bottom: 22px;
+    padding-bottom: 15px;
 
-    padding-bottom: 13px;
+    margin-bottom: 18px;
 
     border-bottom:
         1px solid
-        rgba(60,85,98,0.08);
+        rgba(198, 154, 90, 0.24);
 }
 
 .modal-header h2 {
+    color: #31586c;
+
+    font-size: 17px;
+
     margin-bottom: 4px;
-
-    color: #2f5367;
-
-    font-size: 19px;
 }
 
 .modal-header p {
-    color: #7c8c94;
+    color: #85939a;
 
     font-size: 9px;
+
+    line-height: 1.7;
 }
 
 .close-btn {
-    width: 34px;
-    height: 34px;
+    width: 31px;
+    height: 31px;
 
     flex-shrink: 0;
 
-    border: none;
+    display: flex;
 
-    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
 
     background:
-        rgba(49,88,108,0.07);
+        rgba(49, 88, 108, 0.06);
 
-    color: #3b5b6c;
+    color: #607783;
 
     font-size: 20px;
 
     cursor: pointer;
+
+    transition: 0.18s ease;
+}
+
+.close-btn:hover {
+    background:
+        rgba(49, 88, 108, 0.11);
 }
 
 
-/* الفورم */
+/* =====================================================
+   Forms
+===================================================== */
 
 .form-grid {
     display: grid;
@@ -847,37 +1251,24 @@ textarea {
             minmax(0, 1fr)
         );
 
-    gap: 15px;
+    gap:
+        14px
+        15px;
 }
 
 .form-group {
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 7px;
-
     min-width: 0;
 }
 
-.full-width {
-    grid-column: 1 / -1;
-}
-
 .form-group label {
-    color: #526c79;
+    display: block;
+
+    margin-bottom: 6px;
+
+    color: #46616f;
 
     font-size: 9px;
-
-    font-weight: 600;
-}
-
-.form-group small {
-    color: #87959c;
-
-    font-size: 7px;
-
-    line-height: 1.5;
+    font-weight: 700;
 }
 
 .form-group input,
@@ -885,87 +1276,128 @@ textarea {
 .form-group textarea {
     width: 100%;
 
+    border-radius: 8px;
+
     border:
         1px solid
-        rgba(60,85,98,0.16);
-
-    border-radius: 10px;
-
-    background:
-        rgba(255,255,255,0.75);
-
-    color: #3d5968;
+        rgba(49, 88, 108, 0.16);
 
     outline: none;
+
+    background:
+        rgba(255, 255, 255, 0.90);
+
+    color: #365361;
+
+    font-size: 10px;
+
+    transition:
+        border-color 0.18s ease,
+        box-shadow 0.18s ease;
 }
 
 .form-group input,
 .form-group select {
-    height: 44px;
+    height: 39px;
 
-    padding: 0 12px;
+    padding:
+        0
+        11px;
 }
 
 .form-group textarea {
     min-height: 100px;
 
-    padding: 12px;
-
     resize: vertical;
 
-    line-height: 1.7;
+    padding:
+        11px;
+
+    line-height: 1.8;
 }
 
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
-    border-color: #c49a5c;
+    border-color:
+        rgba(198, 154, 90, 0.72);
 
     box-shadow:
         0 0 0 3px
-        rgba(196,154,92,0.08);
+        rgba(198, 154, 90, 0.08);
+}
+
+.form-group input:disabled {
+    background:
+        rgba(49, 88, 108, 0.05);
+
+    color: #758790;
+
+    cursor: not-allowed;
+}
+
+.form-group small {
+    display: block;
+
+    margin-top: 5px;
+
+    color: #909da3;
+
+    font-size: 8px;
+
+    line-height: 1.6;
+}
+
+.full-width {
+    grid-column: 1 / -1;
 }
 
 
-/* متطلبات المطابقة */
+/* =====================================================
+   متطلبات المطابقة
+===================================================== */
 
 .requirements-section {
     margin-top: 4px;
 
-    padding: 18px;
+    padding:
+        16px;
 
-    border-radius: 14px;
+    border-radius: 12px;
+
+    background:
+        rgba(248, 246, 240, 0.66);
 
     border:
         1px solid
-        rgba(60,85,98,0.12);
+        rgba(198, 154, 90, 0.29);
 
-    background:
-        rgba(255,255,255,0.38);
+    border-right:
+        3px solid
+        #c69a5a;
 }
 
 .requirements-header {
     display: flex;
 
+    align-items: center;
     justify-content: space-between;
 
-    align-items: center;
+    gap: 12px;
 
-    gap: 14px;
-
-    margin-bottom: 18px;
+    margin-bottom: 14px;
 }
 
 .requirements-header h3 {
-    margin-bottom: 5px;
-
     color: #31586c;
 
     font-size: 13px;
+
+    margin-bottom: 4px;
 }
 
 .requirements-header p {
-    color: #819098;
+    color: #839198;
 
     font-size: 8px;
 
@@ -973,22 +1405,36 @@ textarea {
 }
 
 .add-requirement-btn {
-    min-width: 110px;
-    height: 38px;
+    min-height: 34px;
 
-    padding: 0 14px;
+    padding:
+        0
+        13px;
 
-    border: none;
+    flex-shrink: 0;
 
-    border-radius: 9px;
+    border-radius: 8px;
 
-    background: #31586c;
+    background:
+        rgba(198, 154, 90, 0.12);
 
-    color: white;
+    border:
+        1px solid
+        rgba(198, 154, 90, 0.40);
+
+    color: #926a38;
 
     font-size: 9px;
+    font-weight: 700;
 
     cursor: pointer;
+
+    transition: 0.18s ease;
+}
+
+.add-requirement-btn:hover {
+    background:
+        rgba(198, 154, 90, 0.19);
 }
 
 .requirements-general {
@@ -1002,157 +1448,212 @@ textarea {
 
     gap: 12px;
 
-    margin-bottom: 15px;
+    margin-bottom: 13px;
 }
 
-#requirementsContainer {
-    display: flex;
 
-    flex-direction: column;
-
-    gap: 10px;
-}
+/* =====================================================
+   Requirement Row
+===================================================== */
 
 .requirement-row {
+    position: relative;
+
     display: grid;
 
     grid-template-columns:
-        minmax(0, 1.5fr)
-        minmax(130px, 1fr)
-        minmax(100px, 0.8fr)
-        42px;
-
-    gap: 9px;
+        1.6fr
+        1fr
+        0.8fr
+        34px;
 
     align-items: end;
 
-    padding: 12px;
+    gap: 9px;
 
-    border-radius: 11px;
+    padding:
+        12px;
+
+    margin-bottom: 9px;
+
+    border-radius: 10px;
+
+    background:
+        rgba(255, 255, 255, 0.88);
 
     border:
         1px solid
-        rgba(60,85,98,0.08);
-
-    background:
-        rgba(255,255,255,0.60);
+        rgba(198, 154, 90, 0.22);
 }
 
 .remove-requirement-btn {
-    width: 42px;
-    height: 44px;
+    width: 34px;
+    height: 39px;
 
-    border: none;
+    display: flex;
 
-    border-radius: 9px;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    color: #a05d5d;
 
     background:
-        rgba(151,77,77,0.09);
+        rgba(160, 93, 93, 0.06);
 
-    color: #985454;
+    border:
+        1px solid
+        rgba(160, 93, 93, 0.22);
 
     font-size: 18px;
 
     cursor: pointer;
+
+    transition: 0.18s ease;
 }
+
+.remove-requirement-btn:hover {
+    background:
+        rgba(160, 93, 93, 0.12);
+}
+
+
+/* =====================================================
+   مجموع الأوزان
+===================================================== */
 
 .weight-note {
     display: flex;
 
+    align-items: center;
     justify-content: space-between;
 
-    align-items: center;
+    gap: 10px;
 
-    gap: 12px;
+    margin-top: 11px;
 
-    margin-top: 12px;
+    padding:
+        10px
+        12px;
 
-    padding: 10px 12px;
+    border-radius: 8px;
+
+    background:
+        rgba(49, 88, 108, 0.05);
+
+    color: #687e89;
+
+    font-size: 8px;
+}
+
+.weight-note strong {
+    color: #9a713f;
+}
+
+#totalWeightText {
+    color: #557665;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+#totalWeightText.weight-error {
+    color: #a05c5c;
+}
+
+.requirements-loading {
+    padding:
+        15px;
 
     border-radius: 9px;
 
     background:
-        rgba(196,154,92,0.08);
+        rgba(255, 255, 255, 0.60);
 
-    color: #71828c;
+    color: #839198;
 
     font-size: 9px;
-}
-
-.weight-note strong {
-    color: #a77b42;
-}
-
-#totalWeightText {
-    color: #31586c;
-
-    font-weight: 600;
-}
-
-#totalWeightText.weight-error {
-    color: #985454;
-}
-
-.requirements-loading {
-    padding: 18px;
 
     text-align: center;
-
-    color: #819098;
-
-    font-size: 9px;
 }
 
 
-/* أزرار المودال */
+/* =====================================================
+   أزرار Modal
+===================================================== */
 
 .modal-actions {
     display: flex;
 
     justify-content: flex-end;
 
-    gap: 9px;
+    gap: 8px;
 
-    margin-top: 22px;
+    margin-top: 20px;
+
+    padding-top: 15px;
+
+    border-top:
+        1px solid
+        rgba(198, 154, 90, 0.20);
 }
 
 .modal-actions button {
     min-width: 110px;
-    height: 42px;
+    min-height: 38px;
 
-    border-radius: 9px;
+    padding:
+        0
+        17px;
+
+    border-radius: 8px;
 
     font-size: 9px;
+    font-weight: 700;
 
     cursor: pointer;
-}
 
-.cancel-btn {
-    border:
-        1px solid
-        rgba(49,88,108,0.18);
-
-    background: transparent;
-
-    color: #526d7b;
+    transition: 0.18s ease;
 }
 
 .save-btn {
-    border: none;
-
     background: #31586c;
 
-    color: white;
+    color: #ffffff;
+}
+
+.save-btn:hover {
+    background: #294f62;
 }
 
 .save-btn:disabled {
-    opacity: 0.5;
+    opacity: 0.55;
 
     cursor: not-allowed;
 }
 
+.cancel-btn {
+    background:
+        rgba(49, 88, 108, 0.05);
 
-/* التفاصيل */
+    color: #617985;
+
+    border:
+        1px solid
+        rgba(49, 88, 108, 0.14);
+}
+
+.cancel-btn:hover {
+    background:
+        rgba(49, 88, 108, 0.09);
+}
+
+
+/* =====================================================
+   تفاصيل المهمة
+===================================================== */
 
 .details-grid {
     display: grid;
@@ -1163,40 +1664,47 @@ textarea {
             minmax(0, 1fr)
         );
 
-    gap: 12px;
+    gap: 10px;
 }
 
 .detail-item {
-    padding: 14px;
+    min-width: 0;
+
+    padding:
+        13px;
 
     border-radius: 10px;
 
+    background:
+        rgba(248, 246, 240, 0.67);
+
     border:
         1px solid
-        rgba(60,85,98,0.09);
-
-    background:
-        rgba(255,255,255,0.50);
+        rgba(198, 154, 90, 0.23);
 }
 
-.detail-item span {
+.detail-item > span {
     display: block;
 
     margin-bottom: 6px;
 
-    color: #839098;
+    color: #9b713f;
 
     font-size: 8px;
+    font-weight: 600;
 }
 
-.detail-item strong {
-    color: #405e6e;
+.detail-item > strong {
+    display: block;
+
+    color: #385563;
 
     font-size: 10px;
+    font-weight: 700;
 
-    line-height: 1.7;
+    line-height: 1.8;
 
-    word-break: break-word;
+    overflow-wrap: anywhere;
 }
 
 .detail-item.full-detail {
@@ -1204,44 +1712,204 @@ textarea {
 }
 
 
-/* التابلت */
+/* =====================================================
+   تفاصيل متطلبات المهارة
+===================================================== */
 
-@media
-(max-width: 1100px)
-and
-(min-width: 701px) {
+.requirements-details-list {
+    display: grid;
 
-    .main-content {
-        padding:
-            30px
-            25px
-            45px;
-    }
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 7px;
+
+    margin-top: 8px;
+}
+
+.requirement-detail {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    align-items: center;
+
+    gap: 6px;
+
+    padding:
+        10px;
+
+    border-radius: 8px;
+
+    background:
+        rgba(255, 255, 255, 0.85);
+
+    border:
+        1px solid
+        rgba(198, 154, 90, 0.20);
+}
+
+.requirement-detail strong {
+    width: 100%;
+
+    color: #31586c;
+
+    font-size: 9px;
+}
+
+.requirement-detail span {
+    display: inline-flex;
+
+    align-items: center;
+
+    min-height: 22px;
+
+    padding:
+        0
+        7px;
+
+    border-radius: 20px;
+
+    background:
+        rgba(198, 154, 90, 0.09);
+
+    color: #906a3d;
+
+    font-size: 8px;
+}
+
+
+/* =====================================================
+   سجل التمديدات
+===================================================== */
+
+.extensions-history {
+    display: grid;
+
+    gap: 8px;
+
+    margin-top: 8px;
+}
+
+.extension-history-item {
+    display: grid;
+
+    grid-template-columns:
+        120px
+        120px
+        1fr;
+
+    gap: 8px;
+
+    padding:
+        11px;
+
+    border-radius: 9px;
+
+    background:
+        rgba(255, 255, 255, 0.87);
+
+    border:
+        1px solid
+        rgba(198, 154, 90, 0.22);
+}
+
+.extension-history-item > div {
+    min-width: 0;
+}
+
+.extension-history-item span {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #8a989f;
+
+    font-size: 8px;
+}
+
+.extension-history-item strong {
+    display: block;
+
+    color: #3b5967;
+
+    font-size: 9px;
+
+    line-height: 1.7;
+
+    overflow-wrap: anywhere;
+}
+
+.extension-reason {
+    padding-right: 9px;
+
+    border-right:
+        1px solid
+        rgba(198, 154, 90, 0.22);
+}
+
+.empty-mini {
+    padding:
+        13px;
+
+    border-radius: 8px;
+
+    background:
+        rgba(255, 255, 255, 0.55);
+
+    border:
+        1px dashed
+        rgba(198, 154, 90, 0.27);
+
+    color: #8b989e;
+
+    font-size: 8px;
+
+    text-align: center;
+}
+
+
+/* =====================================================
+   نافذة التمديد
+===================================================== */
+
+.extension-field {
+    margin-top: 13px;
+}
+
+#extensionReason {
+    min-height: 95px;
+}
+
+
+/* =====================================================
+   Mobile Header
+===================================================== */
+
+.mobile-header {
+    display: none;
+}
+
+.sidebar-overlay {
+    display: none;
+}
+
+
+/* =====================================================
+   شاشة متوسطة
+===================================================== */
+
+@media (max-width: 1250px) {
 
     .tasks-summary {
         grid-template-columns:
             repeat(
                 3,
-                1fr
+                minmax(0, 1fr)
             );
-    }
-
-    .toolbar {
-        grid-template-columns:
-            1fr;
-    }
-
-    .filters {
-        width: 100%;
-    }
-
-    .filters select {
-        flex: 1;
-        width: auto;
-    }
-
-    .add-btn {
-        width: fit-content;
     }
 
     .tasks-grid {
@@ -1252,155 +1920,64 @@ and
             );
     }
 
-    .requirement-row {
+    .task-actions {
         grid-template-columns:
-            1fr
-            1fr;
-    }
-
-    .remove-requirement-btn {
-        width: 100%;
+            repeat(
+                3,
+                minmax(0, 1fr)
+            );
     }
 }
 
 
-/* الجوال */
+/* =====================================================
+   Tablet
+===================================================== */
 
-@media (max-width: 700px) {
-
-    .tasks-page {
-        display: block;
-    }
-
-    .mobile-header {
-        width: 100%;
-        height: 76px;
-
-        position: fixed;
-
-        top: 0;
-        right: 0;
-        left: 0;
-
-        z-index: 3000;
-
-        display: flex;
-
-        align-items: center;
-
-        gap: 10px;
-
-        padding:
-            10px
-            14px;
-
-        background:
-            linear-gradient(
-                90deg,
-                #5f7c8b 0%,
-                #3c6276 48%,
-                #274f65 100%
-            );
-    }
-
-    .mobile-menu-btn {
-        width: 46px;
-        height: 46px;
-
-        flex: 0 0 46px;
-
-        display: flex;
-
-        align-items: center;
-
-        justify-content: center;
-
-        border:
-            1px solid
-            rgba(255,255,255,0.50);
-
-        border-radius: 14px;
-
-        background:
-            rgba(249,247,242,0.97);
-
-        color: #31586c;
-
-        font-size: 22px;
-
-        cursor: pointer;
-    }
-
-    .mobile-header-title h2 {
-        color: white;
-
-        font-size: 18px;
-    }
-
-    .mobile-header-title span {
-        display: block;
-
-        color:
-            rgba(255,255,255,0.65);
-
-        font-size: 9px;
-    }
-
-    .mobile-logo {
-        width: 54px;
-        height: 54px;
-
-        object-fit: contain;
-
-        margin-right: auto;
-    }
+@media (max-width: 950px) {
 
     .sidebar {
-        width: 275px;
-
-        max-width: 83vw;
-
-        height: 100dvh;
-
-        right: -300px;
-
-        z-index: 5000;
+        transform:
+            translateX(100%);
 
         transition:
-            right
-            0.30s
-            ease;
+            transform 0.25s ease;
+
+        box-shadow:
+            -10px 0 35px
+            rgba(29, 48, 58, 0.20);
     }
 
     .sidebar.show {
-        right: 0;
+        transform:
+            translateX(0);
     }
 
     .sidebar-overlay {
-        display: block;
-
         position: fixed;
 
         inset: 0;
 
-        z-index: 4000;
-
-        background:
-            rgba(22,36,44,0.42);
-
-        opacity: 0;
+        display: block;
 
         visibility: hidden;
 
-        pointer-events: none;
+        opacity: 0;
+
+        background:
+            rgba(30, 47, 57, 0.42);
+
+        transition:
+            opacity 0.22s ease,
+            visibility 0.22s ease;
+
+        z-index: 900;
     }
 
     .sidebar-overlay.show {
-        opacity: 1;
-
         visibility: visible;
 
-        pointer-events: auto;
+        opacity: 1;
     }
 
     .main-content {
@@ -1409,22 +1986,148 @@ and
         margin-right: 0;
 
         padding:
-            102px
-            14px
-            40px;
+            88px
+            24px
+            45px;
+    }
 
-        background-attachment: scroll;
+    .mobile-header {
+        position: fixed;
+
+        top: 0;
+        right: 0;
+        left: 0;
+
+        height: 65px;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: space-between;
+
+        padding:
+            0
+            18px;
+
+        background:
+            rgba(249, 247, 242, 0.95);
+
+        border-bottom:
+            1px solid
+            rgba(198, 154, 90, 0.28);
+
+        backdrop-filter:
+            blur(8px);
+
+        z-index: 800;
+    }
+
+    .mobile-menu-btn {
+        width: 36px;
+        height: 36px;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 8px;
+
+        background:
+            rgba(49, 88, 108, 0.08);
+
+        color: #31586c;
+
+        font-size: 18px;
+
+        cursor: pointer;
+    }
+
+    .mobile-header-title {
+        text-align: center;
+    }
+
+    .mobile-header-title h2 {
+        color: #31586c;
+
+        font-size: 13px;
+
+        margin-bottom: 2px;
+    }
+
+    .mobile-header-title span {
+        color: #9b713f;
+
+        font-size: 8px;
+    }
+
+    .mobile-logo {
+        width: 40px;
+        height: 40px;
+
+        object-fit: contain;
+    }
+
+    .toolbar {
+        flex-wrap: wrap;
+    }
+
+    .search-box {
+        flex-basis: 100%;
+    }
+
+    .filters {
+        flex: 1;
+    }
+
+    .filters select {
+        width: auto;
+
+        flex: 1;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .full-width {
+        grid-column: auto;
+    }
+
+    .requirement-row {
+        grid-template-columns:
+            1fr
+            1fr;
+    }
+
+    .remove-requirement-btn {
+        width: 100%;
+    }
+}
+
+
+/* =====================================================
+   الجوال
+===================================================== */
+
+@media (max-width: 700px) {
+
+    .main-content {
+        padding:
+            82px
+            14px
+            35px;
     }
 
     .topbar h1 {
-        font-size: 24px;
+        font-size: 22px;
     }
 
     .tasks-summary {
         grid-template-columns:
             repeat(
                 2,
-                1fr
+                minmax(0, 1fr)
             );
 
         gap: 8px;
@@ -1433,7 +2136,8 @@ and
     .summary-item {
         min-height: 82px;
 
-        padding: 12px;
+        padding:
+            13px;
     }
 
     .summary-item strong {
@@ -1441,152 +2145,176 @@ and
     }
 
     .toolbar {
-        display: flex;
-
-        flex-direction: column;
-
-        align-items: stretch;
+        padding: 10px;
     }
 
     .filters {
-        display: grid;
-
-        grid-template-columns:
-            1fr
-            1fr;
-    }
-
-    .filters select,
-    .add-btn {
         width: 100%;
 
-        min-width: 0;
+        flex-direction: column;
+    }
+
+    .filters select {
+        width: 100%;
+    }
+
+    .add-btn {
+        width: 100%;
+    }
+
+    .tasks-container {
+        padding: 13px;
+    }
+
+    .section-title {
+        align-items: flex-start;
     }
 
     .tasks-grid {
-        grid-template-columns:
-            1fr;
+        grid-template-columns: 1fr;
     }
 
     .task-actions {
         grid-template-columns:
-            1fr
-            1fr;
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
     }
 
     .modal {
-        padding: 11px;
+        align-items: flex-end;
+
+        padding: 0;
     }
 
     .modal-box {
         width: 100%;
 
-        max-height: 89dvh;
+        max-height: 94vh;
 
-        padding: 17px;
+        border-radius:
+            16px
+            16px
+            0
+            0;
+
+        padding:
+            18px
+            14px;
     }
 
-    .form-grid,
-    .details-grid,
-    .requirements-general {
-        grid-template-columns:
-            1fr;
-    }
-
-    .full-width,
-    .detail-item.full-detail {
-        grid-column: auto;
-    }
-
-    .requirement-row {
-        grid-template-columns:
-            1fr;
-    }
-
-    .remove-requirement-btn {
+    .small-modal,
+    .details-box {
         width: 100%;
     }
 
     .requirements-header {
-        flex-direction: column;
+        align-items: flex-start;
 
-        align-items: stretch;
+        flex-direction: column;
     }
 
     .add-requirement-btn {
         width: 100%;
     }
 
+    .requirements-general {
+        grid-template-columns: 1fr;
+    }
+
+    .requirement-row {
+        grid-template-columns: 1fr;
+
+        gap: 8px;
+    }
+
+    .remove-requirement-btn {
+        height: 35px;
+    }
+
     .weight-note {
-        flex-direction: column;
-
         align-items: flex-start;
-    }
-}
 
-
-/* الجوال الصغير */
-
-@media (max-width: 430px) {
-
-    .mobile-header {
-        height: 70px;
-
-        padding:
-            8px
-            12px;
+        flex-direction: column;
     }
 
-    .mobile-menu-btn {
-        width: 43px;
-        height: 43px;
-
-        flex-basis: 43px;
+    .details-grid {
+        grid-template-columns: 1fr;
     }
 
-    .mobile-logo {
-        width: 49px;
-        height: 49px;
+    .detail-item.full-detail {
+        grid-column: auto;
     }
 
-    .main-content {
-        padding:
-            92px
-            11px
-            35px;
+    .requirements-details-list {
+        grid-template-columns: 1fr;
     }
 
-    .tasks-summary {
-        grid-template-columns:
-            1fr
-            1fr;
+    .extension-history-item {
+        grid-template-columns: 1fr;
     }
 
-    .filters {
-        grid-template-columns:
-            1fr;
-    }
+    .extension-reason {
+        padding-right: 0;
 
-    .task-info {
-        grid-template-columns:
-            1fr
-            1fr;
-    }
+        padding-top: 8px;
 
-    .task-actions {
-        grid-template-columns:
-            1fr
-            1fr;
+        border-right: none;
+
+        border-top:
+            1px solid
+            rgba(198, 154, 90, 0.20);
     }
 
     .modal-actions {
         display: grid;
 
         grid-template-columns:
-            1fr;
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
     }
 
     .modal-actions button {
         width: 100%;
+        min-width: 0;
+    }
+}
+
+
+/* =====================================================
+   جوال صغير
+===================================================== */
+
+@media (max-width: 430px) {
+
+    .tasks-summary {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .task-info {
+        grid-template-columns: 1fr;
+    }
+
+    .task-card-top {
+        flex-direction: column;
+    }
+
+    .task-card-badges {
+        width: 100%;
+
+        flex-direction: row;
+
+        align-items: center;
+    }
+
+    .task-actions {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .modal-header h2 {
+        font-size: 15px;
     }
 }
