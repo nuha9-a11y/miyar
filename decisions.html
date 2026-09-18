@@ -30,9 +30,9 @@
 <div class="decisions-page">
 
 
-    <!-- =====================================================
+    <!-- =========================================
          هيدر الجوال
-    ====================================================== -->
+    ========================================== -->
 
     <header class="mobile-header">
 
@@ -68,17 +68,15 @@
     </header>
 
 
-
     <div
         class="sidebar-overlay"
         id="sidebarOverlay"
     ></div>
 
 
-
-    <!-- =====================================================
+    <!-- =========================================
          القائمة الجانبية
-    ====================================================== -->
+    ========================================== -->
 
     <aside
         class="sidebar"
@@ -94,7 +92,6 @@
             >
 
         </div>
-
 
 
         <nav class="sidebar-nav">
@@ -175,7 +172,6 @@
         </nav>
 
 
-
         <button
             class="logout-btn"
             type="button"
@@ -188,10 +184,9 @@
     </aside>
 
 
-
-    <!-- =====================================================
+    <!-- =========================================
          المحتوى
-    ====================================================== -->
+    ========================================== -->
 
     <main class="main-content">
 
@@ -202,23 +197,20 @@
                 القرار النهائي
             </span>
 
-
             <h1>
                 القرارات
             </h1>
 
-
             <p>
-                مراجعة واعتماد قرارات إسناد المهام للموظفين بعد نتائج المطابقة والترشيح.
+                مراجعة نتائج المطابقة واعتماد الموظف النهائي لإسناد المهمة.
             </p>
 
         </header>
 
 
-
-        <!-- =====================================================
+        <!-- =========================================
              ملخص القرارات
-        ====================================================== -->
+        ========================================== -->
 
         <section class="decisions-summary">
 
@@ -278,10 +270,9 @@
         </section>
 
 
-
-        <!-- =====================================================
+        <!-- =========================================
              الأدوات
-        ====================================================== -->
+        ========================================== -->
 
         <section class="toolbar">
 
@@ -309,10 +300,9 @@
         </section>
 
 
-
-        <!-- =====================================================
+        <!-- =========================================
              سجل القرارات
-        ====================================================== -->
+        ========================================== -->
 
         <section class="decisions-container">
 
@@ -341,7 +331,6 @@
             </div>
 
 
-
             <div
                 class="decisions-grid"
                 id="decisionsGrid"
@@ -363,10 +352,9 @@
 </div>
 
 
-
-<!-- =====================================================
+<!-- =========================================
      نافذة القرار
-===================================================== -->
+========================================== -->
 
 <div
     class="modal"
@@ -378,7 +366,6 @@
         class="modal-overlay"
         id="decisionModalOverlay"
     ></div>
-
 
 
     <div class="modal-box">
@@ -393,9 +380,8 @@
                     تسجيل قرار
                 </h2>
 
-
                 <p id="modalDescription">
-                    راجع بيانات الترشيح ثم احفظ القرار النهائي.
+                    راجع نتيجة المطابقة ثم اعتمد الموظف النهائي.
                 </p>
 
             </div>
@@ -413,7 +399,6 @@
         </div>
 
 
-
         <form id="decisionForm">
 
 
@@ -422,6 +407,12 @@
                 id="editDecisionId"
             >
 
+
+            <input
+                type="hidden"
+                id="decisionSource"
+                value="manual"
+            >
 
 
             <div class="form-grid">
@@ -434,7 +425,6 @@
                     <label for="decisionTask">
                         المهمة
                     </label>
-
 
                     <select
                         id="decisionTask"
@@ -450,7 +440,6 @@
                 </div>
 
 
-
                 <!-- مرشح النظام -->
 
                 <div class="form-group">
@@ -458,7 +447,6 @@
                     <label for="systemCandidate">
                         الموظف الذي رشحه النظام
                     </label>
-
 
                     <select
                         id="systemCandidate"
@@ -474,7 +462,6 @@
                 </div>
 
 
-
                 <!-- نسبة التوافق -->
 
                 <div class="form-group">
@@ -483,27 +470,29 @@
                         نسبة التوافق %
                     </label>
 
-
                     <input
                         type="number"
                         id="matchRate"
                         min="0"
                         max="100"
+                        step="0.01"
                         required
                     >
+
+                    <small id="matchRateHelp">
+                        يتم جلب النسبة تلقائياً عند الاعتماد من صفحة المطابقة.
+                    </small>
 
                 </div>
 
 
-
-                <!-- اختيار المسؤول -->
+                <!-- الموظف النهائي -->
 
                 <div class="form-group">
 
                     <label for="selectedEmployee">
                         الموظف الذي اعتمده المسؤول
                     </label>
-
 
                     <select
                         id="selectedEmployee"
@@ -519,7 +508,6 @@
                 </div>
 
 
-
                 <!-- السبب -->
 
                 <div class="form-group full-width">
@@ -528,15 +516,16 @@
                         سبب القرار
                     </label>
 
-
                     <textarea
                         id="decisionReason"
-                        placeholder="وضح سبب اعتماد الموظف للمهمة..."
-                        required
+                        placeholder="يصبح السبب مطلوباً عند اختيار موظف مختلف عن مرشح النظام..."
                     ></textarea>
 
-                </div>
+                    <small id="reasonHelp">
+                        عند اعتماد مرشح النظام يمكن للنظام تسجيل سبب الاعتماد تلقائياً.
+                    </small>
 
+                </div>
 
 
                 <!-- التاريخ -->
@@ -546,7 +535,6 @@
                     <label for="decisionDate">
                         تاريخ القرار
                     </label>
-
 
                     <input
                         type="date"
@@ -560,19 +548,17 @@
             </div>
 
 
-
             <div class="system-note">
 
                 <strong>
                     القرار النهائي
                 </strong>
 
-                <p>
-                    الموظف الذي يعتمده المسؤول هنا سيتم إسناد المهمة إليه فعلياً في النظام.
+                <p id="decisionStatusText">
+                    الموظف الذي يعتمده المسؤول سيتم إسناد المهمة إليه فعلياً في النظام.
                 </p>
 
             </div>
-
 
 
             <div
@@ -589,7 +575,6 @@
                 </p>
 
             </div>
-
 
 
             <div class="modal-actions">
@@ -625,10 +610,9 @@
 </div>
 
 
-
-<!-- =====================================================
+<!-- =========================================
      تفاصيل القرار
-===================================================== -->
+========================================== -->
 
 <div
     class="modal"
@@ -642,7 +626,6 @@
     ></div>
 
 
-
     <div class="modal-box details-box">
 
 
@@ -654,7 +637,6 @@
                 <h2>
                     تفاصيل القرار
                 </h2>
-
 
                 <p>
                     تفاصيل الترشيح والإسناد النهائي.
@@ -675,7 +657,6 @@
         </div>
 
 
-
         <div
             class="details-grid"
             id="decisionDetails"
@@ -686,7 +667,6 @@
 
 
 </div>
-
 
 
 <script>
@@ -715,7 +695,6 @@ const supabaseClient =
     );
 
 
-
 /* =====================================================
    البيانات
 ===================================================== */
@@ -727,7 +706,6 @@ let tasks = [];
 let employees = [];
 
 let employeeLeaves = [];
-
 
 
 /* =====================================================
@@ -776,7 +754,6 @@ const leaveWarning =
     );
 
 
-
 /* =====================================================
    حماية النص
 ===================================================== */
@@ -786,14 +763,28 @@ function escapeHtml(value) {
     return String(
         value ?? ""
     )
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
+    .replaceAll(
+        "&",
+        "&amp;"
+    )
+    .replaceAll(
+        "<",
+        "&lt;"
+    )
+    .replaceAll(
+        ">",
+        "&gt;"
+    )
+    .replaceAll(
+        '"',
+        "&quot;"
+    )
+    .replaceAll(
+        "'",
+        "&#039;"
+    );
 
 }
-
 
 
 /* =====================================================
@@ -846,7 +837,7 @@ async function protectPage() {
                 .signOut();
 
 
-            localStorage.clear();
+            clearLocalSession();
 
 
             window.location.href =
@@ -887,7 +878,6 @@ async function protectPage() {
 }
 
 
-
 /* =====================================================
    تحميل المهام
 ===================================================== */
@@ -915,7 +905,9 @@ async function loadTasks() {
         );
 
 
-    if (error) {
+    if (
+        error
+    ) {
 
         throw error;
     }
@@ -924,6 +916,17 @@ async function loadTasks() {
     tasks =
         data || [];
 
+
+    fillTaskSelect();
+
+}
+
+
+/* =====================================================
+   تعبئة المهام
+===================================================== */
+
+function fillTaskSelect() {
 
     const select =
         document.getElementById(
@@ -942,6 +945,7 @@ async function loadTasks() {
 
     tasks.forEach(
         task => {
+
 
             const option =
                 document.createElement(
@@ -967,7 +971,6 @@ async function loadTasks() {
     );
 
 }
-
 
 
 /* =====================================================
@@ -998,7 +1001,9 @@ async function loadEmployees() {
         );
 
 
-    if (error) {
+    if (
+        error
+    ) {
 
         throw error;
     }
@@ -1018,7 +1023,6 @@ async function loadEmployees() {
     );
 
 }
-
 
 
 /* =====================================================
@@ -1044,6 +1048,7 @@ function fillEmployeeSelect(selectId) {
 
     employees.forEach(
         employee => {
+
 
             const option =
                 document.createElement(
@@ -1077,7 +1082,6 @@ function fillEmployeeSelect(selectId) {
 }
 
 
-
 /* =====================================================
    تحميل الإجازات
 ===================================================== */
@@ -1100,7 +1104,9 @@ async function loadEmployeeLeaves() {
         `);
 
 
-    if (error) {
+    if (
+        error
+    ) {
 
         console.warn(
             "تعذر تحميل الإجازات:",
@@ -1120,7 +1126,6 @@ async function loadEmployeeLeaves() {
         data || [];
 
 }
-
 
 
 /* =====================================================
@@ -1162,7 +1167,6 @@ function isApprovedLeave(status) {
 }
 
 
-
 /* =====================================================
    الإجازة الحالية
 ===================================================== */
@@ -1183,6 +1187,7 @@ function getCurrentLeave(employeeId) {
 
     return employeeLeaves.find(
         leave => {
+
 
             if (
                 Number(
@@ -1252,9 +1257,8 @@ function getCurrentLeave(employeeId) {
 }
 
 
-
 /* =====================================================
-   تنبيه الإجازة
+   فحص توفر الموظف النهائي
 ===================================================== */
 
 function checkSelectedEmployeeAvailability() {
@@ -1267,13 +1271,18 @@ function checkSelectedEmployeeAvailability() {
             .value;
 
 
-    if (!employeeId) {
+    if (
+        !employeeId
+    ) {
 
         leaveWarning
             .classList
             .add(
                 "hidden"
             );
+
+
+        updateDecisionStatus();
 
 
         return;
@@ -1286,13 +1295,18 @@ function checkSelectedEmployeeAvailability() {
         );
 
 
-    if (!leave) {
+    if (
+        !leave
+    ) {
 
         leaveWarning
             .classList
             .add(
                 "hidden"
             );
+
+
+        updateDecisionStatus();
 
 
         return;
@@ -1314,12 +1328,211 @@ function checkSelectedEmployeeAvailability() {
             "hidden"
         );
 
+
+    updateDecisionStatus();
+
 }
 
 
+/* =====================================================
+   تحديث وصف القرار
+===================================================== */
+
+function updateDecisionStatus() {
+
+    const systemCandidateId =
+        Number(
+            document
+                .getElementById(
+                    "systemCandidate"
+                )
+                .value
+        );
+
+
+    const selectedEmployeeId =
+        Number(
+            document
+                .getElementById(
+                    "selectedEmployee"
+                )
+                .value
+        );
+
+
+    const reason =
+        document.getElementById(
+            "decisionReason"
+        );
+
+
+    const reasonHelp =
+        document.getElementById(
+            "reasonHelp"
+        );
+
+
+    const statusText =
+        document.getElementById(
+            "decisionStatusText"
+        );
+
+
+    if (
+        !systemCandidateId
+        ||
+        !selectedEmployeeId
+    ) {
+
+        reason.required =
+            false;
+
+
+        reasonHelp.textContent =
+            "عند اختيار موظف مختلف عن مرشح النظام يصبح سبب التغيير مطلوباً.";
+
+
+        statusText.textContent =
+            "الموظف الذي يعتمده المسؤول سيتم إسناد المهمة إليه فعلياً في النظام.";
+
+
+        return;
+    }
+
+
+    if (
+        systemCandidateId
+        ===
+        selectedEmployeeId
+    ) {
+
+        reason.required =
+            false;
+
+
+        reasonHelp.textContent =
+            "تم اختيار نفس الموظف الذي رشحه النظام، ويمكن إضافة ملاحظة اختيارية.";
+
+
+        statusText.textContent =
+            "سيتم اعتماد ترشيح النظام وإسناد المهمة إلى الموظف المرشح.";
+
+
+        if (
+            !reason.value.trim()
+        ) {
+
+            reason.placeholder =
+                "اختياري: أضف ملاحظة على اعتماد الترشيح...";
+
+        }
+
+    }
+
+    else {
+
+        reason.required =
+            true;
+
+
+        reasonHelp.textContent =
+            "تم اختيار موظف مختلف عن مرشح النظام، لذلك يجب توضيح سبب تغيير الترشيح.";
+
+
+        statusText.textContent =
+            "تم تغيير ترشيح النظام. سيتم إسناد المهمة إلى الموظف الذي اختاره المسؤول.";
+
+
+        reason.placeholder =
+            "اكتب سبب اختيار موظف مختلف عن مرشح النظام...";
+
+    }
+
+}
+
 
 /* =====================================================
-   استقبال قرار المطابقة
+   قفل بيانات المطابقة
+===================================================== */
+
+function setMatchingFieldsLocked(locked) {
+
+    const task =
+        document.getElementById(
+            "decisionTask"
+        );
+
+
+    const candidate =
+        document.getElementById(
+            "systemCandidate"
+        );
+
+
+    const rate =
+        document.getElementById(
+            "matchRate"
+        );
+
+
+    task.disabled =
+        locked;
+
+
+    candidate.disabled =
+        locked;
+
+
+    rate.readOnly =
+        locked;
+
+
+    if (
+        locked
+    ) {
+
+        task.setAttribute(
+            "aria-disabled",
+            "true"
+        );
+
+
+        candidate.setAttribute(
+            "aria-disabled",
+            "true"
+        );
+
+
+        rate.setAttribute(
+            "aria-readonly",
+            "true"
+        );
+
+    }
+
+    else {
+
+        task.removeAttribute(
+            "aria-disabled"
+        );
+
+
+        candidate.removeAttribute(
+            "aria-disabled"
+        );
+
+
+        rate.removeAttribute(
+            "aria-readonly"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   استقبال القرار من المطابقة
 ===================================================== */
 
 function loadPendingDecision() {
@@ -1330,7 +1543,9 @@ function loadPendingDecision() {
         );
 
 
-    if (!stored) {
+    if (
+        !stored
+    ) {
 
         return;
     }
@@ -1376,6 +1591,14 @@ function loadPendingDecision() {
 
         document
             .getElementById(
+                "decisionSource"
+            )
+            .value =
+            "matching";
+
+
+        document
+            .getElementById(
                 "modalTitle"
             )
             .textContent =
@@ -1387,7 +1610,7 @@ function loadPendingDecision() {
                 "modalDescription"
             )
             .textContent =
-            "تم تعبئة بيانات الترشيح تلقائياً من صفحة المطابقة";
+            "تم جلب بيانات الترشيح ونسبة التوافق تلقائياً من صفحة المطابقة.";
 
 
         document
@@ -1422,15 +1645,29 @@ function loadPendingDecision() {
             );
 
 
+        const pendingRate =
+            Number(
+                pending.matchRate
+                ??
+                pending.score
+                ??
+                pending.matchScore
+                ??
+                0
+            );
+
+
         document
             .getElementById(
                 "matchRate"
             )
             .value =
-            Number(
-                pending.matchRate
-                ||
-                0
+            Math.max(
+                0,
+                Math.min(
+                    100,
+                    pendingRate
+                )
             );
 
 
@@ -1443,7 +1680,7 @@ function loadPendingDecision() {
             ||
             pending.systemReason
             ||
-            "تم اختيار الموظف بناءً على نتيجة المطابقة ومتطلبات المهمة";
+            "";
 
 
         document
@@ -1462,7 +1699,15 @@ function loadPendingDecision() {
             "اعتماد وحفظ القرار";
 
 
+        setMatchingFieldsLocked(
+            true
+        );
+
+
         checkSelectedEmployeeAvailability();
+
+
+        updateDecisionStatus();
 
 
         decisionModal
@@ -1483,6 +1728,7 @@ function loadPendingDecision() {
     catch(error) {
 
         console.error(
+            "تعذر قراءة بيانات المطابقة:",
             error
         );
 
@@ -1494,7 +1740,6 @@ function loadPendingDecision() {
     }
 
 }
-
 
 
 /* =====================================================
@@ -1537,7 +1782,9 @@ async function loadDecisions() {
         );
 
 
-    if (error) {
+    if (
+        error
+    ) {
 
         console.error(
             error
@@ -1553,7 +1800,9 @@ async function loadDecisions() {
                 </strong>
 
                 <small>
-                    ${escapeHtml(error.message || "")}
+                    ${escapeHtml(
+                        error.message || ""
+                    )}
                 </small>
 
             </div>
@@ -1574,6 +1823,7 @@ async function loadDecisions() {
                 const task =
                     tasks.find(
                         item =>
+
                             Number(
                                 item.id
                             )
@@ -1587,6 +1837,7 @@ async function loadDecisions() {
                 const systemEmployee =
                     employees.find(
                         item =>
+
                             Number(
                                 item.id
                             )
@@ -1600,6 +1851,7 @@ async function loadDecisions() {
                 const selectedEmployee =
                     employees.find(
                         item =>
+
                             Number(
                                 item.id
                             )
@@ -1611,6 +1863,7 @@ async function loadDecisions() {
 
 
                 return {
+
 
                     id:
                         decision.id,
@@ -1683,7 +1936,6 @@ async function loadDecisions() {
 }
 
 
-
 /* =====================================================
    الملخص
 ===================================================== */
@@ -1697,6 +1949,7 @@ function updateSummary() {
     const same =
         decisions.filter(
             decision =>
+
                 Number(
                     decision.systemCandidateId
                 )
@@ -1704,6 +1957,7 @@ function updateSummary() {
                 Number(
                     decision.selectedEmployeeId
                 )
+
         ).length;
 
 
@@ -1719,6 +1973,7 @@ function updateSummary() {
                 result,
                 decision
             ) =>
+
                 result
                 +
                 Number(
@@ -1726,6 +1981,7 @@ function updateSummary() {
                     ||
                     0
                 ),
+
             0
         )
         /
@@ -1770,7 +2026,6 @@ function updateSummary() {
         "%";
 
 }
-
 
 
 /* =====================================================
@@ -1850,11 +2105,12 @@ function renderDecisions(list) {
 
 
                         <h3>
-                            ${escapeHtml(decision.taskName)}
+                            ${escapeHtml(
+                                decision.taskName
+                            )}
                         </h3>
 
                     </div>
-
 
 
                     <div class="match-badge">
@@ -1864,14 +2120,15 @@ function renderDecisions(list) {
                         </span>
 
                         <strong>
-                            ${decision.matchRate}%
+                            ${formatRate(
+                                decision.matchRate
+                            )}%
                         </strong>
 
                     </div>
 
 
                 </div>
-
 
 
                 <div class="decision-status">
@@ -1902,7 +2159,6 @@ function renderDecisions(list) {
                 </div>
 
 
-
                 <div class="decision-info">
 
 
@@ -1913,11 +2169,12 @@ function renderDecisions(list) {
                         </span>
 
                         <strong>
-                            ${escapeHtml(decision.systemCandidateName)}
+                            ${escapeHtml(
+                                decision.systemCandidateName
+                            )}
                         </strong>
 
                     </div>
-
 
 
                     <div class="info-item selected">
@@ -1927,11 +2184,12 @@ function renderDecisions(list) {
                         </span>
 
                         <strong>
-                            ${escapeHtml(decision.selectedEmployeeName)}
+                            ${escapeHtml(
+                                decision.selectedEmployeeName
+                            )}
                         </strong>
 
                     </div>
-
 
 
                     <div class="info-item">
@@ -1941,14 +2199,15 @@ function renderDecisions(list) {
                         </span>
 
                         <strong>
-                            ${formatDate(decision.date)}
+                            ${formatDate(
+                                decision.date
+                            )}
                         </strong>
 
                     </div>
 
 
                 </div>
-
 
 
                 <div class="reason-preview">
@@ -1963,14 +2222,19 @@ function renderDecisions(list) {
                             escapeHtml(
                                 decision.reason
                                 ||
-                                "لا يوجد سبب مسجل"
+                                (
+                                    sameSelection
+                                    ?
+                                    "تم اعتماد مرشح النظام بناءً على نتيجة المطابقة."
+                                    :
+                                    "تم اختيار موظف مختلف عن مرشح النظام."
+                                )
                             )
                         }
 
                     </p>
 
                 </div>
-
 
 
                 <div class="decision-actions">
@@ -2012,7 +2276,6 @@ function renderDecisions(list) {
 }
 
 
-
 /* =====================================================
    فتح قرار يدوي
 ===================================================== */
@@ -2036,6 +2299,14 @@ function openDecisionModal() {
 
     document
         .getElementById(
+            "decisionSource"
+        )
+        .value =
+        "manual";
+
+
+    document
+        .getElementById(
             "modalTitle"
         )
         .textContent =
@@ -2047,7 +2318,7 @@ function openDecisionModal() {
             "modalDescription"
         )
         .textContent =
-        "اختر المهمة والموظف ثم سجل القرار النهائي";
+        "اختر المهمة وبيانات الترشيح ثم اعتمد الموظف النهائي.";
 
 
     document
@@ -2073,6 +2344,14 @@ function openDecisionModal() {
         );
 
 
+    setMatchingFieldsLocked(
+        false
+    );
+
+
+    updateDecisionStatus();
+
+
     decisionModal
         .classList
         .add(
@@ -2089,7 +2368,6 @@ function openDecisionModal() {
 }
 
 
-
 /* =====================================================
    حفظ القرار
 ===================================================== */
@@ -2103,6 +2381,14 @@ async function saveDecision(event) {
         document
             .getElementById(
                 "editDecisionId"
+            )
+            .value;
+
+
+    const source =
+        document
+            .getElementById(
+                "decisionSource"
             )
             .value;
 
@@ -2147,7 +2433,7 @@ async function saveDecision(event) {
         );
 
 
-    const reason =
+    let reason =
         document
             .getElementById(
                 "decisionReason"
@@ -2162,7 +2448,6 @@ async function saveDecision(event) {
                 "decisionDate"
             )
             .value;
-
 
 
     if (
@@ -2182,8 +2467,11 @@ async function saveDecision(event) {
     }
 
 
-
     if (
+        !Number.isFinite(
+            matchRate
+        )
+        ||
         matchRate < 0
         ||
         matchRate > 100
@@ -2198,17 +2486,72 @@ async function saveDecision(event) {
     }
 
 
-
-    if (!reason) {
+    if (
+        !decisionDate
+    ) {
 
         alert(
-            "اكتب سبب القرار."
+            "حدد تاريخ القرار."
         );
 
 
         return;
     }
 
+
+    const sameSelection =
+        Number(
+            systemCandidateId
+        )
+        ===
+        Number(
+            selectedEmployeeId
+        );
+
+
+    /*
+        إذا اختار المسؤول موظفاً مختلفاً
+        يجب كتابة سبب واضح.
+    */
+
+    if (
+        !sameSelection
+        &&
+        !reason
+    ) {
+
+        alert(
+            "اكتب سبب اختيار موظف مختلف عن مرشح النظام."
+        );
+
+
+        document
+            .getElementById(
+                "decisionReason"
+            )
+            .focus();
+
+
+        return;
+    }
+
+
+    /*
+        إذا تم اعتماد مرشح النظام
+        ولم يكتب المسؤول سبباً
+        نسجل سبباً تلقائياً.
+    */
+
+    if (
+        sameSelection
+        &&
+        !reason
+    ) {
+
+        reason =
+            "تم اعتماد مرشح النظام بناءً على نتيجة المطابقة ومتطلبات المهمة.";
+
+    }
 
 
     /*
@@ -2246,6 +2589,69 @@ async function saveDecision(event) {
     }
 
 
+    /*
+        إذا جاء القرار من المطابقة
+        نتأكد أن البيانات الأساسية لم تتغير.
+    */
+
+    if (
+        source === "matching"
+    ) {
+
+        const pendingStored =
+            localStorage.getItem(
+                "pendingDecision"
+            );
+
+
+        if (
+            pendingStored
+        ) {
+
+            try {
+
+                const pending =
+                    JSON.parse(
+                        pendingStored
+                    );
+
+
+                if (
+                    Number(
+                        pending.taskId
+                    )
+                    !==
+                    taskId
+                    ||
+                    Number(
+                        pending.systemCandidateId
+                    )
+                    !==
+                    systemCandidateId
+                ) {
+
+                    alert(
+                        "بيانات الترشيح تغيرت. ارجع إلى صفحة المطابقة وأعد اعتماد المرشح."
+                    );
+
+
+                    return;
+                }
+
+            }
+
+            catch(error) {
+
+                console.warn(
+                    error
+                );
+
+            }
+
+        }
+
+    }
+
 
     const saveButton =
         document.getElementById(
@@ -2261,29 +2667,37 @@ async function saveDecision(event) {
         "جارٍ الحفظ...";
 
 
-
     const decisionData = {
+
 
         task_id:
             taskId,
 
+
         system_candidate_id:
             systemCandidateId,
+
 
         selected_employee_id:
             selectedEmployeeId,
 
+
         match_rate:
-            matchRate,
+            Math.round(
+                matchRate * 100
+            )
+            /
+            100,
+
 
         reason:
             reason,
+
 
         decision_date:
             decisionDate
 
     };
-
 
 
     try {
@@ -2316,7 +2730,6 @@ async function saveDecision(event) {
 
                 throw error;
             }
-
 
         }
 
@@ -2361,17 +2774,8 @@ async function saveDecision(event) {
                 );
 
 
-                saveButton.disabled =
-                    false;
-
-
-                saveButton.textContent =
-                    "حفظ القرار";
-
-
                 return;
             }
-
 
 
             const {
@@ -2391,13 +2795,12 @@ async function saveDecision(event) {
                 throw error;
             }
 
-
         }
 
 
-
         /*
-            إسناد المهمة فعلياً للموظف النهائي
+            إسناد المهمة فعلياً
+            إلى الموظف الذي اعتمده المسؤول
         */
 
         const {
@@ -2426,7 +2829,6 @@ async function saveDecision(event) {
         }
 
 
-
         localStorage.removeItem(
             "pendingDecision"
         );
@@ -2437,7 +2839,13 @@ async function saveDecision(event) {
             ?
             "تم تعديل القرار وتحديث إسناد المهمة بنجاح."
             :
-            "تم اعتماد القرار وإسناد المهمة للموظف بنجاح."
+            (
+                sameSelection
+                ?
+                "تم اعتماد ترشيح النظام وإسناد المهمة للموظف بنجاح."
+                :
+                "تم اعتماد الموظف الذي اختاره المسؤول وإسناد المهمة بنجاح."
+            )
         );
 
 
@@ -2448,7 +2856,6 @@ async function saveDecision(event) {
 
 
         await loadDecisions();
-
 
     }
 
@@ -2490,7 +2897,6 @@ async function saveDecision(event) {
 }
 
 
-
 /* =====================================================
    تعديل القرار
 ===================================================== */
@@ -2500,6 +2906,7 @@ function editDecision(id) {
     const decision =
         decisions.find(
             item =>
+
                 Number(
                     item.id
                 )
@@ -2524,6 +2931,14 @@ function editDecision(id) {
         )
         .value =
         decision.id;
+
+
+    document
+        .getElementById(
+            "decisionSource"
+        )
+        .value =
+        "edit";
 
 
     document
@@ -2593,7 +3008,7 @@ function editDecision(id) {
             "modalDescription"
         )
         .textContent =
-        "يمكن تعديل الموظف النهائي أو سبب القرار مع الاحتفاظ بسجل القرار";
+        "يمكن تعديل الموظف النهائي أو سبب القرار مع الاحتفاظ ببيانات ترشيح النظام.";
 
 
     document
@@ -2604,7 +3019,21 @@ function editDecision(id) {
         "حفظ التعديلات";
 
 
+    /*
+        عند تعديل قرار موجود:
+        لا نسمح بتغيير المهمة أو مرشح النظام
+        أو نسبة المطابقة الأصلية.
+    */
+
+    setMatchingFieldsLocked(
+        true
+    );
+
+
     checkSelectedEmployeeAvailability();
+
+
+    updateDecisionStatus();
 
 
     decisionModal
@@ -2623,7 +3052,6 @@ function editDecision(id) {
 }
 
 
-
 /* =====================================================
    تفاصيل القرار
 ===================================================== */
@@ -2633,6 +3061,7 @@ function viewDecision(id) {
     const decision =
         decisions.find(
             item =>
+
                 Number(
                     item.id
                 )
@@ -2675,11 +3104,12 @@ function viewDecision(id) {
                 </span>
 
                 <strong>
-                    ${escapeHtml(decision.taskName)}
+                    ${escapeHtml(
+                        decision.taskName
+                    )}
                 </strong>
 
             </div>
-
 
 
             <div class="detail-item">
@@ -2689,11 +3119,12 @@ function viewDecision(id) {
                 </span>
 
                 <strong>
-                    ${escapeHtml(decision.systemCandidateName)}
+                    ${escapeHtml(
+                        decision.systemCandidateName
+                    )}
                 </strong>
 
             </div>
-
 
 
             <div class="detail-item">
@@ -2703,11 +3134,12 @@ function viewDecision(id) {
                 </span>
 
                 <strong>
-                    ${decision.matchRate}%
+                    ${formatRate(
+                        decision.matchRate
+                    )}%
                 </strong>
 
             </div>
-
 
 
             <div class="detail-item">
@@ -2717,11 +3149,12 @@ function viewDecision(id) {
                 </span>
 
                 <strong>
-                    ${escapeHtml(decision.selectedEmployeeName)}
+                    ${escapeHtml(
+                        decision.selectedEmployeeName
+                    )}
                 </strong>
 
             </div>
-
 
 
             <div class="detail-item">
@@ -2745,7 +3178,6 @@ function viewDecision(id) {
             </div>
 
 
-
             <div class="detail-item">
 
                 <span>
@@ -2753,11 +3185,12 @@ function viewDecision(id) {
                 </span>
 
                 <strong>
-                    ${formatDate(decision.date)}
+                    ${formatDate(
+                        decision.date
+                    )}
                 </strong>
 
             </div>
-
 
 
             <div class="detail-item full-detail">
@@ -2767,7 +3200,6 @@ function viewDecision(id) {
                 </span>
 
                 <strong>
-
                     ${
                         escapeHtml(
                             decision.reason
@@ -2775,7 +3207,6 @@ function viewDecision(id) {
                             "لا يوجد سبب مسجل"
                         )
                     }
-
                 </strong>
 
             </div>
@@ -2800,7 +3231,6 @@ function viewDecision(id) {
 }
 
 
-
 /* =====================================================
    البحث
 ===================================================== */
@@ -2822,7 +3252,9 @@ function filterDecisions() {
             item => {
 
 
-                if (!search) {
+                if (
+                    !search
+                ) {
 
                     return true;
                 }
@@ -2858,6 +3290,36 @@ function filterDecisions() {
 
 }
 
+
+/* =====================================================
+   تنسيق النسبة
+===================================================== */
+
+function formatRate(value) {
+
+    const number =
+        Number(
+            value
+            ||
+            0
+        );
+
+
+    if (
+        Number.isInteger(
+            number
+        )
+    ) {
+
+        return number;
+    }
+
+
+    return number.toFixed(
+        1
+    );
+
+}
 
 
 /* =====================================================
@@ -2911,10 +3373,11 @@ function getTodayDate() {
 }
 
 
-
 function formatDate(value) {
 
-    if (!value) {
+    if (
+        !value
+    ) {
 
         return "-";
     }
@@ -2957,9 +3420,8 @@ function formatDate(value) {
 }
 
 
-
 /* =====================================================
-   إغلاق النوافذ
+   إغلاق نافذة القرار
 ===================================================== */
 
 function closeDecisionModal() {
@@ -2986,11 +3448,24 @@ function closeDecisionModal() {
         "";
 
 
+    document
+        .getElementById(
+            "decisionSource"
+        )
+        .value =
+        "manual";
+
+
     leaveWarning
         .classList
         .add(
             "hidden"
         );
+
+
+    setMatchingFieldsLocked(
+        false
+    );
 
 
     document.body
@@ -3002,6 +3477,9 @@ function closeDecisionModal() {
 }
 
 
+/* =====================================================
+   إغلاق التفاصيل
+===================================================== */
 
 function closeDetailsModal() {
 
@@ -3019,7 +3497,6 @@ function closeDetailsModal() {
         );
 
 }
-
 
 
 /* =====================================================
@@ -3051,7 +3528,6 @@ function openSidebar() {
 }
 
 
-
 function closeSidebar() {
 
     sidebar
@@ -3077,6 +3553,33 @@ function closeSidebar() {
 }
 
 
+/* =====================================================
+   تنظيف الجلسة
+===================================================== */
+
+function clearLocalSession() {
+
+    localStorage.removeItem(
+        "miyarRole"
+    );
+
+
+    localStorage.removeItem(
+        "miyarEmail"
+    );
+
+
+    localStorage.removeItem(
+        "pendingDecision"
+    );
+
+
+    localStorage.removeItem(
+        "selectedTaskId"
+    );
+
+}
+
 
 /* =====================================================
    تسجيل الخروج
@@ -3101,14 +3604,13 @@ async function logout() {
     }
 
 
-    localStorage.clear();
+    clearLocalSession();
 
 
     window.location.href =
         "login.html";
 
 }
-
 
 
 /* =====================================================
@@ -3141,7 +3643,23 @@ document
     )
     .addEventListener(
         "change",
-        checkSelectedEmployeeAvailability
+        function() {
+
+            checkSelectedEmployeeAvailability();
+
+            updateDecisionStatus();
+
+        }
+    );
+
+
+document
+    .getElementById(
+        "systemCandidate"
+    )
+    .addEventListener(
+        "change",
+        updateDecisionStatus
     );
 
 
@@ -3257,7 +3775,9 @@ decisionsGrid
                 );
 
 
-            if (!button) {
+            if (
+                !button
+            ) {
 
                 return;
             }
@@ -3298,7 +3818,6 @@ decisionsGrid
     );
 
 
-
 /* =====================================================
    تشغيل الصفحة
 ===================================================== */
@@ -3309,18 +3828,15 @@ async function startPage() {
         await protectPage();
 
 
-    if (!allowed) {
+    if (
+        !allowed
+    ) {
 
         return;
     }
 
 
     try {
-
-        /*
-            لازم نحمل الموظفين والمهام قبل القرارات
-            لأن القرارات تخزن IDs ونحتاج الأسماء.
-        */
 
         await Promise.all([
 
@@ -3337,8 +3853,9 @@ async function startPage() {
 
 
         /*
-            إذا جاء المستخدم من صفحة المطابقة
-            نفتح القرار تلقائياً.
+            إذا تم الضغط على اعتماد
+            من صفحة المطابقة
+            تفتح نافذة القرار تلقائياً
         */
 
         loadPendingDecision();
@@ -3373,4 +3890,5 @@ startPage();
 
 
 </body>
+
 </html>
