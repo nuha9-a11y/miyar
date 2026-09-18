@@ -68,12 +68,10 @@
     </header>
 
 
-
     <div
         class="sidebar-overlay"
         id="sidebarOverlay"
     ></div>
-
 
 
     <!-- =========================================
@@ -94,7 +92,6 @@
             >
 
         </div>
-
 
 
         <nav class="sidebar-nav">
@@ -175,7 +172,6 @@
         </nav>
 
 
-
         <button
             class="logout-btn"
             type="button"
@@ -186,7 +182,6 @@
 
 
     </aside>
-
 
 
     <!-- =========================================
@@ -213,7 +208,7 @@
 
 
                 <p>
-                    عرض وتحليل بيانات الموظفين والمهام والأداء ونتائج المطابقة لدعم اتخاذ القرار.
+                    عرض وتحليل بيانات الموظفين والمهام والأداء ونتائج المطابقة والإجازات لدعم اتخاذ القرار.
                 </p>
 
             </div>
@@ -228,7 +223,6 @@
             </button>
 
         </header>
-
 
 
         <!-- =========================================
@@ -268,7 +262,6 @@
             </div>
 
 
-
             <div class="filter-group">
 
                 <label for="projectFilter">
@@ -287,7 +280,6 @@
             </div>
 
 
-
             <button
                 class="refresh-btn"
                 type="button"
@@ -298,7 +290,6 @@
 
 
         </section>
-
 
 
         <!-- =========================================
@@ -325,7 +316,6 @@
             </article>
 
 
-
             <article class="summary-card">
 
                 <span class="card-title">
@@ -337,11 +327,10 @@
                 </strong>
 
                 <p>
-                    متوسط ضغط العمل للموظفين.
+                    محسوب من المهام النشطة المسندة فعلياً.
                 </p>
 
             </article>
-
 
 
             <article class="summary-card">
@@ -359,7 +348,6 @@
                 </p>
 
             </article>
-
 
 
             <article class="summary-card">
@@ -380,7 +368,6 @@
 
 
         </section>
-
 
 
         <!-- =========================================
@@ -429,7 +416,6 @@
             </article>
 
 
-
             <!-- 02 -->
 
             <article class="report-card">
@@ -447,7 +433,7 @@
                         </h2>
 
                         <p>
-                            مستوى ضغط العمل الحالي للموظفين.
+                            مستوى ضغط العمل حسب المهام النشطة المسندة.
                         </p>
 
                     </div>
@@ -469,7 +455,6 @@
             </article>
 
 
-
             <!-- 03 -->
 
             <article class="report-card">
@@ -487,7 +472,7 @@
                         </h2>
 
                         <p>
-                            نتائج التقييمات المرتبطة بالمهام.
+                            متوسط تقييم كل موظف من سجل التقييمات.
                         </p>
 
                     </div>
@@ -509,7 +494,6 @@
             </article>
 
 
-
             <!-- 04 -->
 
             <article class="report-card">
@@ -523,11 +507,11 @@
                     <div>
 
                         <h2>
-                            نتائج المطابقة
+                            نتائج المطابقة والقرارات
                         </h2>
 
                         <p>
-                            الموظفون المعتمدون ونسب التوافق.
+                            المرشح المعتمد ونسبة التوافق وقرار المسؤول.
                         </p>
 
                     </div>
@@ -547,7 +531,6 @@
                 </div>
 
             </article>
-
 
 
             <!-- 05 -->
@@ -589,7 +572,6 @@
             </article>
 
 
-
             <!-- 06 -->
 
             <article class="report-card">
@@ -629,7 +611,6 @@
             </article>
 
 
-
             <!-- 07 -->
 
             <article class="report-card">
@@ -647,7 +628,7 @@
                         </h2>
 
                         <p>
-                            الإجازات المعتمدة التي تؤثر على توفر الموظفين.
+                            الإجازات التي تؤثر على توفر الموظفين.
                         </p>
 
                     </div>
@@ -678,7 +659,6 @@
 </div>
 
 
-
 <script>
 
 
@@ -705,7 +685,6 @@ const supabaseClient =
     );
 
 
-
 /* =====================================================
    البيانات
 ===================================================== */
@@ -725,7 +704,6 @@ let taskRequirements = [];
 let skills = [];
 
 let employeeLeaves = [];
-
 
 
 /* =====================================================
@@ -768,7 +746,6 @@ const mobileMenuBtn =
     );
 
 
-
 /* =====================================================
    حماية الصفحة
 ===================================================== */
@@ -791,6 +768,8 @@ async function protectPage() {
             ||
             !data.session
         ) {
+
+            clearLocalSession();
 
             window.location.href =
                 "login.html";
@@ -819,7 +798,7 @@ async function protectPage() {
                 .signOut();
 
 
-            localStorage.clear();
+            clearLocalSession();
 
 
             window.location.href =
@@ -860,9 +839,8 @@ async function protectPage() {
 }
 
 
-
 /* =====================================================
-   تحميل الموظفين
+   الموظفون
 ===================================================== */
 
 async function loadEmployees() {
@@ -887,8 +865,7 @@ async function loadEmployees() {
         .order(
             "name",
             {
-                ascending:
-                    true
+                ascending: true
             }
         );
 
@@ -900,10 +877,13 @@ async function loadEmployees() {
 
 
     employees =
-        data || [];
+        Array.isArray(data)
+        ?
+        data
+        :
+        [];
 
 }
-
 
 
 /* =====================================================
@@ -922,8 +902,7 @@ async function loadProjects() {
         .order(
             "id",
             {
-                ascending:
-                    false
+                ascending: false
             }
         );
 
@@ -935,13 +914,16 @@ async function loadProjects() {
 
 
     projects =
-        data || [];
+        Array.isArray(data)
+        ?
+        data
+        :
+        [];
 
 
     renderProjectFilter();
 
 }
-
 
 
 /* =====================================================
@@ -968,8 +950,7 @@ async function loadTasks() {
         .order(
             "id",
             {
-                ascending:
-                    false
+                ascending: false
             }
         );
 
@@ -981,10 +962,13 @@ async function loadTasks() {
 
 
     tasks =
-        data || [];
+        Array.isArray(data)
+        ?
+        data
+        :
+        [];
 
 }
-
 
 
 /* =====================================================
@@ -999,12 +983,20 @@ async function loadEvaluations() {
     } =
     await supabaseClient
         .from("evaluations")
-        .select("*")
+        .select(`
+            id,
+            employee_id,
+            task_id,
+            achievement_level,
+            performance_rating,
+            notes,
+            evaluation_date,
+            created_at
+        `)
         .order(
             "id",
             {
-                ascending:
-                    false
+                ascending: false
             }
         );
 
@@ -1016,10 +1008,13 @@ async function loadEvaluations() {
 
 
     evaluations =
-        data || [];
+        Array.isArray(data)
+        ?
+        data
+        :
+        [];
 
 }
-
 
 
 /* =====================================================
@@ -1046,8 +1041,7 @@ async function loadDecisions() {
         .order(
             "id",
             {
-                ascending:
-                    false
+                ascending: false
             }
         );
 
@@ -1059,14 +1053,19 @@ async function loadDecisions() {
 
 
     decisions =
-        data || [];
+        Array.isArray(data)
+        ?
+        data
+        :
+        [];
 
 }
 
 
-
 /* =====================================================
    متطلبات المهام
+
+   تم تحديثها لتتوافق مع نظام المطابقة الجديد.
 ===================================================== */
 
 async function loadTaskRequirements() {
@@ -1084,7 +1083,14 @@ async function loadTaskRequirements() {
             required_level,
             experience_required,
             availability_required,
-            skill_weight
+            job_level_required,
+            performance_required,
+            skill_weight,
+            skills_weight,
+            experience_weight,
+            job_level_weight,
+            availability_weight,
+            performance_weight
         `);
 
 
@@ -1095,10 +1101,13 @@ async function loadTaskRequirements() {
 
 
     taskRequirements =
-        data || [];
+        Array.isArray(data)
+        ?
+        data
+        :
+        [];
 
 }
-
 
 
 /* =====================================================
@@ -1126,10 +1135,13 @@ async function loadSkills() {
 
 
     skills =
-        data || [];
+        Array.isArray(data)
+        ?
+        data
+        :
+        [];
 
 }
-
 
 
 /* =====================================================
@@ -1155,8 +1167,7 @@ async function loadEmployeeLeaves() {
         .order(
             "start_date",
             {
-                ascending:
-                    false
+                ascending: false
             }
         );
 
@@ -1178,10 +1189,13 @@ async function loadEmployeeLeaves() {
 
 
     employeeLeaves =
-        data || [];
+        Array.isArray(data)
+        ?
+        data
+        :
+        [];
 
 }
-
 
 
 /* =====================================================
@@ -1189,6 +1203,12 @@ async function loadEmployeeLeaves() {
 ===================================================== */
 
 function renderProjectFilter() {
+
+    const currentValue =
+        projectFilter.value
+        ||
+        "all";
+
 
     projectFilter.innerHTML = `
 
@@ -1225,12 +1245,29 @@ function renderProjectFilter() {
         }
     );
 
+
+    const exists =
+        [...projectFilter.options]
+        .some(
+            option =>
+                String(option.value)
+                ===
+                String(currentValue)
+        );
+
+
+    projectFilter.value =
+        exists
+        ?
+        currentValue
+        :
+        "all";
+
 }
 
 
-
 /* =====================================================
-   مساعدات
+   المساعدات
 ===================================================== */
 
 function getProjectName(projectId) {
@@ -1238,13 +1275,9 @@ function getProjectName(projectId) {
     const project =
         projects.find(
             item =>
-                Number(
-                    item.id
-                )
+                Number(item.id)
                 ===
-                Number(
-                    projectId
-                )
+                Number(projectId)
         );
 
 
@@ -1257,24 +1290,24 @@ function getProjectName(projectId) {
 }
 
 
+function getEmployee(employeeId) {
+
+    return employees.find(
+        item =>
+            Number(item.id)
+            ===
+            Number(employeeId)
+    )
+    ||
+    null;
+
+}
+
 
 function getEmployeeName(employeeId) {
 
-    const employee =
-        employees.find(
-            item =>
-                Number(
-                    item.id
-                )
-                ===
-                Number(
-                    employeeId
-                )
-        );
-
-
     return (
-        employee?.name
+        getEmployee(employeeId)?.name
         ||
         "غير مسند"
     );
@@ -1282,22 +1315,18 @@ function getEmployeeName(employeeId) {
 }
 
 
-
 function getTask(taskId) {
 
     return tasks.find(
         item =>
-            Number(
-                item.id
-            )
+            Number(item.id)
             ===
-            Number(
-                taskId
-            )
-    );
+            Number(taskId)
+    )
+    ||
+    null;
 
 }
-
 
 
 function getSkillName(skillId) {
@@ -1305,13 +1334,9 @@ function getSkillName(skillId) {
     const skill =
         skills.find(
             item =>
-                Number(
-                    item.id
-                )
+                Number(item.id)
                 ===
-                Number(
-                    skillId
-                )
+                Number(skillId)
         );
 
 
@@ -1323,6 +1348,66 @@ function getSkillName(skillId) {
 
 }
 
+
+/* =====================================================
+   توحيد حالات المهام
+===================================================== */
+
+function normalizeTaskStatus(status) {
+
+    return String(
+        status
+        ||
+        ""
+    )
+    .trim()
+    .toLowerCase();
+
+}
+
+
+function isFinishedTask(task) {
+
+    const status =
+        normalizeTaskStatus(
+            task?.status
+        );
+
+
+    const finishedStatuses = [
+
+        "مكتملة",
+
+        "مكتمل",
+
+        "منجزة",
+
+        "منجز",
+
+        "تم الإنجاز",
+
+        "تم الانجاز",
+
+        "منتهي",
+
+        "منتهية",
+
+        "completed",
+
+        "done",
+
+        "finished",
+
+        "closed"
+
+    ];
+
+
+    return finishedStatuses.includes(
+        status
+    );
+
+}
 
 
 /* =====================================================
@@ -1378,7 +1463,6 @@ function dateMatchesPeriod(dateValue) {
             ===
             today.getFullYear()
         );
-
     }
 
 
@@ -1399,7 +1483,6 @@ function dateMatchesPeriod(dateValue) {
             today.getMonth()
 
         );
-
     }
 
 
@@ -1420,6 +1503,10 @@ function dateMatchesPeriod(dateValue) {
             0
         );
 
+
+        /*
+            بداية الأسبوع = الأحد
+        */
 
         const day =
             start.getDay();
@@ -1450,14 +1537,12 @@ function dateMatchesPeriod(dateValue) {
             &&
             date < end
         );
-
     }
 
 
     return true;
 
 }
-
 
 
 /* =====================================================
@@ -1473,22 +1558,15 @@ function getFilteredTasks() {
     return tasks.filter(
         task => {
 
-
             const projectMatch =
 
-                selectedProject
-                ===
-                "all"
+                selectedProject === "all"
 
                 ||
 
-                Number(
-                    task.project_id
-                )
+                Number(task.project_id)
                 ===
-                Number(
-                    selectedProject
-                );
+                Number(selectedProject);
 
 
             const dateMatch =
@@ -1509,33 +1587,143 @@ function getFilteredTasks() {
 }
 
 
-
 /* =====================================================
-   التقييم
+   المهام النشطة
 ===================================================== */
 
-function getEvaluationRating(
-    evaluation
-) {
+function getActiveAssignedTasks() {
 
-    return Number(
-        evaluation.performance_rating
-        ||
-        0
+    return getFilteredTasks()
+        .filter(
+            task =>
+                task.assigned_employee_id
+                !== null
+                &&
+                task.assigned_employee_id
+                !== undefined
+                &&
+                task.assigned_employee_id
+                !== ""
+                &&
+                !isFinishedTask(task)
+        );
+
+}
+
+
+/* =====================================================
+   حساب ضغط العمل
+
+   بدلاً من الاعتماد فقط على employees.workload
+   نحسبه من المهام النشطة المسندة فعلياً.
+
+   0 مهمة = 0%
+   1 مهمة = 25%
+   2 = 50%
+   3 = 75%
+   4 أو أكثر = 100%
+===================================================== */
+
+function getEmployeeActiveTaskCount(employeeId) {
+
+    return getActiveAssignedTasks()
+        .filter(
+            task =>
+                Number(task.assigned_employee_id)
+                ===
+                Number(employeeId)
+        )
+        .length;
+
+}
+
+
+function calculateEmployeeWorkload(employeeId) {
+
+    const count =
+        getEmployeeActiveTaskCount(
+            employeeId
+        );
+
+
+    if (
+        count <= 0
+    ) {
+
+        return 0;
+    }
+
+
+    return Math.min(
+        100,
+        count * 25
     );
 
 }
 
 
+function getWorkloadLevel(workload) {
 
-function getEvaluationDate(
-    evaluation
-) {
+    if (
+        workload >= 75
+    ) {
+
+        return "مرتفع";
+    }
+
+
+    if (
+        workload >= 40
+    ) {
+
+        return "متوسط";
+    }
+
+
+    return "منخفض";
+
+}
+
+
+/* =====================================================
+   التقييمات
+===================================================== */
+
+function getEvaluationRating(evaluation) {
+
+    const rating =
+        Number(
+            evaluation?.performance_rating
+            ||
+            0
+        );
+
+
+    if (
+        !Number.isFinite(rating)
+    ) {
+
+        return 0;
+    }
+
+
+    return Math.max(
+        0,
+        Math.min(
+            5,
+            rating
+        )
+    );
+
+}
+
+
+function getEvaluationDate(evaluation) {
 
     return (
-        evaluation.evaluation_date
+        evaluation?.evaluation_date
         ||
-        evaluation.created_at
+        evaluation?.created_at
         ||
         ""
     );
@@ -1543,9 +1731,301 @@ function getEvaluationDate(
 }
 
 
+/* =====================================================
+   تقييمات مفلترة حسب المشروع والفترة
+===================================================== */
+
+function getFilteredEvaluations() {
+
+    const selectedProject =
+        projectFilter.value;
+
+
+    return evaluations.filter(
+        evaluation => {
+
+            const task =
+                getTask(
+                    evaluation.task_id
+                );
+
+
+            /*
+                إذا تم اختيار مشروع محدد،
+                يجب أن يكون تقييم المهمة تابعاً له.
+            */
+
+            const projectMatch =
+
+                selectedProject === "all"
+
+                ||
+
+                (
+                    task
+                    &&
+                    Number(task.project_id)
+                    ===
+                    Number(selectedProject)
+                );
+
+
+            const dateMatch =
+                dateMatchesPeriod(
+                    getEvaluationDate(
+                        evaluation
+                    )
+                );
+
+
+            return (
+                projectMatch
+                &&
+                dateMatch
+            );
+
+        }
+    );
+
+}
+
 
 /* =====================================================
-   عرض التقارير
+   متوسط أداء الموظف
+===================================================== */
+
+function getEmployeeAverageRating(
+    employeeId,
+    sourceEvaluations = evaluations
+) {
+
+    const ratings =
+        sourceEvaluations
+        .filter(
+            evaluation =>
+                Number(evaluation.employee_id)
+                ===
+                Number(employeeId)
+        )
+        .map(
+            getEvaluationRating
+        )
+        .filter(
+            rating =>
+                rating > 0
+        );
+
+
+    if (
+        ratings.length === 0
+    ) {
+
+        return 0;
+    }
+
+
+    const total =
+        ratings.reduce(
+            (
+                sum,
+                rating
+            ) =>
+                sum + rating,
+            0
+        );
+
+
+    return total /
+        ratings.length;
+
+}
+
+
+/* =====================================================
+   القرارات المفلترة
+===================================================== */
+
+function getFilteredDecisions() {
+
+    const selectedProject =
+        projectFilter.value;
+
+
+    return decisions.filter(
+        decision => {
+
+            const task =
+                getTask(
+                    decision.task_id
+                );
+
+
+            const projectMatch =
+
+                selectedProject === "all"
+
+                ||
+
+                (
+                    task
+                    &&
+                    Number(task.project_id)
+                    ===
+                    Number(selectedProject)
+                );
+
+
+            const dateMatch =
+                dateMatchesPeriod(
+                    decision.decision_date
+                );
+
+
+            return (
+                projectMatch
+                &&
+                dateMatch
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   هل تم تغيير مرشح النظام؟
+===================================================== */
+
+function decisionWasChanged(decision) {
+
+    if (
+        !decision.system_candidate_id
+        ||
+        !decision.selected_employee_id
+    ) {
+
+        return false;
+    }
+
+
+    return (
+        Number(
+            decision.system_candidate_id
+        )
+        !==
+        Number(
+            decision.selected_employee_id
+        )
+    );
+
+}
+
+
+/* =====================================================
+   حالات الإجازات
+===================================================== */
+
+function isApprovedLeave(leave) {
+
+    const status =
+        String(
+            leave?.status
+            ||
+            ""
+        )
+        .trim()
+        .toLowerCase();
+
+
+    return (
+
+        status === "معتمدة"
+
+        ||
+
+        status === "معتمد"
+
+        ||
+
+        status === "approved"
+
+        ||
+
+        status === "مقبولة"
+
+        ||
+
+        status === "مقبول"
+
+    );
+
+}
+
+
+function getLeaveTimeStatus(leave) {
+
+    if (
+        !leave?.start_date
+        ||
+        !leave?.end_date
+    ) {
+
+        return "غير محدد";
+    }
+
+
+    const today =
+        new Date();
+
+
+    today.setHours(
+        0,
+        0,
+        0,
+        0
+    );
+
+
+    const start =
+        new Date(
+            leave.start_date
+            +
+            "T00:00:00"
+        );
+
+
+    const end =
+        new Date(
+            leave.end_date
+            +
+            "T23:59:59"
+        );
+
+
+    if (
+        today < start
+    ) {
+
+        return "قادمة";
+    }
+
+
+    if (
+        today > end
+    ) {
+
+        return "منتهية";
+    }
+
+
+    return "في إجازة الآن";
+
+}
+
+
+/* =====================================================
+   عرض كل التقارير
 ===================================================== */
 
 function renderReports() {
@@ -1567,7 +2047,6 @@ function renderReports() {
     updateSummary();
 
 }
-
 
 
 /* =====================================================
@@ -1595,6 +2074,9 @@ function renderTaskDistribution() {
                 &&
                 task.assigned_employee_id
                 !== undefined
+                &&
+                task.assigned_employee_id
+                !== ""
         );
 
 
@@ -1615,15 +2097,30 @@ function renderTaskDistribution() {
     filtered.forEach(
         task => {
 
+            const employee =
+                getEmployee(
+                    task.assigned_employee_id
+                );
+
+
+            const projectName =
+                getProjectName(
+                    task.project_id
+                );
+
+
             container.appendChild(
                 createReportRow(
-                    getEmployeeName(
-                        task.assigned_employee_id
-                    ),
-                    task.task_name,
+                    employee?.name
+                    ||
+                    "موظف غير معروف",
+
+                    `${task.task_name || "مهمة بدون اسم"} • ${projectName}`,
+
                     task.status
                     ||
                     "غير محدد",
+
                     "status-badge"
                 )
             );
@@ -1632,7 +2129,6 @@ function renderTaskDistribution() {
     );
 
 }
-
 
 
 /* =====================================================
@@ -1652,8 +2148,13 @@ function renderWorkload() {
 
 
     let employeesToShow =
-        employees;
+        employees.slice();
 
+
+    /*
+        إذا تم اختيار مشروع،
+        نعرض الموظفين المرتبطين بمهام المشروع.
+    */
 
     if (
         projectFilter.value !==
@@ -1664,10 +2165,12 @@ function renderWorkload() {
             new Set(
 
                 getFilteredTasks()
+
                 .filter(
                     task =>
                         task.assigned_employee_id
                 )
+
                 .map(
                     task =>
                         Number(
@@ -1706,63 +2209,66 @@ function renderWorkload() {
 
 
     employeesToShow
-        .slice()
+
+        .map(
+            employee => {
+
+                const activeTasks =
+                    getEmployeeActiveTaskCount(
+                        employee.id
+                    );
+
+
+                const workload =
+                    calculateEmployeeWorkload(
+                        employee.id
+                    );
+
+
+                return {
+
+                    employee,
+
+                    activeTasks,
+
+                    workload
+
+                };
+
+            }
+        )
+
         .sort(
             (
                 a,
                 b
             ) =>
-                Number(
-                    b.workload
-                    ||
-                    0
-                )
+                b.workload
                 -
-                Number(
-                    a.workload
-                    ||
-                    0
-                )
+                a.workload
         )
+
         .forEach(
-            employee => {
+            item => {
 
-                const workload =
-                    Number(
-                        employee.workload
-                        ||
-                        0
+                const level =
+                    getWorkloadLevel(
+                        item.workload
                     );
-
-
-                let level =
-                    "منخفض";
-
-
-                if (
-                    workload >= 70
-                ) {
-
-                    level =
-                        "مرتفع";
-
-                }
-
-                else if (
-                    workload >= 40
-                ) {
-
-                    level =
-                        "متوسط";
-
-                }
 
 
                 container.appendChild(
                     createReportRow(
-                        employee.name,
-                        `ضغط العمل ${level}`,
-                        workload + "%",
+                        item.employee.name
+                        ||
+                        "موظف",
+
+                        `${item.activeTasks} مهمة نشطة • ضغط العمل ${level}`,
+
+                        item.workload
+                        +
+                        "%",
+
                         "value-badge"
                     )
                 );
@@ -1773,9 +2279,11 @@ function renderWorkload() {
 }
 
 
-
 /* =====================================================
-   03 الأداء
+   03 أداء الموظفين
+
+   هنا لا نعرض كل تقييم كسطر مستقل.
+   نحسب متوسط تقييم كل موظف.
 ===================================================== */
 
 function renderPerformance() {
@@ -1790,55 +2298,12 @@ function renderPerformance() {
         "";
 
 
-    const filteredTaskIds =
-        new Set(
-            getFilteredTasks()
-            .map(
-                task =>
-                    Number(
-                        task.id
-                    )
-            )
-        );
-
-
-    const filtered =
-        evaluations.filter(
-            evaluation => {
-
-
-                const projectMatch =
-                    projectFilter.value
-                    ===
-                    "all"
-                    ||
-                    filteredTaskIds.has(
-                        Number(
-                            evaluation.task_id
-                        )
-                    );
-
-
-                const dateMatch =
-                    dateMatchesPeriod(
-                        getEvaluationDate(
-                            evaluation
-                        )
-                    );
-
-
-                return (
-                    projectMatch
-                    &&
-                    dateMatch
-                );
-
-            }
-        );
+    const filteredEvaluations =
+        getFilteredEvaluations();
 
 
     if (
-        filtered.length === 0
+        filteredEvaluations.length === 0
     ) {
 
         showEmpty(
@@ -1851,28 +2316,91 @@ function renderPerformance() {
     }
 
 
-    filtered.forEach(
-        evaluation => {
+    const employeeIds =
+        new Set(
+            filteredEvaluations
+            .map(
+                evaluation =>
+                    Number(
+                        evaluation.employee_id
+                    )
+            )
+        );
 
-            const task =
-                getTask(
-                    evaluation.task_id
-                );
 
+    const results =
+        [...employeeIds]
+        .map(
+            employeeId => {
+
+                const employee =
+                    getEmployee(
+                        employeeId
+                    );
+
+
+                const employeeEvaluations =
+                    filteredEvaluations
+                    .filter(
+                        evaluation =>
+                            Number(
+                                evaluation.employee_id
+                            )
+                            ===
+                            Number(
+                                employeeId
+                            )
+                    );
+
+
+                const average =
+                    getEmployeeAverageRating(
+                        employeeId,
+                        filteredEvaluations
+                    );
+
+
+                return {
+
+                    employeeId,
+
+                    employee,
+
+                    average,
+
+                    count:
+                        employeeEvaluations.length
+
+                };
+
+            }
+        )
+        .sort(
+            (
+                a,
+                b
+            ) =>
+                b.average
+                -
+                a.average
+        );
+
+
+    results.forEach(
+        result => {
 
             container.appendChild(
                 createReportRow(
-                    getEmployeeName(
-                        evaluation.employee_id
-                    ),
-                    task?.task_name
+                    result.employee?.name
                     ||
-                    "تقييم موظف",
-                    getEvaluationRating(
-                        evaluation
-                    )
+                    "موظف غير معروف",
+
+                    `${result.count} تقييم مسجل`,
+
+                    result.average.toFixed(1)
                     +
                     "/5",
+
                     "value-badge"
                 )
             );
@@ -1883,9 +2411,8 @@ function renderPerformance() {
 }
 
 
-
 /* =====================================================
-   04 المطابقة
+   04 نتائج المطابقة والقرارات
 ===================================================== */
 
 function renderMatching() {
@@ -1900,49 +2427,8 @@ function renderMatching() {
         "";
 
 
-    const filteredTaskIds =
-        new Set(
-            getFilteredTasks()
-            .map(
-                task =>
-                    Number(
-                        task.id
-                    )
-            )
-        );
-
-
     const filtered =
-        decisions.filter(
-            decision => {
-
-
-                const projectMatch =
-                    projectFilter.value
-                    ===
-                    "all"
-                    ||
-                    filteredTaskIds.has(
-                        Number(
-                            decision.task_id
-                        )
-                    );
-
-
-                const dateMatch =
-                    dateMatchesPeriod(
-                        decision.decision_date
-                    );
-
-
-                return (
-                    projectMatch
-                    &&
-                    dateMatch
-                );
-
-            }
-        );
+        getFilteredDecisions();
 
 
     if (
@@ -1951,7 +2437,7 @@ function renderMatching() {
 
         showEmpty(
             container,
-            "لا توجد نتائج مطابقة ضمن الفترة المحددة"
+            "لا توجد قرارات مطابقة ضمن الفترة المحددة"
         );
 
 
@@ -1968,21 +2454,58 @@ function renderMatching() {
                 );
 
 
+            const selectedEmployee =
+                getEmployeeName(
+                    decision.selected_employee_id
+                );
+
+
+            const systemCandidate =
+                decision.system_candidate_id
+                ?
+                getEmployeeName(
+                    decision.system_candidate_id
+                )
+                :
+                "غير محدد";
+
+
+            const changed =
+                decisionWasChanged(
+                    decision
+                );
+
+
+            let description =
+                task?.task_name
+                ||
+                "مهمة غير معروفة";
+
+
+            if (
+                decision.system_candidate_id
+            ) {
+
+                description +=
+                    changed
+                    ?
+                    ` • مرشح النظام: ${systemCandidate} • تم تغيير الترشيح`
+                    :
+                    ` • مطابق لترشيح النظام`;
+
+            }
+
+
             container.appendChild(
                 createReportRow(
-                    getEmployeeName(
-                        decision.selected_employee_id
-                    ),
-                    task?.task_name
-                    ||
-                    "مهمة غير معروفة",
-                    Number(
+                    selectedEmployee,
+
+                    description,
+
+                    formatPercent(
                         decision.match_rate
-                        ||
-                        0
-                    )
-                    +
-                    "%",
+                    ),
+
                     "match-badge"
                 )
             );
@@ -1993,9 +2516,8 @@ function renderMatching() {
 }
 
 
-
 /* =====================================================
-   05 المهارات
+   05 أكثر المهارات المطلوبة
 ===================================================== */
 
 function renderSkills() {
@@ -2026,15 +2548,15 @@ function renderSkills() {
         taskRequirements.filter(
             requirement => {
 
+                /*
+                    إذا كل الفلاتر = الكل،
+                    نحسب جميع المتطلبات.
+                */
 
                 if (
-                    projectFilter.value
-                    ===
-                    "all"
+                    projectFilter.value === "all"
                     &&
-                    periodFilter.value
-                    ===
-                    "all"
+                    periodFilter.value === "all"
                 ) {
 
                     return true;
@@ -2057,7 +2579,6 @@ function renderSkills() {
 
     requirements.forEach(
         requirement => {
-
 
             if (
                 !requirement.skill_id
@@ -2143,8 +2664,11 @@ function renderSkills() {
                         getSkillName(
                             item.id
                         ),
+
                         "عدد مرات طلب المهارة",
+
                         item.count,
+
                         "value-badge"
                     )
                 );
@@ -2153,7 +2677,6 @@ function renderSkills() {
         );
 
 }
-
 
 
 /* =====================================================
@@ -2193,15 +2716,28 @@ function renderCurrentWork() {
     filtered.forEach(
         task => {
 
+            const employeeName =
+                task.assigned_employee_id
+                ?
+                getEmployeeName(
+                    task.assigned_employee_id
+                )
+                :
+                "غير مسندة";
+
+
             container.appendChild(
                 createReportRow(
-                    task.task_name,
-                    getProjectName(
-                        task.project_id
-                    ),
+                    task.task_name
+                    ||
+                    "مهمة بدون اسم",
+
+                    `${getProjectName(task.project_id)} • ${employeeName}`,
+
                     task.status
                     ||
                     "غير محدد",
+
                     "status-badge"
                 )
             );
@@ -2212,9 +2748,8 @@ function renderCurrentWork() {
 }
 
 
-
 /* =====================================================
-   07 الإجازات
+   07 الإجازات المعتمدة
 ===================================================== */
 
 function renderLeaves() {
@@ -2229,44 +2764,60 @@ function renderLeaves() {
         "";
 
 
-    const approved =
+    let approved =
         employeeLeaves.filter(
-            leave => {
-
-                const status =
-                    String(
-                        leave.status
-                        ||
-                        ""
-                    )
-                    .trim()
-                    .toLowerCase();
-
-
-                const approvedStatus =
-                    status === "معتمدة"
-                    ||
-                    status === "معتمد"
-                    ||
-                    status === "approved"
-                    ||
-                    status === "مقبولة";
-
-
-                const dateMatch =
-                    dateMatchesPeriod(
-                        leave.start_date
-                    );
-
-
-                return (
-                    approvedStatus
-                    &&
-                    dateMatch
-                );
-
-            }
+            leave =>
+                isApprovedLeave(
+                    leave
+                )
+                &&
+                dateMatchesPeriod(
+                    leave.start_date
+                )
         );
+
+
+    /*
+        عند اختيار مشروع محدد:
+        نعرض إجازات الموظفين المرتبطين بمهام المشروع.
+    */
+
+    if (
+        projectFilter.value !==
+        "all"
+    ) {
+
+        const employeeIds =
+            new Set(
+
+                getFilteredTasks()
+
+                .filter(
+                    task =>
+                        task.assigned_employee_id
+                )
+
+                .map(
+                    task =>
+                        Number(
+                            task.assigned_employee_id
+                        )
+                )
+
+            );
+
+
+        approved =
+            approved.filter(
+                leave =>
+                    employeeIds.has(
+                        Number(
+                            leave.employee_id
+                        )
+                    )
+            );
+
+    }
 
 
     if (
@@ -2283,31 +2834,50 @@ function renderLeaves() {
     }
 
 
-    approved.forEach(
-        leave => {
+    approved
+        .slice()
+        .sort(
+            (
+                a,
+                b
+            ) =>
+                new Date(b.start_date)
+                -
+                new Date(a.start_date)
+        )
+        .forEach(
+            leave => {
 
-            container.appendChild(
-                createReportRow(
-                    getEmployeeName(
-                        leave.employee_id
-                    ),
-                    `${formatDate(leave.start_date)} - ${formatDate(leave.end_date)}`,
-                    leave.leave_type
-                    ||
-                    "إجازة",
-                    "leave-badge"
-                )
-            );
+                const timeStatus =
+                    getLeaveTimeStatus(
+                        leave
+                    );
 
-        }
-    );
+
+                container.appendChild(
+                    createReportRow(
+                        getEmployeeName(
+                            leave.employee_id
+                        ),
+
+                        `${formatDate(leave.start_date)} - ${formatDate(leave.end_date)} • ${timeStatus}`,
+
+                        leave.leave_type
+                        ||
+                        "إجازة",
+
+                        "leave-badge"
+                    )
+                );
+
+            }
+        );
 
 }
 
 
-
 /* =====================================================
-   الملخص
+   الملخص العلوي
 ===================================================== */
 
 function updateSummary() {
@@ -2316,10 +2886,21 @@ function updateSummary() {
         getFilteredTasks();
 
 
+    /* =================================================
+       المهام المسندة
+    ================================================= */
+
     const assigned =
         filteredTasks.filter(
             task =>
                 task.assigned_employee_id
+                !== null
+                &&
+                task.assigned_employee_id
+                !== undefined
+                &&
+                task.assigned_employee_id
+                !== ""
         );
 
 
@@ -2331,18 +2912,59 @@ function updateSummary() {
         assigned.length;
 
 
+    /* =================================================
+       ضغط العمل
 
-    /*
-        ضغط العمل
-    */
+       نستخدم المهام النشطة الفعلية.
+    ================================================= */
+
+    let employeesForWorkload =
+        employees.slice();
+
+
+    if (
+        projectFilter.value !==
+        "all"
+    ) {
+
+        const employeeIds =
+            new Set(
+
+                filteredTasks
+
+                .filter(
+                    task =>
+                        task.assigned_employee_id
+                )
+
+                .map(
+                    task =>
+                        Number(
+                            task.assigned_employee_id
+                        )
+                )
+
+            );
+
+
+        employeesForWorkload =
+            employees.filter(
+                employee =>
+                    employeeIds.has(
+                        Number(
+                            employee.id
+                        )
+                    )
+            );
+
+    }
+
 
     const workloads =
-        employees.map(
+        employeesForWorkload.map(
             employee =>
-                Number(
-                    employee.workload
-                    ||
-                    0
+                calculateEmployeeWorkload(
+                    employee.id
                 )
         );
 
@@ -2355,9 +2977,7 @@ function updateSummary() {
                 sum,
                 value
             ) =>
-                sum
-                +
-                value,
+                sum + value,
             0
         )
         /
@@ -2378,21 +2998,16 @@ function updateSummary() {
         "%";
 
 
+    /* =================================================
+       الأداء
+    ================================================= */
 
-    /*
-        التقييمات
-    */
+    const filteredEvaluations =
+        getFilteredEvaluations();
+
 
     const ratings =
-        evaluations
-        .filter(
-            evaluation =>
-                dateMatchesPeriod(
-                    getEvaluationDate(
-                        evaluation
-                    )
-                )
-        )
+        filteredEvaluations
         .map(
             getEvaluationRating
         )
@@ -2410,9 +3025,7 @@ function updateSummary() {
                 total,
                 value
             ) =>
-                total
-                +
-                value,
+                total + value,
             0
         )
         /
@@ -2428,59 +3041,23 @@ function updateSummary() {
         .textContent =
         ratings.length
         ?
-        performance.toFixed(
-            1
-        )
+        performance.toFixed(1)
         +
         "/5"
         :
         "0/5";
 
 
+    /* =================================================
+       المطابقة
+    ================================================= */
 
-    /*
-        المطابقة
-    */
-
-    const filteredTaskIds =
-        new Set(
-            filteredTasks.map(
-                task =>
-                    Number(
-                        task.id
-                    )
-            )
-        );
+    const filteredDecisions =
+        getFilteredDecisions();
 
 
     const matchingValues =
-        decisions
-        .filter(
-            decision => {
-
-
-                const projectMatch =
-                    projectFilter.value
-                    ===
-                    "all"
-                    ||
-                    filteredTaskIds.has(
-                        Number(
-                            decision.task_id
-                        )
-                    );
-
-
-                return (
-                    projectMatch
-                    &&
-                    dateMatchesPeriod(
-                        decision.decision_date
-                    )
-                );
-
-            }
-        )
+        filteredDecisions
         .map(
             decision =>
                 Number(
@@ -2488,6 +3065,12 @@ function updateSummary() {
                     ||
                     0
                 )
+        )
+        .filter(
+            value =>
+                Number.isFinite(value)
+                &&
+                value >= 0
         );
 
 
@@ -2499,9 +3082,7 @@ function updateSummary() {
                 total,
                 value
             ) =>
-                total
-                +
-                value,
+                total + value,
             0
         )
         /
@@ -2524,9 +3105,43 @@ function updateSummary() {
 }
 
 
+/* =====================================================
+   تنسيق النسبة
+===================================================== */
+
+function formatPercent(value) {
+
+    const number =
+        Number(
+            value
+            ||
+            0
+        );
+
+
+    if (
+        !Number.isFinite(number)
+    ) {
+
+        return "0%";
+    }
+
+
+    return (
+        Math.round(
+            number * 10
+        )
+        /
+        10
+    )
+    +
+    "%";
+
+}
+
 
 /* =====================================================
-   إنشاء صف
+   إنشاء صف التقرير
 ===================================================== */
 
 function createReportRow(
@@ -2562,7 +3177,7 @@ function createReportRow(
 
 
         <span
-            class="${badgeClass}"
+            class="${escapeHtml(badgeClass)}"
         >
             ${escapeHtml(value)}
         </span>
@@ -2575,9 +3190,8 @@ function createReportRow(
 }
 
 
-
 /* =====================================================
-   فارغ
+   الحالة الفارغة
 ===================================================== */
 
 function showEmpty(
@@ -2596,7 +3210,6 @@ function showEmpty(
 }
 
 
-
 /* =====================================================
    التاريخ
 ===================================================== */
@@ -2609,12 +3222,31 @@ function formatDate(value) {
     }
 
 
-    const date =
-        new Date(
-            value
-            +
-            "T00:00:00"
-        );
+    let date;
+
+
+    if (
+        String(value)
+        .includes("T")
+    ) {
+
+        date =
+            new Date(
+                value
+            );
+
+    }
+
+    else {
+
+        date =
+            new Date(
+                value
+                +
+                "T00:00:00"
+            );
+
+    }
 
 
     if (
@@ -2644,7 +3276,6 @@ function formatDate(value) {
     );
 
 }
-
 
 
 /* =====================================================
@@ -2680,9 +3311,8 @@ function escapeHtml(value) {
 }
 
 
-
 /* =====================================================
-   الفلاتر والتحديث
+   الفلاتر
 ===================================================== */
 
 function applyFilters() {
@@ -2692,6 +3322,9 @@ function applyFilters() {
 }
 
 
+/* =====================================================
+   تحديث التقارير
+===================================================== */
 
 async function refreshReports() {
 
@@ -2715,12 +3348,19 @@ async function refreshReports() {
     catch(error) {
 
         console.error(
+            "خطأ تحديث التقارير:",
             error
         );
 
 
         alert(
-            "تعذر تحديث التقارير."
+            "تعذر تحديث التقارير: "
+            +
+            (
+                error.message
+                ||
+                ""
+            )
         );
 
     }
@@ -2737,7 +3377,6 @@ async function refreshReports() {
     }
 
 }
-
 
 
 /* =====================================================
@@ -2769,7 +3408,6 @@ function openSidebar() {
 }
 
 
-
 function closeSidebar() {
 
     sidebar
@@ -2795,6 +3433,33 @@ function closeSidebar() {
 }
 
 
+/* =====================================================
+   تنظيف الجلسة
+===================================================== */
+
+function clearLocalSession() {
+
+    localStorage.removeItem(
+        "miyarRole"
+    );
+
+
+    localStorage.removeItem(
+        "miyarEmail"
+    );
+
+
+    localStorage.removeItem(
+        "miyarEmployeeId"
+    );
+
+
+    localStorage.removeItem(
+        "miyarEmployeeName"
+    );
+
+}
+
 
 /* =====================================================
    تسجيل الخروج
@@ -2813,20 +3478,23 @@ async function logout() {
     catch(error) {
 
         console.error(
+            "خطأ تسجيل الخروج:",
             error
         );
 
     }
 
+    finally {
 
-    localStorage.clear();
+        clearLocalSession();
 
 
-    window.location.href =
-        "login.html";
+        window.location.href =
+            "login.html";
+
+    }
 
 }
-
 
 
 /* =====================================================
@@ -2856,7 +3524,6 @@ async function loadAllData() {
     ]);
 
 }
-
 
 
 /* =====================================================
@@ -2938,7 +3605,6 @@ document
     );
 
 
-
 /* =====================================================
    تشغيل الصفحة
 ===================================================== */
@@ -2973,7 +3639,13 @@ async function startPage() {
 
 
         alert(
-            "تعذر تحميل بيانات التقارير."
+            "تعذر تحميل بيانات التقارير: "
+            +
+            (
+                error.message
+                ||
+                ""
+            )
         );
 
     }
