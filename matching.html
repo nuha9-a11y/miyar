@@ -2,9 +2,7 @@
 <html lang="ar" dir="rtl">
 
 <head>
-
     <meta charset="UTF-8">
-
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
@@ -20,7 +18,6 @@
     <script
         src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
     ></script>
-
 </head>
 
 
@@ -30,9 +27,9 @@
 <div class="matching-page">
 
 
-    <!-- =========================================
+    <!-- =========================
          هيدر الجوال
-    ========================================== -->
+    ========================== -->
 
     <header class="mobile-header">
 
@@ -44,7 +41,6 @@
         >
             ☰
         </button>
-
 
         <div class="mobile-header-title">
 
@@ -58,7 +54,6 @@
 
         </div>
 
-
         <img
             src="assets/logo.png"
             alt="معيار"
@@ -68,23 +63,20 @@
     </header>
 
 
-
     <div
         class="sidebar-overlay"
         id="sidebarOverlay"
     ></div>
 
 
-
-    <!-- =========================================
+    <!-- =========================
          القائمة الجانبية
-    ========================================== -->
+    ========================== -->
 
     <aside
         class="sidebar"
         id="sidebar"
     >
-
 
         <div class="sidebar-logo">
 
@@ -96,9 +88,7 @@
         </div>
 
 
-
         <nav class="sidebar-nav">
-
 
             <a
                 href="dashboard.html"
@@ -107,14 +97,12 @@
                 لوحة التحكم
             </a>
 
-
             <a
                 href="employees.html"
                 class="nav-link"
             >
                 الموظفون
             </a>
-
 
             <a
                 href="projects.html"
@@ -123,14 +111,12 @@
                 المشاريع
             </a>
 
-
             <a
                 href="tasks.html"
                 class="nav-link"
             >
                 المهام
             </a>
-
 
             <a
                 href="matching.html"
@@ -139,14 +125,12 @@
                 المطابقة والترشيح
             </a>
 
-
             <a
                 href="evaluations.html"
                 class="nav-link"
             >
                 التقييمات
             </a>
-
 
             <a
                 href="decisions.html"
@@ -155,14 +139,12 @@
                 القرارات
             </a>
 
-
             <a
                 href="leaves.html"
                 class="nav-link"
             >
                 طلبات الإجازات
             </a>
-
 
             <a
                 href="reports.html"
@@ -171,9 +153,7 @@
                 التقارير
             </a>
 
-
         </nav>
-
 
 
         <button
@@ -184,14 +164,12 @@
             تسجيل الخروج
         </button>
 
-
     </aside>
 
 
-
-    <!-- =========================================
+    <!-- =========================
          المحتوى
-    ========================================== -->
+    ========================== -->
 
     <main class="main-content">
 
@@ -202,26 +180,23 @@
                 تحليل المرشحين
             </span>
 
-
             <h1>
                 المطابقة والترشيح
             </h1>
 
-
             <p>
-                تحليل متطلبات المهمة ومقارنتها ببيانات الموظفين والتفرغ وضغط العمل والإجازات للوصول إلى أفضل مرشح.
+                تحليل متطلبات المهمة ومقارنتها ببيانات الموظفين
+                لإظهار نسبة التوافق وترتيب المرشحين حسب الأنسب.
             </p>
 
         </header>
 
 
-
-        <!-- =========================================
+        <!-- =========================
              اختيار المهمة
-        ========================================== -->
+        ========================== -->
 
         <section class="task-selection">
-
 
             <div class="section-heading">
 
@@ -236,9 +211,7 @@
             </div>
 
 
-
             <div class="selection-row">
-
 
                 <select id="taskSelect">
 
@@ -257,23 +230,19 @@
                     بدء المطابقة
                 </button>
 
-
             </div>
-
 
         </section>
 
 
-
-        <!-- =========================================
+        <!-- =========================
              ملخص المهمة
-        ========================================== -->
+        ========================== -->
 
         <section
             class="task-summary hidden"
             id="taskSummary"
         >
-
 
             <div class="summary-title">
 
@@ -288,9 +257,7 @@
             </div>
 
 
-
             <div class="summary-grid">
-
 
                 <div class="summary-item">
 
@@ -321,10 +288,36 @@
                 <div class="summary-item">
 
                     <span>
+                        المستوى الوظيفي المطلوب
+                    </span>
+
+                    <strong id="summaryJobLevel">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-item">
+
+                    <span>
                         التفرغ المطلوب
                     </span>
 
                     <strong id="summaryAvailability">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-item">
+
+                    <span>
+                        الأداء المطلوب
+                    </span>
+
+                    <strong id="summaryPerformance">
                         -
                     </strong>
 
@@ -343,23 +336,81 @@
 
                 </div>
 
-
             </div>
 
+
+            <!-- أوزان المهمة -->
+
+            <div
+                style="
+                    margin-top:15px;
+                    padding:14px;
+                    border-radius:11px;
+                    border:1px solid rgba(196,154,92,.28);
+                    background:rgba(255,255,255,.45);
+                "
+            >
+
+                <strong
+                    style="
+                        display:block;
+                        margin-bottom:10px;
+                        color:#31576b;
+                        font-size:11px;
+                    "
+                >
+                    أوزان معايير المطابقة
+                </strong>
+
+
+                <div
+                    style="
+                        display:grid;
+                        grid-template-columns:repeat(auto-fit,minmax(110px,1fr));
+                        gap:8px;
+                    "
+                >
+
+                    <div class="summary-item">
+                        <span>المهارات</span>
+                        <strong id="summarySkillsWeight">40%</strong>
+                    </div>
+
+                    <div class="summary-item">
+                        <span>الخبرة</span>
+                        <strong id="summaryExperienceWeight">20%</strong>
+                    </div>
+
+                    <div class="summary-item">
+                        <span>المستوى الوظيفي</span>
+                        <strong id="summaryJobWeight">15%</strong>
+                    </div>
+
+                    <div class="summary-item">
+                        <span>التفرغ</span>
+                        <strong id="summaryAvailabilityWeight">15%</strong>
+                    </div>
+
+                    <div class="summary-item">
+                        <span>الأداء</span>
+                        <strong id="summaryPerformanceWeight">10%</strong>
+                    </div>
+
+                </div>
+
+            </div>
 
         </section>
 
 
-
-        <!-- =========================================
-             نتائج المطابقة
-        ========================================== -->
+        <!-- =========================
+             النتائج
+        ========================== -->
 
         <section
             class="results-section hidden"
             id="resultsSection"
         >
-
 
             <div class="section-heading">
 
@@ -368,7 +419,8 @@
                 </h2>
 
                 <p>
-                    ترتيب الموظفين حسب درجة التوافق مع متطلبات المهمة.
+                    يتم ترتيب الموظفين من أعلى نسبة توافق إلى الأقل.
+                    نقص أحد المعايير لا يستبعد الموظف تلقائيًا.
                 </p>
 
             </div>
@@ -379,14 +431,10 @@
                 id="candidatesList"
             ></div>
 
-
         </section>
 
 
-
-        <!-- =========================================
-             قبل المطابقة
-        ========================================== -->
+        <!-- قبل المطابقة -->
 
         <section
             class="empty-matching"
@@ -410,20 +458,18 @@
 
     </main>
 
-
 </div>
 
 
 
-<!-- =========================================
+<!-- =========================
      تفاصيل المرشح
-========================================= -->
+========================== -->
 
 <div
     class="modal"
     id="candidateModal"
 >
-
 
     <div
         class="modal-overlay"
@@ -432,7 +478,6 @@
 
 
     <div class="modal-box">
-
 
         <div class="modal-header">
 
@@ -465,9 +510,7 @@
             id="candidateDetails"
         ></div>
 
-
     </div>
-
 
 </div>
 
@@ -477,7 +520,7 @@
 
 
 /* =====================================================
-   Supabase
+   SUPABASE
 ===================================================== */
 
 const SUPABASE_URL =
@@ -959,7 +1002,7 @@ async function loadEmployeeLeaves() {
 
 
 /* =====================================================
-   تحميل متطلبات المهمة
+   تحميل متطلبات المهمة الجديدة
 ===================================================== */
 
 async function loadTaskRequirements(
@@ -979,13 +1022,27 @@ async function loadTaskRequirements(
             required_level,
             experience_required,
             availability_required,
-            skill_weight
+            skill_weight,
+            job_level_required,
+            performance_required,
+            skills_weight,
+            experience_weight,
+            job_level_weight,
+            availability_weight,
+            performance_weight
         `)
         .eq(
             "task_id",
             Number(
                 taskId
             )
+        )
+        .order(
+            "id",
+            {
+                ascending:
+                    true
+            }
         );
 
 
@@ -1076,13 +1133,9 @@ function getLevelNumber(value) {
 
 
     if (
-        text.includes(
-            "مبتدئ"
-        )
+        text.includes("مبتدئ")
         ||
-        text.includes(
-            "beginner"
-        )
+        text.includes("beginner")
     ) {
 
         return 1;
@@ -1090,13 +1143,7 @@ function getLevelNumber(value) {
 
 
     if (
-        text.includes(
-            "متوسط"
-        )
-        ||
-        text.includes(
-            "intermediate"
-        )
+        text.includes("أساسي")
     ) {
 
         return 2;
@@ -1104,13 +1151,9 @@ function getLevelNumber(value) {
 
 
     if (
-        text.includes(
-            "متقدم"
-        )
+        text.includes("متوسط")
         ||
-        text.includes(
-            "advanced"
-        )
+        text.includes("intermediate")
     ) {
 
         return 3;
@@ -1118,16 +1161,22 @@ function getLevelNumber(value) {
 
 
     if (
-        text.includes(
-            "خبير"
-        )
+        text.includes("متقدم")
         ||
-        text.includes(
-            "expert"
-        )
+        text.includes("advanced")
     ) {
 
         return 4;
+    }
+
+
+    if (
+        text.includes("خبير")
+        ||
+        text.includes("expert")
+    ) {
+
+        return 5;
     }
 
 
@@ -1145,33 +1194,31 @@ function levelToText(level) {
         );
 
 
-    if (
-        number <= 1
-    ) {
+    if (number <= 1) {
 
         return "مبتدئ";
     }
 
 
-    if (
-        number === 2
-    ) {
+    if (number === 2) {
+
+        return "أساسي";
+    }
+
+
+    if (number === 3) {
 
         return "متوسط";
     }
 
 
-    if (
-        number === 3
-    ) {
+    if (number === 4) {
 
         return "متقدم";
     }
 
 
-    if (
-        number >= 4
-    ) {
+    if (number >= 5) {
 
         return "خبير";
     }
@@ -1187,26 +1234,28 @@ function levelToText(level) {
    متطلبات المهمة
 ===================================================== */
 
+function getFirstRequirement() {
+
+    return (
+        taskRequirements[0]
+        ||
+        null
+    );
+
+}
+
+
+
 function getRequiredExperience() {
 
-    if (
-        taskRequirements.length === 0
-    ) {
-
-        return 0;
-    }
+    const first =
+        getFirstRequirement();
 
 
-    return Math.max(
-        0,
-        ...taskRequirements.map(
-            item =>
-                Number(
-                    item.experience_required
-                    ||
-                    0
-                )
-        )
+    return Number(
+        first?.experience_required
+        ||
+        0
     );
 
 }
@@ -1215,32 +1264,46 @@ function getRequiredExperience() {
 
 function getRequiredAvailability() {
 
-    const values =
-        taskRequirements
-            .map(
-                item =>
-                    item.availability_required
-            )
-            .filter(
-                value =>
-                    value !== null
-                    &&
-                    value !== undefined
-                    &&
-                    value !== ""
-            );
-
-
-    if (
-        values.length === 0
-    ) {
-
-        return 0;
-    }
+    const first =
+        getFirstRequirement();
 
 
     return Number(
-        values[0]
+        first?.availability_required
+        ||
+        0
+    );
+
+}
+
+
+
+function getRequiredPerformance() {
+
+    const first =
+        getFirstRequirement();
+
+
+    return Number(
+        first?.performance_required
+        ||
+        0
+    );
+
+}
+
+
+
+function getRequiredJobLevel() {
+
+    const first =
+        getFirstRequirement();
+
+
+    return (
+        first?.job_level_required
+        ||
+        ""
     );
 
 }
@@ -1276,14 +1339,7 @@ function getRequiredSkills() {
                         requirement.required_level
                     )
                     ||
-                    1,
-
-                weight:
-                    Number(
-                        requirement.skill_weight
-                        ||
-                        1
-                    )
+                    1
 
             })
         );
@@ -1293,7 +1349,104 @@ function getRequiredSkills() {
 
 
 /* =====================================================
-   فحص الإجازة الحالية
+   أوزان المهمة
+===================================================== */
+
+function getTaskWeights() {
+
+    const first =
+        getFirstRequirement();
+
+
+    let weights = {
+
+        skills:
+            Number(
+                first?.skills_weight
+                ??
+                40
+            ),
+
+        experience:
+            Number(
+                first?.experience_weight
+                ??
+                20
+            ),
+
+        jobLevel:
+            Number(
+                first?.job_level_weight
+                ??
+                15
+            ),
+
+        availability:
+            Number(
+                first?.availability_weight
+                ??
+                15
+            ),
+
+        performance:
+            Number(
+                first?.performance_weight
+                ??
+                10
+            )
+
+    };
+
+
+    let total =
+        weights.skills
+        +
+        weights.experience
+        +
+        weights.jobLevel
+        +
+        weights.availability
+        +
+        weights.performance;
+
+
+    /*
+        حماية إضافية:
+        إذا كانت بيانات قديمة أو المجموع غير صحيح
+        يستخدم النظام الأوزان الافتراضية.
+    */
+
+    if (
+        total <= 0
+        ||
+        Math.round(total) !== 100
+    ) {
+
+        weights = {
+
+            skills: 40,
+
+            experience: 20,
+
+            jobLevel: 15,
+
+            availability: 15,
+
+            performance: 10
+
+        };
+
+    }
+
+
+    return weights;
+
+}
+
+
+
+/* =====================================================
+   الإجازة الحالية
 ===================================================== */
 
 function normalizeLeaveStatus(status) {
@@ -1423,6 +1576,1128 @@ function getCurrentLeave(
 
 
 /* =====================================================
+   حساب المهارات
+===================================================== */
+
+function calculateSkillScore(
+    employee,
+    requiredSkills
+) {
+
+    if (
+        requiredSkills.length === 0
+    ) {
+
+        return {
+
+            score: 100,
+
+            matchedSkills: 0,
+
+            missingSkills: [],
+
+            skillDetails: []
+
+        };
+
+    }
+
+
+    const employeeCurrentSkills =
+        employeeSkills.filter(
+            item =>
+                Number(
+                    item.employee_id
+                )
+                ===
+                Number(
+                    employee.id
+                )
+        );
+
+
+    let totalScore =
+        0;
+
+
+    let matchedSkills =
+        0;
+
+
+    const missingSkills =
+        [];
+
+
+    const skillDetails =
+        [];
+
+
+    requiredSkills.forEach(
+        requirement => {
+
+            const employeeSkill =
+                employeeCurrentSkills.find(
+                    item =>
+                        Number(
+                            item.skill_id
+                        )
+                        ===
+                        Number(
+                            requirement.skillId
+                        )
+                );
+
+
+            const employeeLevel =
+                employeeSkill
+                ?
+                getLevelNumber(
+                    employeeSkill.skill_level
+                )
+                :
+                0;
+
+
+            const requiredLevel =
+                Math.max(
+                    1,
+                    Number(
+                        requirement.requiredLevel
+                    )
+                );
+
+
+            /*
+                المهارة لا تستبعد الموظف.
+
+                مثال:
+                المطلوب مستوى 5
+                والموظف مستوى 3
+
+                يحصل:
+                3 / 5 = 60%
+            */
+
+            const ratio =
+                employeeLevel > 0
+                ?
+                Math.min(
+                    1,
+                    employeeLevel
+                    /
+                    requiredLevel
+                )
+                :
+                0;
+
+
+            totalScore +=
+                ratio * 100;
+
+
+            if (
+                employeeLevel >=
+                requiredLevel
+            ) {
+
+                matchedSkills++;
+
+            }
+            else {
+
+                missingSkills.push(
+                    requirement.skillName
+                );
+
+            }
+
+
+            skillDetails.push({
+
+                skillName:
+                    requirement.skillName,
+
+                employeeLevel,
+
+                requiredLevel,
+
+                score:
+                    Math.round(
+                        ratio * 100
+                    )
+
+            });
+
+        }
+    );
+
+
+    return {
+
+        score:
+            totalScore
+            /
+            requiredSkills.length,
+
+        matchedSkills,
+
+        missingSkills,
+
+        skillDetails
+
+    };
+
+}
+
+
+
+/* =====================================================
+   حساب الخبرة
+===================================================== */
+
+function calculateExperienceScore(
+    employee,
+    requiredExperience
+) {
+
+    const employeeExperience =
+        Math.max(
+            0,
+            Number(
+                employee.experience_years
+                ||
+                0
+            )
+        );
+
+
+    if (
+        requiredExperience <= 0
+    ) {
+
+        return {
+
+            score: 100,
+
+            employeeExperience,
+
+            requiredExperience
+
+        };
+
+    }
+
+
+    /*
+        الخبرة ليست شرط استبعاد.
+
+        مثال:
+        المطلوب 5 سنوات
+        الموظف 2 سنوات
+
+        2 / 5 = 40%
+
+        الموظف يبقى في الترشيحات.
+    */
+
+    const score =
+        Math.min(
+            100,
+            (
+                employeeExperience
+                /
+                requiredExperience
+            )
+            *
+            100
+        );
+
+
+    return {
+
+        score,
+
+        employeeExperience,
+
+        requiredExperience
+
+    };
+
+}
+
+
+
+/* =====================================================
+   المستوى الوظيفي
+===================================================== */
+
+function calculateJobLevelScore(
+    employee,
+    requiredJobLevel
+) {
+
+    if (
+        !requiredJobLevel
+    ) {
+
+        return {
+
+            score: 100,
+
+            employeeLevel:
+                getLevelNumber(
+                    employee.job_level
+                ),
+
+            requiredLevel: 0
+
+        };
+
+    }
+
+
+    const employeeLevel =
+        getLevelNumber(
+            employee.job_level
+        );
+
+
+    const requiredLevel =
+        getLevelNumber(
+            requiredJobLevel
+        );
+
+
+    if (
+        requiredLevel <= 0
+    ) {
+
+        return {
+
+            score: 100,
+
+            employeeLevel,
+
+            requiredLevel
+
+        };
+
+    }
+
+
+    const score =
+        Math.min(
+            100,
+            (
+                employeeLevel
+                /
+                requiredLevel
+            )
+            *
+            100
+        );
+
+
+    return {
+
+        score,
+
+        employeeLevel,
+
+        requiredLevel
+
+    };
+
+}
+
+
+
+/* =====================================================
+   التفرغ
+===================================================== */
+
+function calculateAvailabilityScore(
+    employee,
+    requiredAvailability,
+    currentLeave
+) {
+
+    if (
+        currentLeave
+    ) {
+
+        return {
+
+            score: 0,
+
+            employeeAvailability: 0,
+
+            requiredAvailability
+
+        };
+
+    }
+
+
+    const employeeAvailability =
+        Math.max(
+            0,
+            Math.min(
+                100,
+                Number(
+                    employee.availability
+                    ||
+                    0
+                )
+            )
+        );
+
+
+    if (
+        requiredAvailability <= 0
+    ) {
+
+        return {
+
+            score: 100,
+
+            employeeAvailability,
+
+            requiredAvailability
+
+        };
+
+    }
+
+
+    const score =
+        Math.min(
+            100,
+            (
+                employeeAvailability
+                /
+                requiredAvailability
+            )
+            *
+            100
+        );
+
+
+    return {
+
+        score,
+
+        employeeAvailability,
+
+        requiredAvailability
+
+    };
+
+}
+
+
+
+/* =====================================================
+   الأداء
+===================================================== */
+
+function calculatePerformanceScore(
+    employee,
+    requiredPerformance
+) {
+
+    /*
+        حالياً إذا كان جدول employees
+        يحتوي performance أو performance_score
+        سيستخدمه مباشرة.
+
+        وإذا لم توجد قيمة أداء للموظف
+        لا يتم استبعاده، وتكون درجة الأداء 0.
+    */
+
+    const employeePerformance =
+        Math.max(
+            0,
+            Math.min(
+                100,
+                Number(
+                    employee.performance
+                    ??
+                    employee.performance_score
+                    ??
+                    0
+                )
+            )
+        );
+
+
+    if (
+        requiredPerformance <= 0
+    ) {
+
+        return {
+
+            score: 100,
+
+            employeePerformance,
+
+            requiredPerformance
+
+        };
+
+    }
+
+
+    const score =
+        Math.min(
+            100,
+            (
+                employeePerformance
+                /
+                requiredPerformance
+            )
+            *
+            100
+        );
+
+
+    return {
+
+        score,
+
+        employeePerformance,
+
+        requiredPerformance
+
+    };
+
+}
+
+
+
+/* =====================================================
+   سبب الترشيح
+===================================================== */
+
+function buildReason(data) {
+
+    const reasons =
+        [];
+
+
+    if (
+        data.currentLeave
+    ) {
+
+        reasons.push(
+            "الموظف في إجازة معتمدة حاليًا ولا يمكن إسناد المهمة له الآن"
+        );
+
+    }
+
+
+    if (
+        data.skillResult.score >= 90
+    ) {
+
+        reasons.push(
+            "توافق مرتفع في المهارات المطلوبة"
+        );
+
+    }
+    else if (
+        data.skillResult.score >= 60
+    ) {
+
+        reasons.push(
+            "يحقق جزءًا جيدًا من متطلبات المهارات"
+        );
+
+    }
+    else {
+
+        reasons.push(
+            "يحتاج إلى تطوير بعض المهارات المطلوبة"
+        );
+
+    }
+
+
+    if (
+        data.requiredExperience > 0
+    ) {
+
+        if (
+            data.experienceResult.employeeExperience
+            >=
+            data.requiredExperience
+        ) {
+
+            reasons.push(
+                "خبرته تحقق الخبرة المطلوبة"
+            );
+
+        }
+        else if (
+            data.experienceResult.employeeExperience > 0
+        ) {
+
+            reasons.push(
+                "خبرته أقل من المطلوب ولكن لم يتم استبعاده من الترشيح"
+            );
+
+        }
+        else {
+
+            reasons.push(
+                "لا توجد خبرة مسجلة له، لذلك حصل على 0% في معيار الخبرة فقط"
+            );
+
+        }
+
+    }
+
+
+    if (
+        data.requiredJobLevel
+    ) {
+
+        if (
+            data.jobLevelResult.score >= 100
+        ) {
+
+            reasons.push(
+                "مستواه الوظيفي يحقق المطلوب"
+            );
+
+        }
+        else {
+
+            reasons.push(
+                "مستواه الوظيفي أقل من المستوى المطلوب"
+            );
+
+        }
+
+    }
+
+
+    if (
+        data.availabilityResult.score >= 100
+    ) {
+
+        reasons.push(
+            "تفرغه يحقق متطلبات المهمة"
+        );
+
+    }
+    else if (
+        !data.currentLeave
+    ) {
+
+        reasons.push(
+            "تفرغه أقل من النسبة المطلوبة"
+        );
+
+    }
+
+
+    if (
+        data.performanceResult.employeePerformance > 0
+    ) {
+
+        if (
+            data.performanceResult.score >= 100
+        ) {
+
+            reasons.push(
+                "مستوى الأداء يحقق المطلوب"
+            );
+
+        }
+        else {
+
+            reasons.push(
+                "الأداء أقل من المستوى المطلوب"
+            );
+
+        }
+
+    }
+    else {
+
+        reasons.push(
+            "لا توجد درجة أداء مسجلة للموظف"
+        );
+
+    }
+
+
+    return reasons.join(
+        " • "
+    );
+
+}
+
+
+
+/* =====================================================
+   حساب المرشحين
+===================================================== */
+
+function calculateCandidates() {
+
+    const requiredSkills =
+        getRequiredSkills();
+
+
+    const requiredExperience =
+        getRequiredExperience();
+
+
+    const requiredAvailability =
+        getRequiredAvailability();
+
+
+    const requiredJobLevel =
+        getRequiredJobLevel();
+
+
+    const requiredPerformance =
+        getRequiredPerformance();
+
+
+    const weights =
+        getTaskWeights();
+
+
+    candidates =
+        employees.map(
+            employee => {
+
+
+                const currentLeave =
+                    getCurrentLeave(
+                        employee.id
+                    );
+
+
+                const skillResult =
+                    calculateSkillScore(
+                        employee,
+                        requiredSkills
+                    );
+
+
+                const experienceResult =
+                    calculateExperienceScore(
+                        employee,
+                        requiredExperience
+                    );
+
+
+                const jobLevelResult =
+                    calculateJobLevelScore(
+                        employee,
+                        requiredJobLevel
+                    );
+
+
+                const availabilityResult =
+                    calculateAvailabilityScore(
+                        employee,
+                        requiredAvailability,
+                        currentLeave
+                    );
+
+
+                const performanceResult =
+                    calculatePerformanceScore(
+                        employee,
+                        requiredPerformance
+                    );
+
+
+                /*
+                    النسبة النهائية:
+
+                    درجة المعيار × وزنه
+
+                    مثال:
+                    المهارات 80%
+                    وزن المهارات 40%
+
+                    80 × 0.40 = 32 نقطة
+                */
+
+                let score =
+
+                    (
+                        skillResult.score
+                        *
+                        (
+                            weights.skills
+                            /
+                            100
+                        )
+                    )
+
+                    +
+
+                    (
+                        experienceResult.score
+                        *
+                        (
+                            weights.experience
+                            /
+                            100
+                        )
+                    )
+
+                    +
+
+                    (
+                        jobLevelResult.score
+                        *
+                        (
+                            weights.jobLevel
+                            /
+                            100
+                        )
+                    )
+
+                    +
+
+                    (
+                        availabilityResult.score
+                        *
+                        (
+                            weights.availability
+                            /
+                            100
+                        )
+                    )
+
+                    +
+
+                    (
+                        performanceResult.score
+                        *
+                        (
+                            weights.performance
+                            /
+                            100
+                        )
+                    );
+
+
+                /*
+                    الإجازة فقط تمنع الإسناد الآن.
+                    لكن الموظف يبقى ظاهرًا في النتائج
+                    حتى يعرف المسؤول السبب.
+                */
+
+                if (
+                    currentLeave
+                ) {
+
+                    score =
+                        Math.max(
+                            0,
+                            score
+                            -
+                            20
+                        );
+
+                }
+
+
+                const finalScore =
+                    Math.round(
+                        Math.max(
+                            0,
+                            Math.min(
+                                100,
+                                score
+                            )
+                        )
+                    );
+
+
+                const reason =
+                    buildReason({
+
+                        employee,
+
+                        currentLeave,
+
+                        skillResult,
+
+                        experienceResult,
+
+                        jobLevelResult,
+
+                        availabilityResult,
+
+                        performanceResult,
+
+                        requiredExperience,
+
+                        requiredJobLevel
+
+                    });
+
+
+                return {
+
+                    ...employee,
+
+                    currentLeave,
+
+                    score:
+                        finalScore,
+
+                    skillScore:
+                        Math.round(
+                            skillResult.score
+                        ),
+
+                    experienceScore:
+                        Math.round(
+                            experienceResult.score
+                        ),
+
+                    jobLevelScore:
+                        Math.round(
+                            jobLevelResult.score
+                        ),
+
+                    availabilityScore:
+                        Math.round(
+                            availabilityResult.score
+                        ),
+
+                    performanceScore:
+                        Math.round(
+                            performanceResult.score
+                        ),
+
+                    employeePerformance:
+                        performanceResult.employeePerformance,
+
+                    matchedSkills:
+                        skillResult.matchedSkills,
+
+                    totalRequiredSkills:
+                        requiredSkills.length,
+
+                    missingSkills:
+                        skillResult.missingSkills,
+
+                    skillDetails:
+                        skillResult.skillDetails,
+
+                    reason
+
+                };
+
+            }
+        );
+
+
+    candidates.sort(
+        (
+            a,
+            b
+        ) =>
+            b.score
+            -
+            a.score
+    );
+
+}
+
+
+
+/* =====================================================
+   ملخص المهمة
+===================================================== */
+
+function showTaskSummary() {
+
+    const requiredSkills =
+        getRequiredSkills();
+
+
+    const experience =
+        getRequiredExperience();
+
+
+    const availability =
+        getRequiredAvailability();
+
+
+    const jobLevel =
+        getRequiredJobLevel();
+
+
+    const performance =
+        getRequiredPerformance();
+
+
+    const weights =
+        getTaskWeights();
+
+
+    document
+        .getElementById(
+            "summaryTaskName"
+        )
+        .textContent =
+        selectedTask?.task_name
+        ||
+        "-";
+
+
+    document
+        .getElementById(
+            "summaryPriority"
+        )
+        .textContent =
+        selectedTask?.priority
+        ||
+        "غير محددة";
+
+
+    document
+        .getElementById(
+            "summaryExperience"
+        )
+        .textContent =
+        experience > 0
+        ?
+        experience
+        +
+        " سنوات"
+        :
+        "غير محددة";
+
+
+    document
+        .getElementById(
+            "summaryJobLevel"
+        )
+        .textContent =
+        jobLevel
+        ||
+        "غير محدد";
+
+
+    document
+        .getElementById(
+            "summaryAvailability"
+        )
+        .textContent =
+        availability > 0
+        ?
+        availability
+        +
+        "%"
+        :
+        "غير محدد";
+
+
+    document
+        .getElementById(
+            "summaryPerformance"
+        )
+        .textContent =
+        performance > 0
+        ?
+        performance
+        +
+        "%"
+        :
+        "غير محدد";
+
+
+    document
+        .getElementById(
+            "summarySkills"
+        )
+        .textContent =
+        requiredSkills.length
+        ?
+        requiredSkills
+            .map(
+                skill =>
+                    skill.skillName
+                    +
+                    " - مستوى "
+                    +
+                    skill.requiredLevel
+            )
+            .join(
+                "، "
+            )
+        :
+        "لا توجد مهارات محددة";
+
+
+    document
+        .getElementById(
+            "summarySkillsWeight"
+        )
+        .textContent =
+        weights.skills
+        +
+        "%";
+
+
+    document
+        .getElementById(
+            "summaryExperienceWeight"
+        )
+        .textContent =
+        weights.experience
+        +
+        "%";
+
+
+    document
+        .getElementById(
+            "summaryJobWeight"
+        )
+        .textContent =
+        weights.jobLevel
+        +
+        "%";
+
+
+    document
+        .getElementById(
+            "summaryAvailabilityWeight"
+        )
+        .textContent =
+        weights.availability
+        +
+        "%";
+
+
+    document
+        .getElementById(
+            "summaryPerformanceWeight"
+        )
+        .textContent =
+        weights.performance
+        +
+        "%";
+
+}
+
+
+
+/* =====================================================
    بدء المطابقة
 ===================================================== */
 
@@ -1434,7 +2709,9 @@ async function startMatching() {
         );
 
 
-    if (!taskId) {
+    if (
+        !taskId
+    ) {
 
         alert(
             "اختر المهمة أولاً"
@@ -1546,6 +2823,7 @@ async function startMatching() {
     catch(error) {
 
         console.error(
+            "خطأ المطابقة:",
             error
         );
 
@@ -1553,7 +2831,17 @@ async function startMatching() {
         candidatesList.innerHTML = `
 
             <div class="no-candidates">
-                تعذر تنفيذ المطابقة
+
+                تعذر تنفيذ المطابقة.
+
+                <br>
+
+                ${escapeHtml(
+                    error.message
+                    ||
+                    ""
+                )}
+
             </div>
 
         `;
@@ -1576,1054 +2864,6 @@ async function startMatching() {
 
 
 /* =====================================================
-   ملخص المهمة
-===================================================== */
-
-function showTaskSummary() {
-
-    const requiredSkills =
-        getRequiredSkills();
-
-
-    const experience =
-        getRequiredExperience();
-
-
-    const availability =
-        getRequiredAvailability();
-
-
-    document
-        .getElementById(
-            "summaryTaskName"
-        )
-        .textContent =
-        selectedTask?.task_name
-        ||
-        "-";
-
-
-    document
-        .getElementById(
-            "summaryPriority"
-        )
-        .textContent =
-        selectedTask?.priority
-        ||
-        "غير محددة";
-
-
-    document
-        .getElementById(
-            "summaryExperience"
-        )
-        .textContent =
-        experience > 0
-        ?
-        experience
-        +
-        " سنوات"
-        :
-        "غير محددة";
-
-
-    document
-        .getElementById(
-            "summaryAvailability"
-        )
-        .textContent =
-        availability > 0
-        ?
-        availability
-        +
-        "%"
-        :
-        "غير محدد";
-
-
-    document
-        .getElementById(
-            "summarySkills"
-        )
-        .textContent =
-        requiredSkills.length
-        ?
-        requiredSkills
-            .map(
-                skill =>
-                    skill.skillName
-            )
-            .join(
-                "، "
-            )
-        :
-        "لا توجد مهارات محددة";
-
-}
-
-
-
-/* =====================================================
-   حساب المرشحين
-===================================================== */
-
-function calculateCandidates() {
-
-    const requiredSkills =
-        getRequiredSkills();
-
-
-    const requiredExperience =
-        getRequiredExperience();
-
-
-    const requiredAvailability =
-        getRequiredAvailability();
-
-
-    candidates =
-        employees.map(
-            employee => {
-
-
-                const currentLeave =
-                    getCurrentLeave(
-                        employee.id
-                    );
-
-
-                const skillResult =
-                    calculateSkillScore(
-                        employee,
-                        requiredSkills
-                    );
-
-
-                const experienceResult =
-                    calculateExperienceScore(
-                        employee,
-                        requiredExperience
-                    );
-
-
-                const availabilityResult =
-                    calculateAvailabilityScore(
-                        employee,
-                        requiredAvailability,
-                        currentLeave
-                    );
-
-
-                const workloadResult =
-                    calculateWorkloadScore(
-                        employee,
-                        currentLeave
-                    );
-
-
-                const statusResult =
-                    calculateStatusScore(
-                        employee,
-                        currentLeave
-                    );
-
-
-                /*
-                    أوزان معيار:
-
-                    المهارات       60%
-                    الخبرة         15%
-                    التفرغ         15%
-                    ضغط العمل       5%
-                    الحالة          5%
-                */
-
-                let score =
-
-                    (
-                        skillResult.score
-                        *
-                        0.60
-                    )
-
-                    +
-
-                    (
-                        experienceResult.score
-                        *
-                        0.15
-                    )
-
-                    +
-
-                    (
-                        availabilityResult.score
-                        *
-                        0.15
-                    )
-
-                    +
-
-                    (
-                        workloadResult.score
-                        *
-                        0.05
-                    )
-
-                    +
-
-                    (
-                        statusResult.score
-                        *
-                        0.05
-                    );
-
-
-                /*
-                    الموظف الموجود حالياً في إجازة
-                    لا يصلح للإسناد الآن.
-                */
-
-                if (
-                    currentLeave
-                ) {
-
-                    score =
-                        0;
-                }
-
-
-                const finalScore =
-                    Math.round(
-                        Math.max(
-                            0,
-                            Math.min(
-                                100,
-                                score
-                            )
-                        )
-                    );
-
-
-                const reason =
-                    buildReason({
-
-                        employee,
-
-                        currentLeave,
-
-                        skillResult,
-
-                        experienceResult,
-
-                        availabilityResult,
-
-                        workloadResult,
-
-                        statusResult,
-
-                        requiredExperience
-
-                    });
-
-
-                return {
-
-                    ...employee,
-
-                    currentLeave,
-
-                    score:
-                        finalScore,
-
-                    skillScore:
-                        Math.round(
-                            skillResult.score
-                        ),
-
-                    experienceScore:
-                        Math.round(
-                            experienceResult.score
-                        ),
-
-                    availabilityScore:
-                        Math.round(
-                            availabilityResult.score
-                        ),
-
-                    workloadScore:
-                        Math.round(
-                            workloadResult.score
-                        ),
-
-                    statusScore:
-                        Math.round(
-                            statusResult.score
-                        ),
-
-                    matchedSkills:
-                        skillResult.matchedSkills,
-
-                    totalRequiredSkills:
-                        requiredSkills.length,
-
-                    missingSkills:
-                        skillResult.missingSkills,
-
-                    skillDetails:
-                        skillResult.skillDetails,
-
-                    reason
-
-                };
-
-            }
-        );
-
-
-    candidates.sort(
-        (
-            a,
-            b
-        ) =>
-            b.score
-            -
-            a.score
-    );
-
-}
-
-
-
-/* =====================================================
-   حساب المهارات
-===================================================== */
-
-function calculateSkillScore(
-    employee,
-    requiredSkills
-) {
-
-    if (
-        requiredSkills.length === 0
-    ) {
-
-        return {
-
-            score:
-                100,
-
-            matchedSkills:
-                0,
-
-            missingSkills:
-                [],
-
-            skillDetails:
-                []
-
-        };
-
-    }
-
-
-    const employeeCurrentSkills =
-        employeeSkills.filter(
-            item =>
-                Number(
-                    item.employee_id
-                )
-                ===
-                Number(
-                    employee.id
-                )
-        );
-
-
-    let totalWeight =
-        0;
-
-
-    let earnedWeight =
-        0;
-
-
-    let matchedSkills =
-        0;
-
-
-    const missingSkills =
-        [];
-
-
-    const skillDetails =
-        [];
-
-
-    requiredSkills.forEach(
-        requirement => {
-
-
-            const weight =
-                Number(
-                    requirement.weight
-                    ||
-                    1
-                );
-
-
-            totalWeight +=
-                weight;
-
-
-            const employeeSkill =
-                employeeCurrentSkills.find(
-                    item =>
-                        Number(
-                            item.skill_id
-                        )
-                        ===
-                        Number(
-                            requirement.skillId
-                        )
-                );
-
-
-            if (
-                !employeeSkill
-            ) {
-
-                missingSkills.push(
-                    requirement.skillName
-                );
-
-
-                skillDetails.push({
-
-                    skillName:
-                        requirement.skillName,
-
-                    requiredLevel:
-                        requirement.requiredLevel,
-
-                    employeeLevel:
-                        0,
-
-                    matched:
-                        false
-
-                });
-
-
-                return;
-            }
-
-
-            const employeeLevel =
-                getLevelNumber(
-                    employeeSkill.skill_level
-                );
-
-
-            const requiredLevel =
-                Number(
-                    requirement.requiredLevel
-                    ||
-                    1
-                );
-
-
-            const ratio =
-                Math.min(
-                    employeeLevel
-                    /
-                    requiredLevel,
-                    1
-                );
-
-
-            earnedWeight +=
-                weight
-                *
-                ratio;
-
-
-            if (
-                employeeLevel
-                >=
-                requiredLevel
-            ) {
-
-                matchedSkills++;
-            }
-
-
-            else {
-
-                missingSkills.push(
-                    requirement.skillName
-                    +
-                    " يحتاج مستوى أعلى"
-                );
-
-            }
-
-
-            skillDetails.push({
-
-                skillName:
-                    requirement.skillName,
-
-                requiredLevel,
-
-                employeeLevel,
-
-                matched:
-                    employeeLevel
-                    >=
-                    requiredLevel
-
-            });
-
-        }
-    );
-
-
-    const score =
-        totalWeight > 0
-        ?
-        (
-            earnedWeight
-            /
-            totalWeight
-        )
-        *
-        100
-        :
-        100;
-
-
-    return {
-
-        score,
-
-        matchedSkills,
-
-        missingSkills,
-
-        skillDetails
-
-    };
-
-}
-
-
-
-/* =====================================================
-   حساب الخبرة
-===================================================== */
-
-function calculateExperienceScore(
-    employee,
-    requiredExperience
-) {
-
-    const employeeExperience =
-        Number(
-            employee.experience_years
-            ||
-            0
-        );
-
-
-    if (
-        requiredExperience <= 0
-    ) {
-
-        return {
-
-            score:
-                100,
-
-            employeeExperience
-
-        };
-
-    }
-
-
-    return {
-
-        score:
-            Math.min(
-                (
-                    employeeExperience
-                    /
-                    requiredExperience
-                )
-                *
-                100,
-                100
-            ),
-
-        employeeExperience
-
-    };
-
-}
-
-
-
-/* =====================================================
-   حساب التفرغ
-===================================================== */
-
-function calculateAvailabilityScore(
-    employee,
-    requiredAvailability,
-    currentLeave
-) {
-
-    if (
-        currentLeave
-    ) {
-
-        return {
-
-            score:
-                0,
-
-            value:
-                0
-
-        };
-
-    }
-
-
-    const employeeValue =
-        Number(
-            employee.availability
-            ??
-            0
-        );
-
-
-    const requiredValue =
-        Number(
-            requiredAvailability
-            ||
-            0
-        );
-
-
-    if (
-        requiredValue <= 0
-    ) {
-
-        return {
-
-            score:
-                100,
-
-            value:
-                employeeValue
-
-        };
-
-    }
-
-
-    return {
-
-        score:
-            Math.min(
-                (
-                    employeeValue
-                    /
-                    requiredValue
-                )
-                *
-                100,
-                100
-            ),
-
-        value:
-            employeeValue
-
-    };
-
-}
-
-
-
-/* =====================================================
-   ضغط العمل
-===================================================== */
-
-function calculateWorkloadScore(
-    employee,
-    currentLeave
-) {
-
-    if (
-        currentLeave
-    ) {
-
-        return {
-
-            score:
-                0,
-
-            workload:
-                Number(
-                    employee.workload
-                    ||
-                    0
-                )
-
-        };
-
-    }
-
-
-    const workload =
-        Number(
-            employee.workload
-            ||
-            0
-        );
-
-
-    return {
-
-        score:
-            Math.max(
-                0,
-                Math.min(
-                    100,
-                    100 - workload
-                )
-            ),
-
-        workload
-
-    };
-
-}
-
-
-
-/* =====================================================
-   حالة الموظف
-===================================================== */
-
-function calculateStatusScore(
-    employee,
-    currentLeave
-) {
-
-    if (
-        currentLeave
-    ) {
-
-        return {
-            score:
-                0
-        };
-
-    }
-
-
-    const status =
-        String(
-            employee.status
-            ||
-            ""
-        )
-        .trim()
-        .toLowerCase();
-
-
-    if (
-        status.includes(
-            "إجازة"
-        )
-    ) {
-
-        return {
-            score:
-                0
-        };
-
-    }
-
-
-    if (
-        status.includes(
-            "متاح"
-        )
-        ||
-        status.includes(
-            "نشط"
-        )
-        ||
-        status.includes(
-            "active"
-        )
-    ) {
-
-        return {
-            score:
-                100
-        };
-
-    }
-
-
-    if (
-        status.includes(
-            "مشغول"
-        )
-    ) {
-
-        return {
-            score:
-                60
-        };
-
-    }
-
-
-    if (
-        status.includes(
-            "غير نشط"
-        )
-        ||
-        status.includes(
-            "inactive"
-        )
-    ) {
-
-        return {
-            score:
-                20
-        };
-
-    }
-
-
-    return {
-        score:
-            80
-    };
-
-}
-
-
-
-/* =====================================================
-   سبب الترشيح
-===================================================== */
-
-function buildReason(data) {
-
-    const reasons =
-        [];
-
-
-    if (
-        data.currentLeave
-    ) {
-
-        reasons.push(
-            "الموظف في إجازة معتمدة حالياً ولذلك لا يوصى بإسناد المهمة له الآن"
-        );
-
-
-        return reasons.join(
-            " • "
-        );
-
-    }
-
-
-    if (
-        data.skillResult.score
-        >=
-        90
-    ) {
-
-        reasons.push(
-            "مطابقة المهارات مرتفعة"
-        );
-
-    }
-
-    else if (
-        data.skillResult.score
-        >=
-        60
-    ) {
-
-        reasons.push(
-            "مطابقة المهارات متوسطة"
-        );
-
-    }
-
-    else {
-
-        reasons.push(
-            "مطابقة المهارات منخفضة"
-        );
-
-    }
-
-
-    if (
-        data.requiredExperience
-        <=
-        0
-    ) {
-
-        reasons.push(
-            "لا يوجد حد محدد للخبرة"
-        );
-
-    }
-
-    else if (
-        data.experienceResult
-            .employeeExperience
-        >=
-        data.requiredExperience
-    ) {
-
-        reasons.push(
-            "خبرته تحقق الخبرة المطلوبة"
-        );
-
-    }
-
-    else {
-
-        reasons.push(
-
-            "خبرته "
-            +
-            data.experienceResult
-                .employeeExperience
-            +
-            " سنوات من أصل "
-            +
-            data.requiredExperience
-            +
-            " سنوات مطلوبة"
-
-        );
-
-    }
-
-
-    if (
-        data.availabilityResult.score
-        >=
-        90
-    ) {
-
-        reasons.push(
-            "التفرغ مناسب للمهمة"
-        );
-
-    }
-
-    else if (
-        data.availabilityResult.score
-        >=
-        60
-    ) {
-
-        reasons.push(
-            "التفرغ مناسب جزئياً"
-        );
-
-    }
-
-    else {
-
-        reasons.push(
-            "التفرغ أقل من المطلوب"
-        );
-
-    }
-
-
-    if (
-        data.workloadResult.score
-        >=
-        75
-    ) {
-
-        reasons.push(
-            "ضغط العمل منخفض"
-        );
-
-    }
-
-    else if (
-        data.workloadResult.score
-        >=
-        40
-    ) {
-
-        reasons.push(
-            "ضغط العمل متوسط"
-        );
-
-    }
-
-    else {
-
-        reasons.push(
-            "ضغط العمل مرتفع"
-        );
-
-    }
-
-
-    if (
-        data.skillResult
-            .missingSkills
-            .length
-        >
-        0
-    ) {
-
-        reasons.push(
-
-            "نواقص المهارات: "
-            +
-            data.skillResult
-                .missingSkills
-                .join(
-                    "، "
-                )
-
-        );
-
-    }
-
-
-    return reasons.join(
-        " • "
-    );
-
-}
-
-
-
-/* =====================================================
    عرض المرشحين
 ===================================================== */
 
@@ -2640,7 +2880,7 @@ function renderCandidates() {
         candidatesList.innerHTML = `
 
             <div class="no-candidates">
-                لا يوجد موظفون لعرض نتائج المطابقة
+                لا يوجد موظفون للمطابقة.
             </div>
 
         `;
@@ -2659,23 +2899,29 @@ function renderCandidates() {
 
             const card =
                 document.createElement(
-                    "article"
+                    "div"
                 );
 
 
             card.className =
-                candidate.currentLeave
-                ?
-                "candidate-card unavailable-candidate"
-                :
-                "candidate-card";
+                "candidate-card"
+                +
+                (
+                    candidate.currentLeave
+                    ?
+                    " unavailable-candidate"
+                    :
+                    ""
+                );
 
 
             card.innerHTML = `
 
 
                 <div class="candidate-rank">
+
                     ${index + 1}
+
                 </div>
 
 
@@ -2688,36 +2934,34 @@ function renderCandidates() {
                         <div>
 
                             <span class="candidate-label">
-
-                                ${
-                                    candidate.currentLeave
-                                    ?
-                                    "غير متاح حالياً"
-                                    :
-                                    index === 0
-                                    ?
-                                    "أفضل مرشح"
-                                    :
-                                    "مرشح"
-                                }
-
+                                المرشح
                             </span>
 
 
                             <h3>
-                                ${escapeHtml(candidate.name)}
+                                ${escapeHtml(
+                                    candidate.name
+                                    ||
+                                    "موظف"
+                                )}
                             </h3>
 
 
                             <p>
 
-                                ${
-                                    escapeHtml(
-                                        candidate.job_title
-                                        ||
-                                        "غير محدد"
-                                    )
-                                }
+                                ${escapeHtml(
+                                    candidate.job_title
+                                    ||
+                                    "بدون مسمى وظيفي"
+                                )}
+
+                                •
+
+                                ${escapeHtml(
+                                    candidate.department
+                                    ||
+                                    "بدون قسم"
+                                )}
 
                             </p>
 
@@ -2751,13 +2995,7 @@ function renderCandidates() {
                             </span>
 
                             <strong>
-
-                                ${candidate.matchedSkills}
-
-                                /
-
-                                ${candidate.totalRequiredSkills}
-
+                                ${candidate.skillScore}%
                             </strong>
 
                         </div>
@@ -2780,6 +3018,39 @@ function renderCandidates() {
                                 }
 
                                 سنوات
+
+                                <br>
+
+                                <small>
+                                    درجة المعيار:
+                                    ${candidate.experienceScore}%
+                                </small>
+
+                            </strong>
+
+                        </div>
+
+
+                        <div class="candidate-info">
+
+                            <span>
+                                المستوى الوظيفي
+                            </span>
+
+                            <strong>
+
+                                ${escapeHtml(
+                                    candidate.job_level
+                                    ||
+                                    "غير محدد"
+                                )}
+
+                                <br>
+
+                                <small>
+                                    درجة المعيار:
+                                    ${candidate.jobLevelScore}%
+                                </small>
 
                             </strong>
 
@@ -2810,6 +3081,13 @@ function renderCandidates() {
                                     )
                                 }
 
+                                <br>
+
+                                <small>
+                                    درجة المعيار:
+                                    ${candidate.availabilityScore}%
+                                </small>
+
                             </strong>
 
                         </div>
@@ -2818,18 +3096,29 @@ function renderCandidates() {
                         <div class="candidate-info">
 
                             <span>
-                                ضغط العمل
+                                الأداء
                             </span>
 
                             <strong>
 
                                 ${
-                                    Number(
-                                        candidate.workload
-                                        ||
-                                        0
-                                    )
-                                }%
+                                    candidate.employeePerformance
+                                    >
+                                    0
+                                    ?
+                                    candidate.employeePerformance
+                                    +
+                                    "%"
+                                    :
+                                    "غير مسجل"
+                                }
+
+                                <br>
+
+                                <small>
+                                    درجة المعيار:
+                                    ${candidate.performanceScore}%
+                                </small>
 
                             </strong>
 
@@ -2847,7 +3136,9 @@ function renderCandidates() {
                         </span>
 
                         <p>
-                            ${escapeHtml(candidate.reason)}
+                            ${escapeHtml(
+                                candidate.reason
+                            )}
                         </p>
 
                     </div>
@@ -2874,13 +3165,13 @@ function renderCandidates() {
 
                             `
 
-                                <button
-                                    type="button"
-                                    class="approve-btn disabled-approve"
-                                    disabled
-                                >
-                                    غير متاح للإسناد
-                                </button>
+                            <button
+                                type="button"
+                                class="approve-btn disabled-approve"
+                                disabled
+                            >
+                                غير متاح للإسناد
+                            </button>
 
                             `
 
@@ -2888,14 +3179,14 @@ function renderCandidates() {
 
                             `
 
-                                <button
-                                    type="button"
-                                    class="approve-btn"
-                                    data-action="approve"
-                                    data-id="${candidate.id}"
-                                >
-                                    اعتماد الترشيح
-                                </button>
+                            <button
+                                type="button"
+                                class="approve-btn"
+                                data-action="approve"
+                                data-id="${candidate.id}"
+                            >
+                                اعتماد الترشيح
+                            </button>
 
                             `
                         }
@@ -2957,7 +3248,9 @@ function showCandidateDetails(id) {
                     <div class="detail-item">
 
                         <span>
-                            ${escapeHtml(skill.skillName)}
+                            ${escapeHtml(
+                                skill.skillName
+                            )}
                         </span>
 
                         <strong>
@@ -2977,6 +3270,11 @@ function showCandidateDetails(id) {
                                     skill.requiredLevel
                                 )
                             )}
+
+                            <br>
+
+                            درجة المطابقة:
+                            ${skill.score}%
 
                         </strong>
 
@@ -3049,7 +3347,7 @@ function showCandidateDetails(id) {
             <div class="detail-item">
 
                 <span>
-                    الخبرة
+                    خبرة الموظف
                 </span>
 
                 <strong>
@@ -3085,11 +3383,15 @@ function showCandidateDetails(id) {
             <div class="detail-item">
 
                 <span>
-                    درجة التفرغ
+                    المستوى الوظيفي
                 </span>
 
                 <strong>
-                    ${candidate.availabilityScore}%
+                    ${escapeHtml(
+                        candidate.job_level
+                        ||
+                        "غير محدد"
+                    )}
                 </strong>
 
             </div>
@@ -3098,36 +3400,11 @@ function showCandidateDetails(id) {
             <div class="detail-item">
 
                 <span>
-                    ملاءمة ضغط العمل
+                    درجة المستوى الوظيفي
                 </span>
 
                 <strong>
-                    ${candidate.workloadScore}%
-                </strong>
-
-            </div>
-
-
-            <div class="detail-item">
-
-                <span>
-                    حالة الموظف
-                </span>
-
-                <strong>
-
-                    ${
-                        candidate.currentLeave
-                        ?
-                        "في إجازة معتمدة"
-                        :
-                        escapeHtml(
-                            candidate.status
-                            ||
-                            "غير محدد"
-                        )
-                    }
-
+                    ${candidate.jobLevelScore}%
                 </strong>
 
             </div>
@@ -3162,6 +3439,82 @@ function showCandidateDetails(id) {
             </div>
 
 
+            <div class="detail-item">
+
+                <span>
+                    درجة التفرغ
+                </span>
+
+                <strong>
+                    ${candidate.availabilityScore}%
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    الأداء المسجل
+                </span>
+
+                <strong>
+
+                    ${
+                        candidate.employeePerformance
+                        >
+                        0
+                        ?
+                        candidate.employeePerformance
+                        +
+                        "%"
+                        :
+                        "غير مسجل"
+                    }
+
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    درجة الأداء
+                </span>
+
+                <strong>
+                    ${candidate.performanceScore}%
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    حالة الموظف
+                </span>
+
+                <strong>
+
+                    ${
+                        candidate.currentLeave
+                        ?
+                        "في إجازة معتمدة"
+                        :
+                        escapeHtml(
+                            candidate.status
+                            ||
+                            "غير محدد"
+                        )
+                    }
+
+                </strong>
+
+            </div>
+
+
             ${skillsHtml}
 
 
@@ -3172,10 +3525,13 @@ function showCandidateDetails(id) {
                 </span>
 
                 <strong>
-                    ${escapeHtml(candidate.reason)}
+                    ${escapeHtml(
+                        candidate.reason
+                    )}
                 </strong>
 
             </div>
+
 
         `;
 
@@ -3235,7 +3591,7 @@ function approveCandidate(id) {
     ) {
 
         alert(
-            "لا يمكن اعتماد الموظف لأنه في إجازة معتمدة حالياً."
+            "لا يمكن اعتماد الموظف لأنه في إجازة معتمدة حاليًا."
         );
 
         return;
@@ -3322,7 +3678,7 @@ function approveCandidate(id) {
 
 
 /* =====================================================
-   إغلاق تفاصيل المرشح
+   إغلاق التفاصيل
 ===================================================== */
 
 function closeCandidateDetails() {
@@ -3345,7 +3701,7 @@ function closeCandidateDetails() {
 
 
 /* =====================================================
-   Sidebar
+   SIDEBAR
 ===================================================== */
 
 function openSidebar() {
@@ -3627,14 +3983,35 @@ async function startPage() {
 
 
         /*
-            إذا المستخدم جاء من صفحة المهام
-            عن طريق زر "طلب مطابقة"
+            يدعم الطريقتين:
+
+            matching.html?task=5
+
+            أو selectedTaskId من localStorage
         */
 
-        const selectedTaskId =
+        const params =
+            new URLSearchParams(
+                window.location.search
+            );
+
+
+        const queryTaskId =
+            params.get(
+                "task"
+            );
+
+
+        const localTaskId =
             localStorage.getItem(
                 "selectedTaskId"
             );
+
+
+        const selectedTaskId =
+            queryTaskId
+            ||
+            localTaskId;
 
 
         if (
@@ -3676,7 +4053,13 @@ async function startPage() {
 
 
         alert(
-            "تعذر تحميل بيانات المطابقة"
+            "تعذر تحميل بيانات المطابقة\n\n"
+            +
+            (
+                error.message
+                ||
+                ""
+            )
         );
 
     }
