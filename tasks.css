@@ -1,17 +1,18 @@
 /* =========================================================
-   معيار - صفحة المهام
-   tasks.css
-========================================================= */
-
-
-/* =========================================================
-   RESET
+   معيار | صفحة المهام
+   نفس هوية صفحة المشاريع
 ========================================================= */
 
 * {
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
 }
 
 html {
@@ -19,20 +20,15 @@ html {
 }
 
 body {
-    min-height: 100vh;
+    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+    color: #263f4f;
+    background: #f5f2ec;
+    overflow-x: hidden;
     direction: rtl;
-    font-family: Tahoma, Arial, sans-serif;
-    color: #17384a;
-    background:
-        linear-gradient(
-            rgba(247, 244, 237, 0.92),
-            rgba(247, 244, 237, 0.92)
-        ),
-        url("assets/bg.jpg") center / cover fixed;
 }
 
-body.modal-open,
-body.menu-open {
+body.menu-open,
+body.modal-open {
     overflow: hidden;
 }
 
@@ -49,79 +45,71 @@ button {
 
 button:disabled {
     cursor: not-allowed;
-    opacity: 0.65;
+    opacity: 0.55;
 }
 
 a {
-    text-decoration: none;
     color: inherit;
+    text-decoration: none;
 }
 
 
 /* =========================================================
-   PAGE
+   الصفحة
 ========================================================= */
 
 .tasks-page {
+    width: 100%;
     min-height: 100vh;
-}
-
-.main-content {
-    min-height: 100vh;
-    margin-right: 220px;
-    padding: 24px 28px 45px;
+    display: flex;
 }
 
 
 /* =========================================================
-   SIDEBAR
+   السايد بار
 ========================================================= */
 
 .sidebar {
+    width: 245px;
+    height: 100vh;
+
     position: fixed;
     top: 0;
     right: 0;
+
     z-index: 1000;
 
-    width: 220px;
-    height: 100vh;
+    padding: 25px 17px;
 
     display: flex;
     flex-direction: column;
 
-    padding: 22px 15px;
-
-    color: #ffffff;
+    overflow-y: auto;
 
     background:
         linear-gradient(
             180deg,
-            #315d72 0%,
-            #274e62 55%,
-            #1f4356 100%
+            #31586c 0%,
+            #3c667a 52%,
+            #456f82 100%
         );
 
-    box-shadow: -4px 0 20px rgba(26, 54, 67, 0.12);
+    box-shadow:
+        -8px 0 28px
+        rgba(38, 59, 70, 0.10);
 }
 
 .sidebar-logo {
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
 
-    min-height: 88px;
-    margin-bottom: 20px;
-
-    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+    margin-bottom: 28px;
 }
 
 .sidebar-logo img {
-    display: block;
-
-    width: 115px;
-    max-width: 85%;
+    width: 92px;
     height: auto;
-
     object-fit: contain;
 }
 
@@ -134,74 +122,120 @@ a {
 }
 
 .nav-link {
-    display: flex;
-    align-items: center;
+    width: 100%;
 
-    min-height: 42px;
+    display: block;
 
-    padding: 10px 13px;
+    padding: 12px 14px;
 
-    border-radius: 9px;
+    border-radius: 10px;
 
-    color: rgba(255, 255, 255, 0.86);
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.78
+        );
 
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 13px;
 
-    transition: 0.2s ease;
+    transition: 0.25s ease;
 }
 
 .nav-link:hover {
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.09
+        );
+
     color: #ffffff;
-    background: rgba(255, 255, 255, 0.10);
 }
 
 .nav-link.active {
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.14
+        );
+
     color: #ffffff;
-    background: rgba(255, 255, 255, 0.17);
-    box-shadow: inset -3px 0 0 #d2aa6d;
+
+    font-weight: 600;
+
+    border-right:
+        3px solid #c69a5a;
 }
 
 .logout-btn {
     width: 100%;
+    min-height: 44px;
 
-    margin-top: 15px;
-    padding: 11px;
+    margin-top: 18px;
 
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    border-radius: 9px;
+    border-radius: 10px;
+
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            0.24
+        );
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.05
+        );
 
     color: #ffffff;
-    background: rgba(255, 255, 255, 0.08);
 
-    font-size: 11px;
-    font-weight: 700;
+    font-size: 12px;
 
-    transition: 0.2s ease;
+    transition: 0.25s ease;
 }
 
 .logout-btn:hover {
-    background: rgba(255, 255, 255, 0.16);
+    background: #b98a4d;
+    border-color: #b98a4d;
 }
 
 
 /* =========================================================
-   MOBILE HEADER
+   هيدر الجوال
 ========================================================= */
 
-.mobile-header {
+.mobile-header,
+.mobile-menu-btn {
     display: none;
 }
 
 .sidebar-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 990;
-
     display: none;
 
-    background: rgba(21, 42, 53, 0.35);
-    backdrop-filter: blur(2px);
+    position: fixed;
+    inset: 0;
+
+    z-index: 999;
+
+    background:
+        rgba(
+            26,
+            43,
+            52,
+            0.45
+        );
+
+    backdrop-filter: blur(3px);
 }
 
 .sidebar-overlay.show {
@@ -210,285 +244,500 @@ a {
 
 
 /* =========================================================
-   TOPBAR
+   المحتوى الرئيسي + الخلفية
+========================================================= */
+
+.main-content {
+    width: calc(100% - 245px);
+    min-height: 100vh;
+
+    margin-right: 245px;
+
+    padding:
+        35px
+        42px
+        50px;
+
+    background-color: #f5f2ec;
+
+    /*
+       الخلفية نفسها المستخدمة في مشروعك
+       والطبقة البيضاء خفيفة حتى تبقى واضحة
+    */
+    background-image:
+        linear-gradient(
+            rgba(249, 247, 242, 0.38),
+            rgba(249, 247, 242, 0.38)
+        ),
+        url("assets/background.jpeg");
+
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+
+/* =========================================================
+   رأس الصفحة
 ========================================================= */
 
 .topbar {
-    position: relative;
+    margin-bottom: 25px;
 
-    margin-bottom: 18px;
-    padding: 22px 24px;
+    padding: 0;
 
-    overflow: hidden;
-
-    border: 1px solid rgba(198, 154, 90, 0.28);
-    border-radius: 16px;
-
-    background: rgba(255, 255, 255, 0.76);
-
-    box-shadow: 0 10px 30px rgba(35, 66, 80, 0.06);
+    background: transparent;
+    border: none;
+    box-shadow: none;
 }
 
 .topbar::before {
-    content: "";
-
-    position: absolute;
-    top: 0;
-    right: 0;
-
-    width: 5px;
-    height: 100%;
-
-    background: #c69a5a;
+    display: none;
 }
 
 .page-badge {
     display: inline-block;
 
-    margin-bottom: 7px;
-    padding: 5px 10px;
+    padding: 7px 14px;
 
-    border: 1px solid rgba(198, 154, 90, 0.30);
-    border-radius: 20px;
+    margin-bottom: 9px;
 
-    color: #936a38;
-    background: rgba(198, 154, 90, 0.09);
+    border-radius: 30px;
 
-    font-size: 9px;
-    font-weight: 700;
+    border:
+        1px solid
+        rgba(
+            196,
+            154,
+            92,
+            0.30
+        );
+
+    background:
+        rgba(
+            255,
+            250,
+            240,
+            0.75
+        );
+
+    color: #a77b42;
+
+    font-size: 10px;
+    font-weight: 600;
 }
 
 .topbar h1 {
-    margin-bottom: 5px;
+    margin-bottom: 6px;
 
-    color: #315d72;
+    color: #263f4f;
 
-    font-size: 24px;
-    font-weight: 800;
+    font-size: 27px;
+    font-weight: 700;
 }
 
 .topbar p {
-    max-width: 750px;
+    max-width: 850px;
 
-    color: #7b8b94;
+    color: #71828c;
 
-    font-size: 10px;
+    font-size: 12px;
     line-height: 1.8;
 }
 
 
 /* =========================================================
-   SUMMARY
+   عدادات المهام
 ========================================================= */
 
 .tasks-summary {
-    display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: 10px;
+    width: 100%;
 
-    margin-bottom: 18px;
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            6,
+            minmax(0, 1fr)
+        );
+
+    gap: 14px;
+
+    margin-bottom: 25px;
 }
 
 .summary-item {
     min-width: 0;
+    min-height: 115px;
 
-    padding: 15px 14px;
+    padding: 20px 18px;
 
-    border: 1px solid rgba(198, 154, 90, 0.24);
-    border-radius: 13px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 
-    background: rgba(255, 255, 255, 0.75);
+    border:
+        1px solid
+        rgba(
+            196,
+            154,
+            92,
+            0.68
+        );
 
-    box-shadow: 0 7px 20px rgba(40, 69, 82, 0.04);
+    border-radius: 16px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.78
+        );
+
+    backdrop-filter: blur(3px);
+
+    box-shadow:
+        0 7px 20px
+        rgba(
+            37,
+            59,
+            70,
+            0.035
+        );
 }
 
 .summary-item span {
     display: block;
 
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 
-    color: #7d8e97;
+    color: #7d8d96;
 
-    font-size: 9px;
+    font-size: 10px;
 }
 
 .summary-item strong {
     display: block;
 
-    color: #315d72;
+    color: #31586c;
 
-    font-size: 20px;
-    font-weight: 800;
+    font-size: 25px;
+    font-weight: 700;
 }
 
 .summary-item.late-summary strong {
-    color: #a45d55;
+    color: #a9584c;
 }
 
 
 /* =========================================================
-   TOOLBAR
+   شريط البحث والفلاتر
 ========================================================= */
 
 .toolbar {
-    display: flex;
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(280px, 1fr)
+        auto
+        auto;
+
     align-items: center;
+
     gap: 10px;
 
-    margin-bottom: 20px;
-    padding: 12px 14px;
+    padding: 14px;
 
-    border: 1px solid rgba(198, 154, 90, 0.28);
-    border-radius: 14px;
+    margin-bottom: 24px;
 
-    background: rgba(255, 255, 255, 0.80);
+    border-radius: 15px;
 
-    box-shadow: 0 8px 25px rgba(39, 67, 80, 0.05);
+    border:
+        1px solid
+        rgba(
+            60,
+            85,
+            98,
+            0.10
+        );
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.78
+        );
+
+    backdrop-filter: blur(5px);
+
+    box-shadow:
+        0 7px 22px
+        rgba(
+            40,
+            61,
+            73,
+            0.04
+        );
 }
 
 .search-box {
-    flex: 1;
+    width: 100%;
     min-width: 0;
 }
 
 .search-box input {
     width: 100%;
-    height: 42px;
+    height: 48px;
 
-    padding: 0 14px;
+    padding: 0 15px;
+
+    border:
+        1px solid
+        rgba(
+            63,
+            87,
+            100,
+            0.17
+        );
+
+    border-radius: 10px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.78
+        );
+
+    color: #385365;
+
+    font-size: 11px;
 
     outline: none;
-
-    border: 1px solid #d9e1e5;
-    border-radius: 9px;
-
-    color: #31586c;
-    background: rgba(255, 255, 255, 0.92);
-
-    font-size: 10px;
 }
 
 .search-box input::placeholder {
-    color: #9aa9b1;
-}
-
-.search-box input:focus {
-    border-color: rgba(198, 154, 90, 0.75);
-    box-shadow: 0 0 0 3px rgba(198, 154, 90, 0.08);
+    color: #8d9ca4;
 }
 
 .filters {
     display: flex;
-    align-items: center;
     gap: 8px;
 }
 
 .filters select {
-    width: 180px;
-    height: 42px;
+    width: 160px;
+    height: 48px;
 
     padding: 0 12px;
 
+    border:
+        1px solid
+        rgba(
+            63,
+            87,
+            100,
+            0.17
+        );
+
+    border-radius: 10px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.78
+        );
+
+    color: #385365;
+
+    font-size: 11px;
+
     outline: none;
-
-    border: 1px solid #d9e1e5;
-    border-radius: 9px;
-
-    color: #31586c;
-    background: #ffffff;
-
-    font-size: 10px;
 }
 
+.search-box input:focus,
 .filters select:focus {
-    border-color: #c69a5a;
+    border-color:
+        rgba(
+            190,
+            144,
+            79,
+            0.75
+        );
+
+    box-shadow:
+        0 0 0 3px
+        rgba(
+            190,
+            144,
+            79,
+            0.08
+        );
 }
 
 .add-btn {
-    min-width: 155px;
-    height: 42px;
+    min-width: 160px;
+    height: 48px;
 
     padding: 0 18px;
 
-    border: 0;
-    border-radius: 9px;
+    border: none;
+
+    border-radius: 10px;
+
+    background: #315f74;
 
     color: #ffffff;
-    background: #315d72;
 
-    font-size: 10px;
-    font-weight: 700;
+    font-size: 11px;
+    font-weight: 600;
 
-    transition: 0.2s ease;
+    white-space: nowrap;
+
+    transition: 0.25s ease;
 }
 
 .add-btn:hover {
-    background: #274e62;
+    background: #294f62;
     transform: translateY(-1px);
 }
 
 
 /* =========================================================
-   TASKS CONTAINER
+   قائمة المهام
 ========================================================= */
 
 .tasks-container {
-    padding: 24px;
+    width: 100%;
 
-    border: 1px solid rgba(198, 154, 90, 0.27);
-    border-radius: 16px;
+    padding: 25px 22px;
 
-    background: rgba(255, 255, 255, 0.74);
+    border-radius: 18px;
 
-    box-shadow: 0 10px 30px rgba(39, 66, 79, 0.05);
+    border-top:
+        1px solid
+        rgba(
+            196,
+            154,
+            92,
+            0.45
+        );
+
+    border-right:
+        1px solid
+        rgba(
+            60,
+            85,
+            98,
+            0.10
+        );
+
+    border-left:
+        1px solid
+        rgba(
+            60,
+            85,
+            98,
+            0.10
+        );
+
+    border-bottom:
+        1px solid
+        rgba(
+            60,
+            85,
+            98,
+            0.10
+        );
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.74
+        );
+
+    backdrop-filter: blur(4px);
+
+    box-shadow:
+        0 8px 25px
+        rgba(
+            40,
+            61,
+            73,
+            0.05
+        );
 }
 
 .section-title {
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
+
     gap: 15px;
 
-    margin-bottom: 20px;
+    margin-bottom: 24px;
 }
 
 .section-title h2 {
-    margin-bottom: 4px;
+    margin-bottom: 5px;
 
-    color: #315d72;
+    color: #31576b;
 
-    font-size: 18px;
-    font-weight: 800;
+    font-size: 20px;
+    font-weight: 700;
 }
 
 .section-title p {
-    color: #8999a1;
+    color: #7c8c94;
 
-    font-size: 9px;
+    font-size: 10px;
 }
 
 .section-title > span {
     flex-shrink: 0;
 
-    padding: 7px 11px;
+    padding: 7px 13px;
 
     border-radius: 20px;
 
-    color: #315d72;
-    background: #eef2f3;
+    background:
+        rgba(
+            49,
+            88,
+            108,
+            0.08
+        );
+
+    color: #31586c;
 
     font-size: 9px;
-    font-weight: 700;
+    font-weight: 600;
 }
 
 
 /* =========================================================
-   TASKS GRID
+   شبكة المهام
 ========================================================= */
 
 .tasks-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
+
     gap: 16px;
 
     align-items: stretch;
@@ -496,91 +745,111 @@ a {
 
 
 /* =========================================================
-   TASK CARD
+   بطاقة المهمة
 ========================================================= */
 
 .task-card {
-    position: relative;
-
     min-width: 0;
-    min-height: 300px;
+    min-height: 370px;
+
+    padding: 20px;
 
     display: flex;
     flex-direction: column;
 
-    padding: 18px 18px 16px;
+    border-radius: 15px;
 
-    overflow: hidden;
+    border:
+        1px solid
+        rgba(
+            196,
+            154,
+            92,
+            0.72
+        );
 
-    border: 1px solid rgba(198, 154, 90, 0.48);
-    border-top: 2px solid rgba(198, 154, 90, 0.88);
-    border-radius: 13px;
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.86
+        );
 
-    background: rgba(255, 255, 255, 0.92);
+    box-shadow:
+        0 7px 20px
+        rgba(
+            37,
+            59,
+            70,
+            0.04
+        );
 
-    box-shadow: 0 8px 22px rgba(39, 67, 80, 0.045);
-
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease,
-        border-color 0.2s ease;
+    transition: 0.25s ease;
 }
 
 .task-card:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px);
 
-    border-color: rgba(198, 154, 90, 0.70);
-
-    box-shadow: 0 12px 28px rgba(39, 67, 80, 0.08);
+    box-shadow:
+        0 11px 25px
+        rgba(
+            37,
+            59,
+            70,
+            0.08
+        );
 }
 
 .task-card.task-late {
-    border-color: rgba(164, 93, 85, 0.50);
-    border-top-color: #a45d55;
+    border-color:
+        rgba(
+            166,
+            84,
+            76,
+            0.62
+        );
 }
 
 
 /* =========================================================
-   TASK CARD TOP
+   أعلى البطاقة
 ========================================================= */
 
 .task-card-top {
     display: flex;
+
     align-items: flex-start;
+
     justify-content: space-between;
+
     gap: 12px;
 
-    margin-bottom: 10px;
+    margin-bottom: 13px;
 }
 
 .task-card-top > div:first-child {
-    min-width: 0;
     flex: 1;
+    min-width: 0;
 }
 
 .task-label {
     display: block;
 
-    margin-bottom: 6px;
+    margin-bottom: 5px;
 
-    overflow: hidden;
+    color: #ad7b3d;
 
-    color: #31586c;
-
-    font-size: 13px;
-    font-weight: 700;
-
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    font-size: 9px;
+    font-weight: 600;
 }
 
 .task-card h3 {
-    margin: 0;
+    color: #244b60;
 
-    color: #17384a;
+    font-size: 16px;
+    font-weight: 700;
 
-    font-size: 13px;
-    font-weight: 800;
     line-height: 1.7;
 
     overflow-wrap: anywhere;
@@ -590,62 +859,94 @@ a {
     flex-shrink: 0;
 
     display: flex;
-    align-items: center;
-    gap: 5px;
     flex-wrap: wrap;
-}
 
-.priority-badge,
-.late-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    min-height: 25px;
-
-    padding: 5px 9px;
-
-    border-radius: 20px;
-
-    font-size: 8px;
-    font-weight: 700;
-
-    white-space: nowrap;
-}
-
-.priority-badge.medium {
-    color: #8a6638;
-    background: #f7f0e4;
-}
-
-.priority-badge.high {
-    color: #9a504a;
-    background: #f8e9e7;
-}
-
-.priority-badge.low {
-    color: #4d7763;
-    background: #eaf3ed;
-}
-
-.late-badge {
-    color: #9a504a;
-    background: #f7e5e3;
+    gap: 5px;
 }
 
 
 /* =========================================================
-   DESCRIPTION
+   الأولوية
+========================================================= */
+
+.priority-badge,
+.late-badge {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 6px 11px;
+
+    border-radius: 20px;
+
+    font-size: 8px;
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+.priority-badge.high {
+    background:
+        rgba(
+            157,
+            78,
+            78,
+            0.11
+        );
+
+    color: #995555;
+}
+
+.priority-badge.medium {
+    background:
+        rgba(
+            190,
+            144,
+            79,
+            0.13
+        );
+
+    color: #a8793f;
+}
+
+.priority-badge.low {
+    background:
+        rgba(
+            70,
+            126,
+            97,
+            0.11
+        );
+
+    color: #497e65;
+}
+
+.late-badge {
+    background:
+        rgba(
+            157,
+            78,
+            78,
+            0.11
+        );
+
+    color: #995555;
+}
+
+
+/* =========================================================
+   وصف المهمة
 ========================================================= */
 
 .task-description {
-    min-height: 48px;
+    min-height: 58px;
 
-    margin: 0 0 15px;
+    margin-bottom: 17px;
 
-    color: #7c8d96;
+    color: #71838c;
 
-    font-size: 9px;
+    font-size: 10px;
+
     line-height: 1.9;
 
     overflow-wrap: anywhere;
@@ -653,32 +954,55 @@ a {
 
 
 /* =========================================================
-   TASK INFO
+   معلومات المهمة
 ========================================================= */
 
 .task-info {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px 12px;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 10px;
 
     margin-top: auto;
-    margin-bottom: 15px;
-    padding: 13px 0;
-
-    border-top: 1px solid #edf0f1;
-    border-bottom: 1px solid #edf0f1;
+    margin-bottom: 16px;
 }
 
 .info-item {
     min-width: 0;
+
+    padding: 11px 12px;
+
+    border-radius: 10px;
+
+    border:
+        1px solid
+        rgba(
+            196,
+            154,
+            92,
+            0.24
+        );
+
+    background:
+        rgba(
+            249,
+            247,
+            242,
+            0.72
+        );
 }
 
 .info-item span {
     display: block;
 
-    margin-bottom: 4px;
+    margin-bottom: 5px;
 
-    color: #9aa7ad;
+    color: #8a979d;
 
     font-size: 8px;
 }
@@ -686,10 +1010,11 @@ a {
 .info-item strong {
     display: block;
 
-    color: #244a5d;
+    color: #3c5c6d;
 
     font-size: 10px;
-    font-weight: 700;
+    font-weight: 600;
+
     line-height: 1.6;
 
     overflow-wrap: anywhere;
@@ -697,31 +1022,47 @@ a {
 
 
 /* =========================================================
-   TASK ACTIONS
+   أزرار البطاقة
 ========================================================= */
 
 .task-actions {
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 6px;
 
-    width: 100%;
+    grid-template-columns:
+        repeat(
+            5,
+            minmax(0, 1fr)
+        );
+
+    gap: 7px;
+
+    padding-top: 15px;
+
+    border-top:
+        1px solid
+        rgba(
+            60,
+            85,
+            98,
+            0.09
+        );
 }
 
 .task-actions button {
-    width: 100%;
     min-width: 0;
-    height: 34px;
+    width: 100%;
+    height: 38px;
 
     padding: 0 4px;
 
-    border: 0;
-    border-radius: 7px;
+    border: none;
+
+    border-radius: 9px;
 
     font-size: 8px;
-    font-weight: 700;
+    font-weight: 600;
 
-    transition: 0.18s ease;
+    transition: 0.2s ease;
 }
 
 .task-actions button:hover {
@@ -729,76 +1070,130 @@ a {
 }
 
 .view-btn {
-    color: #315d72;
-    background: #edf3f5;
+    background: #31586c;
+    color: #ffffff;
+}
+
+.view-btn:hover {
+    background: #294f62;
 }
 
 .edit-btn {
-    color: #315d72;
-    background: #edf3f5;
+    background:
+        rgba(
+            49,
+            88,
+            108,
+            0.09
+        );
+
+    color: #31586c;
 }
 
 .matching-btn {
-    color: #8c673a;
-    background: #f5eee3;
+    background:
+        rgba(
+            190,
+            144,
+            79,
+            0.14
+        );
+
+    color: #9b6e35;
 }
 
 .extend-btn {
+    background:
+        rgba(
+            76,
+            102,
+            114,
+            0.10
+        );
+
     color: #526d78;
-    background: #edf0f1;
 }
 
 .delete-btn {
-    color: #9b5751;
-    background: #f6e9e7;
+    background:
+        rgba(
+            151,
+            77,
+            77,
+            0.10
+        );
+
+    color: #985454;
 }
 
 
 /* =========================================================
-   EMPTY STATE
+   الحالة الفارغة
 ========================================================= */
 
 .empty-state {
     grid-column: 1 / -1;
 
-    padding: 55px 20px;
+    min-height: 250px;
 
-    border: 1px dashed rgba(198, 154, 90, 0.36);
-    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
 
-    color: #87979f;
-    background: rgba(255, 255, 255, 0.55);
+    align-items: center;
+    justify-content: center;
+
+    padding: 25px;
+
+    border:
+        1px dashed
+        rgba(
+            196,
+            154,
+            92,
+            0.45
+        );
+
+    border-radius: 13px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.50
+        );
 
     text-align: center;
 
+    color: #87959c;
+
     font-size: 11px;
+    line-height: 1.8;
 }
 
 .error-state {
-    color: #9a5751;
+    color: #985454;
 }
 
 .error-state small {
     display: block;
-
     margin-top: 8px;
-
-    color: #8b7775;
-
-    font-size: 9px;
 }
 
 
 /* =========================================================
-   MODAL
+   النوافذ
 ========================================================= */
 
 .modal {
-    position: fixed;
-    inset: 0;
-    z-index: 3000;
-
     display: none;
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 7000;
+
     align-items: center;
     justify-content: center;
 
@@ -811,116 +1206,206 @@ a {
 
 .modal-overlay {
     position: absolute;
+
     inset: 0;
 
-    background: rgba(24, 46, 57, 0.46);
+    background:
+        rgba(
+            37,
+            56,
+            66,
+            0.38
+        );
 
-    backdrop-filter: blur(3px);
+    backdrop-filter: blur(4px);
 }
 
 .modal-box {
     position: relative;
-    z-index: 1;
 
-    width: min(900px, 96vw);
+    z-index: 2;
+
+    width: min(850px, 100%);
     max-height: 90vh;
-
-    padding: 22px;
 
     overflow-y: auto;
 
-    border: 1px solid rgba(198, 154, 90, 0.34);
-    border-radius: 15px;
+    padding: 24px;
 
-    background: #fbfaf7;
+    border-radius: 18px;
 
-    box-shadow: 0 25px 60px rgba(22, 48, 61, 0.20);
+    border-top:
+        3px solid #c49a5c;
+
+    border-right:
+        1px solid
+        rgba(
+            196,
+            154,
+            92,
+            0.20
+        );
+
+    border-left:
+        1px solid
+        rgba(
+            196,
+            154,
+            92,
+            0.20
+        );
+
+    border-bottom:
+        1px solid
+        rgba(
+            196,
+            154,
+            92,
+            0.20
+        );
+
+    background:
+        rgba(
+            248,
+            247,
+            243,
+            0.98
+        );
+
+    box-shadow:
+        0 22px 55px
+        rgba(
+            38,
+            57,
+            68,
+            0.18
+        );
 }
 
 .small-modal {
-    width: min(520px, 96vw);
+    width: min(520px, 100%);
 }
 
 .details-box {
-    width: min(820px, 96vw);
+    width: min(760px, 100%);
 }
+
+
+/* =========================================================
+   رأس النافذة
+========================================================= */
 
 .modal-header {
     display: flex;
-    align-items: flex-start;
+
     justify-content: space-between;
+
+    align-items: flex-start;
+
     gap: 15px;
 
-    margin-bottom: 20px;
+    margin-bottom: 22px;
+
     padding-bottom: 14px;
 
-    border-bottom: 1px solid #e7e8e5;
+    border-bottom:
+        1px solid
+        rgba(
+            60,
+            85,
+            98,
+            0.10
+        );
 }
 
 .modal-header h2 {
     margin-bottom: 4px;
 
-    color: #315d72;
+    color: #2f5367;
 
-    font-size: 18px;
-    font-weight: 800;
+    font-size: 19px;
 }
 
 .modal-header p {
-    color: #8a999f;
+    color: #7c8c94;
 
-    font-size: 9px;
+    font-size: 10px;
 }
 
 .close-btn {
+    width: 34px;
+    height: 34px;
+
     flex-shrink: 0;
 
-    width: 32px;
-    height: 32px;
+    border: none;
 
-    border: 0;
-    border-radius: 8px;
+    border-radius: 50%;
 
-    color: #526d78;
-    background: #edf1f2;
+    background:
+        rgba(
+            49,
+            88,
+            108,
+            0.07
+        );
 
-    font-size: 18px;
-    line-height: 1;
+    color: #3b5b6c;
+
+    font-size: 20px;
+
+    transition: 0.2s ease;
 }
 
 .close-btn:hover {
-    color: #9a5751;
-    background: #f5e7e5;
+    color: #985454;
+
+    background:
+        rgba(
+            151,
+            77,
+            77,
+            0.10
+        );
 }
 
 
 /* =========================================================
-   FORM
+   الفورم
 ========================================================= */
 
 .form-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+
+    min-width: 0;
 }
 
 .full-width {
     grid-column: 1 / -1;
 }
 
-.form-group {
-    min-width: 0;
-}
-
 .form-group label {
-    display: block;
+    color: #526c79;
 
-    margin-bottom: 6px;
+    font-size: 11px;
 
-    color: #31586c;
-
-    font-size: 9px;
-    font-weight: 700;
+    font-weight: 600;
 }
 
 .form-group input,
@@ -928,32 +1413,47 @@ a {
 .form-group textarea {
     width: 100%;
 
+    border:
+        1px solid
+        rgba(
+            60,
+            85,
+            98,
+            0.16
+        );
+
+    border-radius: 10px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.78
+        );
+
+    color: #3d5968;
+
     outline: none;
-
-    border: 1px solid #d9e0e3;
-    border-radius: 8px;
-
-    color: #294d5f;
-    background: #ffffff;
-
-    font-size: 10px;
-
-    transition: 0.18s ease;
 }
 
 .form-group input,
 .form-group select {
-    height: 40px;
+    height: 45px;
 
-    padding: 0 11px;
+    padding: 0 12px;
+
+    font-size: 11px;
 }
 
 .form-group textarea {
-    min-height: 95px;
+    min-height: 105px;
 
-    padding: 11px;
+    padding: 12px;
 
     resize: vertical;
+
+    font-size: 11px;
 
     line-height: 1.7;
 }
@@ -961,120 +1461,171 @@ a {
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
-    border-color: rgba(198, 154, 90, 0.85);
+    border-color: #c49a5c;
 
-    box-shadow: 0 0 0 3px rgba(198, 154, 90, 0.08);
+    box-shadow:
+        0 0 0 3px
+        rgba(
+            196,
+            154,
+            92,
+            0.08
+        );
 }
 
 .form-group input:disabled {
-    color: #87969d;
-    background: #f1f2f1;
+    background: #ecece8;
 }
 
 .form-group small {
-    display: block;
+    color: #819098;
 
-    margin-top: 5px;
+    font-size: 9px;
 
-    color: #93a0a6;
-
-    font-size: 8px;
     line-height: 1.6;
 }
 
 
 /* =========================================================
-   REQUIREMENTS
+   قسم المتطلبات
 ========================================================= */
 
 .requirements-section {
-    margin-top: 5px;
-    padding-top: 17px;
+    margin-top: 4px;
 
-    border-top: 1px solid #e7e8e5;
+    padding: 18px;
+
+    border-radius: 14px;
+
+    border:
+        1px solid
+        rgba(
+            196,
+            154,
+            92,
+            0.28
+        );
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.46
+        );
 }
 
 .requirements-header {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
 
-    margin-bottom: 14px;
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 14px;
+
+    margin-bottom: 18px;
 }
 
 .requirements-header h3 {
-    margin-bottom: 4px;
+    margin-bottom: 5px;
 
-    color: #315d72;
+    color: #31586c;
 
     font-size: 14px;
 }
 
 .requirements-header p {
-    color: #87969e;
+    color: #819098;
 
     font-size: 9px;
-    line-height: 1.7;
+
+    line-height: 1.6;
 }
 
 .add-requirement-btn {
-    flex-shrink: 0;
+    min-width: 110px;
+    height: 38px;
 
-    min-height: 35px;
+    padding: 0 14px;
 
-    padding: 8px 13px;
+    border: none;
 
-    border: 1px solid rgba(198, 154, 90, 0.55);
-    border-radius: 8px;
+    border-radius: 9px;
 
-    color: #8f6838;
-    background: #ffffff;
+    background: #31586c;
 
-    font-size: 9px;
-    font-weight: 700;
+    color: #ffffff;
+
+    font-size: 10px;
+
+    transition: 0.2s ease;
 }
 
 .add-requirement-btn:hover {
-    background: #f7f0e5;
-}
-
-.requirements-general {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 10px;
-
-    margin: 14px 0;
+    background: #294f62;
 }
 
 
 /* =========================================================
-   REQUIREMENT ROW
+   المتطلبات العامة
 ========================================================= */
+
+.requirements-general {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 12px;
+
+    margin-bottom: 15px;
+}
 
 #requirementsContainer {
     display: flex;
+
     flex-direction: column;
-    gap: 9px;
+
+    gap: 10px;
 }
 
 .requirement-row {
     display: grid;
+
     grid-template-columns:
-        minmax(180px, 1.4fr)
+        minmax(0, 1.5fr)
         minmax(130px, 1fr)
-        minmax(140px, 1fr)
+        minmax(120px, 0.8fr)
         auto;
 
-    align-items: end;
     gap: 9px;
 
-    padding: 11px;
+    align-items: end;
 
-    border: 1px solid rgba(198, 154, 90, 0.24);
-    border-radius: 10px;
+    padding: 12px;
 
-    background: rgba(255, 255, 255, 0.72);
+    border-radius: 11px;
+
+    border:
+        1px solid
+        rgba(
+            196,
+            154,
+            92,
+            0.20
+        );
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.62
+        );
 }
 
 .requirement-remove-wrap {
@@ -1083,160 +1634,79 @@ a {
 }
 
 .remove-requirement-btn {
-    height: 40px;
+    min-width: 55px;
+    height: 45px;
 
-    padding: 0 13px;
+    padding: 0 10px;
 
-    border: 0;
-    border-radius: 8px;
+    border: none;
 
-    color: #9b5751;
-    background: #f6e9e7;
+    border-radius: 9px;
+
+    background:
+        rgba(
+            151,
+            77,
+            77,
+            0.09
+        );
+
+    color: #985454;
 
     font-size: 9px;
-    font-weight: 700;
+
+    transition: 0.2s ease;
 }
 
 .remove-requirement-btn:hover {
-    background: #efd8d5;
+    background:
+        rgba(
+            151,
+            77,
+            77,
+            0.15
+        );
 }
 
 
 /* =========================================================
-   MODAL ACTIONS
+   تحليل المهمة
+   sep-style-1 إلى sep-style-6
 ========================================================= */
 
-.modal-actions {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 8px;
-
-    margin-top: 20px;
-    padding-top: 15px;
-
-    border-top: 1px solid #e7e8e5;
-}
-
-.cancel-btn,
-.save-btn {
-    min-width: 115px;
-    height: 39px;
-
-    border: 0;
-    border-radius: 8px;
-
-    font-size: 9px;
-    font-weight: 700;
-}
-
-.cancel-btn {
-    color: #526d78;
-    background: #ecefef;
-}
-
-.save-btn {
-    color: #ffffff;
-    background: #315d72;
-}
-
-.cancel-btn:hover {
-    background: #e3e7e8;
-}
-
-.save-btn:hover {
-    background: #274e62;
-}
-
-
-/* =========================================================
-   DETAILS
-========================================================= */
-
-.details-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-}
-
-.detail-item {
-    min-width: 0;
-
-    padding: 13px;
-
-    border: 1px solid rgba(198, 154, 90, 0.22);
-    border-radius: 10px;
-
-    background: rgba(255, 255, 255, 0.74);
-}
-
-.detail-item.full-detail {
-    grid-column: 1 / -1;
-}
-
-.detail-item > span {
-    display: block;
-
-    margin-bottom: 6px;
-
-    color: #9a713f;
-
-    font-size: 8px;
-    font-weight: 700;
-}
-
-.detail-item > strong {
-    display: block;
-
-    color: #31586c;
-
-    font-size: 11px;
-    line-height: 1.6;
-}
-
-.detail-item > p {
-    margin: 0;
-
-    color: #647b87;
-
-    font-size: 10px;
-    line-height: 1.9;
-
-    overflow-wrap: anywhere;
-}
-
-
-/* =========================================================
-   EXTENSION
-========================================================= */
-
-.extension-field {
-    margin-top: 13px;
-}
-
-
-/* =========================================================
-   HTML SEPARATED STYLE
-   sep-style-1 إلى sep-style-25
-========================================================= */
-
-/* صندوق تحليل الذكاء الاصطناعي */
 .sep-style-1 {
-    margin: 14px 0;
-    padding: 14px;
+    margin: 15px 0;
 
-    border: 1px solid rgba(198, 154, 90, 0.35);
+    padding: 15px;
+
     border-radius: 12px;
 
-    background: rgba(249, 247, 242, 0.80);
+    border:
+        1px solid
+        rgba(
+            196,
+            154,
+            92,
+            0.28
+        );
+
+    background:
+        rgba(
+            248,
+            244,
+            236,
+            0.72
+        );
 }
 
 .sep-style-2 {
     display: flex;
-    align-items: center;
+
     justify-content: space-between;
-    gap: 10px;
-    flex-wrap: wrap;
+
+    align-items: center;
+
+    gap: 12px;
 }
 
 .sep-style-3 {
@@ -1245,6 +1715,8 @@ a {
     margin-bottom: 5px;
 
     color: #31586c;
+
+    font-size: 11px;
 }
 
 .sep-style-4 {
@@ -1252,51 +1724,77 @@ a {
 
     color: #71828c;
 
-    font-size: 10px;
+    font-size: 9px;
+
     line-height: 1.7;
 }
 
 .sep-style-5 {
-    padding: 9px 14px;
+    min-width: 145px;
+    height: 39px;
 
-    border: 1px solid #c69a5a;
-    border-radius: 8px;
+    padding: 0 13px;
 
-    color: #9f733c;
-    background: #ffffff;
+    border: none;
+
+    border-radius: 9px;
+
+    background: #31586c;
+
+    color: #ffffff;
 
     font-size: 9px;
-    font-weight: 700;
+    font-weight: 600;
+
+    transition: 0.2s ease;
 }
 
 .sep-style-5:hover {
-    color: #ffffff;
-    background: #c69a5a;
+    background: #294f62;
 }
 
 .sep-style-6 {
-    margin-top: 8px;
+    margin-top: 10px;
 
-    color: #526b78;
+    color: #5c7480;
 
-    font-size: 10px;
+    font-size: 9px;
+
     line-height: 1.7;
 }
 
 
-/* صندوق الأوزان */
+/* =========================================================
+   أوزان المعايير
+========================================================= */
+
 .sep-style-7 {
     margin-top: 16px;
-    padding: 14px;
 
-    border: 1px solid rgba(198, 154, 90, 0.28);
+    padding: 15px;
+
     border-radius: 12px;
 
-    background: rgba(255, 255, 255, 0.55);
+    border:
+        1px solid
+        rgba(
+            196,
+            154,
+            92,
+            0.28
+        );
+
+    background:
+        rgba(
+            248,
+            244,
+            236,
+            0.58
+        );
 }
 
 .sep-style-8 {
-    margin: 0 0 5px;
+    margin-bottom: 5px;
 
     color: #31586c;
 
@@ -1304,52 +1802,241 @@ a {
 }
 
 .sep-style-9 {
-    margin: 0 0 12px;
+    margin-bottom: 13px;
 
-    color: #7b8a92;
+    color: #71828c;
 
-    font-size: 10px;
+    font-size: 9px;
+
     line-height: 1.7;
 }
 
 .sep-style-10 {
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 8px;
+
+    grid-template-columns:
+        repeat(
+            5,
+            minmax(0, 1fr)
+        );
+
+    gap: 9px;
 }
 
 .sep-style-11 {
-    margin-top: 10px;
+    margin-top: 11px;
+
+    padding: 8px 10px;
+
+    border-radius: 8px;
+
+    background:
+        rgba(
+            196,
+            154,
+            92,
+            0.08
+        );
 
     color: #527b61;
 
-    font-size: 10px;
-    font-weight: 700;
+    font-size: 9px;
+    font-weight: 600;
 }
 
 
-/* لا توجد متطلبات */
-.sep-style-12 {
-    padding: 14px;
+/* =========================================================
+   أزرار المودال
+========================================================= */
 
-    border: 1px dashed rgba(198, 154, 90, 0.30);
+.modal-actions {
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 9px;
+
+    margin-top: 22px;
+
+    padding-top: 16px;
+
+    border-top:
+        1px solid
+        rgba(
+            60,
+            85,
+            98,
+            0.09
+        );
+}
+
+.modal-actions button {
+    min-width: 110px;
+    height: 43px;
+
+    border-radius: 9px;
+
+    font-size: 11px;
+
+    transition: 0.2s ease;
+}
+
+.cancel-btn {
+    border:
+        1px solid
+        rgba(
+            49,
+            88,
+            108,
+            0.18
+        );
+
+    background: transparent;
+
+    color: #526d7b;
+}
+
+.cancel-btn:hover {
+    background:
+        rgba(
+            49,
+            88,
+            108,
+            0.05
+        );
+}
+
+.save-btn {
+    border: none;
+
+    background: #31586c;
+
+    color: #ffffff;
+}
+
+.save-btn:hover {
+    background: #294f62;
+}
+
+
+/* =========================================================
+   تفاصيل المهمة
+========================================================= */
+
+.details-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 13px;
+}
+
+.detail-item {
+    padding: 15px;
+
+    border-radius: 11px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.58
+        );
+
+    border:
+        1px solid
+        rgba(
+            196,
+            154,
+            92,
+            0.20
+        );
+}
+
+.detail-item > span {
+    display: block;
+
+    margin-bottom: 6px;
+
+    color: #839098;
+
+    font-size: 9px;
+}
+
+.detail-item > strong {
+    display: block;
+
+    color: #405e6e;
+
+    font-size: 12px;
+
+    line-height: 1.7;
+
+    word-break: break-word;
+}
+
+.detail-item > p {
+    color: #647b87;
+
+    font-size: 10px;
+
+    line-height: 1.8;
+}
+
+.full-detail {
+    grid-column: 1 / -1;
+}
+
+
+/* =========================================================
+   تفاصيل المتطلبات
+========================================================= */
+
+.sep-style-12 {
+    padding: 15px;
+
     border-radius: 10px;
 
-    color: #87959c;
+    border:
+        1px dashed
+        rgba(
+            196,
+            154,
+            92,
+            0.35
+        );
 
     text-align: center;
+
+    color: #819098;
 }
 
-
-/* بطاقة المهارة داخل التفاصيل */
 .sep-style-13 {
     padding: 12px;
 
-    border: 1px solid rgba(198, 154, 90, 0.25);
-    border-right: 3px solid rgba(198, 154, 90, 0.75);
-    border-radius: 9px;
+    border-radius: 10px;
 
-    background: rgba(255, 255, 255, 0.80);
+    border:
+        1px solid
+        rgba(
+            196,
+            154,
+            92,
+            0.26
+        );
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.62
+        );
 }
 
 .sep-style-14 {
@@ -1364,36 +2051,53 @@ a {
 
 .sep-style-15 {
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px 18px;
 
-    color: #647b87;
+    flex-wrap: wrap;
+
+    gap: 7px 16px;
+
+    color: #71828c;
 
     font-size: 9px;
-    line-height: 1.7;
 }
 
 .sep-style-16 {
     color: #31586c;
 }
 
-
-/* شبكة متطلبات المطابقة */
 .sep-style-17 {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
 
-    width: 100%;
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 10px;
 }
 
 .sep-style-18 {
     padding: 12px;
 
-    border: 1px solid rgba(198, 154, 90, 0.24);
     border-radius: 10px;
 
-    background: rgba(255, 255, 255, 0.58);
+    border:
+        1px solid
+        rgba(
+            196,
+            154,
+            92,
+            0.20
+        );
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.58
+        );
 }
 
 .sep-style-18 > strong {
@@ -1407,22 +2111,34 @@ a {
 
     margin-bottom: 5px;
 
-    color: #9b713f;
+    color: #9a713f;
 
     font-size: 8px;
 }
 
-
-/* أوزان المطابقة في التفاصيل */
 .sep-style-20 {
     grid-column: 1 / -1;
 
     padding: 12px;
 
-    border: 1px solid rgba(198, 154, 90, 0.24);
     border-radius: 10px;
 
-    background: rgba(255, 255, 255, 0.58);
+    border:
+        1px solid
+        rgba(
+            196,
+            154,
+            92,
+            0.20
+        );
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.58
+        );
 }
 
 .sep-style-21 {
@@ -1430,28 +2146,33 @@ a {
 
     margin-bottom: 8px;
 
-    color: #9b713f;
+    color: #9a713f;
 
     font-size: 8px;
 }
 
 .sep-style-22 {
     display: flex;
+
     flex-wrap: wrap;
-    gap: 8px;
+
+    gap: 7px;
 }
 
 .sep-style-22 span {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-
     padding: 6px 9px;
 
     border-radius: 7px;
 
+    background:
+        rgba(
+            196,
+            154,
+            92,
+            0.08
+        );
+
     color: #647b87;
-    background: #f3f4f2;
 
     font-size: 8px;
 }
@@ -1460,8 +2181,6 @@ a {
     color: #31586c;
 }
 
-
-/* المهارات المطلوبة */
 .sep-style-23 {
     grid-column: 1 / -1;
 }
@@ -1469,7 +2188,7 @@ a {
 .sep-style-24 {
     display: block;
 
-    margin: 4px 0 8px;
+    margin: 5px 0 8px;
 
     color: #31586c;
 
@@ -1478,57 +2197,112 @@ a {
 
 .sep-style-25 {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(210px, 1fr)
+        );
+
     gap: 8px;
 }
 
 
 /* =========================================================
-   SCROLLBAR
+   تمديد المهمة
 ========================================================= */
 
-.modal-box::-webkit-scrollbar {
-    width: 7px;
-}
-
-.modal-box::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.modal-box::-webkit-scrollbar-thumb {
-    border-radius: 20px;
-    background: rgba(49, 93, 114, 0.25);
-}
-
-.modal-box::-webkit-scrollbar-thumb:hover {
-    background: rgba(49, 93, 114, 0.40);
+.extension-field {
+    margin-top: 14px;
 }
 
 
 /* =========================================================
-   TABLET
+   Scrollbar
 ========================================================= */
 
-@media (max-width: 1250px) {
+.modal-box::-webkit-scrollbar,
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal-box::-webkit-scrollbar-track,
+.sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.modal-box::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+
+    background:
+        rgba(
+            49,
+            88,
+            108,
+            0.22
+        );
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.20
+        );
+}
+
+
+/* =========================================================
+   شاشة متوسطة
+========================================================= */
+
+@media (max-width: 1350px) {
 
     .tasks-summary {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns:
+            repeat(
+                3,
+                minmax(0, 1fr)
+            );
     }
 
     .tasks-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+}
+
+
+/* =========================================================
+   تابلت
+========================================================= */
+
+@media
+(max-width: 1100px)
+and
+(min-width: 701px) {
+
+    .main-content {
+        padding:
+            28px
+            25px
+            45px;
     }
 
     .toolbar {
-        flex-wrap: wrap;
-    }
-
-    .search-box {
-        flex-basis: 100%;
+        grid-template-columns: 1fr;
     }
 
     .filters {
-        flex: 1;
+        width: 100%;
     }
 
     .filters select {
@@ -1536,30 +2310,37 @@ a {
         width: auto;
     }
 
-}
-
-
-/* =========================================================
-   SMALL TABLET
-========================================================= */
-
-@media (max-width: 950px) {
-
-    .sidebar {
-        width: 205px;
+    .add-btn {
+        width: 160px;
     }
 
-    .main-content {
-        margin-right: 205px;
-        padding: 20px;
+    .tasks-grid {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
     }
 
-    .requirements-general {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    .task-actions {
+        grid-template-columns:
+            repeat(
+                3,
+                minmax(0, 1fr)
+            );
+    }
+
+    .task-actions .delete-btn,
+    .task-actions .extend-btn {
+        min-width: 0;
     }
 
     .requirement-row {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
     }
 
     .requirement-remove-wrap {
@@ -1571,140 +2352,442 @@ a {
     }
 
     .sep-style-10 {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns:
+            repeat(
+                3,
+                minmax(0, 1fr)
+            );
     }
 
 }
 
 
 /* =========================================================
-   MOBILE
+   الجوال
 ========================================================= */
 
-@media (max-width: 768px) {
+@media (max-width: 700px) {
 
     body {
-        background-attachment: scroll;
+        background: #f5f2ec;
     }
 
+    .tasks-page {
+        display: block;
+    }
+
+
+    /* هيدر الجوال */
+
     .mobile-header {
-        position: sticky;
+        width: 100%;
+        height: 70px;
+
+        position: fixed;
+
         top: 0;
-        z-index: 900;
+        right: 0;
+        left: 0;
+
+        z-index: 3000;
 
         display: flex;
+
         align-items: center;
         justify-content: space-between;
 
-        height: 62px;
+        gap: 10px;
 
-        padding: 8px 14px;
+        padding:
+            9px
+            14px;
 
-        border-bottom: 1px solid rgba(198, 154, 90, 0.28);
+        background:
+            linear-gradient(
+                90deg,
+                #5f7c8b 0%,
+                #3c6276 48%,
+                #274f65 100%
+            );
 
-        background: rgba(251, 250, 247, 0.96);
+        border-bottom:
+            1px solid
+            rgba(
+                198,
+                154,
+                90,
+                0.20
+            );
 
-        backdrop-filter: blur(8px);
+        box-shadow:
+            0 4px 17px
+            rgba(
+                40,
+                61,
+                73,
+                0.13
+            );
     }
 
     .mobile-menu-btn {
-        width: 38px;
-        height: 38px;
+        display: flex;
 
-        border: 0;
-        border-radius: 8px;
+        width: 39px;
+        height: 39px;
+
+        align-items: center;
+        justify-content: center;
+
+        flex-shrink: 0;
+
+        border:
+            1px solid
+            rgba(
+                255,
+                255,
+                255,
+                0.20
+            );
+
+        border-radius: 9px;
+
+        background:
+            rgba(
+                255,
+                255,
+                255,
+                0.09
+            );
 
         color: #ffffff;
-        background: #315d72;
 
-        font-size: 17px;
+        font-size: 19px;
     }
 
     .mobile-header-title {
-        text-align: center;
+        flex: 1;
+
+        text-align: right;
     }
 
     .mobile-header-title h2 {
-        color: #315d72;
+        margin-bottom: 2px;
 
-        font-size: 13px;
+        color: #ffffff;
+
+        font-size: 15px;
+        font-weight: 600;
     }
 
     .mobile-header-title span {
-        color: #9a7b51;
+        color:
+            rgba(
+                255,
+                255,
+                255,
+                0.68
+            );
 
-        font-size: 8px;
+        font-size: 9px;
     }
 
     .mobile-logo {
-        width: 45px;
-        height: 45px;
+        width: 50px;
+        height: 50px;
+
+        flex-shrink: 0;
 
         object-fit: contain;
     }
 
+
+    /* السايد بار */
+
     .sidebar {
-        right: -235px;
+        width: 245px;
 
-        width: 220px;
+        right: -270px;
 
-        transition: right 0.25s ease;
+        padding-top: 22px;
+
+        transition: right 0.28s ease;
+
+        box-shadow:
+            -10px 0 30px
+            rgba(
+                25,
+                44,
+                54,
+                0.18
+            );
     }
 
     .sidebar.show {
         right: 0;
     }
 
+
+    /* المحتوى */
+
     .main-content {
+        width: 100%;
+
+        min-height: 100vh;
+
         margin-right: 0;
 
-        padding: 15px;
+        padding:
+            94px
+            13px
+            30px;
+
+        background-image:
+            linear-gradient(
+                rgba(249, 247, 242, 0.48),
+                rgba(249, 247, 242, 0.48)
+            ),
+            url("assets/background.jpeg");
+
+        background-size: cover;
+        background-position: center top;
+        background-repeat: no-repeat;
+        background-attachment: scroll;
     }
 
+
+    /* رأس الصفحة */
+
     .topbar {
-        padding: 17px;
+        margin-bottom: 17px;
+    }
+
+    .page-badge {
+        padding: 6px 11px;
+
+        margin-bottom: 7px;
+
+        font-size: 8px;
     }
 
     .topbar h1 {
+        font-size: 23px;
+    }
+
+    .topbar p {
+        font-size: 10px;
+        line-height: 1.7;
+    }
+
+
+    /* العدادات */
+
+    .tasks-summary {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+
+        gap: 9px;
+
+        margin-bottom: 17px;
+    }
+
+    .summary-item {
+        min-height: 86px;
+
+        padding: 13px;
+
+        border-radius: 12px;
+    }
+
+    .summary-item span {
+        margin-bottom: 6px;
+
+        font-size: 8px;
+    }
+
+    .summary-item strong {
         font-size: 20px;
     }
 
-    .tasks-summary {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+
+    /* البحث */
 
     .toolbar {
         display: grid;
+
         grid-template-columns: 1fr;
 
-        padding: 11px;
+        gap: 8px;
+
+        padding: 10px;
+
+        margin-bottom: 17px;
+
+        border-radius: 12px;
+    }
+
+    .search-box input {
+        height: 44px;
     }
 
     .filters {
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
 
-        width: 100%;
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+
+        gap: 7px;
     }
 
     .filters select {
         width: 100%;
+        height: 44px;
+
+        font-size: 9px;
     }
 
     .add-btn {
         width: 100%;
+        height: 44px;
     }
 
+
+    /* حاوية القائمة */
+
     .tasks-container {
-        padding: 15px;
+        padding: 15px 11px;
+
+        border-radius: 14px;
+
+        background:
+            rgba(
+                255,
+                255,
+                255,
+                0.73
+            );
     }
+
+    .section-title {
+        align-items: flex-start;
+
+        margin-bottom: 16px;
+    }
+
+    .section-title h2 {
+        font-size: 17px;
+    }
+
+    .section-title p {
+        font-size: 8px;
+    }
+
+    .section-title > span {
+        padding: 6px 9px;
+
+        font-size: 8px;
+    }
+
+
+    /* البطاقات */
 
     .tasks-grid {
         grid-template-columns: 1fr;
+
+        gap: 12px;
     }
 
     .task-card {
         min-height: auto;
+
+        padding: 15px;
+
+        border-radius: 13px;
+    }
+
+    .task-card h3 {
+        font-size: 14px;
+    }
+
+    .task-description {
+        min-height: auto;
+
+        margin-bottom: 14px;
+
+        font-size: 9px;
+    }
+
+    .task-info {
+        gap: 8px;
+
+        margin-bottom: 13px;
+    }
+
+    .info-item {
+        padding: 9px;
+    }
+
+    .info-item span {
+        font-size: 7px;
+    }
+
+    .info-item strong {
+        font-size: 9px;
+    }
+
+
+    /* أزرار البطاقة */
+
+    .task-actions {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+
+        gap: 7px;
+
+        padding-top: 12px;
+    }
+
+    .task-actions button {
+        height: 38px;
+
+        font-size: 9px;
+    }
+
+    .task-actions .delete-btn {
+        grid-column: 1 / -1;
+    }
+
+
+    /* النوافذ */
+
+    .modal {
+        padding: 10px;
+    }
+
+    .modal-box {
+        width: 100%;
+
+        max-height: 92vh;
+
+        padding: 17px;
+
+        border-radius: 14px;
+    }
+
+    .modal-header {
+        margin-bottom: 17px;
+    }
+
+    .modal-header h2 {
+        font-size: 16px;
     }
 
     .form-grid {
@@ -1713,6 +2796,22 @@ a {
 
     .full-width {
         grid-column: auto;
+    }
+
+    .requirements-section {
+        padding: 12px;
+    }
+
+    .requirements-header {
+        align-items: stretch;
+
+        flex-direction: column;
+
+        gap: 10px;
+    }
+
+    .add-requirement-btn {
+        width: 100%;
     }
 
     .requirements-general {
@@ -1727,15 +2826,33 @@ a {
         grid-column: auto;
     }
 
+    .remove-requirement-btn {
+        width: 100%;
+    }
+
+    .sep-style-2 {
+        align-items: stretch;
+
+        flex-direction: column;
+    }
+
+    .sep-style-5 {
+        width: 100%;
+    }
+
     .sep-style-10 {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
     }
 
     .details-grid {
         grid-template-columns: 1fr;
     }
 
-    .detail-item.full-detail {
+    .full-detail {
         grid-column: auto;
     }
 
@@ -1748,40 +2865,44 @@ a {
         grid-column: auto;
     }
 
-    .modal {
-        padding: 10px;
-    }
-
-    .modal-box {
-        width: 100%;
-        max-height: 94vh;
-
-        padding: 17px;
+    .sep-style-25 {
+        grid-template-columns: 1fr;
     }
 
 }
 
 
 /* =========================================================
-   SMALL MOBILE
+   جوال صغير
 ========================================================= */
 
-@media (max-width: 520px) {
+@media (max-width: 480px) {
 
     .main-content {
-        padding: 11px;
+        padding:
+            88px
+            10px
+            25px;
     }
 
     .tasks-summary {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+
         gap: 7px;
     }
 
     .summary-item {
-        padding: 12px;
+        min-height: 80px;
+
+        padding: 11px;
     }
 
     .summary-item strong {
-        font-size: 17px;
+        font-size: 18px;
     }
 
     .filters {
@@ -1789,66 +2910,36 @@ a {
     }
 
     .section-title {
-        align-items: flex-start;
-    }
-
-    .task-card {
-        padding: 15px;
+        gap: 8px;
     }
 
     .task-card-top {
-        flex-direction: column;
-    }
-
-    .task-card-badges {
-        width: 100%;
+        gap: 8px;
     }
 
     .task-info {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .task-actions {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .task-actions .delete-btn {
-        grid-column: 1 / -1;
-    }
-
-    .requirements-header {
-        align-items: stretch;
-        flex-direction: column;
-    }
-
-    .add-requirement-btn {
-        width: 100%;
-    }
-
-    .sep-style-2 {
-        align-items: stretch;
-        flex-direction: column;
-    }
-
-    .sep-style-5 {
-        width: 100%;
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
     }
 
     .sep-style-10 {
         grid-template-columns: 1fr;
     }
 
-    .sep-style-25 {
-        grid-template-columns: 1fr;
-    }
-
     .modal-actions {
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
     }
 
-    .cancel-btn,
-    .save-btn {
+    .modal-actions button {
         width: 100%;
         min-width: 0;
     }
@@ -1857,10 +2948,10 @@ a {
 
 
 /* =========================================================
-   VERY SMALL MOBILE
+   جوال 
 ========================================================= */
 
-@media (max-width: 380px) {
+@media (max-width: 350px) {
 
     .tasks-summary {
         grid-template-columns: 1fr;
