@@ -211,6 +211,18 @@
 
 
                 <div class="summary-item">
+                    <span>تم إسناد</span>
+                    <strong id="summaryAssignedCount">0 من 1</strong>
+                </div>
+
+
+                <div class="summary-item">
+                    <span>المتبقي</span>
+                    <strong id="summaryRemainingCount">1 موظف</strong>
+                </div>
+
+
+                <div class="summary-item">
                     <span>الخبرة المطلوبة</span>
                     <strong id="summaryExperience">-</strong>
                 </div>
@@ -323,7 +335,7 @@
 
                 <p>
                     يتم ترتيب الموظفين من أعلى نسبة توافق إلى الأقل.
-                    نقص أحد المعايير لا يستبعد الموظف تلقائيًا.
+                    الموظف المسند مسبقًا لنفس المهمة لا يظهر مرة أخرى.
                 </p>
 
             </div>
@@ -449,10 +461,15 @@ let employeeSkills = [];
 
 let employeeLeaves = [];
 
-/* تقييمات الموظفين */
 let evaluations = [];
 
 let taskRequirements = [];
+
+/*
+    جميع الإسنادات الفعلية.
+    هذا هو التعديل المهم لدعم أكثر من موظف للمهمة.
+*/
+let taskAssignments = [];
 
 let candidates = [];
 
@@ -552,6 +569,17 @@ function escapeHtml(value) {
         "'",
         "&#039;"
     );
+
+}
+
+
+function normalizeText(value) {
+
+    return String(
+        value ?? ""
+    )
+    .trim()
+    .toLowerCase();
 
 }
 
@@ -672,7 +700,9 @@ async function loadTasks() {
         priority,
         due_date,
         status,
-        assigned_employee_id
+        assigned_employee_id,
+        started_at,
+        completed_at
     `)
     .order(
         "id",
@@ -692,6 +722,17 @@ async function loadTasks() {
     tasks =
     data || [];
 
+
+    renderTaskOptions();
+
+}
+
+
+/* =====================================================
+   خيارات المهام
+===================================================== */
+
+function renderTaskOptions() {
 
     taskSelect.innerHTML = `
 
@@ -756,7 +797,8 @@ async function loadEmployees() {
         availability,
         workload,
         status,
-        employee_number
+        employee_number,
+        employment_status
     `)
     .order(
         "name",
@@ -768,7 +810,53 @@ async function loadEmployees() {
 
     if (error) {
 
-        throw error;
+        /*
+            بعض قواعد البيانات القديمة قد لا تحتوي
+            employment_status.
+
+            لذلك نجرب نفس الاستعلام القديم.
+        */
+
+        const fallback =
+        await supabaseClient
+        .from(
+            "employees"
+        )
+        .select(`
+            id,
+            name,
+            email,
+            job_title,
+            department,
+            experience_years,
+            job_level,
+            availability,
+            workload,
+            status,
+            employee_number
+        `)
+        .order(
+            "name",
+            {
+                ascending:true
+            }
+        );
+
+
+        if (
+            fallback.error
+        ) {
+
+            throw fallback.error;
+
+        }
+
+
+        employees =
+        fallback.data || [];
+
+
+        return;
 
     }
 
@@ -904,9 +992,6 @@ async function loadEmployeeLeaves() {
 
 /* =====================================================
    تحميل تقييمات الموظفين
-
-   performance_rating من 1 إلى 5
-   وسيتم تحويل المتوسط إلى نسبة من 100
 ===================================================== */
 
 async function loadEvaluations() {
@@ -950,118 +1035,49 @@ async function loadEvaluations() {
 
 
 /* =====================================================
-   حساب متوسط أداء الموظف من التقييمات
-
-   مثال:
-   5 من 5 = 100%
-   4 من 5 = 80%
-   3 من 5 = 60%
-
-   وإذا عنده أكثر من تقييم:
-   نحسب المتوسط أولاً ثم نحوله إلى نسبة.
+   تحميل إسنادات المهام
+   مهم جدًا
 ===================================================== */
 
-function getEmployeePerformance(
-    employeeId
-) {
+async function loadTaskAssignments() {
 
-    const employeeEvaluations =
-    evaluations.filter(
-        evaluation => {
-
-            return (
-                Number(
-                    evaluation.employee_id
-                )
-                ===
-                Number(
-                    employeeId
-                )
-                &&
-                Number(
-                    evaluation.performance_rating
-                )
-                >
-                0
-            );
-
-        }
-    );
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+    .from(
+        "task_assignments"
+    )
+    .select(`
+        id,
+        task_id,
+        employee_id,
+        decision_id,
+        assigned_at,
+        created_at
+    `);
 
 
-    if (
-        employeeEvaluations.length === 0
-    ) {
+    if (error) {
 
-        return {
+        console.warn(
+            "تعذر تحميل إسنادات المهام:",
+            error
+        );
 
-            percentage:0,
 
-            averageRating:0,
+        taskAssignments =
+        [];
 
-            evaluationsCount:0
 
-        };
+        return;
 
     }
 
 
-    const total =
-    employeeEvaluations.reduce(
-        (
-            sum,
-            evaluation
-        ) => {
-
-            return (
-                sum
-                +
-                Number(
-                    evaluation.performance_rating
-                    ||
-                    0
-                )
-            );
-
-        },
-        0
-    );
-
-
-    const averageRating =
-    total
-    /
-    employeeEvaluations.length;
-
-
-    const percentage =
-    Math.round(
-        Math.max(
-            0,
-            Math.min(
-                100,
-                (
-                    averageRating
-                    /
-                    5
-                )
-                *
-                100
-            )
-        )
-    );
-
-
-    return {
-
-        percentage,
-
-        averageRating,
-
-        evaluationsCount:
-        employeeEvaluations.length
-
-    };
+    taskAssignments =
+    data || [];
 
 }
 
@@ -1122,6 +1138,334 @@ async function loadTaskRequirements(
 
     taskRequirements =
     data || [];
+
+}
+
+
+/* =====================================================
+   المهمة مكتملة؟
+===================================================== */
+
+function isCompletedTask(task) {
+
+    const status =
+    normalizeText(
+        task?.status
+    );
+
+
+    return (
+        status === "done"
+        ||
+        status === "completed"
+        ||
+        status === "مكتمل"
+        ||
+        status === "مكتملة"
+        ||
+        status === "منجز"
+        ||
+        status === "منجزة"
+        ||
+        status === "cancelled"
+        ||
+        status === "canceled"
+        ||
+        status === "ملغاة"
+        ||
+        status === "ملغي"
+    );
+
+}
+
+
+/* =====================================================
+   استخراج إسنادات مهمة
+===================================================== */
+
+function getTaskAssignments(
+    taskId
+) {
+
+    const ids =
+    new Set();
+
+
+    /*
+        الإسنادات الجديدة.
+    */
+
+    taskAssignments
+    .filter(
+        assignment =>
+        Number(
+            assignment.task_id
+        )
+        ===
+        Number(
+            taskId
+        )
+    )
+    .forEach(
+        assignment => {
+
+            ids.add(
+                Number(
+                    assignment.employee_id
+                )
+            );
+
+        }
+    );
+
+
+    /*
+        دعم assigned_employee_id القديم.
+
+        Set يمنع التكرار لو الموظف
+        موجود في الجدولين.
+    */
+
+    const task =
+    tasks.find(
+        item =>
+        Number(
+            item.id
+        )
+        ===
+        Number(
+            taskId
+        )
+    );
+
+
+    if (
+        task?.assigned_employee_id
+    ) {
+
+        ids.add(
+            Number(
+                task.assigned_employee_id
+            )
+        );
+
+    }
+
+
+    return [
+        ...ids
+    ];
+
+}
+
+
+/* =====================================================
+   هل الموظف مسند للمهمة؟
+===================================================== */
+
+function isEmployeeAssignedToTask(
+    taskId,
+    employeeId
+) {
+
+    return getTaskAssignments(
+        taskId
+    )
+    .includes(
+        Number(
+            employeeId
+        )
+    );
+
+}
+
+
+/* =====================================================
+   جميع مهام الموظف
+===================================================== */
+
+function getEmployeeAssignedTaskIds(
+    employeeId
+) {
+
+    const ids =
+    new Set();
+
+
+    taskAssignments.forEach(
+        assignment => {
+
+            if (
+                Number(
+                    assignment.employee_id
+                )
+                ===
+                Number(
+                    employeeId
+                )
+            ) {
+
+                ids.add(
+                    Number(
+                        assignment.task_id
+                    )
+                );
+
+            }
+
+        }
+    );
+
+
+    /*
+        دعم البيانات القديمة.
+    */
+
+    tasks.forEach(
+        task => {
+
+            if (
+                Number(
+                    task.assigned_employee_id
+                )
+                ===
+                Number(
+                    employeeId
+                )
+            ) {
+
+                ids.add(
+                    Number(
+                        task.id
+                    )
+                );
+
+            }
+
+        }
+    );
+
+
+    return [
+        ...ids
+    ];
+
+}
+
+
+/* =====================================================
+   المهام النشطة للموظف
+===================================================== */
+
+function getEmployeeActiveTasks(
+    employeeId
+) {
+
+    const ids =
+    getEmployeeAssignedTaskIds(
+        employeeId
+    );
+
+
+    return tasks.filter(
+        task => {
+
+            return (
+                ids.includes(
+                    Number(
+                        task.id
+                    )
+                )
+                &&
+                !isCompletedTask(
+                    task
+                )
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   الحمل الفعلي للموظف
+
+   كل مهمة نشطة = 20%
+===================================================== */
+
+function getEmployeeOperationalState(
+    employee
+) {
+
+    const activeTasks =
+    getEmployeeActiveTasks(
+        employee.id
+    );
+
+
+    const workload =
+    Math.min(
+        100,
+        activeTasks.length * 20
+    );
+
+
+    let availability =
+    Math.max(
+        0,
+        100 - workload
+    );
+
+
+    const currentLeave =
+    getCurrentLeave(
+        employee.id
+    );
+
+
+    if (
+        currentLeave
+    ) {
+
+        availability =
+        0;
+
+    }
+
+
+    const employmentStatus =
+    normalizeText(
+        employee.employment_status
+    );
+
+
+    if (
+        employmentStatus
+        &&
+        employmentStatus !== "على رأس العمل"
+    ) {
+
+        availability =
+        0;
+
+    }
+
+
+    return {
+
+        activeTasks,
+
+        taskCount:
+        activeTasks.length,
+
+        workload,
+
+        availability,
+
+        currentLeave
+
+    };
 
 }
 
@@ -1193,11 +1537,9 @@ function getLevelNumber(value) {
 
 
     const text =
-    String(
+    normalizeText(
         value
-    )
-    .trim()
-    .toLowerCase();
+    );
 
 
     if (
@@ -1350,7 +1692,7 @@ function getFirstRequirement() {
 
 
 /* =====================================================
-   عدد الموظفين المطلوب للمهمة كاملة
+   عدد الموظفين المطلوب
 ===================================================== */
 
 function getEmployeesRequired() {
@@ -1366,6 +1708,44 @@ function getEmployeesRequired() {
             ||
             1
         )
+    );
+
+}
+
+
+/* =====================================================
+   عدد الموظفين المسندين
+===================================================== */
+
+function getAssignedCount() {
+
+    if (
+        !selectedTask
+    ) {
+
+        return 0;
+
+    }
+
+
+    return getTaskAssignments(
+        selectedTask.id
+    ).length;
+
+}
+
+
+/* =====================================================
+   العدد المتبقي
+===================================================== */
+
+function getRemainingCount() {
+
+    return Math.max(
+        0,
+        getEmployeesRequired()
+        -
+        getAssignedCount()
     );
 
 }
@@ -1429,7 +1809,7 @@ function getRequiredPerformance() {
 
 
 /* =====================================================
-   المستوى الوظيفي المطلوب
+   المستوى المطلوب
 ===================================================== */
 
 function getRequiredJobLevel() {
@@ -1449,9 +1829,6 @@ function getRequiredJobLevel() {
 
 /* =====================================================
    المهارات المطلوبة
-
-   عدد الموظفين للمهمة كاملة
-   وليس لكل مهارة
 ===================================================== */
 
 function getRequiredSkills() {
@@ -1539,7 +1916,7 @@ function getTaskWeights() {
     };
 
 
-    let total =
+    const total =
     weights.skills
     +
     weights.experience
@@ -1584,13 +1961,9 @@ function getTaskWeights() {
 function normalizeLeaveStatus(status) {
 
     const value =
-    String(
+    normalizeText(
         status
-        ||
-        ""
-    )
-    .trim()
-    .toLowerCase();
+    );
 
 
     return (
@@ -1690,6 +2063,115 @@ function getCurrentLeave(
     )
     ||
     null;
+
+}
+
+
+/* =====================================================
+   متوسط أداء الموظف
+===================================================== */
+
+function getEmployeePerformance(
+    employeeId
+) {
+
+    const employeeEvaluations =
+    evaluations.filter(
+        evaluation => {
+
+            return (
+                Number(
+                    evaluation.employee_id
+                )
+                ===
+                Number(
+                    employeeId
+                )
+                &&
+                Number(
+                    evaluation.performance_rating
+                )
+                >
+                0
+            );
+
+        }
+    );
+
+
+    if (
+        employeeEvaluations.length === 0
+    ) {
+
+        return {
+
+            percentage:0,
+
+            averageRating:0,
+
+            evaluationsCount:0
+
+        };
+
+    }
+
+
+    const total =
+    employeeEvaluations.reduce(
+        (
+            sum,
+            evaluation
+        ) => {
+
+            return (
+                sum
+                +
+                Number(
+                    evaluation.performance_rating
+                    ||
+                    0
+                )
+            );
+
+        },
+        0
+    );
+
+
+    const averageRating =
+    total
+    /
+    employeeEvaluations.length;
+
+
+    const percentage =
+    Math.round(
+        Math.max(
+            0,
+            Math.min(
+                100,
+                (
+                    averageRating
+                    /
+                    5
+                )
+                *
+                100
+            )
+        )
+    );
+
+
+    return {
+
+        percentage,
+
+        averageRating,
+
+        evaluationsCount:
+        employeeEvaluations.length
+
+    };
 
 }
 
@@ -2000,7 +2482,7 @@ function calculateJobLevelScore(
 ===================================================== */
 
 function calculateAvailabilityScore(
-    employee,
+    actualAvailability,
     requiredAvailability,
     currentLeave
 ) {
@@ -2026,7 +2508,7 @@ function calculateAvailabilityScore(
         Math.min(
             100,
             Number(
-                employee.availability
+                actualAvailability
                 ||
                 0
             )
@@ -2075,10 +2557,6 @@ function calculateAvailabilityScore(
 
 /* =====================================================
    الأداء
-
-   التعديل:
-   الأداء يأتي من متوسط تقييمات الموظف
-   في جدول evaluations
 ===================================================== */
 
 function calculatePerformanceScore(
@@ -2095,12 +2573,6 @@ function calculatePerformanceScore(
     const employeePerformance =
     performanceData.percentage;
 
-
-    /*
-       إذا لم يوجد للموظف أي تقييم:
-       لا نخترع له درجة أداء.
-       تكون درجته في معيار الأداء 0.
-    */
 
     if (
         performanceData.evaluationsCount === 0
@@ -2122,12 +2594,6 @@ function calculatePerformanceScore(
 
     }
 
-
-    /*
-       إذا المهمة لم تحدد حدًا أدنى للأداء
-       والموظف لديه تقييمات:
-       نستخدم نسبة أدائه نفسها.
-    */
 
     if (
         requiredPerformance <= 0
@@ -2152,20 +2618,6 @@ function calculatePerformanceScore(
 
     }
 
-
-    /*
-       إذا المهمة حددت أداء مطلوبًا:
-       نقارن أداء الموظف بالأداء المطلوب.
-
-       مثال:
-       أداء الموظف 80%
-       المطلوب 70%
-       يحصل على 100% في معيار الأداء.
-
-       أداء الموظف 60%
-       المطلوب 80%
-       يحصل على 75% في معيار الأداء.
-    */
 
     const score =
     Math.min(
@@ -2326,7 +2778,7 @@ function buildReason(data) {
     ) {
 
         reasons.push(
-            "تفرغه أقل من النسبة المطلوبة"
+            "تفرغه أقل من النسبة المطلوبة بسبب المهام الحالية"
         );
 
     }
@@ -2360,6 +2812,25 @@ function buildReason(data) {
 
         reasons.push(
             "لا توجد تقييمات أداء سابقة للموظف"
+        );
+
+    }
+
+
+    if (
+        data.taskCount > 0
+    ) {
+
+        reasons.push(
+            `لديه ${data.taskCount} مهام نشطة حاليًا وضغط العمل ${data.workload}%`
+        );
+
+    }
+
+    else {
+
+        reasons.push(
+            "لا توجد لديه مهام نشطة حاليًا"
         );
 
     }
@@ -2402,14 +2873,48 @@ function calculateCandidates() {
     getTaskWeights();
 
 
+    /*
+        الموظفون المسندون مسبقًا لنفس المهمة.
+    */
+
+    const assignedEmployeeIds =
+    selectedTask
+    ?
+    getTaskAssignments(
+        selectedTask.id
+    )
+    :
+    [];
+
+
     candidates =
-    employees.map(
+    employees
+
+    /*
+        التعديل المهم:
+        الموظف المسند لنفس المهمة لا يدخل
+        المطابقة مرة ثانية.
+    */
+    .filter(
+        employee =>
+        !assignedEmployeeIds.includes(
+            Number(
+                employee.id
+            )
+        )
+    )
+
+    .map(
         employee => {
 
-            const currentLeave =
-            getCurrentLeave(
-                employee.id
+            const operational =
+            getEmployeeOperationalState(
+                employee
             );
+
+
+            const currentLeave =
+            operational.currentLeave;
 
 
             const skillResult =
@@ -2433,9 +2938,17 @@ function calculateCandidates() {
             );
 
 
+            /*
+                هنا لا نستخدم availability القديمة فقط.
+
+                نحسب التفرغ من عدد المهام الحالية:
+                مهمة = ضغط 20%
+                التفرغ = 100 - الضغط
+            */
+
             const availabilityResult =
             calculateAvailabilityScore(
-                employee,
+                operational.availability,
                 requiredAvailability,
                 currentLeave
             );
@@ -2546,7 +3059,13 @@ function calculateCandidates() {
 
                 requiredExperience,
 
-                requiredJobLevel
+                requiredJobLevel,
+
+                taskCount:
+                operational.taskCount,
+
+                workload:
+                operational.workload
 
             });
 
@@ -2556,6 +3075,18 @@ function calculateCandidates() {
                 ...employee,
 
                 currentLeave,
+
+                activeTasks:
+                operational.activeTasks,
+
+                currentTaskCount:
+                operational.taskCount,
+
+                workload:
+                operational.workload,
+
+                availability:
+                operational.availability,
 
                 score:
                 finalScore,
@@ -2641,6 +3172,14 @@ function showTaskSummary() {
     getEmployeesRequired();
 
 
+    const assignedCount =
+    getAssignedCount();
+
+
+    const remainingCount =
+    getRemainingCount();
+
+
     const experience =
     getRequiredExperience();
 
@@ -2699,6 +3238,34 @@ function showTaskSummary() {
     " "
     +
     employeeWord;
+
+
+    document
+    .getElementById(
+        "summaryAssignedCount"
+    )
+    .textContent =
+    assignedCount
+    +
+    " من "
+    +
+    employeesRequired;
+
+
+    document
+    .getElementById(
+        "summaryRemainingCount"
+    )
+    .textContent =
+    remainingCount
+    +
+    (
+        remainingCount === 1
+        ?
+        " موظف"
+        :
+        " موظفين"
+    );
 
 
     document
@@ -2966,9 +3533,26 @@ async function startMatching() {
 
     try {
 
-        await loadTaskRequirements(
-            taskId
-        );
+        /*
+            نعيد تحميل الإسنادات قبل كل مطابقة
+            حتى لو رجعنا من صفحة القرارات.
+        */
+
+        await Promise.all([
+
+            loadTaskRequirements(
+                taskId
+            ),
+
+            loadTaskAssignments(),
+
+            loadEmployees(),
+
+            loadEvaluations(),
+
+            loadEmployeeLeaves()
+
+        ]);
 
 
         if (
@@ -2999,6 +3583,42 @@ async function startMatching() {
 
 
         showTaskSummary();
+
+
+        /*
+            إذا اكتمل العدد المطلوب
+            نوقف الترشيح.
+        */
+
+        if (
+            getRemainingCount() <= 0
+        ) {
+
+            candidates = [];
+
+
+            candidatesList.innerHTML = `
+
+                <div class="no-candidates">
+
+                    تم إكمال العدد المطلوب لهذه المهمة.
+
+                    <br>
+
+                    تم إسناد
+                    ${getAssignedCount()}
+                    من
+                    ${getEmployeesRequired()}
+                    موظفين.
+
+                </div>
+
+            `;
+
+
+            return;
+
+        }
 
 
         calculateCandidates();
@@ -3067,7 +3687,7 @@ function renderCandidates() {
         candidatesList.innerHTML = `
 
             <div class="no-candidates">
-                لا يوجد موظفون للمطابقة.
+                لا يوجد موظفون متاحون للمطابقة لهذه المهمة.
             </div>
 
         `;
@@ -3244,6 +3864,32 @@ function renderCandidates() {
                                     ${candidate.jobLevelScore}%
                                 </small>
 
+                            </strong>
+
+                        </div>
+
+
+                        <div class="candidate-info">
+
+                            <span>
+                                عدد المهام الحالية
+                            </span>
+
+                            <strong>
+                                ${candidate.currentTaskCount}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="candidate-info">
+
+                            <span>
+                                ضغط العمل
+                            </span>
+
+                            <strong>
+                                ${candidate.workload}%
                             </strong>
 
                         </div>
@@ -3512,6 +4158,23 @@ function showCandidateDetails(id) {
     "لا توجد تقييمات سابقة";
 
 
+    const activeTasksHtml =
+    candidate.activeTasks.length
+    ?
+    candidate.activeTasks
+    .map(
+        task =>
+        `• ${escapeHtml(
+            task.task_name
+            ||
+            "مهمة"
+        )}`
+    )
+    .join("<br>")
+    :
+    "لا توجد مهام حالية";
+
+
     document
     .getElementById(
         "candidateDetails"
@@ -3540,6 +4203,34 @@ function showCandidateDetails(id) {
 
             <strong>
                 ${getEmployeesRequired()}
+            </strong>
+
+        </div>
+
+
+        <div class="detail-item">
+
+            <span>
+                تم إسناد
+            </span>
+
+            <strong>
+                ${getAssignedCount()}
+                من
+                ${getEmployeesRequired()}
+            </strong>
+
+        </div>
+
+
+        <div class="detail-item">
+
+            <span>
+                المتبقي
+            </span>
+
+            <strong>
+                ${getRemainingCount()}
             </strong>
 
         </div>
@@ -3600,13 +4291,11 @@ function showCandidateDetails(id) {
             </span>
 
             <strong>
-
                 ${escapeHtml(
                     candidate.job_level
                     ||
                     "غير محدد"
                 )}
-
             </strong>
 
         </div>
@@ -3615,7 +4304,7 @@ function showCandidateDetails(id) {
         <div class="detail-item">
 
             <span>
-                درجة المستوى الوظيفي
+                درجة المستوى
             </span>
 
             <strong>
@@ -3628,27 +4317,43 @@ function showCandidateDetails(id) {
         <div class="detail-item">
 
             <span>
-                التفرغ الحالي
+                عدد المهام الحالية
             </span>
 
             <strong>
+                ${candidate.currentTaskCount}
+            </strong>
 
+        </div>
+
+
+        <div class="detail-item">
+
+            <span>
+                ضغط العمل
+            </span>
+
+            <strong>
+                ${candidate.workload}%
+            </strong>
+
+        </div>
+
+
+        <div class="detail-item">
+
+            <span>
+                التفرغ الفعلي
+            </span>
+
+            <strong>
                 ${
                     candidate.currentLeave
                     ?
-                    "0%"
+                    "في إجازة"
                     :
-                    (
-                        Number(
-                            candidate.availability
-                            ||
-                            0
-                        )
-                        +
-                        "%"
-                    )
+                    candidate.availability + "%"
                 }
-
             </strong>
 
         </div>
@@ -3670,51 +4375,24 @@ function showCandidateDetails(id) {
         <div class="detail-item">
 
             <span>
-                متوسط الأداء
+                الأداء
             </span>
 
             <strong>
-
                 ${performanceDetails}
-
             </strong>
 
         </div>
 
 
-        <div class="detail-item">
+        <div class="detail-item full-detail">
 
             <span>
-                درجة معيار الأداء
+                المهام الحالية
             </span>
 
             <strong>
-                ${candidate.performanceScore}%
-            </strong>
-
-        </div>
-
-
-        <div class="detail-item">
-
-            <span>
-                حالة الموظف
-            </span>
-
-            <strong>
-
-                ${
-                    candidate.currentLeave
-                    ?
-                    "في إجازة معتمدة"
-                    :
-                    escapeHtml(
-                        candidate.status
-                        ||
-                        "غير محدد"
-                    )
-                }
-
+                ${activeTasksHtml}
             </strong>
 
         </div>
@@ -3762,7 +4440,7 @@ function showCandidateDetails(id) {
    اعتماد الترشيح
 ===================================================== */
 
-function approveCandidate(id) {
+async function approveCandidate(id) {
 
     const candidate =
     candidates.find(
@@ -3786,6 +4464,67 @@ function approveCandidate(id) {
         alert(
             "تعذر العثور على بيانات المرشح أو المهمة"
         );
+
+
+        return;
+
+    }
+
+
+    /*
+        نعيد تحميل الإسنادات قبل الاعتماد
+        للتأكد أن البيانات حديثة.
+    */
+
+    await loadTaskAssignments();
+
+
+    const required =
+    getEmployeesRequired();
+
+
+    const assigned =
+    getTaskAssignments(
+        selectedTask.id
+    );
+
+
+    if (
+        assigned.length >= required
+    ) {
+
+        alert(
+            "تم إكمال العدد المطلوب لهذه المهمة ولا يمكن اعتماد موظف إضافي."
+        );
+
+
+        await startMatching();
+
+
+        return;
+
+    }
+
+
+    /*
+        حماية إضافية:
+        لا يمكن اعتماد نفس الموظف للمهمة مرتين.
+    */
+
+    if (
+        assigned.includes(
+            Number(
+                candidate.id
+            )
+        )
+    ) {
+
+        alert(
+            "هذا الموظف تم إسناده لهذه المهمة مسبقًا."
+        );
+
+
+        await startMatching();
 
 
         return;
@@ -3843,7 +4582,16 @@ function approveCandidate(id) {
         selectedTask.task_name,
 
         employeesRequired:
-        getEmployeesRequired(),
+        required,
+
+        alreadyAssignedCount:
+        assigned.length,
+
+        remainingBeforeDecision:
+        Math.max(
+            0,
+            required - assigned.length
+        ),
 
         systemCandidateId:
         Number(
@@ -3868,6 +4616,15 @@ function approveCandidate(id) {
 
         recommendationReason:
         candidate.reason,
+
+        currentTaskCount:
+        candidate.currentTaskCount,
+
+        currentWorkload:
+        candidate.workload,
+
+        currentAvailability:
+        candidate.availability,
 
         requiredSkills:
         getRequiredSkills().map(
@@ -3896,6 +4653,14 @@ function approveCandidate(id) {
             pendingDecision
         )
 
+    );
+
+
+    localStorage.setItem(
+        "selectedTaskId",
+        String(
+            selectedTask.id
+        )
     );
 
 
@@ -4169,6 +4934,52 @@ candidatesList
 
 
 /* =====================================================
+   تحديث البيانات عند الرجوع للصفحة
+===================================================== */
+
+window.addEventListener(
+    "focus",
+    async function() {
+
+        try {
+
+            await Promise.all([
+
+                loadTaskAssignments(),
+
+                loadEmployees(),
+
+                loadTasks()
+
+            ]);
+
+
+            if (
+                selectedTask
+                &&
+                taskSelect.value
+            ) {
+
+                await startMatching();
+
+            }
+
+        }
+
+        catch(error) {
+
+            console.warn(
+                "تعذر تحديث بيانات المطابقة:",
+                error
+            );
+
+        }
+
+    }
+);
+
+
+/* =====================================================
    تشغيل الصفحة
 ===================================================== */
 
@@ -4201,18 +5012,22 @@ async function startPage() {
 
             loadEmployeeLeaves(),
 
-            /* التعديل الجديد */
-            loadEvaluations()
+            loadEvaluations(),
+
+            /*
+                التعديل المهم
+            */
+            loadTaskAssignments()
 
         ]);
 
 
         /*
-        يدعم:
-        matching.html?task=5
+            يدعم:
+            matching.html?task=5
 
-        أو selectedTaskId
-        من localStorage
+            أو selectedTaskId
+            من localStorage
         */
 
         const params =
