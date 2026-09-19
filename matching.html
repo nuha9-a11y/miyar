@@ -55,75 +55,50 @@
     >
 
         <div class="sidebar-logo">
+
             <img
                 src="assets/logo.png"
                 alt="معيار"
             >
+
         </div>
 
 
         <nav class="sidebar-nav">
 
-            <a
-                href="dashboard.html"
-                class="nav-link"
-            >
+            <a href="dashboard.html" class="nav-link">
                 لوحة التحكم
             </a>
 
-            <a
-                href="employees.html"
-                class="nav-link"
-            >
+            <a href="employees.html" class="nav-link">
                 الموظفون
             </a>
 
-            <a
-                href="projects.html"
-                class="nav-link"
-            >
+            <a href="projects.html" class="nav-link">
                 المشاريع
             </a>
 
-            <a
-                href="tasks.html"
-                class="nav-link"
-            >
+            <a href="tasks.html" class="nav-link">
                 المهام
             </a>
 
-            <a
-                href="matching.html"
-                class="nav-link active"
-            >
+            <a href="matching.html" class="nav-link active">
                 المطابقة والترشيح
             </a>
 
-            <a
-                href="evaluations.html"
-                class="nav-link"
-            >
+            <a href="evaluations.html" class="nav-link">
                 التقييمات
             </a>
 
-            <a
-                href="decisions.html"
-                class="nav-link"
-            >
+            <a href="decisions.html" class="nav-link">
                 القرارات
             </a>
 
-            <a
-                href="leaves.html"
-                class="nav-link"
-            >
+            <a href="leaves.html" class="nav-link">
                 طلبات الإجازات
             </a>
 
-            <a
-                href="reports.html"
-                class="nav-link"
-            >
+            <a href="reports.html" class="nav-link">
                 التقارير
             </a>
 
@@ -228,25 +203,36 @@
                     <strong id="summaryPriority">-</strong>
                 </div>
 
+
+                <div class="summary-item">
+                    <span>عدد الموظفين المطلوب للمهمة</span>
+                    <strong id="summaryEmployeesRequired">1 موظف</strong>
+                </div>
+
+
                 <div class="summary-item">
                     <span>الخبرة المطلوبة</span>
                     <strong id="summaryExperience">-</strong>
                 </div>
+
 
                 <div class="summary-item">
                     <span>المستوى الوظيفي المطلوب</span>
                     <strong id="summaryJobLevel">-</strong>
                 </div>
 
+
                 <div class="summary-item">
                     <span>التفرغ المطلوب</span>
                     <strong id="summaryAvailability">-</strong>
                 </div>
 
+
                 <div class="summary-item">
                     <span>الأداء المطلوب</span>
                     <strong id="summaryPerformance">-</strong>
                 </div>
+
 
                 <div class="summary-item">
                     <span>المهارات المطلوبة</span>
@@ -256,7 +242,7 @@
             </div>
 
 
-            <!-- أوزان المهمة -->
+            <!-- الأوزان -->
             <div
                 style="
                     margin-top:15px;
@@ -292,20 +278,24 @@
                         <strong id="summarySkillsWeight">40%</strong>
                     </div>
 
+
                     <div class="summary-item">
                         <span>الخبرة</span>
                         <strong id="summaryExperienceWeight">20%</strong>
                     </div>
+
 
                     <div class="summary-item">
                         <span>المستوى الوظيفي</span>
                         <strong id="summaryJobWeight">15%</strong>
                     </div>
 
+
                     <div class="summary-item">
                         <span>التفرغ</span>
                         <strong id="summaryAvailabilityWeight">15%</strong>
                     </div>
+
 
                     <div class="summary-item">
                         <span>الأداء</span>
@@ -1178,7 +1168,7 @@ function levelToText(level) {
 
 
 /* =====================================================
-   متطلبات المهمة
+   أول متطلب
 ===================================================== */
 
 function getFirstRequirement() {
@@ -1191,6 +1181,32 @@ function getFirstRequirement() {
 
 }
 
+
+/* =====================================================
+   عدد الموظفين المطلوب للمهمة كاملة
+===================================================== */
+
+function getEmployeesRequired() {
+
+    const first =
+    getFirstRequirement();
+
+
+    return Math.max(
+        1,
+        Number(
+            first?.employees_required
+            ||
+            1
+        )
+    );
+
+}
+
+
+/* =====================================================
+   الخبرة المطلوبة
+===================================================== */
 
 function getRequiredExperience() {
 
@@ -1207,6 +1223,10 @@ function getRequiredExperience() {
 }
 
 
+/* =====================================================
+   التفرغ المطلوب
+===================================================== */
+
 function getRequiredAvailability() {
 
     const first =
@@ -1222,6 +1242,10 @@ function getRequiredAvailability() {
 }
 
 
+/* =====================================================
+   الأداء المطلوب
+===================================================== */
+
 function getRequiredPerformance() {
 
     const first =
@@ -1236,6 +1260,10 @@ function getRequiredPerformance() {
 
 }
 
+
+/* =====================================================
+   المستوى الوظيفي المطلوب
+===================================================== */
 
 function getRequiredJobLevel() {
 
@@ -1253,7 +1281,9 @@ function getRequiredJobLevel() {
 
 
 /* =====================================================
-   المهارات المطلوبة + عدد الموظفين لكل مهارة
+   المهارات المطلوبة
+   ملاحظة:
+   عدد الموظفين لم يعد مرتبطًا بكل مهارة
 ===================================================== */
 
 function getRequiredSkills() {
@@ -1283,17 +1313,7 @@ function getRequiredSkills() {
                 requirement.required_level
             )
             ||
-            1,
-
-            employeesRequired:
-            Math.max(
-                1,
-                Number(
-                    requirement.employees_required
-                    ||
-                    1
-                )
-            )
+            1
 
         })
     );
@@ -1638,9 +1658,6 @@ function calculateSkillScore(
                 employeeLevel,
 
                 requiredLevel,
-
-                employeesRequired:
-                requirement.employeesRequired,
 
                 score:
                 Math.round(
@@ -2384,6 +2401,10 @@ function showTaskSummary() {
     getRequiredSkills();
 
 
+    const employeesRequired =
+    getEmployeesRequired();
+
+
     const experience =
     getRequiredExperience();
 
@@ -2422,6 +2443,26 @@ function showTaskSummary() {
     selectedTask?.priority
     ||
     "غير محددة";
+
+
+    const employeeWord =
+    employeesRequired === 1
+    ?
+    "موظف"
+    :
+    "موظفين";
+
+
+    document
+    .getElementById(
+        "summaryEmployeesRequired"
+    )
+    .textContent =
+    employeesRequired
+    +
+    " "
+    +
+    employeeWord;
 
 
     document
@@ -2476,10 +2517,6 @@ function showTaskSummary() {
     "غير محدد";
 
 
-    /* =================================================
-       تعديل تنسيق المهارات المطلوبة
-    ================================================= */
-
     const summarySkillsElement =
     document.getElementById(
         "summarySkills"
@@ -2494,14 +2531,6 @@ function showTaskSummary() {
         requiredSkills
         .map(
             skill => {
-
-                const employeeWord =
-                skill.employeesRequired === 1
-                ?
-                "موظف"
-                :
-                "موظفين";
-
 
                 return `
 
@@ -2532,15 +2561,6 @@ function showTaskSummary() {
                                 )
 
                             </span>
-
-                        </span>
-
-
-                        <span class="summary-skill-count">
-
-                            المطلوب
-                            ${skill.employeesRequired}
-                            ${employeeWord}
 
                         </span>
 
@@ -2724,6 +2744,8 @@ async function startMatching() {
                 <div class="no-candidates">
 
                     لا توجد متطلبات مطابقة لهذه المهمة.
+
+                    <br>
 
                     عدل المهمة وأضف متطلباتها أولاً.
 
@@ -3184,19 +3206,13 @@ function showCandidateDetails(id) {
 
                     <br>
 
-                    المطلوب:
+                    المستوى المطلوب:
 
                     ${escapeHtml(
                         levelToText(
                             skill.requiredLevel
                         )
                     )}
-
-                    <br>
-
-                    عدد الموظفين المطلوب لهذه المهارة:
-
-                    ${skill.employeesRequired || 1}
 
                     <br>
 
@@ -3252,6 +3268,19 @@ function showCandidateDetails(id) {
 
             <strong>
                 ${candidate.score}%
+            </strong>
+
+        </div>
+
+
+        <div class="detail-item">
+
+            <span>
+                عدد الموظفين المطلوب للمهمة
+            </span>
+
+            <strong>
+                ${getEmployeesRequired()}
             </strong>
 
         </div>
@@ -3564,6 +3593,9 @@ function approveCandidate(id) {
         taskName:
         selectedTask.task_name,
 
+        employeesRequired:
+        getEmployeesRequired(),
+
         systemCandidateId:
         Number(
             candidate.id
@@ -3599,10 +3631,7 @@ function approveCandidate(id) {
                 skill.skillName,
 
                 requiredLevel:
-                skill.requiredLevel,
-
-                employeesRequired:
-                skill.employeesRequired
+                skill.requiredLevel
 
             })
         )
@@ -3927,11 +3956,11 @@ async function startPage() {
 
 
         /*
-        يدعم الطريقتين:
-
+        يدعم:
         matching.html?task=5
 
-        أو selectedTaskId من localStorage
+        أو selectedTaskId
+        من localStorage
         */
 
         const params =
