@@ -334,6 +334,26 @@
 
 <div class="form-group">
 
+    <label for="taskEmployeesRequired">
+        عدد الموظفين المطلوب للمهمة
+    </label>
+
+    <input
+        type="number"
+        id="taskEmployeesRequired"
+        min="1"
+        value="1"
+        required
+    >
+
+    <small>
+        هذا العدد للمهمة كاملة، وليس لكل مهارة.
+    </small>
+
+</div>
+
+<div class="form-group">
+
     <label for="requiredExperience">
         سنوات الخبرة المطلوبة
     </label>
@@ -1506,6 +1526,11 @@ function openTaskModal(){
     "جديدة";
 
     document.getElementById(
+        "taskEmployeesRequired"
+    ).value =
+    1;
+
+    document.getElementById(
         "requiredExperience"
     ).value =
     1;
@@ -1565,8 +1590,7 @@ function openTaskModal(){
 
     addRequirementRow(
         "",
-        3,
-        1
+        3
     );
 
     updateCriteriaTotal();
@@ -1603,8 +1627,7 @@ function closeTaskModal(){
 
 function addRequirementRow(
     skillId = "",
-    requiredLevel = 3,
-    employeesRequired = 1
+    requiredLevel = 3
 ){
 
     const row =
@@ -1711,26 +1734,6 @@ function addRequirementRow(
         </div>
 
 
-        <div class="form-group requirement-employees-group">
-
-            <label>
-                عدد الموظفين المطلوب
-            </label>
-
-            <input
-                type="number"
-                class="requirement-employees"
-                min="1"
-                value="${Math.max(
-                    1,
-                    Number(employeesRequired) || 1
-                )}"
-                required
-            >
-
-        </div>
-
-
         <button
             type="button"
             class="remove-requirement-btn"
@@ -1758,8 +1761,7 @@ function addRequirementRow(
 
                 addRequirementRow(
                     "",
-                    3,
-                    1
+                    3
                 );
             }
         }
@@ -1804,16 +1806,6 @@ function getRequirementsFromForm(){
                 ).value
             );
 
-            const employeesRequired =
-            Math.max(
-                1,
-                Number(
-                    row.querySelector(
-                        ".requirement-employees"
-                    ).value || 1
-                )
-            );
-
             if(!skillId){
                 return;
             }
@@ -1842,10 +1834,7 @@ function getRequirementsFromForm(){
                         1,
                         level || 3
                     )
-                ),
-
-                employees_required:
-                employeesRequired
+                )
 
             });
         }
@@ -2722,31 +2711,6 @@ async function analyzeTaskRequirements(){
             :
             3;
 
-            let employeesRequired =
-            typeof item === "object"
-            ?
-            Number(
-                item.employees_required ??
-                item.employee_count ??
-                item.required_employees ??
-                0
-            )
-            :
-            0;
-
-            if(
-                !employeesRequired ||
-                employeesRequired < 1
-            ){
-
-                employeesRequired =
-                suggestEmployeesRequired(
-                    existing.skill_name,
-                    taskName,
-                    description
-                );
-            }
-
             addRequirementRow(
                 existing.id,
                 Math.min(
@@ -2755,10 +2719,6 @@ async function analyzeTaskRequirements(){
                         1,
                         level || 3
                     )
-                ),
-                Math.max(
-                    1,
-                    employeesRequired
                 )
             );
 
@@ -2794,8 +2754,7 @@ async function analyzeTaskRequirements(){
 
                     addRequirementRow(
                         item.skill_id,
-                        item.required_level,
-                        item.employees_required
+                        item.required_level
                     );
 
                     used.add(
@@ -3082,6 +3041,14 @@ async function editTask(id){
             requirements[0];
 
             document.getElementById(
+                "taskEmployeesRequired"
+            ).value =
+            Math.max(
+                1,
+                Number(first.employees_required || 1)
+            );
+
+            document.getElementById(
                 "requiredExperience"
             ).value =
             first.experience_required ??
@@ -3140,13 +3107,17 @@ async function editTask(id){
 
                     addRequirementRow(
                         requirement.skill_id,
-                        requirement.required_level,
-                        requirement.employees_required || 1
+                        requirement.required_level
                     );
                 }
             );
 
         }else{
+
+            document.getElementById(
+                "taskEmployeesRequired"
+            ).value =
+            1;
 
             document.getElementById(
                 "requiredExperience"
@@ -3270,6 +3241,16 @@ async function saveTaskRequirements(
         return;
     }
 
+    const employeesRequired =
+    Math.max(
+        1,
+        Number(
+            document.getElementById(
+                "taskEmployeesRequired"
+            ).value || 1
+        )
+    );
+
     const experience =
     Number(
         document.getElementById(
@@ -3317,13 +3298,7 @@ async function saveTaskRequirements(
             ),
 
             employees_required:
-            Math.max(
-                1,
-                Number(
-                    requirement.employees_required ||
-                    1
-                )
-            ),
+            employeesRequired,
 
             experience_required:
             experience,
@@ -3456,16 +3431,20 @@ async function saveTask(event){
         return;
     }
 
-    if(
-        requirements.some(
-            item =>
-            !item.employees_required ||
-            item.employees_required < 1
+    const taskEmployeesRequired =
+    Math.max(
+        1,
+        Number(
+            document.getElementById(
+                "taskEmployeesRequired"
+            ).value || 1
         )
-    ){
+    );
+
+    if(taskEmployeesRequired < 1){
 
         alert(
-            "عدد الموظفين المطلوبين لكل مهارة يجب أن يكون 1 على الأقل."
+            "عدد الموظفين المطلوب للمهمة يجب أن يكون 1 على الأقل."
         );
 
         return;
@@ -3690,18 +3669,6 @@ async function viewTask(id){
                                     </strong>
                                 </span>
 
-                                <span>
-                                    عدد الموظفين المطلوبين:
-                                    <strong>
-                                        ${Math.max(
-                                            1,
-                                            Number(
-                                                requirement.employees_required ||
-                                                1
-                                            )
-                                        )}
-                                    </strong>
-                                </span>
 
                             </div>
 
@@ -3714,6 +3681,21 @@ async function viewTask(id){
             requirementsHtml = `
 
                 <div class="requirements-details">
+
+                    <div class="requirement-summary-item">
+
+                        <span>
+                            عدد الموظفين المطلوب للمهمة
+                        </span>
+
+                        <strong>
+                            ${Math.max(
+                                1,
+                                Number(first.employees_required || 1)
+                            )}
+                        </strong>
+
+                    </div>
 
                     <div class="requirement-summary-item">
 
