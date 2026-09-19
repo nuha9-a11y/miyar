@@ -1,705 +1,412 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
-
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>معيار | القرارات</title>
-
-    <link
-        rel="stylesheet"
-        href="decisions.css"
-    >
-
-    <script
-        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
-    ></script>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>معيار | القرارات</title>
+<link rel="stylesheet" href="decisions.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-
 
 <body>
 
-
 <div class="decisions-page">
 
+<header class="mobile-header">
+    <button class="mobile-menu-btn" id="mobileMenuBtn" type="button">☰</button>
 
-    <!-- =========================================
-         هيدر الجوال
-    ========================================== -->
+    <div class="mobile-header-title">
+        <h2>القرارات</h2>
+        <span>معيار</span>
+    </div>
 
-    <header class="mobile-header">
+    <img src="assets/logo.png" alt="معيار" class="mobile-logo">
+</header>
 
-        <button
-            class="mobile-menu-btn"
-            id="mobileMenuBtn"
-            type="button"
-            aria-label="فتح القائمة"
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-logo">
+        <img src="assets/logo.png" alt="معيار">
+    </div>
+
+    <nav class="sidebar-nav">
+
+        <a href="dashboard.html" class="nav-link">
+            لوحة التحكم
+        </a>
+
+        <a href="employees.html" class="nav-link">
+            الموظفون
+        </a>
+
+        <a href="projects.html" class="nav-link">
+            المشاريع
+        </a>
+
+        <a href="tasks.html" class="nav-link">
+            المهام
+        </a>
+
+        <a href="matching.html" class="nav-link">
+            المطابقة والترشيح
+        </a>
+
+        <a href="evaluations.html" class="nav-link">
+            التقييمات
+        </a>
+
+        <a href="decisions.html" class="nav-link active">
+            القرارات
+        </a>
+
+        <a href="leaves.html" class="nav-link">
+            طلبات الإجازات
+        </a>
+
+        <a href="reports.html" class="nav-link">
+            التقارير
+        </a>
+
+    </nav>
+
+    <button class="logout-btn" type="button" id="logoutBtn">
+        تسجيل الخروج
+    </button>
+
+</aside>
+
+<main class="main-content">
+
+<header class="topbar">
+    <span class="page-badge">القرار النهائي</span>
+    <h1>القرارات</h1>
+    <p>
+        مراجعة نتائج المطابقة واعتماد الموظف النهائي لإسناد المهمة.
+    </p>
+</header>
+
+<section class="decisions-summary">
+
+    <div class="summary-item">
+        <span>إجمالي القرارات</span>
+        <strong id="summaryTotal">0</strong>
+    </div>
+
+    <div class="summary-item">
+        <span>مطابق لترشيح النظام</span>
+        <strong id="summarySame">0</strong>
+    </div>
+
+    <div class="summary-item">
+        <span>تم اختيار موظف آخر</span>
+        <strong id="summaryChanged">0</strong>
+    </div>
+
+    <div class="summary-item">
+        <span>متوسط التوافق</span>
+        <strong id="summaryAverage">0%</strong>
+    </div>
+
+</section>
+
+<section class="toolbar">
+
+    <div class="search-box">
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="ابحث باسم المهمة أو الموظف..."
         >
-            ☰
-        </button>
+    </div>
 
+    <button class="add-btn" type="button" id="addDecisionBtn">
+        + تسجيل قرار
+    </button>
 
-        <div class="mobile-header-title">
+</section>
 
-            <h2>
-                القرارات
-            </h2>
+<section class="decisions-container">
 
-            <span>
-                معيار
-            </span>
+    <div class="section-title">
 
+        <div>
+            <h2>سجل القرارات</h2>
+            <p>القرارات النهائية المعتمدة لإسناد المهام.</p>
         </div>
 
+        <span id="decisionsCount">
+            0 قرار
+        </span>
 
-        <img
-            src="assets/logo.png"
-            alt="معيار"
-            class="mobile-logo"
-        >
+    </div>
 
-    </header>
+    <div class="decisions-grid" id="decisionsGrid">
+        <div class="empty-state">
+            جارٍ تحميل القرارات...
+        </div>
+    </div>
+
+</section>
+
+</main>
+
+</div>
 
 
-    <div
-        class="sidebar-overlay"
-        id="sidebarOverlay"
-    ></div>
+<!-- نافذة القرار -->
 
+<div class="modal" id="decisionModal">
 
-    <!-- =========================================
-         القائمة الجانبية
-    ========================================== -->
+<div class="modal-overlay" id="decisionModalOverlay"></div>
 
-    <aside
-        class="sidebar"
-        id="sidebar"
+<div class="modal-box">
+
+<div class="modal-header">
+
+    <div>
+        <h2 id="modalTitle">
+            تسجيل قرار
+        </h2>
+
+        <p id="modalDescription">
+            راجع نتيجة المطابقة ثم اعتمد الموظف النهائي.
+        </p>
+    </div>
+
+    <button
+        class="close-btn"
+        type="button"
+        id="closeDecisionBtn"
     >
+        ×
+    </button>
 
+</div>
 
-        <div class="sidebar-logo">
+<form id="decisionForm">
 
-            <img
-                src="assets/logo.png"
-                alt="معيار"
-            >
+<input type="hidden" id="editDecisionId">
 
-        </div>
+<input
+    type="hidden"
+    id="decisionSource"
+    value="manual"
+>
 
+<div class="form-grid">
 
-        <nav class="sidebar-nav">
+<div class="form-group">
 
+<label for="decisionTask">
+    المهمة
+</label>
 
-            <a
-                href="dashboard.html"
-                class="nav-link"
-            >
-                لوحة التحكم
-            </a>
-
-
-            <a
-                href="employees.html"
-                class="nav-link"
-            >
-                الموظفون
-            </a>
-
-
-            <a
-                href="projects.html"
-                class="nav-link"
-            >
-                المشاريع
-            </a>
-
-
-            <a
-                href="tasks.html"
-                class="nav-link"
-            >
-                المهام
-            </a>
-
-
-            <a
-                href="matching.html"
-                class="nav-link"
-            >
-                المطابقة والترشيح
-            </a>
-
-
-            <a
-                href="evaluations.html"
-                class="nav-link"
-            >
-                التقييمات
-            </a>
-
-
-            <a
-                href="decisions.html"
-                class="nav-link active"
-            >
-                القرارات
-            </a>
-
-
-            <a
-                href="leaves.html"
-                class="nav-link"
-            >
-                طلبات الإجازات
-            </a>
-
-
-            <a
-                href="reports.html"
-                class="nav-link"
-            >
-                التقارير
-            </a>
-
-
-        </nav>
-
-
-        <button
-            class="logout-btn"
-            type="button"
-            id="logoutBtn"
-        >
-            تسجيل الخروج
-        </button>
-
-
-    </aside>
-
-
-    <!-- =========================================
-         المحتوى
-    ========================================== -->
-
-    <main class="main-content">
-
-
-        <header class="topbar">
-
-            <span class="page-badge">
-                القرار النهائي
-            </span>
-
-            <h1>
-                القرارات
-            </h1>
-
-            <p>
-                مراجعة نتائج المطابقة واعتماد الموظف النهائي لإسناد المهمة.
-            </p>
-
-        </header>
-
-
-        <!-- =========================================
-             ملخص القرارات
-        ========================================== -->
-
-        <section class="decisions-summary">
-
-
-            <div class="summary-item">
-
-                <span>
-                    إجمالي القرارات
-                </span>
-
-                <strong id="summaryTotal">
-                    0
-                </strong>
-
-            </div>
-
-
-            <div class="summary-item">
-
-                <span>
-                    مطابق لترشيح النظام
-                </span>
-
-                <strong id="summarySame">
-                    0
-                </strong>
-
-            </div>
-
-
-            <div class="summary-item">
-
-                <span>
-                    تم اختيار موظف آخر
-                </span>
-
-                <strong id="summaryChanged">
-                    0
-                </strong>
-
-            </div>
-
-
-            <div class="summary-item">
-
-                <span>
-                    متوسط التوافق
-                </span>
-
-                <strong id="summaryAverage">
-                    0%
-                </strong>
-
-            </div>
-
-
-        </section>
-
-
-        <!-- =========================================
-             الأدوات
-        ========================================== -->
-
-        <section class="toolbar">
-
-
-            <div class="search-box">
-
-                <input
-                    type="text"
-                    id="searchInput"
-                    placeholder="ابحث باسم المهمة أو الموظف..."
-                >
-
-            </div>
-
-
-            <button
-                class="add-btn"
-                type="button"
-                id="addDecisionBtn"
-            >
-                + تسجيل قرار
-            </button>
-
-
-        </section>
-
-
-        <!-- =========================================
-             سجل القرارات
-        ========================================== -->
-
-        <section class="decisions-container">
-
-
-            <div class="section-title">
-
-
-                <div>
-
-                    <h2>
-                        سجل القرارات
-                    </h2>
-
-                    <p>
-                        القرارات النهائية المعتمدة لإسناد المهام.
-                    </p>
-
-                </div>
-
-
-                <span id="decisionsCount">
-                    0 قرار
-                </span>
-
-
-            </div>
-
-
-            <div
-                class="decisions-grid"
-                id="decisionsGrid"
-            >
-
-                <div class="empty-state">
-                    جارٍ تحميل القرارات...
-                </div>
-
-            </div>
-
-
-        </section>
-
-
-    </main>
-
+<select id="decisionTask" required>
+    <option value="">
+        اختر المهمة
+    </option>
+</select>
 
 </div>
 
 
-<!-- =========================================
-     نافذة القرار
-========================================== -->
-
-<div
-    class="modal"
-    id="decisionModal"
->
-
-
-    <div
-        class="modal-overlay"
-        id="decisionModalOverlay"
-    ></div>
-
-
-    <div class="modal-box">
-
-
-        <div class="modal-header">
-
-
-            <div>
-
-                <h2 id="modalTitle">
-                    تسجيل قرار
-                </h2>
-
-                <p id="modalDescription">
-                    راجع نتيجة المطابقة ثم اعتمد الموظف النهائي.
-                </p>
-
-            </div>
-
-
-            <button
-                class="close-btn"
-                type="button"
-                id="closeDecisionBtn"
-            >
-                ×
-            </button>
-
-
-        </div>
-
-
-        <form id="decisionForm">
-
-
-            <input
-                type="hidden"
-                id="editDecisionId"
-            >
-
-
-            <input
-                type="hidden"
-                id="decisionSource"
-                value="manual"
-            >
-
-
-            <div class="form-grid">
-
-
-                <!-- المهمة -->
-
-                <div class="form-group">
-
-                    <label for="decisionTask">
-                        المهمة
-                    </label>
-
-                    <select
-                        id="decisionTask"
-                        required
-                    >
-
-                        <option value="">
-                            اختر المهمة
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <!-- مرشح النظام -->
-
-                <div class="form-group">
-
-                    <label for="systemCandidate">
-                        الموظف الذي رشحه النظام
-                    </label>
-
-                    <select
-                        id="systemCandidate"
-                        required
-                    >
-
-                        <option value="">
-                            اختر الموظف
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <!-- نسبة التوافق -->
-
-                <div class="form-group">
-
-                    <label for="matchRate">
-                        نسبة التوافق %
-                    </label>
-
-                    <input
-                        type="number"
-                        id="matchRate"
-                        min="0"
-                        max="100"
-                        step="0.01"
-                        required
-                    >
-
-                    <small id="matchRateHelp">
-                        يتم جلب النسبة تلقائياً عند الاعتماد من صفحة المطابقة.
-                    </small>
-
-                </div>
-
-
-                <!-- الموظف النهائي -->
-
-                <div class="form-group">
-
-                    <label for="selectedEmployee">
-                        الموظف الذي اعتمده المسؤول
-                    </label>
-
-                    <select
-                        id="selectedEmployee"
-                        required
-                    >
-
-                        <option value="">
-                            اختر الموظف
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <!-- السبب -->
-
-                <div class="form-group full-width">
-
-                    <label for="decisionReason">
-                        سبب القرار
-                    </label>
-
-                    <textarea
-                        id="decisionReason"
-                        placeholder="يصبح السبب مطلوباً عند اختيار موظف مختلف عن مرشح النظام..."
-                    ></textarea>
-
-                    <small id="reasonHelp">
-                        عند اعتماد مرشح النظام يمكن للنظام تسجيل سبب الاعتماد تلقائياً.
-                    </small>
-
-                </div>
-
-
-                <!-- التاريخ -->
-
-                <div class="form-group">
-
-                    <label for="decisionDate">
-                        تاريخ القرار
-                    </label>
-
-                    <input
-                        type="date"
-                        id="decisionDate"
-                        required
-                    >
-
-                </div>
-
-
-            </div>
-
-
-            <div class="system-note">
-
-                <strong>
-                    القرار النهائي
-                </strong>
-
-                <p id="decisionStatusText">
-                    الموظف الذي يعتمده المسؤول سيتم إسناد المهمة إليه فعلياً في النظام.
-                </p>
-
-            </div>
-
-
-            <div
-                class="leave-warning hidden"
-                id="leaveWarning"
-            >
-
-                <strong>
-                    الموظف غير متاح
-                </strong>
-
-                <p id="leaveWarningText">
-                    الموظف في إجازة معتمدة حالياً.
-                </p>
-
-            </div>
-
-
-            <div class="modal-actions">
-
-
-                <button
-                    type="button"
-                    class="cancel-btn"
-                    id="cancelDecisionBtn"
-                >
-                    إلغاء
-                </button>
-
-
-                <button
-                    type="submit"
-                    class="save-btn"
-                    id="saveDecisionBtn"
-                >
-                    حفظ القرار
-                </button>
-
-
-            </div>
-
-
-        </form>
-
-
-    </div>
-
+<div class="form-group">
+
+<label for="systemCandidate">
+    الموظف الذي رشحه النظام
+</label>
+
+<select id="systemCandidate" required>
+    <option value="">
+        اختر الموظف
+    </option>
+</select>
 
 </div>
 
 
-<!-- =========================================
-     تفاصيل القرار
-========================================== -->
+<div class="form-group">
 
-<div
-    class="modal"
-    id="detailsModal"
+<label for="matchRate">
+    نسبة التوافق %
+</label>
+
+<input
+    type="number"
+    id="matchRate"
+    min="0"
+    max="100"
+    step="0.01"
+    required
 >
 
+<small id="matchRateHelp">
+    يتم جلب النسبة تلقائياً عند الاعتماد من صفحة المطابقة.
+</small>
 
-    <div
-        class="modal-overlay"
-        id="detailsModalOverlay"
-    ></div>
-
-
-    <div class="modal-box details-box">
+</div>
 
 
-        <div class="modal-header">
+<div class="form-group">
+
+<label for="selectedEmployee">
+    الموظف الذي اعتمده المسؤول
+</label>
+
+<select id="selectedEmployee" required>
+    <option value="">
+        اختر الموظف
+    </option>
+</select>
+
+</div>
 
 
-            <div>
+<div class="form-group full-width">
 
-                <h2>
-                    تفاصيل القرار
-                </h2>
+<label for="decisionReason">
+    سبب القرار
+</label>
 
-                <p>
-                    تفاصيل الترشيح والإسناد النهائي.
-                </p>
+<textarea
+    id="decisionReason"
+    placeholder="يصبح السبب مطلوباً عند اختيار موظف مختلف عن مرشح النظام..."
+></textarea>
 
-            </div>
+<small id="reasonHelp">
+    عند اعتماد مرشح النظام يمكن للنظام تسجيل سبب الاعتماد تلقائياً.
+</small>
 
-
-            <button
-                class="close-btn"
-                type="button"
-                id="closeDetailsBtn"
-            >
-                ×
-            </button>
+</div>
 
 
-        </div>
+<div class="form-group">
+
+<label for="decisionDate">
+    تاريخ القرار
+</label>
+
+<input
+    type="date"
+    id="decisionDate"
+    required
+>
+
+</div>
+
+</div>
 
 
-        <div
-            class="details-grid"
-            id="decisionDetails"
-        ></div>
+<div
+    class="leave-warning hidden"
+    id="leaveWarning"
+></div>
 
 
-    </div>
+<div
+    class="decision-status"
+    id="decisionStatus"
+></div>
 
+
+<div class="modal-actions">
+
+<button
+    type="button"
+    class="secondary-btn"
+    id="cancelDecisionBtn"
+>
+    إلغاء
+</button>
+
+<button
+    type="submit"
+    class="primary-btn"
+    id="saveDecisionBtn"
+>
+    حفظ القرار
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+
+<!-- نافذة التفاصيل -->
+
+<div class="modal" id="detailsModal">
+
+<div
+    class="modal-overlay"
+    id="detailsModalOverlay"
+></div>
+
+<div class="modal-box details-box">
+
+<div class="modal-header">
+
+<div>
+    <h2>
+        تفاصيل القرار
+    </h2>
+
+    <p>
+        تفاصيل القرار النهائي وإسناد المهمة.
+    </p>
+</div>
+
+<button
+    class="close-btn"
+    type="button"
+    id="closeDetailsBtn"
+>
+    ×
+</button>
+
+</div>
+
+<div
+    class="details-grid"
+    id="decisionDetails"
+></div>
+
+</div>
 
 </div>
 
 
 <script>
 
-
 /* =====================================================
-   Supabase
+   إعداد Supabase
 ===================================================== */
 
 const SUPABASE_URL =
-    "https://avooyglxacytrfhvotsl.supabase.co";
-
+"https://avooyglxacytrfhvotsl.supabase.co";
 
 const SUPABASE_KEY =
-    "sb_publishable_NVlWEnA_w4KbSse_-70zdA_J9ut0Kyo";
-
+"sb_publishable_NVlWEnA_w4KbSse_-70zdA_J9ut0Kyo";
 
 const ADMIN_EMAIL =
-    "admin@gmail.com";
+"admin@gmail.com";
 
 
 const supabaseClient =
-    window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-    );
+supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
 
 
 /* =====================================================
    البيانات
 ===================================================== */
-
-let decisions = [];
 
 let tasks = [];
 
@@ -707,174 +414,109 @@ let employees = [];
 
 let employeeLeaves = [];
 
+let decisions = [];
+
+let taskAssignments = [];
+
 
 /* =====================================================
    العناصر
 ===================================================== */
 
 const decisionsGrid =
-    document.getElementById(
-        "decisionsGrid"
-    );
-
+document.getElementById(
+    "decisionsGrid"
+);
 
 const decisionModal =
-    document.getElementById(
-        "decisionModal"
-    );
-
+document.getElementById(
+    "decisionModal"
+);
 
 const detailsModal =
-    document.getElementById(
-        "detailsModal"
-    );
-
+document.getElementById(
+    "detailsModal"
+);
 
 const sidebar =
-    document.getElementById(
-        "sidebar"
-    );
-
+document.getElementById(
+    "sidebar"
+);
 
 const sidebarOverlay =
-    document.getElementById(
-        "sidebarOverlay"
-    );
-
+document.getElementById(
+    "sidebarOverlay"
+);
 
 const mobileMenuBtn =
-    document.getElementById(
-        "mobileMenuBtn"
-    );
-
+document.getElementById(
+    "mobileMenuBtn"
+);
 
 const leaveWarning =
-    document.getElementById(
-        "leaveWarning"
-    );
+document.getElementById(
+    "leaveWarning"
+);
 
 
 /* =====================================================
-   حماية النص
-===================================================== */
-
-function escapeHtml(value) {
-
-    return String(
-        value ?? ""
-    )
-    .replaceAll(
-        "&",
-        "&amp;"
-    )
-    .replaceAll(
-        "<",
-        "&lt;"
-    )
-    .replaceAll(
-        ">",
-        "&gt;"
-    )
-    .replaceAll(
-        '"',
-        "&quot;"
-    )
-    .replaceAll(
-        "'",
-        "&#039;"
-    );
-
-}
-
-
-/* =====================================================
-   حماية صفحة المسؤول
+   حماية الصفحة
 ===================================================== */
 
 async function protectPage() {
 
-    try {
-
-        const {
-            data,
-            error
-        } =
-        await supabaseClient
-            .auth
-            .getSession();
-
-
-        if (
-            error
-            ||
-            !data.session
-        ) {
-
-            window.location.href =
-                "login.html";
-
-            return false;
+    const {
+        data: {
+            session
         }
+    } =
+    await supabaseClient
+        .auth
+        .getSession();
 
 
-        const email =
-            String(
-                data.session.user.email
-                ||
-                ""
-            )
-            .trim()
-            .toLowerCase();
+    if (
+        !session
+        ||
+        !session.user
+    ) {
 
-
-        if (
-            email !==
-            ADMIN_EMAIL.toLowerCase()
-        ) {
-
-            await supabaseClient
-                .auth
-                .signOut();
-
-
-            clearLocalSession();
-
-
-            window.location.href =
-                "login.html";
-
-
-            return false;
-        }
-
-
-        localStorage.setItem(
-            "miyarRole",
-            "admin"
-        );
-
-
-        localStorage.setItem(
-            "miyarEmail",
-            email
-        );
-
-
-        return true;
-
-    }
-
-    catch(error) {
-
-        console.error(
-            "خطأ التحقق:",
-            error
-        );
-
+        window.location.href =
+        "login.html";
 
         return false;
     }
 
+
+    const email =
+    String(
+        session.user.email
+        ||
+        ""
+    )
+    .trim()
+    .toLowerCase();
+
+
+    if (
+        email
+        !==
+        ADMIN_EMAIL.toLowerCase()
+    ) {
+
+        alert(
+            "هذه الصفحة مخصصة للمسؤول فقط."
+        );
+
+
+        window.location.href =
+        "login.html";
+
+        return false;
+    }
+
+
+    return true;
 }
 
 
@@ -889,10 +531,16 @@ async function loadTasks() {
         error
     } =
     await supabaseClient
-        .from("tasks")
+        .from(
+            "tasks"
+        )
         .select(`
             id,
+            project_id,
             task_name,
+            description,
+            priority,
+            due_date,
             status,
             assigned_employee_id
         `)
@@ -914,62 +562,12 @@ async function loadTasks() {
 
 
     tasks =
-        data || [];
+    data
+    ||
+    [];
 
 
     fillTaskSelect();
-
-}
-
-
-/* =====================================================
-   تعبئة المهام
-===================================================== */
-
-function fillTaskSelect() {
-
-    const select =
-        document.getElementById(
-            "decisionTask"
-        );
-
-
-    select.innerHTML = `
-
-        <option value="">
-            اختر المهمة
-        </option>
-
-    `;
-
-
-    tasks.forEach(
-        task => {
-
-
-            const option =
-                document.createElement(
-                    "option"
-                );
-
-
-            option.value =
-                task.id;
-
-
-            option.textContent =
-                task.task_name
-                ||
-                "مهمة بدون اسم";
-
-
-            select.appendChild(
-                option
-            );
-
-        }
-    );
-
 }
 
 
@@ -984,13 +582,17 @@ async function loadEmployees() {
         error
     } =
     await supabaseClient
-        .from("employees")
+        .from(
+            "employees"
+        )
         .select(`
             id,
             name,
             employee_number,
-            status,
-            availability
+            email,
+            job_title,
+            department,
+            status
         `)
         .order(
             "name",
@@ -1010,75 +612,12 @@ async function loadEmployees() {
 
 
     employees =
-        data || [];
+    data
+    ||
+    [];
 
 
-    fillEmployeeSelect(
-        "systemCandidate"
-    );
-
-
-    fillEmployeeSelect(
-        "selectedEmployee"
-    );
-
-}
-
-
-/* =====================================================
-   تعبئة الموظفين
-===================================================== */
-
-function fillEmployeeSelect(selectId) {
-
-    const select =
-        document.getElementById(
-            selectId
-        );
-
-
-    select.innerHTML = `
-
-        <option value="">
-            اختر الموظف
-        </option>
-
-    `;
-
-
-    employees.forEach(
-        employee => {
-
-
-            const option =
-                document.createElement(
-                    "option"
-                );
-
-
-            option.value =
-                employee.id;
-
-
-            option.textContent =
-                employee.name
-                +
-                (
-                    employee.employee_number
-                    ?
-                    ` - ${employee.employee_number}`
-                    :
-                    ""
-                );
-
-
-            select.appendChild(
-                option
-            );
-
-        }
-    );
-
+    fillEmployeeSelects();
 }
 
 
@@ -1093,7 +632,9 @@ async function loadEmployeeLeaves() {
         error
     } =
     await supabaseClient
-        .from("employee_leaves")
+        .from(
+            "employee_leaves"
+        )
         .select(`
             id,
             employee_id,
@@ -1115,55 +656,315 @@ async function loadEmployeeLeaves() {
 
 
         employeeLeaves =
-            [];
-
+        [];
 
         return;
     }
 
 
     employeeLeaves =
-        data || [];
-
+    data
+    ||
+    [];
 }
 
 
 /* =====================================================
-   هل الإجازة معتمدة؟
+   تحميل الإسنادات
 ===================================================== */
 
-function isApprovedLeave(status) {
+async function loadTaskAssignments() {
 
-    const value =
-        String(
-            status || ""
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from(
+            "task_assignments"
         )
-        .trim()
-        .toLowerCase();
+        .select(`
+            id,
+            task_id,
+            employee_id,
+            decision_id,
+            assigned_at,
+            created_at
+        `)
+        .order(
+            "id",
+            {
+                ascending:
+                    true
+            }
+        );
 
 
-    return (
+    if (
+        error
+    ) {
 
-        value === "معتمدة"
+        throw error;
+    }
 
-        ||
 
-        value === "معتمد"
+    taskAssignments =
+    data
+    ||
+    [];
+}
 
-        ||
 
-        value === "approved"
+/* =====================================================
+   تعبئة قائمة المهام
+===================================================== */
 
-        ||
+function fillTaskSelect() {
 
-        value === "مقبولة"
-
-        ||
-
-        value === "مقبول"
-
+    const select =
+    document.getElementById(
+        "decisionTask"
     );
 
+
+    select.innerHTML =
+    `
+        <option value="">
+            اختر المهمة
+        </option>
+    `;
+
+
+    tasks.forEach(
+        task => {
+
+            const option =
+            document.createElement(
+                "option"
+            );
+
+
+            option.value =
+            task.id;
+
+
+            option.textContent =
+            task.task_name
+            ||
+            "مهمة بدون اسم";
+
+
+            select.appendChild(
+                option
+            );
+
+        }
+    );
+}
+
+
+/* =====================================================
+   تعبئة الموظفين
+===================================================== */
+
+function fillEmployeeSelects() {
+
+    const systemCandidate =
+    document.getElementById(
+        "systemCandidate"
+    );
+
+
+    const selectedEmployee =
+    document.getElementById(
+        "selectedEmployee"
+    );
+
+
+    const createOptions =
+    () => {
+
+        let html =
+        `
+            <option value="">
+                اختر الموظف
+            </option>
+        `;
+
+
+        employees.forEach(
+            employee => {
+
+                html +=
+                `
+                    <option value="${employee.id}">
+                        ${escapeHtml(
+                            employee.name
+                            ||
+                            "موظف"
+                        )}
+                    </option>
+                `;
+
+            }
+        );
+
+
+        return html;
+    };
+
+
+    systemCandidate.innerHTML =
+    createOptions();
+
+
+    selectedEmployee.innerHTML =
+    createOptions();
+}
+
+
+/* =====================================================
+   متطلبات المهمة
+===================================================== */
+
+async function getTaskRequirements(
+    taskId
+) {
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from(
+            "task_requirements"
+        )
+        .select(`
+            id,
+            task_id,
+            employees_required
+        `)
+        .eq(
+            "task_id",
+            Number(
+                taskId
+            )
+        )
+        .order(
+            "id",
+            {
+                ascending:
+                    true
+            }
+        );
+
+
+    if (
+        error
+    ) {
+
+        throw error;
+    }
+
+
+    return data
+    ||
+    [];
+}
+
+
+/* =====================================================
+   عدد الموظفين المطلوب للمهمة
+===================================================== */
+
+async function getEmployeesRequired(
+    taskId
+) {
+
+    const requirements =
+    await getTaskRequirements(
+        taskId
+    );
+
+
+    if (
+        !requirements.length
+    ) {
+
+        return 1;
+    }
+
+
+    const value =
+    Number(
+        requirements[0]
+            ?.employees_required
+        ||
+        1
+    );
+
+
+    return Math.max(
+        1,
+        value
+    );
+}
+
+
+/* =====================================================
+   إسنادات مهمة محددة
+===================================================== */
+
+function getTaskAssignments(
+    taskId
+) {
+
+    return taskAssignments
+        .filter(
+            assignment =>
+
+                Number(
+                    assignment.task_id
+                )
+                ===
+                Number(
+                    taskId
+                )
+        );
+}
+
+
+/* =====================================================
+   هل الموظف مسند للمهمة؟
+===================================================== */
+
+function isEmployeeAssigned(
+    taskId,
+    employeeId
+) {
+
+    return taskAssignments
+        .some(
+            assignment =>
+
+                Number(
+                    assignment.task_id
+                )
+                ===
+                Number(
+                    taskId
+                )
+
+                &&
+
+                Number(
+                    assignment.employee_id
+                )
+                ===
+                Number(
+                    employeeId
+                )
+        );
 }
 
 
@@ -1171,155 +972,138 @@ function isApprovedLeave(status) {
    الإجازة الحالية
 ===================================================== */
 
-function getCurrentLeave(employeeId) {
+function getCurrentLeave(
+    employeeId
+) {
 
     const today =
-        new Date();
+    getTodayDate();
 
 
-    today.setHours(
-        0,
-        0,
-        0,
-        0
-    );
+    return employeeLeaves
+        .find(
+            leave => {
 
-
-    return employeeLeaves.find(
-        leave => {
-
-
-            if (
-                Number(
-                    leave.employee_id
-                )
-                !==
-                Number(
-                    employeeId
-                )
-            ) {
-
-                return false;
-            }
-
-
-            if (
-                !isApprovedLeave(
+                const status =
+                String(
                     leave.status
+                    ||
+                    ""
                 )
-            ) {
-
-                return false;
-            }
+                .trim()
+                .toLowerCase();
 
 
-            if (
-                !leave.start_date
+                const approved =
+                status === "approved"
                 ||
-                !leave.end_date
-            ) {
+                status === "معتمدة"
+                ||
+                status === "مقبول"
+                ||
+                status === "مقبولة";
 
-                return false;
-            }
+
+                if (
+                    !approved
+                ) {
+
+                    return false;
+                }
 
 
-            const start =
-                new Date(
+                return (
+                    Number(
+                        leave.employee_id
+                    )
+                    ===
+                    Number(
+                        employeeId
+                    )
+
+                    &&
+
                     leave.start_date
-                    +
-                    "T00:00:00"
-                );
+                    <=
+                    today
 
+                    &&
 
-            const end =
-                new Date(
                     leave.end_date
-                    +
-                    "T23:59:59"
+                    >=
+                    today
                 );
 
-
-            return (
-
-                today >= start
-
-                &&
-
-                today <= end
-
-            );
-
-        }
-    )
-    ||
-    null;
-
+            }
+        )
+        ||
+        null;
 }
 
 
 /* =====================================================
-   فحص توفر الموظف النهائي
+   فحص توفر الموظف
 ===================================================== */
 
 function checkSelectedEmployeeAvailability() {
 
     const employeeId =
+    Number(
         document
             .getElementById(
                 "selectedEmployee"
             )
-            .value;
+            .value
+    );
+
+
+    leaveWarning
+        .classList
+        .add(
+            "hidden"
+        );
+
+
+    leaveWarning.textContent =
+    "";
 
 
     if (
         !employeeId
     ) {
 
-        leaveWarning
-            .classList
-            .add(
-                "hidden"
-            );
-
-
-        updateDecisionStatus();
-
-
         return;
     }
 
 
     const leave =
-        getCurrentLeave(
-            employeeId
-        );
+    getCurrentLeave(
+        employeeId
+    );
 
 
     if (
         !leave
     ) {
 
-        leaveWarning
-            .classList
-            .add(
-                "hidden"
-            );
-
-
-        updateDecisionStatus();
-
-
         return;
     }
 
 
-    document
-        .getElementById(
-            "leaveWarningText"
-        )
-        .textContent =
-
-        `الموظف في إجازة ${leave.leave_type || ""} معتمدة من ${formatDate(leave.start_date)} إلى ${formatDate(leave.end_date)}.`;
+    leaveWarning.textContent =
+    "تنبيه: الموظف في إجازة معتمدة حالياً من "
+    +
+    formatDate(
+        leave.start_date
+    )
+    +
+    " إلى "
+    +
+    formatDate(
+        leave.end_date
+    )
+    +
+    ".";
 
 
     leaveWarning
@@ -1327,55 +1111,39 @@ function checkSelectedEmployeeAvailability() {
         .remove(
             "hidden"
         );
-
-
-    updateDecisionStatus();
-
 }
 
 
 /* =====================================================
-   تحديث وصف القرار
+   حالة القرار
 ===================================================== */
 
 function updateDecisionStatus() {
 
     const systemCandidateId =
-        Number(
-            document
-                .getElementById(
-                    "systemCandidate"
-                )
-                .value
-        );
+    Number(
+        document
+            .getElementById(
+                "systemCandidate"
+            )
+            .value
+    );
 
 
     const selectedEmployeeId =
-        Number(
-            document
-                .getElementById(
-                    "selectedEmployee"
-                )
-                .value
-        );
+    Number(
+        document
+            .getElementById(
+                "selectedEmployee"
+            )
+            .value
+    );
 
 
-    const reason =
-        document.getElementById(
-            "decisionReason"
-        );
-
-
-    const reasonHelp =
-        document.getElementById(
-            "reasonHelp"
-        );
-
-
-    const statusText =
-        document.getElementById(
-            "decisionStatusText"
-        );
+    const status =
+    document.getElementById(
+        "decisionStatus"
+    );
 
 
     if (
@@ -1384,17 +1152,8 @@ function updateDecisionStatus() {
         !selectedEmployeeId
     ) {
 
-        reason.required =
-            false;
-
-
-        reasonHelp.textContent =
-            "عند اختيار موظف مختلف عن مرشح النظام يصبح سبب التغيير مطلوباً.";
-
-
-        statusText.textContent =
-            "الموظف الذي يعتمده المسؤول سيتم إسناد المهمة إليه فعلياً في النظام.";
-
+        status.textContent =
+        "";
 
         return;
     }
@@ -1406,48 +1165,17 @@ function updateDecisionStatus() {
         selectedEmployeeId
     ) {
 
-        reason.required =
-            false;
-
-
-        reasonHelp.textContent =
-            "تم اختيار نفس الموظف الذي رشحه النظام، ويمكن إضافة ملاحظة اختيارية.";
-
-
-        statusText.textContent =
-            "سيتم اعتماد ترشيح النظام وإسناد المهمة إلى الموظف المرشح.";
-
-
-        if (
-            !reason.value.trim()
-        ) {
-
-            reason.placeholder =
-                "اختياري: أضف ملاحظة على اعتماد الترشيح...";
-
-        }
+        status.textContent =
+        "سيتم اعتماد الموظف الذي رشحه النظام.";
 
     }
 
     else {
 
-        reason.required =
-            true;
-
-
-        reasonHelp.textContent =
-            "تم اختيار موظف مختلف عن مرشح النظام، لذلك يجب توضيح سبب تغيير الترشيح.";
-
-
-        statusText.textContent =
-            "تم تغيير ترشيح النظام. سيتم إسناد المهمة إلى الموظف الذي اختاره المسؤول.";
-
-
-        reason.placeholder =
-            "اكتب سبب اختيار موظف مختلف عن مرشح النظام...";
+        status.textContent =
+        "تم اختيار موظف مختلف عن مرشح النظام، لذلك يجب توضيح سبب القرار.";
 
     }
-
 }
 
 
@@ -1455,36 +1183,38 @@ function updateDecisionStatus() {
    قفل بيانات المطابقة
 ===================================================== */
 
-function setMatchingFieldsLocked(locked) {
+function setMatchingFieldsLocked(
+    locked
+) {
 
     const task =
-        document.getElementById(
-            "decisionTask"
-        );
+    document.getElementById(
+        "decisionTask"
+    );
 
 
     const candidate =
-        document.getElementById(
-            "systemCandidate"
-        );
+    document.getElementById(
+        "systemCandidate"
+    );
 
 
     const rate =
-        document.getElementById(
-            "matchRate"
-        );
+    document.getElementById(
+        "matchRate"
+    );
 
 
     task.disabled =
-        locked;
+    locked;
 
 
     candidate.disabled =
-        locked;
+    locked;
 
 
     rate.readOnly =
-        locked;
+    locked;
 
 
     if (
@@ -1527,7 +1257,97 @@ function setMatchingFieldsLocked(locked) {
         );
 
     }
+}
 
+
+/* =====================================================
+   فتح نافذة قرار يدوي
+===================================================== */
+
+function openDecisionModal() {
+
+    document
+        .getElementById(
+            "decisionForm"
+        )
+        .reset();
+
+
+    document
+        .getElementById(
+            "editDecisionId"
+        )
+        .value =
+        "";
+
+
+    document
+        .getElementById(
+            "decisionSource"
+        )
+        .value =
+        "manual";
+
+
+    document
+        .getElementById(
+            "modalTitle"
+        )
+        .textContent =
+        "تسجيل قرار";
+
+
+    document
+        .getElementById(
+            "modalDescription"
+        )
+        .textContent =
+        "راجع بيانات المهمة ثم اعتمد الموظف النهائي.";
+
+
+    document
+        .getElementById(
+            "decisionDate"
+        )
+        .value =
+        getTodayDate();
+
+
+    document
+        .getElementById(
+            "saveDecisionBtn"
+        )
+        .textContent =
+        "حفظ القرار";
+
+
+    leaveWarning
+        .classList
+        .add(
+            "hidden"
+        );
+
+
+    setMatchingFieldsLocked(
+        false
+    );
+
+
+    updateDecisionStatus();
+
+
+    decisionModal
+        .classList
+        .add(
+            "show"
+        );
+
+
+    document.body
+        .classList
+        .add(
+            "modal-open"
+        );
 }
 
 
@@ -1535,12 +1355,12 @@ function setMatchingFieldsLocked(locked) {
    استقبال القرار من المطابقة
 ===================================================== */
 
-function loadPendingDecision() {
+async function loadPendingDecision() {
 
     const stored =
-        localStorage.getItem(
-            "pendingDecision"
-        );
+    localStorage.getItem(
+        "pendingDecision"
+    );
 
 
     if (
@@ -1554,9 +1374,9 @@ function loadPendingDecision() {
     try {
 
         const pending =
-            JSON.parse(
-                stored
-            );
+        JSON.parse(
+            stored
+        );
 
 
         if (
@@ -1564,6 +1384,90 @@ function loadPendingDecision() {
             ||
             !pending.systemCandidateId
         ) {
+
+            localStorage.removeItem(
+                "pendingDecision"
+            );
+
+            return;
+        }
+
+
+        /*
+            قبل فتح القرار نتأكد من العدد
+        */
+
+        await loadTaskAssignments();
+
+
+        const required =
+        Math.max(
+            1,
+            Number(
+                pending.employeesRequired
+                ||
+                await getEmployeesRequired(
+                    pending.taskId
+                )
+            )
+        );
+
+
+        const currentAssignments =
+        getTaskAssignments(
+            pending.taskId
+        );
+
+
+        if (
+            currentAssignments.length
+            >=
+            required
+        ) {
+
+            alert(
+                "تم استكمال العدد المطلوب لهذه المهمة.\n\n"
+                +
+                "تم إسناد "
+                +
+                currentAssignments.length
+                +
+                " من "
+                +
+                required
+                +
+                " موظف."
+            );
+
+
+            localStorage.removeItem(
+                "pendingDecision"
+            );
+
+
+            return;
+        }
+
+
+        const selectedId =
+        Number(
+            pending.selectedEmployeeId
+            ||
+            pending.systemCandidateId
+        );
+
+
+        if (
+            isEmployeeAssigned(
+                pending.taskId,
+                selectedId
+            )
+        ) {
+
+            alert(
+                "هذا الموظف تم اعتماده مسبقاً لهذه المهمة.\nاختر موظفاً آخر من صفحة المطابقة."
+            );
+
 
             localStorage.removeItem(
                 "pendingDecision"
@@ -1610,7 +1514,17 @@ function loadPendingDecision() {
                 "modalDescription"
             )
             .textContent =
-            "تم جلب بيانات الترشيح ونسبة التوافق تلقائياً من صفحة المطابقة.";
+            "تم جلب بيانات الترشيح ونسبة التوافق تلقائياً من صفحة المطابقة. "
+            +
+            "تم إسناد "
+            +
+            currentAssignments.length
+            +
+            " من "
+            +
+            required
+            +
+            " موظف حتى الآن.";
 
 
         document
@@ -1639,22 +1553,20 @@ function loadPendingDecision() {
             )
             .value =
             String(
-                pending.selectedEmployeeId
-                ||
-                pending.systemCandidateId
+                selectedId
             );
 
 
         const pendingRate =
-            Number(
-                pending.matchRate
-                ??
-                pending.score
-                ??
-                pending.matchScore
-                ??
-                0
-            );
+        Number(
+            pending.matchRate
+            ??
+            pending.score
+            ??
+            pending.matchScore
+            ??
+            0
+        );
 
 
         document
@@ -1736,9 +1648,7 @@ function loadPendingDecision() {
         localStorage.removeItem(
             "pendingDecision"
         );
-
     }
-
 }
 
 
@@ -1748,12 +1658,11 @@ function loadPendingDecision() {
 
 async function loadDecisions() {
 
-    decisionsGrid.innerHTML = `
-
+    decisionsGrid.innerHTML =
+    `
         <div class="empty-state">
             جارٍ تحميل القرارات...
         </div>
-
     `;
 
 
@@ -1762,7 +1671,9 @@ async function loadDecisions() {
         error
     } =
     await supabaseClient
-        .from("decisions")
+        .from(
+            "decisions"
+        )
         .select(`
             id,
             task_id,
@@ -1791,8 +1702,8 @@ async function loadDecisions() {
         );
 
 
-        decisionsGrid.innerHTML = `
-
+        decisionsGrid.innerHTML =
+        `
             <div class="empty-state error-state">
 
                 <strong>
@@ -1801,12 +1712,13 @@ async function loadDecisions() {
 
                 <small>
                     ${escapeHtml(
-                        error.message || ""
+                        error.message
+                        ||
+                        ""
                     )}
                 </small>
 
             </div>
-
         `;
 
 
@@ -1815,89 +1727,80 @@ async function loadDecisions() {
 
 
     decisions =
-        (data || [])
+    (data || [])
         .map(
             decision => {
 
-
                 const task =
-                    tasks.find(
-                        item =>
+                tasks.find(
+                    item =>
 
-                            Number(
-                                item.id
-                            )
-                            ===
-                            Number(
-                                decision.task_id
-                            )
-                    );
+                        Number(
+                            item.id
+                        )
+                        ===
+                        Number(
+                            decision.task_id
+                        )
+                );
 
 
                 const systemEmployee =
-                    employees.find(
-                        item =>
+                employees.find(
+                    item =>
 
-                            Number(
-                                item.id
-                            )
-                            ===
-                            Number(
-                                decision.system_candidate_id
-                            )
-                    );
+                        Number(
+                            item.id
+                        )
+                        ===
+                        Number(
+                            decision.system_candidate_id
+                        )
+                );
 
 
                 const selectedEmployee =
-                    employees.find(
-                        item =>
+                employees.find(
+                    item =>
 
-                            Number(
-                                item.id
-                            )
-                            ===
-                            Number(
-                                decision.selected_employee_id
-                            )
-                    );
+                        Number(
+                            item.id
+                        )
+                        ===
+                        Number(
+                            decision.selected_employee_id
+                        )
+                );
 
 
                 return {
 
-
                     id:
                         decision.id,
 
-
                     taskId:
                         decision.task_id,
-
 
                     taskName:
                         task?.task_name
                         ||
                         "مهمة غير معروفة",
 
-
                     systemCandidateId:
                         decision.system_candidate_id,
-
 
                     systemCandidateName:
                         systemEmployee?.name
                         ||
                         "موظف غير معروف",
 
-
                     selectedEmployeeId:
                         decision.selected_employee_id,
-
 
                     selectedEmployeeName:
                         selectedEmployee?.name
                         ||
                         "موظف غير معروف",
-
 
                     matchRate:
                         Number(
@@ -1906,24 +1809,19 @@ async function loadDecisions() {
                             0
                         ),
 
-
                     reason:
                         decision.reason
                         ||
                         "",
-
 
                     date:
                         decision.decision_date
                         ||
                         "",
 
-
                     createdAt:
                         decision.created_at
-
                 };
-
             }
         );
 
@@ -1931,8 +1829,9 @@ async function loadDecisions() {
     updateSummary();
 
 
-    filterDecisions();
-
+    renderDecisions(
+        decisions
+    );
 }
 
 
@@ -1943,51 +1842,53 @@ async function loadDecisions() {
 function updateSummary() {
 
     const total =
-        decisions.length;
+    decisions.length;
 
 
     const same =
-        decisions.filter(
-            decision =>
+    decisions.filter(
+        decision =>
 
-                Number(
-                    decision.systemCandidateId
-                )
-                ===
-                Number(
-                    decision.selectedEmployeeId
-                )
-
-        ).length;
+            Number(
+                decision.systemCandidateId
+            )
+            ===
+            Number(
+                decision.selectedEmployeeId
+            )
+    )
+    .length;
 
 
     const changed =
-        total - same;
+    total
+    -
+    same;
 
 
     const average =
-        total
-        ?
-        decisions.reduce(
-            (
-                result,
-                decision
-            ) =>
+    total
+    ?
+    decisions.reduce(
+        (
+            sum,
+            decision
+        ) =>
 
-                result
-                +
-                Number(
-                    decision.matchRate
-                    ||
-                    0
-                ),
+            sum
+            +
+            Number(
+                decision.matchRate
+                ||
+                0
+            ),
 
-            0
-        )
-        /
-        total
-        :
-        0;
+        0
+    )
+    /
+    total
+    :
+    0;
 
 
     document
@@ -2019,12 +1920,11 @@ function updateSummary() {
             "summaryAverage"
         )
         .textContent =
-        Math.round(
+        formatRate(
             average
         )
         +
         "%";
-
 }
 
 
@@ -2032,11 +1932,9 @@ function updateSummary() {
    عرض القرارات
 ===================================================== */
 
-function renderDecisions(list) {
-
-    decisionsGrid.innerHTML =
-        "";
-
+function renderDecisions(
+    list
+) {
 
     document
         .getElementById(
@@ -2049,17 +1947,14 @@ function renderDecisions(list) {
 
 
     if (
-        !list
-        ||
-        list.length === 0
+        !list.length
     ) {
 
-        decisionsGrid.innerHTML = `
-
+        decisionsGrid.innerHTML =
+        `
             <div class="empty-state">
-                لا توجد قرارات مسجلة حالياً
+                لا توجد قرارات مسجلة.
             </div>
-
         `;
 
 
@@ -2067,11 +1962,12 @@ function renderDecisions(list) {
     }
 
 
-    list.forEach(
-        decision => {
+    decisionsGrid.innerHTML =
+    list
+        .map(
+            decision => {
 
-
-            const sameSelection =
+                const sameSelection =
                 Number(
                     decision.systemCandidateId
                 )
@@ -2081,290 +1977,146 @@ function renderDecisions(list) {
                 );
 
 
-            const card =
-                document.createElement(
-                    "article"
-                );
+                return `
+                    <article class="decision-card">
 
+                        <div class="decision-card-header">
 
-            card.className =
-                "decision-card";
+                            <div>
 
+                                <span class="decision-label">
+                                    قرار نهائي
+                                </span>
 
-            card.innerHTML = `
+                                <h3>
+                                    ${escapeHtml(
+                                        decision.taskName
+                                    )}
+                                </h3>
 
+                            </div>
 
-                <div class="decision-top">
+                            <div class="decision-rate">
+                                ${formatRate(
+                                    decision.matchRate
+                                )}%
+                            </div>
 
+                        </div>
 
-                    <div>
 
-                        <span class="decision-label">
-                            قرار إسناد
-                        </span>
+                        <div class="decision-info">
 
+                            <div class="decision-info-item">
 
-                        <h3>
-                            ${escapeHtml(
-                                decision.taskName
-                            )}
-                        </h3>
+                                <span>
+                                    مرشح النظام
+                                </span>
 
-                    </div>
+                                <strong>
+                                    ${escapeHtml(
+                                        decision.systemCandidateName
+                                    )}
+                                </strong>
 
+                            </div>
 
-                    <div class="match-badge">
 
-                        <span>
-                            نسبة التوافق
-                        </span>
+                            <div class="decision-info-item">
 
-                        <strong>
-                            ${formatRate(
-                                decision.matchRate
-                            )}%
-                        </strong>
+                                <span>
+                                    الموظف النهائي
+                                </span>
 
-                    </div>
+                                <strong>
+                                    ${escapeHtml(
+                                        decision.selectedEmployeeName
+                                    )}
+                                </strong>
 
+                            </div>
 
-                </div>
 
+                            <div class="decision-info-item">
 
-                <div class="decision-status">
+                                <span>
+                                    نتيجة القرار
+                                </span>
 
-                    <span
-                        class="
-                            decision-type
-                            ${
-                                sameSelection
-                                ?
-                                "system-approved"
-                                :
-                                "manual-selection"
-                            }
-                        "
-                    >
+                                <strong>
+                                    ${
+                                        sameSelection
+                                        ?
+                                        "اعتماد ترشيح النظام"
+                                        :
+                                        "اختيار موظف آخر"
+                                    }
+                                </strong>
 
-                        ${
-                            sameSelection
-                            ?
-                            "تم اعتماد ترشيح النظام"
-                            :
-                            "تم اختيار موظف مختلف"
-                        }
+                            </div>
 
-                    </span>
 
-                </div>
+                            <div class="decision-info-item">
 
+                                <span>
+                                    تاريخ القرار
+                                </span>
 
-                <div class="decision-info">
+                                <strong>
+                                    ${formatDate(
+                                        decision.date
+                                    )}
+                                </strong>
 
+                            </div>
 
-                    <div class="info-item">
+                        </div>
 
-                        <span>
-                            ترشيح النظام
-                        </span>
 
-                        <strong>
-                            ${escapeHtml(
-                                decision.systemCandidateName
-                            )}
-                        </strong>
+                        <div class="decision-reason">
 
-                    </div>
-
-
-                    <div class="info-item selected">
-
-                        <span>
-                            قرار المسؤول
-                        </span>
-
-                        <strong>
-                            ${escapeHtml(
-                                decision.selectedEmployeeName
-                            )}
-                        </strong>
-
-                    </div>
-
-
-                    <div class="info-item">
-
-                        <span>
-                            تاريخ القرار
-                        </span>
-
-                        <strong>
-                            ${formatDate(
-                                decision.date
-                            )}
-                        </strong>
-
-                    </div>
-
-
-                </div>
-
-
-                <div class="reason-preview">
-
-                    <span>
-                        سبب القرار
-                    </span>
-
-                    <p>
-
-                        ${
-                            escapeHtml(
-                                decision.reason
-                                ||
-                                (
-                                    sameSelection
-                                    ?
-                                    "تم اعتماد مرشح النظام بناءً على نتيجة المطابقة."
-                                    :
-                                    "تم اختيار موظف مختلف عن مرشح النظام."
-                                )
-                            )
-                        }
-
-                    </p>
-
-                </div>
-
-
-                <div class="decision-actions">
-
-
-                    <button
-                        class="view-btn"
-                        type="button"
-                        data-action="view"
-                        data-id="${decision.id}"
-                    >
-                        عرض
-                    </button>
-
-
-                    <button
-                        class="edit-btn"
-                        type="button"
-                        data-action="edit"
-                        data-id="${decision.id}"
-                    >
-                        تعديل القرار
-                    </button>
-
-
-                </div>
-
-
-            `;
-
-
-            decisionsGrid.appendChild(
-                card
-            );
-
-        }
-    );
-
-}
-
-
-/* =====================================================
-   فتح قرار يدوي
-===================================================== */
-
-function openDecisionModal() {
-
-    document
-        .getElementById(
-            "decisionForm"
+                            <span>
+                                سبب القرار
+                            </span>
+
+                            <p>
+                                ${escapeHtml(
+                                    decision.reason
+                                    ||
+                                    "لا يوجد سبب مسجل"
+                                )}
+                            </p>
+
+                        </div>
+
+
+                        <div class="decision-actions">
+
+                            <button
+                                type="button"
+                                class="view-btn"
+                                data-action="view"
+                                data-id="${decision.id}"
+                            >
+                                عرض
+                            </button>
+
+                            <button
+                                type="button"
+                                class="edit-btn"
+                                data-action="edit"
+                                data-id="${decision.id}"
+                            >
+                                تعديل
+                            </button>
+
+                        </div>
+
+                    </article>
+                `;
+            }
         )
-        .reset();
-
-
-    document
-        .getElementById(
-            "editDecisionId"
-        )
-        .value =
-        "";
-
-
-    document
-        .getElementById(
-            "decisionSource"
-        )
-        .value =
-        "manual";
-
-
-    document
-        .getElementById(
-            "modalTitle"
-        )
-        .textContent =
-        "تسجيل قرار";
-
-
-    document
-        .getElementById(
-            "modalDescription"
-        )
-        .textContent =
-        "اختر المهمة وبيانات الترشيح ثم اعتمد الموظف النهائي.";
-
-
-    document
-        .getElementById(
-            "decisionDate"
-        )
-        .value =
-        getTodayDate();
-
-
-    document
-        .getElementById(
-            "saveDecisionBtn"
-        )
-        .textContent =
-        "حفظ القرار";
-
-
-    leaveWarning
-        .classList
-        .add(
-            "hidden"
-        );
-
-
-    setMatchingFieldsLocked(
-        false
-    );
-
-
-    updateDecisionStatus();
-
-
-    decisionModal
-        .classList
-        .add(
-            "show"
-        );
-
-
-    document.body
-        .classList
-        .add(
-            "modal-open"
-        );
-
+        .join("");
 }
 
 
@@ -2372,82 +2124,84 @@ function openDecisionModal() {
    حفظ القرار
 ===================================================== */
 
-async function saveDecision(event) {
+async function saveDecision(
+    event
+) {
 
     event.preventDefault();
 
 
     const editId =
-        document
-            .getElementById(
-                "editDecisionId"
-            )
-            .value;
+    document
+        .getElementById(
+            "editDecisionId"
+        )
+        .value;
 
 
     const source =
-        document
-            .getElementById(
-                "decisionSource"
-            )
-            .value;
+    document
+        .getElementById(
+            "decisionSource"
+        )
+        .value;
 
 
     const taskId =
-        Number(
-            document
-                .getElementById(
-                    "decisionTask"
-                )
-                .value
-        );
+    Number(
+        document
+            .getElementById(
+                "decisionTask"
+            )
+            .value
+    );
 
 
     const systemCandidateId =
-        Number(
-            document
-                .getElementById(
-                    "systemCandidate"
-                )
-                .value
-        );
+    Number(
+        document
+            .getElementById(
+                "systemCandidate"
+            )
+            .value
+    );
 
 
     const selectedEmployeeId =
-        Number(
-            document
-                .getElementById(
-                    "selectedEmployee"
-                )
-                .value
-        );
+    Number(
+        document
+            .getElementById(
+                "selectedEmployee"
+            )
+            .value
+    );
 
 
     const matchRate =
-        Number(
-            document
-                .getElementById(
-                    "matchRate"
-                )
-                .value
-        );
+    Number(
+        document
+            .getElementById(
+                "matchRate"
+            )
+            .value
+    );
 
 
     let reason =
-        document
-            .getElementById(
-                "decisionReason"
-            )
-            .value
-            .trim();
+    document
+        .getElementById(
+            "decisionReason"
+        )
+        .value
+        .trim();
 
 
     const decisionDate =
-        document
-            .getElementById(
-                "decisionDate"
-            )
-            .value;
+    document
+        .getElementById(
+            "decisionDate"
+        )
+        .value;
 
 
     if (
@@ -2461,7 +2215,6 @@ async function saveDecision(event) {
         alert(
             "أكمل بيانات المهمة والموظفين."
         );
-
 
         return;
     }
@@ -2481,7 +2234,6 @@ async function saveDecision(event) {
             "نسبة التوافق يجب أن تكون بين 0 و100."
         );
 
-
         return;
     }
 
@@ -2494,25 +2246,19 @@ async function saveDecision(event) {
             "حدد تاريخ القرار."
         );
 
-
         return;
     }
 
 
     const sameSelection =
-        Number(
-            systemCandidateId
-        )
-        ===
-        Number(
-            selectedEmployeeId
-        );
+    Number(
+        systemCandidateId
+    )
+    ===
+    Number(
+        selectedEmployeeId
+    );
 
-
-    /*
-        إذا اختار المسؤول موظفاً مختلفاً
-        يجب كتابة سبب واضح.
-    */
 
     if (
         !sameSelection
@@ -2536,12 +2282,6 @@ async function saveDecision(event) {
     }
 
 
-    /*
-        إذا تم اعتماد مرشح النظام
-        ولم يكتب المسؤول سبباً
-        نسجل سبباً تلقائياً.
-    */
-
     if (
         sameSelection
         &&
@@ -2549,19 +2289,14 @@ async function saveDecision(event) {
     ) {
 
         reason =
-            "تم اعتماد مرشح النظام بناءً على نتيجة المطابقة ومتطلبات المهمة.";
-
+        "تم اعتماد مرشح النظام بناءً على نتيجة المطابقة ومتطلبات المهمة.";
     }
 
 
-    /*
-        منع اعتماد موظف في إجازة حالية
-    */
-
     const currentLeave =
-        getCurrentLeave(
-            selectedEmployeeId
-        );
+    getCurrentLeave(
+        selectedEmployeeId
+    );
 
 
     if (
@@ -2569,7 +2304,6 @@ async function saveDecision(event) {
     ) {
 
         alert(
-
             "لا يمكن اعتماد الموظف لأنه في إجازة معتمدة حالياً من "
             +
             formatDate(
@@ -2581,7 +2315,6 @@ async function saveDecision(event) {
             formatDate(
                 currentLeave.end_date
             )
-
         );
 
 
@@ -2591,17 +2324,19 @@ async function saveDecision(event) {
 
     /*
         إذا جاء القرار من المطابقة
-        نتأكد أن البيانات الأساسية لم تتغير.
+        نتأكد أن بيانات المطابقة الأساسية
+        لم تتغير.
     */
 
     if (
-        source === "matching"
+        source ===
+        "matching"
     ) {
 
         const pendingStored =
-            localStorage.getItem(
-                "pendingDecision"
-            );
+        localStorage.getItem(
+            "pendingDecision"
+        );
 
 
         if (
@@ -2611,9 +2346,9 @@ async function saveDecision(event) {
             try {
 
                 const pending =
-                    JSON.parse(
-                        pendingStored
-                    );
+                JSON.parse(
+                    pendingStored
+                );
 
 
                 if (
@@ -2622,7 +2357,9 @@ async function saveDecision(event) {
                     )
                     !==
                     taskId
+
                     ||
+
                     Number(
                         pending.systemCandidateId
                     )
@@ -2645,74 +2382,168 @@ async function saveDecision(event) {
                 console.warn(
                     error
                 );
-
             }
-
         }
-
     }
 
 
     const saveButton =
-        document.getElementById(
-            "saveDecisionBtn"
-        );
+    document.getElementById(
+        "saveDecisionBtn"
+    );
 
 
     saveButton.disabled =
-        true;
+    true;
 
 
     saveButton.textContent =
-        "جارٍ الحفظ...";
-
-
-    const decisionData = {
-
-
-        task_id:
-            taskId,
-
-
-        system_candidate_id:
-            systemCandidateId,
-
-
-        selected_employee_id:
-            selectedEmployeeId,
-
-
-        match_rate:
-            Math.round(
-                matchRate * 100
-            )
-            /
-            100,
-
-
-        reason:
-            reason,
-
-
-        decision_date:
-            decisionDate
-
-    };
+    "جارٍ الحفظ...";
 
 
     try {
 
+        /*
+            تحديث الإسنادات أولاً
+        */
+
+        await loadTaskAssignments();
+
+
+        const required =
+        await getEmployeesRequired(
+            taskId
+        );
+
+
+        let assignments =
+        getTaskAssignments(
+            taskId
+        );
+
+
+        /*
+            تعديل قرار موجود
+        */
 
         if (
             editId
         ) {
 
+            const oldDecision =
+            decisions.find(
+                decision =>
+
+                    Number(
+                        decision.id
+                    )
+                    ===
+                    Number(
+                        editId
+                    )
+            );
+
+
+            if (
+                !oldDecision
+            ) {
+
+                throw new Error(
+                    "تعذر العثور على القرار المراد تعديله."
+                );
+            }
+
+
+            /*
+                إذا تم تغيير الموظف
+                نتأكد أن الموظف الجديد
+                غير موجود مسبقاً في المهمة.
+            */
+
+            if (
+                Number(
+                    oldDecision.selectedEmployeeId
+                )
+                !==
+                Number(
+                    selectedEmployeeId
+                )
+            ) {
+
+                const duplicate =
+                assignments.some(
+                    assignment =>
+
+                        Number(
+                            assignment.employee_id
+                        )
+                        ===
+                        Number(
+                            selectedEmployeeId
+                        )
+
+                        &&
+
+                        Number(
+                            assignment.task_id
+                        )
+                        ===
+                        Number(
+                            taskId
+                        )
+                );
+
+
+                if (
+                    duplicate
+                ) {
+
+                    alert(
+                        "هذا الموظف معتمد مسبقاً لهذه المهمة."
+                    );
+
+
+                    return;
+                }
+            }
+
+
+            const decisionData = {
+
+                task_id:
+                    taskId,
+
+                system_candidate_id:
+                    systemCandidateId,
+
+                selected_employee_id:
+                    selectedEmployeeId,
+
+                match_rate:
+                    Math.round(
+                        matchRate
+                        *
+                        100
+                    )
+                    /
+                    100,
+
+                reason:
+                    reason,
+
+                decision_date:
+                    decisionDate
+            };
+
 
             const {
-                error
+                error:
+                    decisionUpdateError
             } =
             await supabaseClient
-                .from("decisions")
+                .from(
+                    "decisions"
+                )
                 .update(
                     decisionData
                 )
@@ -2725,52 +2556,187 @@ async function saveDecision(event) {
 
 
             if (
-                error
+                decisionUpdateError
             ) {
 
-                throw error;
+                throw decisionUpdateError;
             }
-
-        }
-
-
-        else {
 
 
             /*
-                لا ننشئ قرارين لنفس المهمة
+                تحديث الإسناد المرتبط
+                بالقرار نفسه
             */
 
-            const {
-                data:
-                    existingDecision,
-                error:
-                    existingError
-            } =
-            await supabaseClient
-                .from("decisions")
-                .select("id")
-                .eq(
-                    "task_id",
-                    taskId
-                )
-                .maybeSingle();
+            const assignmentByDecision =
+            assignments.find(
+                assignment =>
+
+                    Number(
+                        assignment.decision_id
+                    )
+                    ===
+                    Number(
+                        editId
+                    )
+            );
 
 
             if (
-                existingError
+                assignmentByDecision
             ) {
 
-                throw existingError;
+                const {
+                    error:
+                        assignmentUpdateError
+                } =
+                await supabaseClient
+                    .from(
+                        "task_assignments"
+                    )
+                    .update({
+
+                        employee_id:
+                            selectedEmployeeId,
+
+                        assigned_at:
+                            new Date()
+                                .toISOString()
+
+                    })
+                    .eq(
+                        "id",
+                        assignmentByDecision.id
+                    );
+
+
+                if (
+                    assignmentUpdateError
+                ) {
+
+                    throw assignmentUpdateError;
+                }
+            }
+
+            else {
+
+                /*
+                    دعم القرارات القديمة
+                    التي تم إنشاؤها قبل إضافة
+                    جدول task_assignments
+                */
+
+                const {
+                    error:
+                        assignmentInsertError
+                } =
+                await supabaseClient
+                    .from(
+                        "task_assignments"
+                    )
+                    .insert([{
+
+                        task_id:
+                            taskId,
+
+                        employee_id:
+                            selectedEmployeeId,
+
+                        decision_id:
+                            Number(
+                                editId
+                            )
+
+                    }]);
+
+
+                if (
+                    assignmentInsertError
+                ) {
+
+                    throw assignmentInsertError;
+                }
             }
 
 
+            /*
+                نبقي الحقل القديم متوافقاً
+                مع الصفحات الحالية
+            */
+
+            const {
+                error:
+                    taskUpdateError
+            } =
+            await supabaseClient
+                .from(
+                    "tasks"
+                )
+                .update({
+
+                    assigned_employee_id:
+                        selectedEmployeeId
+
+                })
+                .eq(
+                    "id",
+                    taskId
+                );
+
+
             if (
-                existingDecision
+                taskUpdateError
+            ) {
+
+                throw taskUpdateError;
+            }
+
+
+            localStorage.removeItem(
+                "pendingDecision"
+            );
+
+
+            alert(
+                "تم تعديل القرار وتحديث إسناد الموظف بنجاح."
+            );
+        }
+
+
+        /*
+            إنشاء قرار جديد
+        */
+
+        else {
+
+            assignments =
+            getTaskAssignments(
+                taskId
+            );
+
+
+            /*
+                هل اكتمل العدد المطلوب؟
+            */
+
+            if (
+                assignments.length
+                >=
+                required
             ) {
 
                 alert(
-                    "هذه المهمة لديها قرار نهائي مسجل مسبقاً. افتح القرار الموجود واستخدم تعديل القرار."
+                    "تم استكمال العدد المطلوب لهذه المهمة.\n\n"
+                    +
+                    "تم إسناد "
+                    +
+                    assignments.length
+                    +
+                    " من "
+                    +
+                    required
+                    +
+                    " موظف."
                 );
 
 
@@ -2778,81 +2744,322 @@ async function saveDecision(event) {
             }
 
 
-            const {
-                error
-            } =
-            await supabaseClient
-                .from("decisions")
-                .insert([
-                    decisionData
-                ]);
+            /*
+                منع نفس الموظف
+                من الاعتماد مرتين
+            */
+
+            if (
+                isEmployeeAssigned(
+                    taskId,
+                    selectedEmployeeId
+                )
+            ) {
+
+                alert(
+                    "هذا الموظف تم اعتماده مسبقاً لهذه المهمة.\nاختر موظفاً آخر."
+                );
+
+
+                return;
+            }
+
+
+            /*
+                احتياط للقرارات القديمة:
+                نتأكد أن نفس الموظف
+                ليس لديه قرار لنفس المهمة.
+            */
+
+            const duplicateDecision =
+            decisions.some(
+                decision =>
+
+                    Number(
+                        decision.taskId
+                    )
+                    ===
+                    Number(
+                        taskId
+                    )
+
+                    &&
+
+                    Number(
+                        decision.selectedEmployeeId
+                    )
+                    ===
+                    Number(
+                        selectedEmployeeId
+                    )
+            );
 
 
             if (
-                error
+                duplicateDecision
             ) {
 
-                throw error;
+                alert(
+                    "يوجد قرار سابق لهذا الموظف على نفس المهمة."
+                );
+
+
+                return;
             }
 
-        }
+
+            const decisionData = {
+
+                task_id:
+                    taskId,
+
+                system_candidate_id:
+                    systemCandidateId,
+
+                selected_employee_id:
+                    selectedEmployeeId,
+
+                match_rate:
+                    Math.round(
+                        matchRate
+                        *
+                        100
+                    )
+                    /
+                    100,
+
+                reason:
+                    reason,
+
+                decision_date:
+                    decisionDate
+            };
 
 
-        /*
-            إسناد المهمة فعلياً
-            إلى الموظف الذي اعتمده المسؤول
-        */
+            /*
+                نحفظ القرار
+                ونرجع ID القرار الجديد
+            */
 
-        const {
-            error:
+            const {
+                data:
+                    insertedDecision,
+                error:
+                    insertDecisionError
+            } =
+            await supabaseClient
+                .from(
+                    "decisions"
+                )
+                .insert([
+                    decisionData
+                ])
+                .select(
+                    "id"
+                )
+                .single();
+
+
+            if (
+                insertDecisionError
+            ) {
+
+                throw insertDecisionError;
+            }
+
+
+            /*
+                نحفظ الإسناد المتعدد
+            */
+
+            const {
+                error:
+                    assignmentError
+            } =
+            await supabaseClient
+                .from(
+                    "task_assignments"
+                )
+                .insert([{
+
+                    task_id:
+                        taskId,
+
+                    employee_id:
+                        selectedEmployeeId,
+
+                    decision_id:
+                        insertedDecision.id
+
+                }]);
+
+
+            if (
+                assignmentError
+            ) {
+
+                /*
+                    إذا فشل الإسناد
+                    نحذف القرار حتى لا يبقى
+                    قرار بدون إسناد.
+                */
+
+                await supabaseClient
+                    .from(
+                        "decisions"
+                    )
+                    .delete()
+                    .eq(
+                        "id",
+                        insertedDecision.id
+                    );
+
+
+                throw assignmentError;
+            }
+
+
+            /*
+                إبقاء assigned_employee_id
+                للتوافق مع الصفحات الحالية.
+            */
+
+            const {
+                error:
+                    taskError
+            } =
+            await supabaseClient
+                .from(
+                    "tasks"
+                )
+                .update({
+
+                    assigned_employee_id:
+                        selectedEmployeeId
+
+                })
+                .eq(
+                    "id",
+                    taskId
+                );
+
+
+            if (
                 taskError
-        } =
-        await supabaseClient
-            .from("tasks")
-            .update({
+            ) {
 
-                assigned_employee_id:
-                    selectedEmployeeId
+                throw taskError;
+            }
 
-            })
-            .eq(
-                "id",
+
+            /*
+                نعيد تحميل الإسنادات
+                لمعرفة العدد بعد الحفظ.
+            */
+
+            await loadTaskAssignments();
+
+
+            const afterAssignments =
+            getTaskAssignments(
                 taskId
             );
 
 
-        if (
-            taskError
-        ) {
+            const assignedCount =
+            afterAssignments.length;
 
-            throw taskError;
+
+            localStorage.removeItem(
+                "pendingDecision"
+            );
+
+
+            if (
+                assignedCount
+                >=
+                required
+            ) {
+
+                alert(
+                    (
+                        sameSelection
+                        ?
+                        "تم اعتماد ترشيح النظام وإسناد المهمة للموظف بنجاح."
+                        :
+                        "تم اعتماد الموظف الذي اختاره المسؤول وإسناد المهمة بنجاح."
+                    )
+                    +
+                    "\n\n"
+                    +
+                    "تم استكمال العدد المطلوب للمهمة: "
+                    +
+                    assignedCount
+                    +
+                    " من "
+                    +
+                    required
+                    +
+                    " موظف."
+                    +
+                    "\n\n"
+                    +
+                    "لن يسمح النظام باعتماد موظف إضافي لهذه المهمة."
+                );
+
+            }
+
+            else {
+
+                const remaining =
+                required
+                -
+                assignedCount;
+
+
+                alert(
+                    (
+                        sameSelection
+                        ?
+                        "تم اعتماد ترشيح النظام وإسناد المهمة للموظف بنجاح."
+                        :
+                        "تم اعتماد الموظف الذي اختاره المسؤول وإسناد المهمة بنجاح."
+                    )
+                    +
+                    "\n\n"
+                    +
+                    "تم إسناد "
+                    +
+                    assignedCount
+                    +
+                    " من "
+                    +
+                    required
+                    +
+                    " موظف."
+                    +
+                    "\n"
+                    +
+                    "متبقي "
+                    +
+                    remaining
+                    +
+                    " موظف للمهمة."
+                );
+            }
         }
-
-
-        localStorage.removeItem(
-            "pendingDecision"
-        );
-
-
-        alert(
-            editId
-            ?
-            "تم تعديل القرار وتحديث إسناد المهمة بنجاح."
-            :
-            (
-                sameSelection
-                ?
-                "تم اعتماد ترشيح النظام وإسناد المهمة للموظف بنجاح."
-                :
-                "تم اعتماد الموظف الذي اختاره المسؤول وإسناد المهمة بنجاح."
-            )
-        );
 
 
         closeDecisionModal();
 
 
-        await loadTasks();
+        await Promise.all([
+
+            loadTasks(),
+
+            loadTaskAssignments()
+
+        ]);
 
 
         await loadDecisions();
@@ -2876,24 +3083,21 @@ async function saveDecision(event) {
                 ""
             )
         );
-
     }
 
     finally {
 
         saveButton.disabled =
-            false;
+        false;
 
 
         saveButton.textContent =
-            editId
-            ?
-            "حفظ التعديلات"
-            :
-            "حفظ القرار";
-
+        editId
+        ?
+        "حفظ التعديلات"
+        :
+        "حفظ القرار";
     }
-
 }
 
 
@@ -2901,20 +3105,22 @@ async function saveDecision(event) {
    تعديل القرار
 ===================================================== */
 
-function editDecision(id) {
+function editDecision(
+    id
+) {
 
     const decision =
-        decisions.find(
-            item =>
+    decisions.find(
+        item =>
 
-                Number(
-                    item.id
-                )
-                ===
-                Number(
-                    id
-                )
-        );
+            Number(
+                item.id
+            )
+            ===
+            Number(
+                id
+            )
+    );
 
 
     if (
@@ -3019,12 +3225,6 @@ function editDecision(id) {
         "حفظ التعديلات";
 
 
-    /*
-        عند تعديل قرار موجود:
-        لا نسمح بتغيير المهمة أو مرشح النظام
-        أو نسبة المطابقة الأصلية.
-    */
-
     setMatchingFieldsLocked(
         true
     );
@@ -3048,7 +3248,6 @@ function editDecision(id) {
         .add(
             "modal-open"
         );
-
 }
 
 
@@ -3056,20 +3255,22 @@ function editDecision(id) {
    تفاصيل القرار
 ===================================================== */
 
-function viewDecision(id) {
+function viewDecision(
+    id
+) {
 
     const decision =
-        decisions.find(
-            item =>
+    decisions.find(
+        item =>
 
-                Number(
-                    item.id
-                )
-                ===
-                Number(
-                    id
-                )
-        );
+            Number(
+                item.id
+            )
+            ===
+            Number(
+                id
+            )
+    );
 
 
     if (
@@ -3081,21 +3282,21 @@ function viewDecision(id) {
 
 
     const sameSelection =
-        Number(
-            decision.systemCandidateId
-        )
-        ===
-        Number(
-            decision.selectedEmployeeId
-        );
+    Number(
+        decision.systemCandidateId
+    )
+    ===
+    Number(
+        decision.selectedEmployeeId
+    );
 
 
     document
         .getElementById(
             "decisionDetails"
         )
-        .innerHTML = `
-
+        .innerHTML =
+        `
 
             <div class="detail-item">
 
@@ -3164,7 +3365,6 @@ function viewDecision(id) {
                 </span>
 
                 <strong>
-
                     ${
                         sameSelection
                         ?
@@ -3172,7 +3372,6 @@ function viewDecision(id) {
                         :
                         "اختار المسؤول موظفاً مختلفاً"
                     }
-
                 </strong>
 
             </div>
@@ -3200,18 +3399,14 @@ function viewDecision(id) {
                 </span>
 
                 <strong>
-                    ${
-                        escapeHtml(
-                            decision.reason
-                            ||
-                            "لا يوجد سبب مسجل"
-                        )
-                    }
+                    ${escapeHtml(
+                        decision.reason
+                        ||
+                        "لا يوجد سبب مسجل"
+                    )}
                 </strong>
 
             </div>
-
-
         `;
 
 
@@ -3227,7 +3422,6 @@ function viewDecision(id) {
         .add(
             "modal-open"
         );
-
 }
 
 
@@ -3238,56 +3432,55 @@ function viewDecision(id) {
 function filterDecisions() {
 
     const search =
-        document
-            .getElementById(
-                "searchInput"
-            )
-            .value
-            .trim()
-            .toLowerCase();
+    document
+        .getElementById(
+            "searchInput"
+        )
+        .value
+        .trim()
+        .toLowerCase();
 
 
     const filtered =
-        decisions.filter(
-            item => {
+    decisions.filter(
+        item => {
 
+            if (
+                !search
+            ) {
 
-                if (
-                    !search
-                ) {
-
-                    return true;
-                }
-
-
-                const text =
-                    [
-
-                        item.taskName,
-
-                        item.systemCandidateName,
-
-                        item.selectedEmployeeName,
-
-                        item.reason
-
-                    ]
-                    .join(" ")
-                    .toLowerCase();
-
-
-                return text.includes(
-                    search
-                );
-
+                return true;
             }
-        );
+
+
+            const text =
+            [
+
+                item.taskName,
+
+                item.systemCandidateName,
+
+                item.selectedEmployeeName,
+
+                item.reason
+
+            ]
+            .join(
+                " "
+            )
+            .toLowerCase();
+
+
+            return text.includes(
+                search
+            );
+        }
+    );
 
 
     renderDecisions(
         filtered
     );
-
 }
 
 
@@ -3295,14 +3488,16 @@ function filterDecisions() {
    تنسيق النسبة
 ===================================================== */
 
-function formatRate(value) {
+function formatRate(
+    value
+) {
 
     const number =
-        Number(
-            value
-            ||
-            0
-        );
+    Number(
+        value
+        ||
+        0
+    );
 
 
     if (
@@ -3318,7 +3513,6 @@ function formatRate(value) {
     return number.toFixed(
         1
     );
-
 }
 
 
@@ -3329,33 +3523,33 @@ function formatRate(value) {
 function getTodayDate() {
 
     const now =
-        new Date();
+    new Date();
 
 
     const year =
-        now.getFullYear();
+    now.getFullYear();
 
 
     const month =
-        String(
-            now.getMonth()
-            +
-            1
-        )
-        .padStart(
-            2,
-            "0"
-        );
+    String(
+        now.getMonth()
+        +
+        1
+    )
+    .padStart(
+        2,
+        "0"
+    );
 
 
     const day =
-        String(
-            now.getDate()
-        )
-        .padStart(
-            2,
-            "0"
-        );
+    String(
+        now.getDate()
+    )
+    .padStart(
+        2,
+        "0"
+    );
 
 
     return (
@@ -3369,11 +3563,12 @@ function getTodayDate() {
         +
         day
     );
-
 }
 
 
-function formatDate(value) {
+function formatDate(
+    value
+) {
 
     if (
         !value
@@ -3384,11 +3579,11 @@ function formatDate(value) {
 
 
     const date =
-        new Date(
-            value
-            +
-            "T00:00:00"
-        );
+    new Date(
+        value
+        +
+        "T00:00:00"
+    );
 
 
     if (
@@ -3401,22 +3596,58 @@ function formatDate(value) {
     }
 
 
-    return date.toLocaleDateString(
-        "ar-SA-u-ca-gregory",
-        {
+    return date
+        .toLocaleDateString(
+            "ar-SA-u-ca-gregory",
+            {
 
-            year:
-                "numeric",
+                year:
+                    "numeric",
 
-            month:
-                "2-digit",
+                month:
+                    "2-digit",
 
-            day:
-                "2-digit"
+                day:
+                    "2-digit"
 
-        }
+            }
+        );
+}
+
+
+/* =====================================================
+   حماية النص
+===================================================== */
+
+function escapeHtml(
+    value
+) {
+
+    return String(
+        value
+        ??
+        ""
+    )
+    .replaceAll(
+        "&",
+        "&amp;"
+    )
+    .replaceAll(
+        "<",
+        "&lt;"
+    )
+    .replaceAll(
+        ">",
+        "&gt;"
+    )
+    .replaceAll(
+        '"',
+        "&quot;"
+    )
+    .replaceAll(
+        "'",
+        "&#039;"
     );
-
 }
 
 
@@ -3473,7 +3704,6 @@ function closeDecisionModal() {
         .remove(
             "modal-open"
         );
-
 }
 
 
@@ -3495,7 +3725,6 @@ function closeDetailsModal() {
         .remove(
             "modal-open"
         );
-
 }
 
 
@@ -3524,7 +3753,6 @@ function openSidebar() {
         .add(
             "menu-open"
         );
-
 }
 
 
@@ -3549,7 +3777,6 @@ function closeSidebar() {
         .remove(
             "menu-open"
         );
-
 }
 
 
@@ -3577,7 +3804,6 @@ function clearLocalSession() {
     localStorage.removeItem(
         "selectedTaskId"
     );
-
 }
 
 
@@ -3600,7 +3826,6 @@ async function logout() {
         console.error(
             error
         );
-
     }
 
 
@@ -3608,8 +3833,7 @@ async function logout() {
 
 
     window.location.href =
-        "login.html";
-
+    "login.html";
 }
 
 
@@ -3648,7 +3872,6 @@ document
             checkSelectedEmployeeAvailability();
 
             updateDecisionStatus();
-
         }
     );
 
@@ -3748,7 +3971,6 @@ document
                 "click",
                 closeSidebar
             );
-
         }
     );
 
@@ -3768,11 +3990,10 @@ decisionsGrid
         "click",
         event => {
 
-
             const button =
-                event.target.closest(
-                    "button[data-action]"
-                );
+            event.target.closest(
+                "button[data-action]"
+            );
 
 
             if (
@@ -3784,36 +4005,34 @@ decisionsGrid
 
 
             const id =
-                Number(
-                    button.dataset.id
-                );
+            Number(
+                button.dataset.id
+            );
 
 
             const action =
-                button.dataset.action;
+            button.dataset.action;
 
 
             if (
-                action === "view"
+                action ===
+                "view"
             ) {
 
                 viewDecision(
                     id
                 );
-
             }
 
-
             else if (
-                action === "edit"
+                action ===
+                "edit"
             ) {
 
                 editDecision(
                     id
                 );
-
             }
-
         }
     );
 
@@ -3825,7 +4044,7 @@ decisionsGrid
 async function startPage() {
 
     const allowed =
-        await protectPage();
+    await protectPage();
 
 
     if (
@@ -3844,7 +4063,9 @@ async function startPage() {
 
             loadEmployees(),
 
-            loadEmployeeLeaves()
+            loadEmployeeLeaves(),
+
+            loadTaskAssignments()
 
         ]);
 
@@ -3858,7 +4079,7 @@ async function startPage() {
             تفتح نافذة القرار تلقائياً
         */
 
-        loadPendingDecision();
+        await loadPendingDecision();
 
     }
 
@@ -3870,25 +4091,30 @@ async function startPage() {
         );
 
 
-        decisionsGrid.innerHTML = `
-
+        decisionsGrid.innerHTML =
+        `
             <div class="empty-state">
                 تعذر تحميل بيانات القرارات
             </div>
-
         `;
 
-    }
 
+        alert(
+            "تعذر تحميل بيانات القرارات.\n\n"
+            +
+            (
+                error.message
+                ||
+                ""
+            )
+        );
+    }
 }
 
 
 startPage();
 
-
 </script>
 
-
 </body>
-
 </html>
