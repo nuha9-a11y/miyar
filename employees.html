@@ -176,47 +176,20 @@
             <div class="filters">
 
                 <select id="departmentFilter">
-
-                    <option value="">
-                        جميع الأقسام
-                    </option>
-
+                    <option value="">جميع الأقسام</option>
                 </select>
 
 
                 <select id="statusFilter">
 
-                    <option value="">
-                        جميع الحالات
-                    </option>
-
-                    <option value="متاح">
-                        متاح
-                    </option>
-
-                    <option value="مشغول">
-                        مشغول
-                    </option>
-
-                    <option value="في إجازة">
-                        في إجازة
-                    </option>
-
-                    <option value="موقوف">
-                        موقوف
-                    </option>
-
-                    <option value="مستقيل">
-                        مستقيل
-                    </option>
-
-                    <option value="منتهي الخدمة">
-                        منتهي الخدمة
-                    </option>
-
-                    <option value="متقاعد">
-                        متقاعد
-                    </option>
+                    <option value="">جميع الحالات</option>
+                    <option value="متاح">متاح</option>
+                    <option value="مشغول">مشغول</option>
+                    <option value="في إجازة">في إجازة</option>
+                    <option value="موقوف">موقوف</option>
+                    <option value="مستقيل">مستقيل</option>
+                    <option value="منتهي الخدمة">منتهي الخدمة</option>
+                    <option value="متقاعد">متقاعد</option>
 
                 </select>
 
@@ -277,15 +250,11 @@
                     <tbody id="employeesTable">
 
                         <tr>
-
                             <td colspan="9">
-
                                 <div class="table-message">
                                     جارٍ تحميل بيانات الموظفين...
                                 </div>
-
                             </td>
-
                         </tr>
 
                     </tbody>
@@ -350,7 +319,6 @@
 
             <div class="form-grid">
 
-                <!-- الاسم -->
                 <div class="form-group">
 
                     <label for="employeeName">
@@ -366,7 +334,6 @@
                 </div>
 
 
-                <!-- الرقم الوظيفي -->
                 <div class="form-group">
 
                     <label for="employeeNumber">
@@ -383,7 +350,6 @@
                 </div>
 
 
-                <!-- البريد -->
                 <div class="form-group">
 
                     <label for="employeeEmail">
@@ -399,7 +365,6 @@
                 </div>
 
 
-                <!-- القسم -->
                 <div class="form-group">
 
                     <label for="employeeDepartment">
@@ -415,7 +380,6 @@
                 </div>
 
 
-                <!-- المسمى -->
                 <div class="form-group">
 
                     <label for="employeeTitle">
@@ -431,7 +395,6 @@
                 </div>
 
 
-                <!-- المستوى الوظيفي -->
                 <div class="form-group">
 
                     <label for="employeeLevel">
@@ -464,7 +427,6 @@
                 </div>
 
 
-                <!-- الخبرة -->
                 <div class="form-group">
 
                     <label for="employeeExperience">
@@ -482,7 +444,6 @@
                 </div>
 
 
-                <!-- تاريخ التعيين -->
                 <div class="form-group">
 
                     <label for="employeeHireDate">
@@ -497,7 +458,6 @@
                 </div>
 
 
-                <!-- الحالة -->
                 <div class="form-group">
 
                     <label for="employmentStatus">
@@ -542,6 +502,7 @@
 
                     <div>
                         <h3>المهارات</h3>
+
                         <p>
                             أضف مهارات الموظف وحدد مستوى كل مهارة.
                         </p>
@@ -733,6 +694,13 @@ const supabaseClient =
 let employees = [];
 
 let tasks = [];
+
+/*
+    مهم:
+    هذا الجدول هو الذي يحتوي على جميع إسنادات الموظفين للمهام
+    ويدعم أكثر من موظف لنفس المهمة.
+*/
+let taskAssignments = [];
 
 let employeeLeaves = [];
 
@@ -952,7 +920,10 @@ async function loadTasks() {
 
     if (error) {
 
-        console.warn(error);
+        console.warn(
+            "خطأ تحميل المهام:",
+            error
+        );
 
         tasks = [];
 
@@ -961,6 +932,54 @@ async function loadTasks() {
 
 
     tasks =
+        data || [];
+
+}
+
+
+/* =====================================================
+   تحميل إسنادات المهام
+   التعديل المهم
+===================================================== */
+
+async function loadTaskAssignments() {
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("task_assignments")
+        .select(`
+            id,
+            task_id,
+            employee_id,
+            decision_id,
+            assigned_at,
+            created_at
+        `);
+
+
+    if (error) {
+
+        console.error(
+            "تعذر تحميل task_assignments:",
+            error
+        );
+
+        /*
+            لا نوقف الصفحة كاملة.
+            سنبقي المصفوفة فارغة
+            ونستخدم assigned_employee_id
+            للبيانات القديمة.
+        */
+        taskAssignments = [];
+
+        return;
+    }
+
+
+    taskAssignments =
         data || [];
 
 }
@@ -1061,11 +1080,9 @@ function renderSkillOptions() {
 
 
     select.innerHTML = `
-
         <option value="">
             اختر المهارة
         </option>
-
     `;
 
 
@@ -1104,7 +1121,7 @@ function isCompletedTask(task) {
 
     const status =
         normalizeText(
-            task.status
+            task?.status
         );
 
 
@@ -1131,6 +1148,22 @@ function isCompletedTask(task) {
         ||
 
         status === "منجزة"
+
+        ||
+
+        status === "ملغي"
+
+        ||
+
+        status === "ملغاة"
+
+        ||
+
+        status === "cancelled"
+
+        ||
+
+        status === "canceled"
 
     );
 
@@ -1175,6 +1208,86 @@ function isApprovedLeave(leave) {
 
 
 /* =====================================================
+   استخراج مهام الموظف من task_assignments
+===================================================== */
+
+function getEmployeeAssignedTaskIds(employeeId) {
+
+    const id =
+        Number(employeeId);
+
+
+    const taskIds =
+        new Set();
+
+
+    /*
+        أولاً:
+        الإسنادات الجديدة الصحيحة
+        والتي تدعم أكثر من موظف.
+    */
+
+    taskAssignments.forEach(
+        assignment => {
+
+            if (
+                Number(
+                    assignment.employee_id
+                )
+                ===
+                id
+            ) {
+
+                taskIds.add(
+                    Number(
+                        assignment.task_id
+                    )
+                );
+
+            }
+
+        }
+    );
+
+
+    /*
+        ثانياً:
+        دعم البيانات القديمة الموجودة
+        في assigned_employee_id.
+
+        Set يمنع تكرار المهمة لو كانت
+        موجودة في الجدولين.
+    */
+
+    tasks.forEach(
+        task => {
+
+            if (
+                Number(
+                    task.assigned_employee_id
+                )
+                ===
+                id
+            ) {
+
+                taskIds.add(
+                    Number(task.id)
+                );
+
+            }
+
+        }
+    );
+
+
+    return [
+        ...taskIds
+    ];
+
+}
+
+
+/* =====================================================
    حساب حالة الموظف
 ===================================================== */
 
@@ -1184,21 +1297,34 @@ function calculateEmployeeState(employee) {
         Number(employee.id);
 
 
+    const assignedTaskIds =
+        getEmployeeAssignedTaskIds(
+            employeeId
+        );
+
+
+    /*
+        نأخذ فقط المهام غير المكتملة.
+    */
+
     const activeTasks =
         tasks.filter(
             task =>
 
-                Number(
-                    task.assigned_employee_id
+                assignedTaskIds.includes(
+                    Number(task.id)
                 )
-                ===
-                employeeId
 
                 &&
 
                 !isCompletedTask(task)
         );
 
+
+    /*
+        كل مهمة حالية = 20%
+        مثل النظام المعتمد عندك.
+    */
 
     let workload =
         activeTasks.length
@@ -1221,7 +1347,7 @@ function calculateEmployeeState(employee) {
 
 
     let status =
-        activeTasks.length
+        activeTasks.length > 0
         ?
         "مشغول"
         :
@@ -1240,8 +1366,8 @@ function calculateEmployeeState(employee) {
 
         workloadLevel =
             "منخفض";
-    }
 
+    }
 
     else if (
         workload >= 40
@@ -1251,8 +1377,8 @@ function calculateEmployeeState(employee) {
 
         workloadLevel =
             "متوسط";
-    }
 
+    }
 
     else if (
         workload >= 70
@@ -1260,8 +1386,13 @@ function calculateEmployeeState(employee) {
 
         workloadLevel =
             "مرتفع";
+
     }
 
+
+    /* =========================
+       فحص الإجازة الحالية
+    ========================== */
 
     const today =
         new Date();
@@ -1288,6 +1419,7 @@ function calculateEmployeeState(employee) {
                 ) {
 
                     return false;
+
                 }
 
 
@@ -1298,6 +1430,18 @@ function calculateEmployeeState(employee) {
                 ) {
 
                     return false;
+
+                }
+
+
+                if (
+                    !leave.start_date
+                    ||
+                    !leave.end_date
+                ) {
+
+                    return false;
+
                 }
 
 
@@ -1333,6 +1477,11 @@ function calculateEmployeeState(employee) {
         "على رأس العمل";
 
 
+    /*
+        إذا الموظف ليس على رأس العمل
+        فهو غير متاح مهما كان عدد المهام.
+    */
+
     if (
         officialStatus !==
         "على رأس العمل"
@@ -1346,8 +1495,13 @@ function calculateEmployeeState(employee) {
 
         workloadLevel =
             "غير متاح";
+
     }
 
+
+    /*
+        الإجازة لها الأولوية.
+    */
 
     if (currentLeave) {
 
@@ -1359,6 +1513,7 @@ function calculateEmployeeState(employee) {
 
         workloadLevel =
             "غير متاح";
+
     }
 
 
@@ -1382,10 +1537,118 @@ function calculateEmployeeState(employee) {
 
 
 /* =====================================================
+   تحديث قيم الموظف في قاعدة البيانات
+===================================================== */
+
+async function syncEmployeeOperationalData(
+    employee
+) {
+
+    const state =
+        employee.operational;
+
+
+    /*
+        نحفظ القيم المشتقة في employees
+        حتى صفحات المطابقة التي تقرأ
+        availability / workload ترى نفس القيم.
+    */
+
+    const oldWorkload =
+        Number(
+            employee.workload
+            ||
+            0
+        );
+
+
+    const oldAvailability =
+        Number(
+            employee.availability
+            ??
+            100
+        );
+
+
+    const oldStatus =
+        employee.status
+        ||
+        "";
+
+
+    if (
+        oldWorkload ===
+        state.workload
+
+        &&
+
+        oldAvailability ===
+        state.availability
+
+        &&
+
+        oldStatus ===
+        state.status
+    ) {
+
+        return;
+
+    }
+
+
+    const {
+        error
+    } =
+    await supabaseClient
+        .from("employees")
+        .update({
+
+            workload:
+                state.workload,
+
+            availability:
+                state.availability,
+
+            status:
+                state.status
+
+        })
+        .eq(
+            "id",
+            employee.id
+        );
+
+
+    if (error) {
+
+        console.warn(
+            "تعذر تحديث حالة الموظف:",
+            employee.id,
+            error
+        );
+
+        return;
+
+    }
+
+
+    employee.workload =
+        state.workload;
+
+    employee.availability =
+        state.availability;
+
+    employee.status =
+        state.status;
+
+}
+
+
+/* =====================================================
    تجهيز الموظفين
 ===================================================== */
 
-function prepareEmployees() {
+async function prepareEmployees() {
 
     employees =
         employees.map(
@@ -1401,6 +1664,21 @@ function prepareEmployees() {
             })
         );
 
+
+    /*
+        تحديث القيم في employees
+        حتى باقي الصفحات تكون متوافقة.
+    */
+
+    await Promise.all(
+        employees.map(
+            employee =>
+                syncEmployeeOperationalData(
+                    employee
+                )
+        )
+    );
+
 }
 
 
@@ -1414,6 +1692,10 @@ function buildDepartmentFilter() {
         document.getElementById(
             "departmentFilter"
         );
+
+
+    const currentValue =
+        select.value;
 
 
     const departments =
@@ -1433,11 +1715,9 @@ function buildDepartmentFilter() {
 
 
     select.innerHTML = `
-
         <option value="">
             جميع الأقسام
         </option>
-
     `;
 
 
@@ -1464,6 +1744,18 @@ function buildDepartmentFilter() {
 
         }
     );
+
+
+    if (
+        departments.includes(
+            currentValue
+        )
+    ) {
+
+        select.value =
+            currentValue;
+
+    }
 
 }
 
@@ -1526,6 +1818,7 @@ function getStatusClass(status) {
     ) {
 
         return "leave";
+
     }
 
 
@@ -1534,6 +1827,7 @@ function getStatusClass(status) {
     ) {
 
         return "busy";
+
     }
 
 
@@ -1542,6 +1836,7 @@ function getStatusClass(status) {
     ) {
 
         return "available";
+
     }
 
 
@@ -1558,6 +1853,7 @@ function getWorkloadClass(state) {
     ) {
 
         return "leave";
+
     }
 
 
@@ -1567,6 +1863,7 @@ function getWorkloadClass(state) {
     ) {
 
         return "high";
+
     }
 
 
@@ -1576,6 +1873,7 @@ function getWorkloadClass(state) {
     ) {
 
         return "medium";
+
     }
 
 
@@ -1619,6 +1917,7 @@ function renderEmployees(list) {
         `;
 
         return;
+
     }
 
 
@@ -1928,6 +2227,7 @@ function generateEmployeeNumber() {
                 if (!match) {
 
                     return max;
+
                 }
 
 
@@ -1952,7 +2252,7 @@ function generateEmployeeNumber() {
 
 
 /* =====================================================
-   المهارات المختارة
+   إضافة مهارة
 ===================================================== */
 
 function addSelectedSkill() {
@@ -1984,6 +2284,7 @@ function addSelectedSkill() {
         );
 
         return;
+
     }
 
 
@@ -1999,6 +2300,7 @@ function addSelectedSkill() {
     if (!skill) {
 
         return;
+
     }
 
 
@@ -2080,6 +2382,7 @@ function renderSelectedSkills() {
         `;
 
         return;
+
     }
 
 
@@ -2184,6 +2487,7 @@ async function loadEmployeeSkills(
         renderSelectedSkills();
 
         return;
+
     }
 
 
@@ -2251,6 +2555,7 @@ async function saveEmployeeSkills(
     if (deleteError) {
 
         throw deleteError;
+
     }
 
 
@@ -2261,6 +2566,7 @@ async function saveEmployeeSkills(
     ) {
 
         return;
+
     }
 
 
@@ -2298,6 +2604,7 @@ async function saveEmployeeSkills(
     if (insertError) {
 
         throw insertError;
+
     }
 
 }
@@ -2451,7 +2758,7 @@ async function openEmployeeModal(
 
 
 /* =====================================================
-   إغلاق النافذة
+   إغلاق نافذة الموظف
 ===================================================== */
 
 function closeEmployeeModal() {
@@ -2481,9 +2788,8 @@ async function createNewEmployee(
 ) {
 
     /*
-       نحاول استخدام Edge Function أولاً
-       لأنها الطريقة الصحيحة إذا كانت موجودة عندك
-       لإنشاء حساب Auth + سجل الموظف.
+        نجرب Edge Function أولاً
+        لأنها قد تنشئ حساب Auth للموظف.
     */
 
     try {
@@ -2536,8 +2842,8 @@ async function createNewEmployee(
 
 
     /*
-       في حال لم تكن Edge Function جاهزة
-       ننشئ سجل الموظف فقط.
+        إذا لم تكن Edge Function موجودة
+        ننشئ سجل الموظف في employees.
     */
 
     const {
@@ -2563,6 +2869,7 @@ async function createNewEmployee(
     if (error) {
 
         throw error;
+
     }
 
 
@@ -2683,16 +2990,8 @@ async function handleEmployeeSubmit(
                 "أضيفي مهارة واحدة على الأقل للموظف حتى يستطيع نظام معيار استخدامه في المطابقة والترشيح."
             );
 
-
-            saveEmployeeBtn.disabled =
-                false;
-
-
-            saveEmployeeBtn.textContent =
-                "حفظ";
-
-
             return;
+
         }
 
 
@@ -2703,7 +3002,7 @@ async function handleEmployeeSubmit(
 
 
         /* =========================
-           تعديل
+           تعديل موظف
         ========================== */
 
         if (editId) {
@@ -2756,6 +3055,7 @@ async function handleEmployeeSubmit(
             if (error) {
 
                 throw error;
+
             }
 
 
@@ -2766,7 +3066,7 @@ async function handleEmployeeSubmit(
 
 
         /* =========================
-           تعيين جديد
+           موظف جديد
         ========================== */
 
         else {
@@ -2790,12 +3090,11 @@ async function handleEmployeeSubmit(
                 throw new Error(
                     "تعذر تحديد رقم الموظف بعد إنشائه."
                 );
+
             }
 
         }
 
-
-        /* حفظ المهارات */
 
         await saveEmployeeSkills(
             employeeId
@@ -2885,6 +3184,7 @@ async function viewEmployee(id) {
     if (!employee) {
 
         return;
+
     }
 
 
@@ -2910,6 +3210,7 @@ async function viewEmployee(id) {
     if (error) {
 
         console.warn(error);
+
     }
 
 
@@ -2979,6 +3280,28 @@ async function viewEmployee(id) {
         employee.operational;
 
 
+    const tasksHtml =
+        state.activeTasks.length
+
+        ?
+
+        state.activeTasks
+            .map(
+                task => `
+
+                    <div style="margin-bottom:6px;">
+                        • ${escapeHtml(task.task_name || "مهمة")}
+                    </div>
+
+                `
+            )
+            .join("")
+
+        :
+
+        `<span>لا توجد مهام حالية</span>`;
+
+
     document.getElementById(
         "detailsContent"
     ).innerHTML = `
@@ -3027,11 +3350,13 @@ async function viewEmployee(id) {
 
             <p>
                 <strong>الحالة الوظيفية:</strong>
-                ${escapeHtml(
-                    employee.employment_status
-                    ||
-                    "على رأس العمل"
-                )}
+                ${
+                    escapeHtml(
+                        employee.employment_status
+                        ||
+                        "على رأس العمل"
+                    )
+                }
             </p>
 
             <p>
@@ -3049,17 +3374,35 @@ async function viewEmployee(id) {
                 ${state.availability}%
             </p>
 
+            <p>
+                <strong>الحالة الحالية:</strong>
+                ${escapeHtml(state.status)}
+            </p>
+
         </div>
 
 
         <div class="employee-details-skills">
 
             <h3>
-                مهارات الموظف
+                المهارات
             </h3>
 
             <div class="details-skills-list">
                 ${skillsHtml}
+            </div>
+
+        </div>
+
+
+        <div class="employee-details-skills">
+
+            <h3>
+                المهام المسندة الحالية
+            </h3>
+
+            <div class="details-skills-list">
+                ${tasksHtml}
             </div>
 
         </div>
@@ -3122,6 +3465,7 @@ async function handleTableAction(
     if (!button) {
 
         return;
+
     }
 
 
@@ -3140,6 +3484,7 @@ async function handleTableAction(
         await viewEmployee(id);
 
         return;
+
     }
 
 
@@ -3179,11 +3524,33 @@ async function loadPageData() {
 
     try {
 
+        employeesTable.innerHTML = `
+
+            <tr>
+                <td colspan="9">
+
+                    <div class="table-message">
+                        جارٍ تحميل بيانات الموظفين...
+                    </div>
+
+                </td>
+            </tr>
+
+        `;
+
+
+        /*
+            هنا التعديل المهم:
+            task_assignments يتم تحميله مع باقي البيانات.
+        */
+
         await Promise.all([
 
             loadEmployees(),
 
             loadTasks(),
+
+            loadTaskAssignments(),
 
             loadLeaves(),
 
@@ -3192,7 +3559,13 @@ async function loadPageData() {
         ]);
 
 
-        prepareEmployees();
+        /*
+            ننتظر حساب الموظفين وتحديث
+            workload / availability.
+        */
+
+        await prepareEmployees();
+
 
         buildDepartmentFilter();
 
@@ -3204,7 +3577,10 @@ async function loadPageData() {
 
     catch(error) {
 
-        console.error(error);
+        console.error(
+            "خطأ تحميل صفحة الموظفين:",
+            error
+        );
 
 
         employeesTable.innerHTML = `
@@ -3400,6 +3776,7 @@ document
             if (!button) {
 
                 return;
+
             }
 
 
@@ -3484,6 +3861,34 @@ document
 
 
 /* =====================================================
+   تحديث الصفحة عند الرجوع لها
+===================================================== */
+
+window.addEventListener(
+    "focus",
+    async () => {
+
+        const {
+            data
+        } =
+        await supabaseClient
+            .auth
+            .getSession();
+
+
+        if (
+            data?.session
+        ) {
+
+            await loadPageData();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
    بدء الصفحة
 ===================================================== */
 
@@ -3498,6 +3903,7 @@ document.addEventListener(
         if (!allowed) {
 
             return;
+
         }
 
 
