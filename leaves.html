@@ -74,6 +74,7 @@
     ></div>
 
 
+
     <!-- =========================================
          القائمة الجانبية
     ========================================== -->
@@ -184,6 +185,7 @@
     </aside>
 
 
+
     <!-- =========================================
          المحتوى
     ========================================== -->
@@ -208,6 +210,7 @@
             </p>
 
         </header>
+
 
 
         <!-- =========================================
@@ -283,6 +286,7 @@
 
 
         </section>
+
 
 
         <!-- =========================================
@@ -362,6 +366,7 @@
         </section>
 
 
+
         <!-- =========================================
              قائمة الطلبات
         ========================================== -->
@@ -405,6 +410,7 @@
 
 
 </div>
+
 
 
 <!-- =========================================
@@ -532,6 +538,7 @@
 </div>
 
 
+
 <script>
 
 
@@ -558,6 +565,7 @@ const supabaseClient =
     );
 
 
+
 /* =====================================================
    البيانات
 ===================================================== */
@@ -568,9 +576,21 @@ let employees = [];
 
 let tasks = [];
 
+
+/*
+    الإسنادات الفعلية للمهام.
+
+    هذا هو التعديل المهم:
+    الصفحة أصبحت تقرأ الموظفين المسندين
+    من task_assignments.
+*/
+let taskAssignments = [];
+
+
 let selectedRequest = null;
 
 let selectedRequestConflicts = [];
+
 
 
 /* =====================================================
@@ -631,6 +651,7 @@ const taskConflictBox =
     );
 
 
+
 /* =====================================================
    حماية النصوص
 ===================================================== */
@@ -664,6 +685,7 @@ function escapeHtml(value) {
 }
 
 
+
 /* =====================================================
    حماية صفحة المسؤول
 ===================================================== */
@@ -689,10 +711,13 @@ async function protectPage() {
 
             clearLocalSession();
 
+
             window.location.href =
                 "login.html";
 
+
             return false;
+
         }
 
 
@@ -707,7 +732,8 @@ async function protectPage() {
 
 
         if (
-            email !==
+            email
+            !==
             ADMIN_EMAIL.toLowerCase()
         ) {
 
@@ -724,6 +750,7 @@ async function protectPage() {
 
 
             return false;
+
         }
 
 
@@ -752,9 +779,11 @@ async function protectPage() {
 
 
         return false;
+
     }
 
 }
+
 
 
 /* =====================================================
@@ -768,7 +797,9 @@ async function loadEmployees() {
         error
     } =
     await supabaseClient
-        .from("employees")
+        .from(
+            "employees"
+        )
         .select(`
             id,
             name,
@@ -780,7 +811,8 @@ async function loadEmployees() {
         .order(
             "name",
             {
-                ascending: true
+                ascending:
+                    true
             }
         );
 
@@ -788,11 +820,14 @@ async function loadEmployees() {
     if (error) {
 
         throw error;
+
     }
 
 
     employees =
-        Array.isArray(data)
+        Array.isArray(
+            data
+        )
         ?
         data
         :
@@ -801,11 +836,9 @@ async function loadEmployees() {
 }
 
 
+
 /* =====================================================
    تحميل المهام
-
-   نحتاجها فقط لفحص هل الموظف لديه مهام مسندة
-   أثناء فترة الإجازة.
 ===================================================== */
 
 async function loadTasks() {
@@ -817,7 +850,9 @@ async function loadTasks() {
             error
         } =
         await supabaseClient
-            .from("tasks")
+            .from(
+                "tasks"
+            )
             .select(`
                 id,
                 task_name,
@@ -827,7 +862,8 @@ async function loadTasks() {
             .order(
                 "id",
                 {
-                    ascending: false
+                    ascending:
+                        false
                 }
             );
 
@@ -835,11 +871,14 @@ async function loadTasks() {
         if (error) {
 
             throw error;
+
         }
 
 
         tasks =
-            Array.isArray(data)
+            Array.isArray(
+                data
+            )
             ?
             data
             :
@@ -849,11 +888,6 @@ async function loadTasks() {
 
     catch(error) {
 
-        /*
-            لا نوقف صفحة الإجازات إذا تعذر تحميل المهام.
-            فقط لن يظهر فحص التعارض.
-        */
-
         console.warn(
             "تعذر تحميل المهام لفحص التعارض:",
             error
@@ -861,9 +895,71 @@ async function loadTasks() {
 
 
         tasks = [];
+
     }
 
 }
+
+
+
+/* =====================================================
+   تحميل إسنادات المهام
+===================================================== */
+
+async function loadTaskAssignments() {
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+        await supabaseClient
+            .from(
+                "task_assignments"
+            )
+            .select(`
+                id,
+                task_id,
+                employee_id,
+                decision_id,
+                assigned_at,
+                created_at
+            `);
+
+
+        if (error) {
+
+            throw error;
+
+        }
+
+
+        taskAssignments =
+            Array.isArray(
+                data
+            )
+            ?
+            data
+            :
+            [];
+
+    }
+
+    catch(error) {
+
+        console.warn(
+            "تعذر تحميل إسنادات المهام:",
+            error
+        );
+
+
+        taskAssignments = [];
+
+    }
+
+}
+
 
 
 /* =====================================================
@@ -888,7 +984,9 @@ async function loadLeaves() {
             error
         } =
         await supabaseClient
-            .from("employee_leaves")
+            .from(
+                "employee_leaves"
+            )
             .select(`
                 id,
                 employee_id,
@@ -913,11 +1011,14 @@ async function loadLeaves() {
         if (error) {
 
             throw error;
+
         }
 
 
         leaveRequests =
-            Array.isArray(data)
+            Array.isArray(
+                data
+            )
             ?
             data
             :
@@ -952,7 +1053,9 @@ async function loadLeaves() {
 
                 <span>
                     ${escapeHtml(
-                        error.message || ""
+                        error.message
+                        ||
+                        ""
                     )}
                 </span>
 
@@ -963,6 +1066,7 @@ async function loadLeaves() {
     }
 
 }
+
 
 
 /* =====================================================
@@ -1004,56 +1108,20 @@ function enrichRequests() {
 }
 
 
-/* =====================================================
-   فحص المهام المسندة للموظف
-
-   ملاحظة:
-   جدول tasks الموجود في مشروعك لا يحتوي حسب الكود الحالي
-   على تاريخ بداية ونهاية للمهمة.
-
-   لذلك لا نخترع تعارضاً زمنياً غير موجود في قاعدة البيانات.
-   نعرض للمسؤول المهام النشطة المسندة للموظف حتى يراجعها
-   قبل اعتماد الإجازة.
-===================================================== */
-
-function getEmployeeAssignedTasks(employeeId) {
-
-    return tasks.filter(
-        task => {
-
-            if (
-                Number(
-                    task.assigned_employee_id
-                )
-                !==
-                Number(
-                    employeeId
-                )
-            ) {
-
-                return false;
-            }
-
-
-            return !isFinishedTaskStatus(
-                task.status
-            );
-
-        }
-    );
-
-}
-
 
 /* =====================================================
    هل المهمة منتهية؟
 ===================================================== */
 
-function isFinishedTaskStatus(status) {
+function isFinishedTaskStatus(
+    status
+) {
 
     const value =
         String(
-            status || ""
+            status
+            ||
+            ""
         )
         .trim()
         .toLowerCase();
@@ -1091,11 +1159,132 @@ function isFinishedTaskStatus(status) {
 }
 
 
+
+/* =====================================================
+   المهام المسندة للموظف
+
+   مهم:
+   نقرأ من task_assignments.
+
+   ونحتفظ بدعم assigned_employee_id
+   حتى البيانات القديمة تظل تعمل.
+===================================================== */
+
+function getEmployeeAssignedTasks(
+    employeeId
+) {
+
+    const employeeIdNumber =
+        Number(
+            employeeId
+        );
+
+
+    /*
+        أرقام المهام الموجودة في
+        task_assignments.
+    */
+
+    const assignedTaskIds =
+        new Set(
+
+            taskAssignments
+
+                .filter(
+                    assignment =>
+
+                        Number(
+                            assignment.employee_id
+                        )
+                        ===
+                        employeeIdNumber
+                )
+
+                .map(
+                    assignment =>
+
+                        Number(
+                            assignment.task_id
+                        )
+                )
+
+        );
+
+
+    /*
+        دعم البيانات القديمة.
+
+        إذا كانت المهمة تحتوي
+        assigned_employee_id
+        نضيفها أيضاً.
+
+        Set يمنع التكرار.
+    */
+
+    tasks.forEach(
+        task => {
+
+            if (
+
+                Number(
+                    task.assigned_employee_id
+                )
+                ===
+                employeeIdNumber
+
+                &&
+
+                !assignedTaskIds.has(
+                    Number(
+                        task.id
+                    )
+                )
+
+            ) {
+
+                assignedTaskIds.add(
+                    Number(
+                        task.id
+                    )
+                );
+
+            }
+
+        }
+    );
+
+
+    /*
+        نرجع فقط المهام النشطة.
+    */
+
+    return tasks.filter(
+        task =>
+
+            assignedTaskIds.has(
+                Number(
+                    task.id
+                )
+            )
+
+            &&
+
+            !isFinishedTaskStatus(
+                task.status
+            )
+    );
+
+}
+
+
+
 /* =====================================================
    عرض تنبيه المهام
 ===================================================== */
 
-function renderTaskConflictWarning(request) {
+function renderTaskConflictWarning(
+    request
+) {
 
     selectedRequestConflicts =
         getEmployeeAssignedTasks(
@@ -1104,7 +1293,9 @@ function renderTaskConflictWarning(request) {
 
 
     if (
-        selectedRequestConflicts.length === 0
+        selectedRequestConflicts.length
+        ===
+        0
     ) {
 
         taskConflictBox.style.display =
@@ -1117,8 +1308,8 @@ function renderTaskConflictWarning(request) {
                 style="
                     padding:14px;
                     border-radius:12px;
-                    background:rgba(46, 125, 50, 0.08);
-                    border:1px solid rgba(46, 125, 50, 0.20);
+                    background:rgba(46,125,50,0.08);
+                    border:1px solid rgba(46,125,50,0.20);
                 "
             >
 
@@ -1141,37 +1332,46 @@ function renderTaskConflictWarning(request) {
 
 
         return;
+
     }
 
 
     const tasksHtml =
         selectedRequestConflicts
-        .map(
-            task => `
 
-                <li
-                    style="
-                        margin-bottom:6px;
-                    "
-                >
-                    ${escapeHtml(
-                        task.task_name
-                        ||
-                        "مهمة بدون اسم"
-                    )}
+            .map(
+                task => `
 
-                    ${
-                        task.status
-                        ?
-                        ` — ${escapeHtml(task.status)}`
-                        :
-                        ""
-                    }
-                </li>
+                    <li
+                        style="
+                            margin-bottom:6px;
+                        "
+                    >
 
-            `
-        )
-        .join("");
+                        ${escapeHtml(
+                            task.task_name
+                            ||
+                            "مهمة بدون اسم"
+                        )}
+
+                        ${
+                            task.status
+                            ?
+                            ` — ${escapeHtml(
+                                task.status
+                            )}`
+                            :
+                            ""
+                        }
+
+                    </li>
+
+                `
+            )
+
+            .join(
+                ""
+            );
 
 
     taskConflictBox.style.display =
@@ -1184,14 +1384,15 @@ function renderTaskConflictWarning(request) {
             style="
                 padding:14px;
                 border-radius:12px;
-                background:rgba(194, 122, 0, 0.08);
-                border:1px solid rgba(194, 122, 0, 0.25);
+                background:rgba(194,122,0,0.08);
+                border:1px solid rgba(194,122,0,0.25);
             "
         >
 
             <strong>
                 تنبيه قبل اعتماد الإجازة
             </strong>
+
 
             <p
                 style="
@@ -1200,11 +1401,15 @@ function renderTaskConflictWarning(request) {
                     line-height:1.8;
                 "
             >
+
                 لدى الموظف
                 ${selectedRequestConflicts.length}
                 مهمة نشطة مسندة إليه حالياً.
+
                 راجع المهام قبل اعتماد الإجازة.
+
             </p>
+
 
             <ul
                 style="
@@ -1213,8 +1418,11 @@ function renderTaskConflictWarning(request) {
                     font-size:13px;
                 "
             >
+
                 ${tasksHtml}
+
             </ul>
+
 
         </div>
 
@@ -1223,11 +1431,14 @@ function renderTaskConflictWarning(request) {
 }
 
 
+
 /* =====================================================
    عرض الطلبات
 ===================================================== */
 
-function renderRequests(list) {
+function renderRequests(
+    list
+) {
 
     requestsList.innerHTML =
         "";
@@ -1238,7 +1449,9 @@ function renderRequests(list) {
 
 
     if (
-        list.length === 0
+        list.length
+        ===
+        0
     ) {
 
         requestsList.innerHTML = `
@@ -1253,6 +1466,7 @@ function renderRequests(list) {
 
 
         return;
+
     }
 
 
@@ -1306,16 +1520,16 @@ function renderRequests(list) {
 
                         <div class="avatar">
 
-                            ${
-                                escapeHtml(
-                                    (
-                                        employee.name
-                                        ||
-                                        "-"
-                                    )
-                                    .charAt(0)
+                            ${escapeHtml(
+                                (
+                                    employee.name
+                                    ||
+                                    "-"
                                 )
-                            }
+                                .charAt(
+                                    0
+                                )
+                            )}
 
                         </div>
 
@@ -1324,38 +1538,32 @@ function renderRequests(list) {
 
                             <h3>
 
-                                ${
-                                    escapeHtml(
-                                        employee.name
-                                        ||
-                                        "موظف غير معروف"
-                                    )
-                                }
+                                ${escapeHtml(
+                                    employee.name
+                                    ||
+                                    "موظف غير معروف"
+                                )}
 
                             </h3>
 
 
                             <p>
 
-                                ${
-                                    escapeHtml(
-                                        employee.employee_number
-                                        ||
-                                        "-"
-                                    )
-                                }
+                                ${escapeHtml(
+                                    employee.employee_number
+                                    ||
+                                    "-"
+                                )}
 
                                 <span>
                                     •
                                 </span>
 
-                                ${
-                                    escapeHtml(
-                                        employee.department
-                                        ||
-                                        "-"
-                                    )
-                                }
+                                ${escapeHtml(
+                                    employee.department
+                                    ||
+                                    "-"
+                                )}
 
                             </p>
 
@@ -1374,20 +1582,19 @@ function renderRequests(list) {
                         "
                     >
 
-                        ${
-                            escapeHtml(
-                                normalizeStatus(
-                                    request.status
-                                )
-                                ||
-                                "-"
+                        ${escapeHtml(
+                            normalizeStatus(
+                                request.status
                             )
-                        }
+                            ||
+                            "-"
+                        )}
 
                     </span>
 
 
                 </div>
+
 
 
                 <div class="request-info-grid">
@@ -1401,13 +1608,11 @@ function renderRequests(list) {
 
                         <strong>
 
-                            ${
-                                escapeHtml(
-                                    request.leave_type
-                                    ||
-                                    "-"
-                                )
-                            }
+                            ${escapeHtml(
+                                request.leave_type
+                                ||
+                                "-"
+                            )}
 
                         </strong>
 
@@ -1422,11 +1627,9 @@ function renderRequests(list) {
 
                         <strong>
 
-                            ${
-                                formatDate(
-                                    request.start_date
-                                )
-                            }
+                            ${formatDate(
+                                request.start_date
+                            )}
 
                         </strong>
 
@@ -1441,11 +1644,9 @@ function renderRequests(list) {
 
                         <strong>
 
-                            ${
-                                formatDate(
-                                    request.end_date
-                                )
-                            }
+                            ${formatDate(
+                                request.end_date
+                            )}
 
                         </strong>
 
@@ -1461,7 +1662,6 @@ function renderRequests(list) {
                         <strong>
 
                             ${duration}
-
                             يوم
 
                         </strong>
@@ -1477,11 +1677,9 @@ function renderRequests(list) {
 
                         <strong>
 
-                            ${
-                                formatDateTime(
-                                    request.created_at
-                                )
-                            }
+                            ${formatDateTime(
+                                request.created_at
+                            )}
 
                         </strong>
 
@@ -1496,13 +1694,11 @@ function renderRequests(list) {
 
                         <strong>
 
-                            ${
-                                escapeHtml(
-                                    employee.job_title
-                                    ||
-                                    "-"
-                                )
-                            }
+                            ${escapeHtml(
+                                employee.job_title
+                                ||
+                                "-"
+                            )}
 
                         </strong>
 
@@ -1512,8 +1708,12 @@ function renderRequests(list) {
                 </div>
 
 
+
                 ${
-                    assignedTasks.length > 0
+                    assignedTasks.length
+                    >
+                    0
+
                     ?
 
                     `
@@ -1525,9 +1725,13 @@ function renderRequests(list) {
                             </span>
 
                             <p>
+
                                 لدى الموظف
                                 ${assignedTasks.length}
-                                مهمة نشطة. ستظهر التفاصيل عند مراجعة الطلب.
+                                مهمة نشطة.
+
+                                ستظهر التفاصيل عند مراجعة الطلب.
+
                             </p>
 
                         </div>
@@ -1538,6 +1742,7 @@ function renderRequests(list) {
 
                     ""
                 }
+
 
 
                 ${
@@ -1555,11 +1760,9 @@ function renderRequests(list) {
 
                             <p>
 
-                                ${
-                                    escapeHtml(
-                                        request.notes
-                                    )
-                                }
+                                ${escapeHtml(
+                                    request.notes
+                                )}
 
                             </p>
 
@@ -1571,6 +1774,7 @@ function renderRequests(list) {
 
                     ""
                 }
+
 
 
                 ${
@@ -1588,11 +1792,9 @@ function renderRequests(list) {
 
                             <p>
 
-                                ${
-                                    escapeHtml(
-                                        request.decision_note
-                                    )
-                                }
+                                ${escapeHtml(
+                                    request.decision_note
+                                )}
 
                             </p>
 
@@ -1604,6 +1806,7 @@ function renderRequests(list) {
 
                     ""
                 }
+
 
 
                 ${
@@ -1619,11 +1822,9 @@ function renderRequests(list) {
 
                             <strong>
 
-                                ${
-                                    formatDateTime(
-                                        request.reviewed_at
-                                    )
-                                }
+                                ${formatDateTime(
+                                    request.reviewed_at
+                                )}
 
                             </strong>
 
@@ -1635,6 +1836,7 @@ function renderRequests(list) {
 
                     ""
                 }
+
 
 
                 ${
@@ -1667,10 +1869,9 @@ function renderRequests(list) {
             `;
 
 
-            requestsList
-                .appendChild(
-                    card
-                );
+            requestsList.appendChild(
+                card
+            );
 
         }
     );
@@ -1678,15 +1879,19 @@ function renderRequests(list) {
 }
 
 
+
 /* =====================================================
-   فتح نافذة المراجعة
+   فتح نافذة مراجعة الطلب
 ===================================================== */
 
-function openDecisionModal(id) {
+function openDecisionModal(
+    id
+) {
 
     const request =
         leaveRequests.find(
             item =>
+
                 Number(
                     item.id
                 )
@@ -1697,9 +1902,12 @@ function openDecisionModal(id) {
         );
 
 
-    if (!request) {
+    if (
+        !request
+    ) {
 
         return;
+
     }
 
 
@@ -1715,7 +1923,9 @@ function openDecisionModal(id) {
             "تم اتخاذ قرار على هذا الطلب مسبقاً"
         );
 
+
         return;
+
     }
 
 
@@ -1741,29 +1951,27 @@ function openDecisionModal(id) {
 
         <div class="decision-employee">
 
+
             <div>
 
                 <strong>
 
-                    ${
-                        escapeHtml(
-                            employee.name
-                            ||
-                            "-"
-                        )
-                    }
+                    ${escapeHtml(
+                        employee.name
+                        ||
+                        "-"
+                    )}
 
                 </strong>
 
+
                 <small>
 
-                    ${
-                        escapeHtml(
-                            employee.job_title
-                            ||
-                            "-"
-                        )
-                    }
+                    ${escapeHtml(
+                        employee.job_title
+                        ||
+                        "-"
+                    )}
 
                 </small>
 
@@ -1772,17 +1980,17 @@ function openDecisionModal(id) {
 
             <span>
 
-                ${
-                    escapeHtml(
-                        employee.employee_number
-                        ||
-                        "-"
-                    )
-                }
+                ${escapeHtml(
+                    employee.employee_number
+                    ||
+                    "-"
+                )}
 
             </span>
 
+
         </div>
+
 
 
         <div class="decision-grid">
@@ -1796,13 +2004,11 @@ function openDecisionModal(id) {
 
                 <strong>
 
-                    ${
-                        escapeHtml(
-                            request.leave_type
-                            ||
-                            "-"
-                        )
-                    }
+                    ${escapeHtml(
+                        request.leave_type
+                        ||
+                        "-"
+                    )}
 
                 </strong>
 
@@ -1817,11 +2023,9 @@ function openDecisionModal(id) {
 
                 <strong>
 
-                    ${
-                        formatDate(
-                            request.start_date
-                        )
-                    }
+                    ${formatDate(
+                        request.start_date
+                    )}
 
                 </strong>
 
@@ -1836,11 +2040,9 @@ function openDecisionModal(id) {
 
                 <strong>
 
-                    ${
-                        formatDate(
-                            request.end_date
-                        )
-                    }
+                    ${formatDate(
+                        request.end_date
+                    )}
 
                 </strong>
 
@@ -1855,12 +2057,10 @@ function openDecisionModal(id) {
 
                 <strong>
 
-                    ${
-                        calculateDays(
-                            request.start_date,
-                            request.end_date
-                        )
-                    }
+                    ${calculateDays(
+                        request.start_date,
+                        request.end_date
+                    )}
 
                     يوم
 
@@ -1870,6 +2070,7 @@ function openDecisionModal(id) {
 
 
         </div>
+
 
 
         ${
@@ -1887,11 +2088,9 @@ function openDecisionModal(id) {
 
                     <p>
 
-                        ${
-                            escapeHtml(
-                                request.notes
-                            )
-                        }
+                        ${escapeHtml(
+                            request.notes
+                        )}
 
                     </p>
 
@@ -1928,8 +2127,9 @@ function openDecisionModal(id) {
 }
 
 
+
 /* =====================================================
-   إغلاق النافذة
+   إغلاق نافذة المراجعة
 ===================================================== */
 
 function closeDecisionModal() {
@@ -1974,60 +2174,87 @@ function closeDecisionModal() {
 }
 
 
+
 /* =====================================================
-   تأكيد اعتماد إجازة لموظف لديه مهام
+   تأكيد اعتماد الإجازة مع وجود مهام
 ===================================================== */
 
 function confirmApprovalWithTasks() {
 
     if (
-        selectedRequestConflicts.length === 0
+        selectedRequestConflicts.length
+        ===
+        0
     ) {
 
         return true;
+
     }
 
 
     const taskNames =
         selectedRequestConflicts
-        .slice(
-            0,
-            5
-        )
-        .map(
-            task =>
-                "• "
-                +
-                (
-                    task.task_name
-                    ||
-                    "مهمة بدون اسم"
-                )
-        )
-        .join("\n");
+
+            .slice(
+                0,
+                5
+            )
+
+            .map(
+                task =>
+
+                    "• "
+                    +
+                    (
+                        task.task_name
+                        ||
+                        "مهمة بدون اسم"
+                    )
+            )
+
+            .join(
+                "\n"
+            );
 
 
     const extra =
-        selectedRequestConflicts.length > 5
+        selectedRequestConflicts.length
+        >
+        5
+
         ?
+
         `\nو${selectedRequestConflicts.length - 5} مهام أخرى.`
+
         :
+
         "";
 
 
     return confirm(
 
         "تنبيه: الموظف لديه مهام نشطة مسندة إليه حالياً:\n\n"
+
         +
+
         taskNames
+
         +
+
         extra
+
         +
-        "\n\nاعتماد الإجازة سيجعل الإجازة المعتمدة تؤثر على توفر الموظف في المطابقة خلال مدتها.\n\nهل تريد اعتماد الطلب؟"
+
+        "\n\nاعتماد الإجازة سيجعل الإجازة المعتمدة تؤثر على توفر الموظف في المطابقة خلال مدتها."
+
+        +
+
+        "\n\nهل تريد اعتماد الطلب؟"
 
     );
 
 }
+
 
 
 /* =====================================================
@@ -2043,6 +2270,7 @@ async function updateLeaveStatus(
     ) {
 
         return;
+
     }
 
 
@@ -2067,6 +2295,7 @@ async function updateLeaveStatus(
 
 
         return;
+
     }
 
 
@@ -2077,14 +2306,20 @@ async function updateLeaveStatus(
 
 
     /*
-        في حالة الرفض:
-        سبب الرفض إلزامي.
+        عند الرفض:
+        السبب إلزامي.
     */
 
     if (
-        newStatus === "مرفوضة"
+        newStatus
+        ===
+        "مرفوضة"
+
         &&
-        note.length < 3
+
+        note.length
+        <
+        3
     ) {
 
         decisionError.textContent =
@@ -2095,18 +2330,26 @@ async function updateLeaveStatus(
 
 
         return;
+
     }
 
 
     /*
-        قبل اعتماد الإجازة:
-        نعرض تنبيهاً إذا لدى الموظف مهام نشطة.
+        عند الاعتماد:
+        إذا الموظف لديه مهام
+        نظهر تأكيداً للمسؤول.
     */
 
     if (
-        newStatus === "معتمدة"
+        newStatus
+        ===
+        "معتمدة"
+
         &&
-        selectedRequestConflicts.length > 0
+
+        selectedRequestConflicts.length
+        >
+        0
     ) {
 
         const approved =
@@ -2118,6 +2361,7 @@ async function updateLeaveStatus(
         ) {
 
             return;
+
         }
 
     }
@@ -2139,7 +2383,9 @@ async function updateLeaveStatus(
             error
         } =
         await supabaseClient
-            .from("employee_leaves")
+            .from(
+                "employee_leaves"
+            )
             .update({
 
                 status:
@@ -2169,9 +2415,12 @@ async function updateLeaveStatus(
             `);
 
 
-        if (error) {
+        if (
+            error
+        ) {
 
             throw error;
+
         }
 
 
@@ -2182,12 +2431,15 @@ async function updateLeaveStatus(
         if (
             !data
             ||
-            data.length === 0
+            data.length
+            ===
+            0
         ) {
 
             throw new Error(
                 "تم تحديث هذا الطلب مسبقاً. حدّث الصفحة وحاول مرة أخرى."
             );
+
         }
 
 
@@ -2245,6 +2497,7 @@ async function updateLeaveStatus(
 }
 
 
+
 /* =====================================================
    حالة أزرار القرار
 ===================================================== */
@@ -2279,6 +2532,7 @@ function setDecisionButtonsState(
 }
 
 
+
 /* =====================================================
    الملخص
 ===================================================== */
@@ -2288,47 +2542,52 @@ function updateSummary() {
     const pending =
         leaveRequests.filter(
             item =>
+
                 normalizeStatus(
                     item.status
                 )
                 ===
                 "قيد المراجعة"
-        ).length;
+        )
+        .length;
 
 
     const approved =
         leaveRequests.filter(
             item =>
+
                 normalizeStatus(
                     item.status
                 )
                 ===
                 "معتمدة"
-        ).length;
+        )
+        .length;
 
 
     const rejected =
         leaveRequests.filter(
             item =>
+
                 normalizeStatus(
                     item.status
                 )
                 ===
                 "مرفوضة"
-        ).length;
+        )
+        .length;
 
 
     /*
-        نحسب الموظفين الموجودين في إجازة حالياً،
-        وليس عدد الطلبات فقط.
-
-        إذا كان لنفس الموظف أكثر من طلب متداخل
-        لا نعده مرتين.
+        الموظفون الموجودون في إجازة حالياً.
+        Set يمنع حساب الموظف مرتين.
     */
 
     const currentEmployeeIds =
         new Set(
+
             leaveRequests
+
                 .filter(
                     item =>
 
@@ -2344,12 +2603,15 @@ function updateSummary() {
                             item
                         )
                 )
+
                 .map(
                     item =>
+
                         Number(
                             item.employee_id
                         )
                 )
+
         );
 
 
@@ -2393,6 +2655,7 @@ function updateSummary() {
         currentEmployeeIds.size;
 
 }
+
 
 
 /* =====================================================
@@ -2514,11 +2777,14 @@ function filterRequests() {
 }
 
 
+
 /* =====================================================
    توحيد حالة الطلب
 ===================================================== */
 
-function normalizeStatus(status) {
+function normalizeStatus(
+    status
+) {
 
     const value =
         String(
@@ -2536,6 +2802,7 @@ function normalizeStatus(status) {
     ) {
 
         return "قيد المراجعة";
+
     }
 
 
@@ -2550,6 +2817,7 @@ function normalizeStatus(status) {
     ) {
 
         return "معتمدة";
+
     }
 
 
@@ -2560,12 +2828,14 @@ function normalizeStatus(status) {
     ) {
 
         return "مرفوضة";
+
     }
 
 
     return value;
 
 }
+
 
 
 /* =====================================================
@@ -2583,6 +2853,7 @@ function isCurrentLeave(
     ) {
 
         return false;
+
     }
 
 
@@ -2616,15 +2887,20 @@ function isCurrentLeave(
 
     return (
 
-        today >= start
+        today
+        >=
+        start
 
         &&
 
-        today <= end
+        today
+        <=
+        end
 
     );
 
 }
+
 
 
 /* =====================================================
@@ -2648,6 +2924,7 @@ function getStatusClass(
     ) {
 
         return "approved";
+
     }
 
 
@@ -2658,6 +2935,7 @@ function getStatusClass(
     ) {
 
         return "rejected";
+
     }
 
 
@@ -2666,30 +2944,48 @@ function getStatusClass(
 }
 
 
+
 /* =====================================================
-   التواريخ
+   تنسيق التاريخ
 ===================================================== */
 
-function formatDate(value) {
+function formatDate(
+    value
+) {
 
-    if (!value) {
+    if (
+        !value
+    ) {
 
         return "-";
+
     }
 
 
     const date =
         new Date(
+
             value
+
             +
+
             (
-                String(value)
-                    .includes("T")
+                String(
+                    value
+                )
+                .includes(
+                    "T"
+                )
+
                 ?
+
                 ""
+
                 :
+
                 "T00:00:00"
             )
+
         );
 
 
@@ -2700,33 +2996,45 @@ function formatDate(value) {
     ) {
 
         return "-";
+
     }
 
 
-    return date.toLocaleDateString(
-        "ar-SA-u-ca-gregory",
-        {
+    return date
+        .toLocaleDateString(
+            "ar-SA-u-ca-gregory",
+            {
 
-            year:
-                "numeric",
+                year:
+                    "numeric",
 
-            month:
-                "2-digit",
+                month:
+                    "2-digit",
 
-            day:
-                "2-digit"
+                day:
+                    "2-digit"
 
-        }
-    );
+            }
+        );
 
 }
 
 
-function formatDateTime(value) {
 
-    if (!value) {
+/* =====================================================
+   تنسيق التاريخ والوقت
+===================================================== */
+
+function formatDateTime(
+    value
+) {
+
+    if (
+        !value
+    ) {
 
         return "-";
+
     }
 
 
@@ -2743,33 +3051,40 @@ function formatDateTime(value) {
     ) {
 
         return "-";
+
     }
 
 
-    return date.toLocaleString(
-        "ar-SA-u-ca-gregory",
-        {
+    return date
+        .toLocaleString(
+            "ar-SA-u-ca-gregory",
+            {
 
-            year:
-                "numeric",
+                year:
+                    "numeric",
 
-            month:
-                "2-digit",
+                month:
+                    "2-digit",
 
-            day:
-                "2-digit",
+                day:
+                    "2-digit",
 
-            hour:
-                "2-digit",
+                hour:
+                    "2-digit",
 
-            minute:
-                "2-digit"
+                minute:
+                    "2-digit"
 
-        }
-    );
+            }
+        );
 
 }
 
+
+
+/* =====================================================
+   حساب عدد أيام الإجازة
+===================================================== */
 
 function calculateDays(
     startDate,
@@ -2783,6 +3098,7 @@ function calculateDays(
     ) {
 
         return 0;
+
     }
 
 
@@ -2803,14 +3119,19 @@ function calculateDays(
 
 
     const difference =
-        end - start;
+        end
+        -
+        start;
 
 
     if (
-        difference < 0
+        difference
+        <
+        0
     ) {
 
         return 0;
+
     }
 
 
@@ -2831,8 +3152,9 @@ function calculateDays(
 }
 
 
+
 /* =====================================================
-   Sidebar
+   القائمة الجانبية
 ===================================================== */
 
 function openSidebar() {
@@ -2860,6 +3182,7 @@ function openSidebar() {
 }
 
 
+
 function closeSidebar() {
 
     sidebar
@@ -2883,6 +3206,7 @@ function closeSidebar() {
         );
 
 }
+
 
 
 /* =====================================================
@@ -2911,6 +3235,7 @@ function clearLocalSession() {
     );
 
 }
+
 
 
 /* =====================================================
@@ -2947,6 +3272,7 @@ async function logout() {
     }
 
 }
+
 
 
 /* =====================================================
@@ -3027,9 +3353,12 @@ requestsList
                 );
 
 
-            if (!button) {
+            if (
+                !button
+            ) {
 
                 return;
+
             }
 
 
@@ -3113,6 +3442,45 @@ document
     );
 
 
+
+/* =====================================================
+   عند الرجوع للصفحة
+   نحدث الإسنادات
+===================================================== */
+
+window.addEventListener(
+    "focus",
+    async function() {
+
+        try {
+
+            await Promise.all([
+
+                loadTasks(),
+
+                loadTaskAssignments()
+
+            ]);
+
+
+            filterRequests();
+
+        }
+
+        catch(error) {
+
+            console.warn(
+                "تعذر تحديث إسنادات المهام:",
+                error
+            );
+
+        }
+
+    }
+);
+
+
+
 /* =====================================================
    تشغيل الصفحة
 ===================================================== */
@@ -3126,24 +3494,36 @@ document
                 await protectPage();
 
 
-            if (!allowed) {
+            if (
+                !allowed
+            ) {
 
                 return;
+
             }
 
 
             try {
 
                 /*
-                    نحمل الموظفين والمهام أولاً،
-                    ثم طلبات الإجازة.
+                    مهم:
+                    نحمل الموظفين
+                    + المهام
+                    + task_assignments
+                    قبل طلبات الإجازات.
+
+                    وبكذا فحص مهام الموظف
+                    يشمل جميع الموظفين المسندين
+                    لنفس المهمة.
                 */
 
                 await Promise.all([
 
                     loadEmployees(),
 
-                    loadTasks()
+                    loadTasks(),
+
+                    loadTaskAssignments()
 
                 ]);
 
@@ -3170,13 +3550,11 @@ document
 
                         <span>
 
-                            ${
-                                escapeHtml(
-                                    error.message
-                                    ||
-                                    ""
-                                )
-                            }
+                            ${escapeHtml(
+                                error.message
+                                ||
+                                ""
+                            )}
 
                         </span>
 
