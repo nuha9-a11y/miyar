@@ -61,66 +61,39 @@ alt="معيار"
 
 <nav class="sidebar-nav">
 
-<a
-href="dashboard.html"
-class="nav-link"
->
+<a href="dashboard.html" class="nav-link">
 لوحة التحكم
 </a>
 
-<a
-href="employees.html"
-class="nav-link"
->
+<a href="employees.html" class="nav-link">
 الموظفون
 </a>
 
-<a
-href="projects.html"
-class="nav-link"
->
+<a href="projects.html" class="nav-link">
 المشاريع
 </a>
 
-<a
-href="tasks.html"
-class="nav-link active"
->
+<a href="tasks.html" class="nav-link active">
 المهام
 </a>
 
-<a
-href="matching.html"
-class="nav-link"
->
+<a href="matching.html" class="nav-link">
 المطابقة والترشيح
 </a>
 
-<a
-href="evaluations.html"
-class="nav-link"
->
+<a href="evaluations.html" class="nav-link">
 التقييمات
 </a>
 
-<a
-href="decisions.html"
-class="nav-link"
->
+<a href="decisions.html" class="nav-link">
 القرارات
 </a>
 
-<a
-href="leaves.html"
-class="nav-link"
->
+<a href="leaves.html" class="nav-link">
 طلبات الإجازات
 </a>
 
-<a
-href="reports.html"
-class="nav-link"
->
+<a href="reports.html" class="nav-link">
 التقارير
 </a>
 
@@ -321,10 +294,7 @@ id="tasksGrid"
 <!-- نافذة إضافة / تعديل مهمة -->
 <!-- ========================= -->
 
-<div
-class="modal"
-id="taskModal"
->
+<div class="modal" id="taskModal">
 
 <div
 class="modal-overlay"
@@ -363,10 +333,7 @@ type="button"
 
 <form id="taskForm">
 
-<input
-type="hidden"
-id="editTaskId"
->
+<input type="hidden" id="editTaskId">
 
 
 <div class="form-grid">
@@ -395,10 +362,7 @@ required
 المشروع المرتبط
 </label>
 
-<select
-id="taskProject"
-required
->
+<select id="taskProject" required>
 
 <option value="">
 اختر المشروع
@@ -550,8 +514,6 @@ id="addRequirementBtn"
 
 
 
-<!-- تحليل الذكاء الاصطناعي -->
-
 <div
 style="
 margin:14px 0;
@@ -630,8 +592,6 @@ color:#526b78;
 
 
 
-<!-- المتطلبات العامة -->
-
 <div class="requirements-general">
 
 
@@ -659,19 +619,13 @@ required
 المستوى الوظيفي المطلوب
 </label>
 
-<select
-id="requiredJobLevel"
-required
->
+<select id="requiredJobLevel" required>
 
 <option value="مبتدئ">
 مبتدئ
 </option>
 
-<option
-value="متوسط"
-selected
->
+<option value="متوسط" selected>
 متوسط
 </option>
 
@@ -728,14 +682,9 @@ required
 </div>
 
 
-
-<!-- المهارات المطلوبة -->
-
 <div id="requirementsContainer"></div>
 
 
-
-<!-- أوزان المطابقة -->
 
 <div
 style="
@@ -927,10 +876,7 @@ id="saveTaskBtn"
 <!-- تفاصيل المهمة -->
 <!-- ========================= -->
 
-<div
-class="modal"
-id="detailsModal"
->
+<div class="modal" id="detailsModal">
 
 <div
 class="modal-overlay"
@@ -981,10 +927,7 @@ class="details-grid"
 <!-- تمديد المهمة -->
 <!-- ========================= -->
 
-<div
-class="modal"
-id="extensionModal"
->
+<div class="modal" id="extensionModal">
 
 <div
 class="modal-overlay"
@@ -1187,34 +1130,13 @@ function escapeHtml(value){
 return String(
 value ?? ""
 )
-
-.replaceAll(
-"&",
-"&amp;"
-)
-
-.replaceAll(
-"<",
-"&lt;"
-)
-
-.replaceAll(
-">",
-"&gt;"
-)
-
-.replaceAll(
-'"',
-"&quot;"
-)
-
-.replaceAll(
-"'",
-"&#039;"
-);
+.replaceAll("&","&amp;")
+.replaceAll("<","&lt;")
+.replaceAll(">","&gt;")
+.replaceAll('"',"&quot;")
+.replaceAll("'","&#039;");
 
 }
-
 
 
 function normalizeText(value){
@@ -1222,13 +1144,10 @@ function normalizeText(value){
 return String(
 value || ""
 )
-
 .trim()
-
 .toLowerCase();
 
 }
-
 
 
 function formatDate(date){
@@ -1253,7 +1172,6 @@ return date;
 }
 
 }
-
 
 
 function getToday(){
@@ -1285,7 +1203,6 @@ return `${year}-${month}-${day}`;
 }
 
 
-
 function isLateTask(task){
 
 return Boolean(
@@ -1295,7 +1212,6 @@ task.status !== "مكتملة"
 );
 
 }
-
 
 
 function getDisplayStatus(task){
@@ -1380,15 +1296,8 @@ data,
 error
 } =
 await supabaseClient
-
-.from(
-"projects"
-)
-
-.select(
-"*"
-)
-
+.from("projects")
+.select("*")
 .order(
 "id",
 {
@@ -1458,15 +1367,8 @@ data,
 error
 } =
 await supabaseClient
-
-.from(
-"employees"
-)
-
-.select(
-"*"
-)
-
+.from("employees")
+.select("*")
 .order(
 "id",
 {
@@ -1537,15 +1439,8 @@ data,
 error
 } =
 await supabaseClient
-
-.from(
-"skills"
-)
-
-.select(
-"*"
-)
-
+.from("skills")
+.select("*")
 .order(
 "skill_name",
 {
@@ -1585,15 +1480,8 @@ data,
 error
 } =
 await supabaseClient
-
-.from(
-"tasks"
-)
-
-.select(
-"*"
-)
-
+.from("tasks")
+.select("*")
 .order(
 "id",
 {
@@ -1617,9 +1505,7 @@ const project =
 projects.find(
 item =>
 Number(item.id) ===
-Number(
-task.project_id
-)
+Number(task.project_id)
 );
 
 
@@ -1627,9 +1513,7 @@ const employee =
 employees.find(
 item =>
 Number(item.id) ===
-Number(
-task.employee_id
-)
+Number(task.employee_id)
 );
 
 
@@ -1707,6 +1591,7 @@ updateSummary();
 
 /* =========================================================
    RENDER TASKS
+   تم إصلاح التنسيق هنا
 ========================================================= */
 
 function renderTasks(list){
@@ -1715,7 +1600,6 @@ const count =
 document.getElementById(
 "tasksCount"
 );
-
 
 count.textContent =
 `${list.length} مهمة`;
@@ -1744,16 +1628,47 @@ getDisplayStatus(
 task
 );
 
+const late =
+isLateTask(
+task
+);
+
+
+let priorityClass =
+"medium";
+
+
+if(
+task.priority === "عالية"
+){
+
+priorityClass =
+"high";
+
+}
+
+
+if(
+task.priority === "منخفضة"
+){
+
+priorityClass =
+"low";
+
+}
+
 
 return `
 
-<article class="task-card">
+<article class="task-card ${late ? "task-late" : ""}">
+
 
 <div class="task-card-top">
 
+
 <div>
 
-<span class="task-project">
+<span class="task-label">
 ${escapeHtml(
 task.projectName
 )}
@@ -1768,27 +1683,48 @@ task.name
 </div>
 
 
-<span class="task-status">
+<div class="task-card-badges">
+
+<span class="priority-badge ${priorityClass}">
 ${escapeHtml(
-status
+task.priority
 )}
 </span>
 
+${
+late
+?
+`
+<span class="late-badge">
+متأخرة
+</span>
+`
+:
+""
+}
+
 </div>
+
+
+</div>
+
 
 
 <p class="task-description">
 
 ${escapeHtml(
-task.description || "لا يوجد وصف."
+task.description ||
+"لا يوجد وصف."
 )}
 
 </p>
 
 
+
 <div class="task-info">
 
-<div>
+
+<div class="info-item">
 
 <span>
 الموظف
@@ -1803,22 +1739,24 @@ task.employeeName
 </div>
 
 
-<div>
+
+<div class="info-item">
 
 <span>
-الأولوية
+الحالة
 </span>
 
 <strong>
 ${escapeHtml(
-task.priority
+status
 )}
 </strong>
 
 </div>
 
 
-<div>
+
+<div class="info-item">
 
 <span>
 تاريخ الاستحقاق
@@ -1832,13 +1770,33 @@ task.dueDate
 
 </div>
 
+
+
+<div class="info-item">
+
+<span>
+المشروع
+</span>
+
+<strong>
+${escapeHtml(
+task.projectName
+)}
+</strong>
+
 </div>
+
+
+</div>
+
 
 
 <div class="task-actions">
 
+
 <button
 type="button"
+class="view-btn"
 onclick="viewTask(${task.id})"
 >
 التفاصيل
@@ -1847,6 +1805,7 @@ onclick="viewTask(${task.id})"
 
 <button
 type="button"
+class="edit-btn"
 onclick="editTask(${task.id})"
 >
 تعديل
@@ -1855,6 +1814,7 @@ onclick="editTask(${task.id})"
 
 <button
 type="button"
+class="matching-btn"
 onclick="goToMatching(${task.id})"
 >
 المطابقة
@@ -1863,6 +1823,7 @@ onclick="goToMatching(${task.id})"
 
 <button
 type="button"
+class="extend-btn"
 onclick="openExtensionModal(${task.id})"
 >
 تمديد
@@ -1871,13 +1832,15 @@ onclick="openExtensionModal(${task.id})"
 
 <button
 type="button"
-class="delete-action"
+class="delete-btn"
 onclick="deleteTask(${task.id})"
 >
 حذف
 </button>
 
+
 </div>
+
 
 </article>
 
@@ -2162,7 +2125,6 @@ document.body.classList.add(
 );
 
 }
-
 
 
 function closeTaskModal(){
@@ -2482,7 +2444,6 @@ document.getElementById(
 }
 
 
-
 function updateCriteriaTotal(){
 
 const weights =
@@ -2552,13 +2513,9 @@ const text =
 let weights = {
 
 skills:40,
-
 experience:20,
-
 jobLevel:15,
-
 availability:15,
-
 performance:10
 
 };
@@ -2579,13 +2536,9 @@ text.includes("css")
 weights = {
 
 skills:50,
-
 experience:20,
-
 jobLevel:10,
-
 availability:10,
-
 performance:10
 
 };
@@ -2603,13 +2556,9 @@ text.includes("إشراف")
 weights = {
 
 skills:25,
-
 experience:30,
-
 jobLevel:25,
-
 availability:10,
-
 performance:10
 
 };
@@ -2626,13 +2575,9 @@ text.includes("سريع")
 weights = {
 
 skills:35,
-
 experience:15,
-
 jobLevel:10,
-
 availability:30,
-
 performance:10
 
 };
@@ -2650,13 +2595,9 @@ text.includes("مراجعة")
 weights = {
 
 skills:35,
-
 experience:20,
-
 jobLevel:10,
-
 availability:10,
-
 performance:25
 
 };
@@ -3135,20 +3076,16 @@ data,
 error
 } =
 await supabaseClient
-
 .from(
 "task_requirements"
 )
-
 .select(
 "*"
 )
-
 .eq(
 "task_id",
 Number(taskId)
 )
-
 .order(
 "id",
 {
@@ -3448,13 +3385,10 @@ const {
 error:deleteError
 } =
 await supabaseClient
-
 .from(
 "task_requirements"
 )
-
 .delete()
-
 .eq(
 "task_id",
 Number(taskId)
@@ -3565,11 +3499,9 @@ const {
 error
 } =
 await supabaseClient
-
 .from(
 "task_requirements"
 )
-
 .insert(
 rows
 );
@@ -3768,15 +3700,12 @@ const {
 error
 } =
 await supabaseClient
-
 .from(
 "tasks"
 )
-
 .update(
 payload
 )
-
 .eq(
 "id",
 Number(editId)
@@ -3800,21 +3729,17 @@ data,
 error
 } =
 await supabaseClient
-
 .from(
 "tasks"
 )
-
 .insert(
 [
 payload
 ]
 )
-
 .select(
 "id"
 )
-
 .single();
 
 
@@ -3887,7 +3812,6 @@ editId
 
 /* =========================================================
    VIEW TASK
-   التعديل الجديد لترتيب متطلبات المطابقة
 ========================================================= */
 
 async function viewTask(id){
@@ -4481,13 +4405,10 @@ try{
 
 
 await supabaseClient
-
 .from(
 "task_requirements"
 )
-
 .delete()
-
 .eq(
 "task_id",
 Number(id)
@@ -4498,13 +4419,10 @@ const {
 error
 } =
 await supabaseClient
-
 .from(
 "tasks"
 )
-
 .delete()
-
 .eq(
 "id",
 Number(id)
@@ -4622,7 +4540,6 @@ document.body.classList.add(
 }
 
 
-
 function closeExtensionModal(){
 
 extensionModal.classList.remove(
@@ -4715,11 +4632,9 @@ const {
 error
 } =
 await supabaseClient
-
 .from(
 "tasks"
 )
-
 .update(
 {
 
@@ -4739,7 +4654,6 @@ task?.extensionCount || 0
 
 }
 )
-
 .eq(
 "id",
 taskId
@@ -4804,7 +4718,6 @@ document.body.classList.add(
 );
 
 }
-
 
 
 function closeSidebar(){
