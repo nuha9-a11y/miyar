@@ -1,5269 +1,1837 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>معيار | القرارات</title>
-
-    <link rel="stylesheet" href="decisions.css">
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>معيار | القرارات</title>
+<link rel="stylesheet" href="decisions.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-
-
 <body>
-
-
 <div class="decisions-page">
-
-
-    <!-- =========================
-         هيدر الجوال
-    ========================== -->
-
-    <header class="mobile-header">
-
-        <button
-            class="mobile-menu-btn"
-            id="mobileMenuBtn"
-            type="button"
-        >
-            ☰
-        </button>
-
-
-        <div class="mobile-header-title">
-
-            <h2>
-                القرارات
-            </h2>
-
-            <span>
-                معيار
-            </span>
-
-        </div>
-
-
-        <img
-            src="assets/logo.png"
-            alt="معيار"
-            class="mobile-logo"
-        >
-
-    </header>
-
-
-    <div
-        class="sidebar-overlay"
-        id="sidebarOverlay"
-    ></div>
-
-
-
-    <!-- =========================
-         القائمة الجانبية
-    ========================== -->
-
-    <aside
-        class="sidebar"
-        id="sidebar"
-    >
-
-
-        <div class="sidebar-logo">
-
-            <img
-                src="assets/logo.png"
-                alt="معيار"
-            >
-
-        </div>
-
-
-        <nav class="sidebar-nav">
-
-
-            <a
-                href="dashboard.html"
-                class="nav-link"
-            >
-                لوحة التحكم
-            </a>
-
-
-            <a
-                href="employees.html"
-                class="nav-link"
-            >
-                الموظفون
-            </a>
-
-
-            <a
-                href="projects.html"
-                class="nav-link"
-            >
-                المشاريع
-            </a>
-
-
-            <a
-                href="tasks.html"
-                class="nav-link"
-            >
-                المهام
-            </a>
-
-
-            <a
-                href="matching.html"
-                class="nav-link"
-            >
-                المطابقة والترشيح
-            </a>
-
-
-            <a
-                href="evaluations.html"
-                class="nav-link"
-            >
-                التقييمات
-            </a>
-
-
-            <a
-                href="decisions.html"
-                class="nav-link active"
-            >
-                القرارات
-            </a>
-
-
-            <a
-                href="leaves.html"
-                class="nav-link"
-            >
-                طلبات الإجازات
-            </a>
-
-
-            <a
-                href="reports.html"
-                class="nav-link"
-            >
-                التقارير
-            </a>
-
-
-        </nav>
-
-
-        <button
-            class="logout-btn"
-            type="button"
-            id="logoutBtn"
-        >
-            تسجيل الخروج
-        </button>
-
-
-    </aside>
-
-
-
-    <!-- =========================
-         المحتوى
-    ========================== -->
-
-    <main class="main-content">
-
-
-        <header class="topbar">
-
-            <span class="page-badge">
-                القرار النهائي
-            </span>
-
-
-            <h1>
-                القرارات
-            </h1>
-
-
-            <p>
-                مراجعة نتائج المطابقة واعتماد الموظف النهائي لإسناد المهمة.
-            </p>
-
-        </header>
-
-
-
-        <!-- =========================
-             الملخص
-        ========================== -->
-
-        <section class="decisions-summary">
-
-
-            <div class="summary-item">
-
-                <span>
-                    إجمالي القرارات
-                </span>
-
-                <strong id="summaryTotal">
-                    0
-                </strong>
-
-            </div>
-
-
-            <div class="summary-item">
-
-                <span>
-                    مطابق لترشيح النظام
-                </span>
-
-                <strong id="summarySame">
-                    0
-                </strong>
-
-            </div>
-
-
-            <div class="summary-item">
-
-                <span>
-                    تم اختيار موظف آخر
-                </span>
-
-                <strong id="summaryChanged">
-                    0
-                </strong>
-
-            </div>
-
-
-            <div class="summary-item">
-
-                <span>
-                    متوسط التوافق
-                </span>
-
-                <strong id="summaryAverage">
-                    0%
-                </strong>
-
-            </div>
-
-
-        </section>
-
-
-
-        <!-- =========================
-             الأدوات
-        ========================== -->
-
-        <section class="toolbar">
-
-
-            <div class="search-box">
-
-                <input
-                    type="text"
-                    id="searchInput"
-                    placeholder="ابحث باسم المهمة أو الموظف..."
-                >
-
-            </div>
-
-
-            <button
-                class="add-btn"
-                type="button"
-                id="addDecisionBtn"
-            >
-                + تسجيل قرار
-            </button>
-
-
-        </section>
-
-
-
-        <!-- =========================
-             سجل القرارات
-        ========================== -->
-
-        <section class="decisions-container">
-
-
-            <div class="section-title">
-
-
-                <div>
-
-                    <h2>
-                        سجل القرارات
-                    </h2>
-
-                    <p>
-                        القرارات النهائية المعتمدة لإسناد المهام.
-                    </p>
-
-                </div>
-
-
-                <span id="decisionsCount">
-                    0 قرار
-                </span>
-
-
-            </div>
-
-
-            <div
-                class="decisions-grid"
-                id="decisionsGrid"
-            >
-
-                <div class="empty-state">
-                    جارٍ تحميل القرارات...
-                </div>
-
-            </div>
-
-
-        </section>
-
-
-    </main>
-
+<header class="mobile-header">
+<button class="mobile-menu-btn" id="mobileMenuBtn" type="button">☰</button>
+<div class="mobile-header-title"><h2>القرارات</h2><span>معيار</span></div>
+<img src="assets/logo.png" alt="معيار" class="mobile-logo">
+</header>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-logo"><img src="assets/logo.png" alt="معيار"></div>
+<nav class="sidebar-nav">
+<a href="dashboard.html" class="nav-link">لوحة التحكم</a>
+<a href="employees.html" class="nav-link">الموظفون</a>
+<a href="projects.html" class="nav-link">المشاريع</a>
+<a href="tasks.html" class="nav-link">المهام</a>
+<a href="matching.html" class="nav-link">المطابقة والترشيح</a>
+<a href="evaluations.html" class="nav-link">التقييمات</a>
+<a href="decisions.html" class="nav-link active">القرارات</a>
+<a href="leaves.html" class="nav-link">طلبات الإجازات</a>
+<a href="reports.html" class="nav-link">التقارير</a>
+</nav>
+<button class="logout-btn" type="button" id="logoutBtn">تسجيل الخروج</button>
+</aside>
+
+<main class="main-content">
+<header class="topbar">
+<span class="page-badge">القرار النهائي</span>
+<h1>القرارات</h1>
+<p>مراجعة نتائج المطابقة واعتماد الموظف النهائي لإسناد المهمة.</p>
+</header>
+
+<section class="decisions-summary">
+<div class="summary-item"><span>إجمالي القرارات</span><strong id="summaryTotal">0</strong></div>
+<div class="summary-item"><span>مطابق لترشيح النظام</span><strong id="summarySame">0</strong></div>
+<div class="summary-item"><span>تم اختيار موظف آخر</span><strong id="summaryChanged">0</strong></div>
+<div class="summary-item"><span>متوسط التوافق</span><strong id="summaryAverage">0%</strong></div>
+</section>
+
+<section class="toolbar">
+<div class="search-box">
+<input type="text" id="searchInput" placeholder="ابحث باسم المهمة أو الموظف...">
+</div>
+<button class="add-btn" type="button" id="addDecisionBtn">+ تسجيل قرار</button>
+</section>
+
+<section class="decisions-container">
+<div class="section-title">
+<div>
+<h2>سجل القرارات</h2>
+<p>القرارات النهائية المعتمدة لإسناد المهام.</p>
+</div>
+<span id="decisionsCount">0 قرار</span>
+</div>
+<div class="decisions-grid" id="decisionsGrid">
+<div class="empty-state">جارٍ تحميل القرارات...</div>
+</div>
+</section>
+</main>
+</div>
+
+<div class="modal" id="decisionModal">
+<div class="modal-overlay" id="decisionModalOverlay"></div>
+<div class="modal-box">
+<div class="modal-header">
+<div>
+<h2 id="modalTitle">تسجيل قرار</h2>
+<p id="modalDescription">راجع نتيجة المطابقة ثم اعتمد الموظف النهائي.</p>
+</div>
+<button class="close-btn" type="button" id="closeDecisionBtn">×</button>
+</div>
+
+<form id="decisionForm">
+<input type="hidden" id="editDecisionId">
+<input type="hidden" id="decisionSource" value="manual">
+
+<div class="form-grid">
+
+<div class="form-group">
+<label for="decisionTask">المهمة</label>
+<select id="decisionTask" required>
+<option value="">اختر المهمة</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="projectManager">مدير المشروع</label>
+<input type="text" id="projectManager" value="-" readonly>
+</div>
+
+<div class="form-group">
+<label for="systemCandidate">الموظف الذي رشحه النظام</label>
+<select id="systemCandidate" required>
+<option value="">اختر الموظف</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="matchRate">نسبة التوافق %</label>
+<input type="number" id="matchRate" min="0" max="100" step="0.01" required>
+<small id="matchRateHelp">يتم جلب النسبة تلقائياً عند الاعتماد من صفحة المطابقة.</small>
+</div>
+
+<div class="form-group">
+<label for="selectedEmployee">الموظف الذي اعتمده المسؤول</label>
+<select id="selectedEmployee" required>
+<option value="">اختر الموظف</option>
+</select>
+</div>
+
+<div class="form-group full-width">
+<label for="decisionReason">سبب القرار</label>
+<textarea id="decisionReason" placeholder="يصبح السبب مطلوباً عند اختيار موظف مختلف عن مرشح النظام..."></textarea>
+<small id="reasonHelp">عند اعتماد مرشح النظام يمكن للنظام تسجيل سبب الاعتماد تلقائياً.</small>
+</div>
+
+<div class="form-group">
+<label for="decisionDate">تاريخ القرار</label>
+<input type="date" id="decisionDate" required>
+</div>
 
 </div>
 
-
-
-<!-- =====================================================
-     نافذة تسجيل / تعديل القرار
-===================================================== -->
-
-<div
-    class="modal"
-    id="decisionModal"
->
-
-
-    <div
-        class="modal-overlay"
-        id="decisionModalOverlay"
-    ></div>
-
-
-    <div class="modal-box">
-
-
-        <div class="modal-header">
-
-
-            <div>
-
-                <h2 id="modalTitle">
-                    تسجيل قرار
-                </h2>
-
-                <p id="modalDescription">
-                    راجع نتيجة المطابقة ثم اعتمد الموظف النهائي.
-                </p>
-
-            </div>
-
-
-            <button
-                class="close-btn"
-                type="button"
-                id="closeDecisionBtn"
-            >
-                ×
-            </button>
-
-
-        </div>
-
-
-
-        <form id="decisionForm">
-
-
-            <input
-                type="hidden"
-                id="editDecisionId"
-            >
-
-
-            <input
-                type="hidden"
-                id="decisionSource"
-                value="manual"
-            >
-
-
-
-            <div class="form-grid">
-
-
-                <!-- المهمة -->
-
-                <div class="form-group">
-
-                    <label for="decisionTask">
-                        المهمة
-                    </label>
-
-                    <select
-                        id="decisionTask"
-                        required
-                    >
-
-                        <option value="">
-                            اختر المهمة
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-
-                <!-- مرشح النظام -->
-
-                <div class="form-group">
-
-                    <label for="systemCandidate">
-                        الموظف الذي رشحه النظام
-                    </label>
-
-                    <select
-                        id="systemCandidate"
-                        required
-                    >
-
-                        <option value="">
-                            اختر الموظف
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-
-                <!-- نسبة التوافق -->
-
-                <div class="form-group">
-
-                    <label for="matchRate">
-                        نسبة التوافق %
-                    </label>
-
-                    <input
-                        type="number"
-                        id="matchRate"
-                        min="0"
-                        max="100"
-                        step="0.01"
-                        required
-                    >
-
-                    <small id="matchRateHelp">
-                        يتم جلب النسبة تلقائياً عند الاعتماد من صفحة المطابقة.
-                    </small>
-
-                </div>
-
-
-
-                <!-- الموظف النهائي -->
-
-                <div class="form-group">
-
-                    <label for="selectedEmployee">
-                        الموظف الذي اعتمده المسؤول
-                    </label>
-
-                    <select
-                        id="selectedEmployee"
-                        required
-                    >
-
-                        <option value="">
-                            اختر الموظف
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-
-                <!-- السبب -->
-
-                <div class="form-group full-width">
-
-                    <label for="decisionReason">
-                        سبب القرار
-                    </label>
-
-                    <textarea
-                        id="decisionReason"
-                        placeholder="يصبح السبب مطلوباً عند اختيار موظف مختلف عن مرشح النظام..."
-                    ></textarea>
-
-                    <small id="reasonHelp">
-                        عند اعتماد مرشح النظام يمكن للنظام تسجيل سبب الاعتماد تلقائياً.
-                    </small>
-
-                </div>
-
-
-
-                <!-- التاريخ -->
-
-                <div class="form-group">
-
-                    <label for="decisionDate">
-                        تاريخ القرار
-                    </label>
-
-                    <input
-                        type="date"
-                        id="decisionDate"
-                        required
-                    >
-
-                </div>
-
-
-            </div>
-
-
-
-            <!-- تحذير الإجازة -->
-
-            <div
-                class="leave-warning hidden"
-                id="leaveWarning"
-            ></div>
-
-
-
-            <!-- حالة القرار -->
-
-            <div
-                class="decision-status"
-                id="decisionStatus"
-            ></div>
-
-
-
-            <div class="modal-actions">
-
-
-                <button
-                    type="button"
-                    class="secondary-btn"
-                    id="cancelDecisionBtn"
-                >
-                    إلغاء
-                </button>
-
-
-                <button
-                    type="submit"
-                    class="primary-btn"
-                    id="saveDecisionBtn"
-                >
-                    حفظ القرار
-                </button>
-
-
-            </div>
-
-
-        </form>
-
-
-    </div>
-
-
+<div class="leave-warning hidden" id="leaveWarning"></div>
+<div class="decision-status" id="decisionStatus"></div>
+
+<div class="modal-actions">
+<button type="button" class="secondary-btn" id="cancelDecisionBtn">إلغاء</button>
+<button type="submit" class="primary-btn" id="saveDecisionBtn">حفظ القرار</button>
+</div>
+</form>
+</div>
 </div>
 
-
-
-<!-- =====================================================
-     نافذة التفاصيل
-===================================================== -->
-
-<div
-    class="modal"
-    id="detailsModal"
->
-
-
-    <div
-        class="modal-overlay"
-        id="detailsModalOverlay"
-    ></div>
-
-
-    <div class="modal-box details-box">
-
-
-        <div class="modal-header">
-
-
-            <div>
-
-                <h2>
-                    تفاصيل القرار
-                </h2>
-
-                <p>
-                    تفاصيل القرار النهائي وإسناد المهمة.
-                </p>
-
-            </div>
-
-
-            <button
-                class="close-btn"
-                type="button"
-                id="closeDetailsBtn"
-            >
-                ×
-            </button>
-
-
-        </div>
-
-
-        <div
-            class="details-grid"
-            id="decisionDetails"
-        ></div>
-
-
-    </div>
-
-
+<div class="modal" id="detailsModal">
+<div class="modal-overlay" id="detailsModalOverlay"></div>
+<div class="modal-box details-box">
+<div class="modal-header">
+<div>
+<h2>تفاصيل القرار</h2>
+<p>تفاصيل القرار النهائي وإسناد المهمة.</p>
 </div>
-
-
+<button class="close-btn" type="button" id="closeDetailsBtn">×</button>
+</div>
+<div class="details-grid" id="decisionDetails"></div>
+</div>
+</div>
 
 <script>
+const SUPABASE_URL="https://avooyglxacytrfhvotsl.supabase.co";
+const SUPABASE_KEY="sb_publishable_NVlWEnA_w4KbSse_-70zdA_J9ut0Kyo";
+const ADMIN_EMAIL="admin@gmail.com";
 
-
-/* =====================================================
-   إعداد Supabase
-===================================================== */
-
-const SUPABASE_URL =
-"https://avooyglxacytrfhvotsl.supabase.co";
-
-
-const SUPABASE_KEY =
-"sb_publishable_NVlWEnA_w4KbSse_-70zdA_J9ut0Kyo";
-
-
-const ADMIN_EMAIL =
-"admin@gmail.com";
-
-
-const supabaseClient =
-window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
+const supabaseClient=window.supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
 );
 
+let tasks=[];
+let projects=[];
+let employees=[];
+let employeeLeaves=[];
+let decisions=[];
+let taskAssignments=[];
 
+const decisionsGrid=document.getElementById("decisionsGrid");
+const decisionModal=document.getElementById("decisionModal");
+const detailsModal=document.getElementById("detailsModal");
+const sidebar=document.getElementById("sidebar");
+const sidebarOverlay=document.getElementById("sidebarOverlay");
+const mobileMenuBtn=document.getElementById("mobileMenuBtn");
+const leaveWarning=document.getElementById("leaveWarning");
 
-/* =====================================================
-   البيانات
-===================================================== */
+function escapeHtml(value){
+return String(value??"")
+.replaceAll("&","&amp;")
+.replaceAll("<","&lt;")
+.replaceAll(">","&gt;")
+.replaceAll('"',"&quot;")
+.replaceAll("'","&#039;");
+}
 
-let tasks = [];
+async function protectPage(){
+try{
+const{data,error}=await supabaseClient.auth.getSession();
+if(error||!data.session||!data.session.user){
+window.location.href="login.html";
+return false;
+}
+const email=String(data.session.user.email||"").trim().toLowerCase();
+if(email!==ADMIN_EMAIL.toLowerCase()){
+await supabaseClient.auth.signOut();
+clearLocalSession();
+window.location.href="login.html";
+return false;
+}
+localStorage.setItem("miyarRole","admin");
+localStorage.setItem("miyarEmail",email);
+return true;
+}catch(error){
+console.error("خطأ حماية الصفحة:",error);
+return false;
+}
+}
 
-let employees = [];
+async function loadTasks(){
+const{data,error}=await supabaseClient
+.from("tasks")
+.select(`
+id,
+project_id,
+task_name,
+description,
+priority,
+due_date,
+status,
+assigned_employee_id
+`)
+.order("id",{ascending:false});
+if(error)throw error;
+tasks=data||[];
+fillTaskSelect();
+}
 
-let employeeLeaves = [];
+async function loadProjects(){
+const{data,error}=await supabaseClient
+.from("projects")
+.select(`
+id,
+project_name,
+project_manager,
+project_manager_id
+`)
+.order("id",{ascending:false});
+if(error)throw error;
+projects=data||[];
+}
 
-let decisions = [];
+function getTaskProject(taskId){
+const task=tasks.find(item=>String(item.id)===String(taskId));
+if(!task||!task.project_id)return null;
+return projects.find(project=>String(project.id)===String(task.project_id))||null;
+}
 
+function getTaskProjectManagerId(taskId){
+const project=getTaskProject(taskId);
+if(!project?.project_manager_id)return null;
+return String(project.project_manager_id);
+}
 
-/*
-    هذا الجدول هو المصدر الأساسي
-    لإسناد أكثر من موظف لنفس المهمة.
-*/
-let taskAssignments = [];
+function getTaskProjectManagerName(taskId){
+const project=getTaskProject(taskId);
+if(!project)return "غير محدد";
 
+if(project.project_manager_id){
+const employee=employees.find(
+item=>String(item.id)===String(project.project_manager_id)
+);
+if(employee?.name)return employee.name;
+}
 
+return project.project_manager||"غير محدد";
+}
 
-/* =====================================================
-   العناصر
-===================================================== */
+function updateProjectManagerField(){
+const taskId=document.getElementById("decisionTask").value;
+const field=document.getElementById("projectManager");
+if(!taskId){
+field.value="-";
+return;
+}
+field.value=getTaskProjectManagerName(taskId);
+}
 
-const decisionsGrid =
-document.getElementById(
-    "decisionsGrid"
+async function loadEmployees(){
+const{data,error}=await supabaseClient
+.from("employees")
+.select(`
+id,
+name,
+employee_number,
+email,
+job_title,
+department,
+status
+`)
+.order("name",{ascending:true});
+if(error)throw error;
+employees=data||[];
+}
+
+async function loadEmployeeLeaves(){
+const{data,error}=await supabaseClient
+.from("employee_leaves")
+.select(`
+id,
+employee_id,
+leave_type,
+start_date,
+end_date,
+status
+`);
+if(error){
+console.warn("تعذر تحميل الإجازات:",error);
+employeeLeaves=[];
+return;
+}
+employeeLeaves=data||[];
+}
+
+async function loadTaskAssignments(){
+const{data,error}=await supabaseClient
+.from("task_assignments")
+.select(`
+id,
+task_id,
+employee_id,
+decision_id,
+assigned_at,
+created_at
+`)
+.order("id",{ascending:true});
+if(error)throw error;
+taskAssignments=data||[];
+}
+
+function fillTaskSelect(){
+const select=document.getElementById("decisionTask");
+const oldValue=select.value;
+
+select.innerHTML=`
+<option value="">
+اختر المهمة
+</option>
+`;
+
+tasks.forEach(task=>{
+const option=document.createElement("option");
+option.value=task.id;
+option.textContent=task.task_name||"مهمة بدون اسم";
+select.appendChild(option);
+});
+
+if(oldValue&&tasks.some(task=>Number(task.id)===Number(oldValue))){
+select.value=oldValue;
+}
+}
+
+async function getTaskRequirements(taskId){
+const{data,error}=await supabaseClient
+.from("task_requirements")
+.select(`
+id,
+task_id,
+employees_required
+`)
+.eq("task_id",Number(taskId))
+.order("id",{ascending:true});
+
+if(error)throw error;
+return data||[];
+}
+
+async function getEmployeesRequired(taskId){
+const requirements=await getTaskRequirements(taskId);
+if(!requirements.length)return 1;
+const value=Number(requirements[0]?.employees_required||1);
+return Math.max(1,value);
+}
+
+function getTaskAssignments(taskId){
+const result=[];
+const employeeIds=new Set();
+
+taskAssignments
+.filter(assignment=>Number(assignment.task_id)===Number(taskId))
+.forEach(assignment=>{
+const employeeId=Number(assignment.employee_id);
+if(!employeeIds.has(employeeId)){
+employeeIds.add(employeeId);
+result.push(assignment);
+}
+});
+
+const task=tasks.find(item=>Number(item.id)===Number(taskId));
+
+if(task&&task.assigned_employee_id){
+const legacyEmployeeId=Number(task.assigned_employee_id);
+if(!employeeIds.has(legacyEmployeeId)){
+result.push({
+id:"legacy-"+task.id,
+task_id:Number(task.id),
+employee_id:legacyEmployeeId,
+decision_id:null,
+assigned_at:null,
+created_at:null,
+legacy:true
+});
+}
+}
+
+return result;
+}
+
+function isEmployeeAssigned(taskId,employeeId){
+return getTaskAssignments(taskId).some(
+assignment=>Number(assignment.employee_id)===Number(employeeId)
+);
+}
+
+function fillEmployeeSelects(){
+const systemCandidate=document.getElementById("systemCandidate");
+const selectedEmployee=document.getElementById("selectedEmployee");
+
+const taskId=Number(
+document.getElementById("decisionTask").value
 );
 
-
-const decisionModal =
-document.getElementById(
-    "decisionModal"
+const editId=Number(
+document.getElementById("editDecisionId").value
 );
 
+const oldSystemCandidate=Number(systemCandidate.value);
+const oldSelectedEmployee=Number(selectedEmployee.value);
 
-const detailsModal =
-document.getElementById(
-    "detailsModal"
+const assignedIds=taskId
+?getTaskAssignments(taskId).map(
+assignment=>Number(assignment.employee_id)
+)
+:[];
+
+const projectManagerId=taskId
+?getTaskProjectManagerId(taskId)
+:null;
+
+let editedDecision=null;
+
+if(editId){
+editedDecision=decisions.find(
+decision=>Number(decision.id)===editId
+)||null;
+}
+
+function createOptions(currentValue,isSystemCandidate){
+let html=`<option value="">اختر الموظف</option>`;
+
+employees.forEach(employee=>{
+const employeeId=Number(employee.id);
+let allowed=true;
+
+const isProjectManager=
+projectManagerId!==null
+&&String(employee.id)===String(projectManagerId);
+
+if(isProjectManager){
+allowed=false;
+}
+
+if(assignedIds.includes(employeeId)){
+allowed=false;
+
+if(editedDecision){
+if(
+isSystemCandidate
+&&Number(editedDecision.systemCandidateId)===employeeId
+){
+allowed=true;
+}
+
+if(
+!isSystemCandidate
+&&Number(editedDecision.selectedEmployeeId)===employeeId
+){
+allowed=true;
+}
+}
+
+if(Number(currentValue)===employeeId){
+allowed=true;
+}
+}
+
+if(isProjectManager){
+allowed=false;
+}
+
+if(!allowed)return;
+
+html+=`
+<option value="${employee.id}">
+${escapeHtml(employee.name||"موظف")}
+</option>
+`;
+});
+
+return html;
+}
+
+systemCandidate.innerHTML=createOptions(
+oldSystemCandidate,
+true
 );
 
-
-const sidebar =
-document.getElementById(
-    "sidebar"
+selectedEmployee.innerHTML=createOptions(
+oldSelectedEmployee,
+false
 );
 
+if(oldSystemCandidate){
+systemCandidate.value=String(oldSystemCandidate);
+}
 
-const sidebarOverlay =
-document.getElementById(
-    "sidebarOverlay"
+if(oldSelectedEmployee){
+selectedEmployee.value=String(oldSelectedEmployee);
+}
+}
+
+function getTodayDate(){
+const now=new Date();
+const year=now.getFullYear();
+const month=String(now.getMonth()+1).padStart(2,"0");
+const day=String(now.getDate()).padStart(2,"0");
+return `${year}-${month}-${day}`;
+}
+
+function getCurrentLeave(employeeId){
+const today=getTodayDate();
+
+return employeeLeaves.find(leave=>{
+const status=String(leave.status||"").trim().toLowerCase();
+
+const approved=
+status==="approved"
+||status==="معتمدة"
+||status==="معتمد"
+||status==="مقبول"
+||status==="مقبولة";
+
+if(!approved)return false;
+
+return(
+Number(leave.employee_id)===Number(employeeId)
+&&leave.start_date<=today
+&&leave.end_date>=today
+);
+})||null;
+}
+
+function checkSelectedEmployeeAvailability(){
+const employeeId=Number(
+document.getElementById("selectedEmployee").value
 );
 
+leaveWarning.classList.add("hidden");
+leaveWarning.textContent="";
 
-const mobileMenuBtn =
-document.getElementById(
-    "mobileMenuBtn"
+if(!employeeId)return;
+
+const leave=getCurrentLeave(employeeId);
+
+if(!leave)return;
+
+leaveWarning.textContent=
+"تنبيه: الموظف في إجازة معتمدة حالياً من "
++formatDate(leave.start_date)
++" إلى "
++formatDate(leave.end_date)
++".";
+
+leaveWarning.classList.remove("hidden");
+}
+
+function updateDecisionStatus(){
+const systemCandidateId=Number(
+document.getElementById("systemCandidate").value
 );
 
-
-const leaveWarning =
-document.getElementById(
-    "leaveWarning"
+const selectedEmployeeId=Number(
+document.getElementById("selectedEmployee").value
 );
 
+const status=document.getElementById("decisionStatus");
 
-
-/* =====================================================
-   حماية النصوص
-===================================================== */
-
-function escapeHtml(value) {
-
-    return String(
-        value ?? ""
-    )
-    .replaceAll(
-        "&",
-        "&amp;"
-    )
-    .replaceAll(
-        "<",
-        "&lt;"
-    )
-    .replaceAll(
-        ">",
-        "&gt;"
-    )
-    .replaceAll(
-        '"',
-        "&quot;"
-    )
-    .replaceAll(
-        "'",
-        "&#039;"
-    );
-
+if(!systemCandidateId||!selectedEmployeeId){
+status.textContent="";
+return;
 }
 
-
-
-/* =====================================================
-   حماية صفحة المسؤول
-===================================================== */
-
-async function protectPage() {
-
-    try {
-
-        const {
-            data,
-            error
-        } =
-        await supabaseClient
-            .auth
-            .getSession();
-
-
-        if (
-            error
-            ||
-            !data.session
-            ||
-            !data.session.user
-        ) {
-
-            window.location.href =
-            "login.html";
-
-            return false;
-
-        }
-
-
-        const email =
-        String(
-            data.session.user.email
-            ||
-            ""
-        )
-        .trim()
-        .toLowerCase();
-
-
-        if (
-            email !==
-            ADMIN_EMAIL.toLowerCase()
-        ) {
-
-            await supabaseClient
-                .auth
-                .signOut();
-
-
-            clearLocalSession();
-
-
-            window.location.href =
-            "login.html";
-
-
-            return false;
-
-        }
-
-
-        localStorage.setItem(
-            "miyarRole",
-            "admin"
-        );
-
-
-        localStorage.setItem(
-            "miyarEmail",
-            email
-        );
-
-
-        return true;
-
-    }
-
-    catch(error) {
-
-        console.error(
-            "خطأ حماية الصفحة:",
-            error
-        );
-
-
-        return false;
-
-    }
-
+if(systemCandidateId===selectedEmployeeId){
+status.textContent="سيتم اعتماد الموظف الذي رشحه النظام.";
+}else{
+status.textContent=
+"تم اختيار موظف مختلف عن مرشح النظام، لذلك يجب توضيح سبب القرار.";
+}
 }
 
+function setMatchingFieldsLocked(locked){
+const task=document.getElementById("decisionTask");
+const candidate=document.getElementById("systemCandidate");
+const rate=document.getElementById("matchRate");
 
+task.disabled=locked;
+candidate.disabled=locked;
+rate.readOnly=locked;
 
-/* =====================================================
-   تحميل المهام
-===================================================== */
-
-async function loadTasks() {
-
-    const {
-        data,
-        error
-    } =
-    await supabaseClient
-        .from(
-            "tasks"
-        )
-        .select(`
-            id,
-            project_id,
-            task_name,
-            description,
-            priority,
-            due_date,
-            status,
-            assigned_employee_id
-        `)
-        .order(
-            "id",
-            {
-                ascending:false
-            }
-        );
-
-
-    if (error) {
-
-        throw error;
-
-    }
-
-
-    tasks =
-    data || [];
-
-
-    fillTaskSelect();
-
+if(locked){
+task.setAttribute("aria-disabled","true");
+candidate.setAttribute("aria-disabled","true");
+rate.setAttribute("aria-readonly","true");
+}else{
+task.removeAttribute("aria-disabled");
+candidate.removeAttribute("aria-disabled");
+rate.removeAttribute("aria-readonly");
+}
 }
 
+async function openDecisionModal(){
+document.getElementById("decisionForm").reset();
+document.getElementById("editDecisionId").value="";
+document.getElementById("decisionSource").value="manual";
+document.getElementById("modalTitle").textContent="تسجيل قرار";
+document.getElementById("modalDescription").textContent=
+"راجع بيانات المهمة ثم اعتمد الموظف النهائي.";
 
+document.getElementById("decisionDate").value=getTodayDate();
+document.getElementById("saveDecisionBtn").textContent="حفظ القرار";
 
-/* =====================================================
-   تحميل الموظفين
-===================================================== */
+leaveWarning.classList.add("hidden");
 
-async function loadEmployees() {
+setMatchingFieldsLocked(false);
 
-    const {
-        data,
-        error
-    } =
-    await supabaseClient
-        .from(
-            "employees"
-        )
-        .select(`
-            id,
-            name,
-            employee_number,
-            email,
-            job_title,
-            department,
-            status
-        `)
-        .order(
-            "name",
-            {
-                ascending:true
-            }
-        );
-
-
-    if (error) {
-
-        throw error;
-
-    }
-
-
-    employees =
-    data || [];
-
+try{
+await loadTaskAssignments();
+}catch(error){
+console.warn(error);
 }
 
+fillEmployeeSelects();
+updateProjectManagerField();
+updateDecisionStatus();
 
-
-/* =====================================================
-   تحميل الإجازات
-===================================================== */
-
-async function loadEmployeeLeaves() {
-
-    const {
-        data,
-        error
-    } =
-    await supabaseClient
-        .from(
-            "employee_leaves"
-        )
-        .select(`
-            id,
-            employee_id,
-            leave_type,
-            start_date,
-            end_date,
-            status
-        `);
-
-
-    if (error) {
-
-        console.warn(
-            "تعذر تحميل الإجازات:",
-            error
-        );
-
-
-        employeeLeaves =
-        [];
-
-
-        return;
-
-    }
-
-
-    employeeLeaves =
-    data || [];
-
+decisionModal.classList.add("show");
+document.body.classList.add("modal-open");
 }
 
+async function loadPendingDecision(){
+const stored=localStorage.getItem("pendingDecision");
+if(!stored)return;
 
+try{
+const pending=JSON.parse(stored);
 
-/* =====================================================
-   تحميل الإسنادات الفعلية
-===================================================== */
-
-async function loadTaskAssignments() {
-
-    const {
-        data,
-        error
-    } =
-    await supabaseClient
-        .from(
-            "task_assignments"
-        )
-        .select(`
-            id,
-            task_id,
-            employee_id,
-            decision_id,
-            assigned_at,
-            created_at
-        `)
-        .order(
-            "id",
-            {
-                ascending:true
-            }
-        );
-
-
-    if (error) {
-
-        throw error;
-
-    }
-
-
-    taskAssignments =
-    data || [];
-
+if(!pending.taskId||!pending.systemCandidateId){
+localStorage.removeItem("pendingDecision");
+return;
 }
 
+await loadTaskAssignments();
 
+const required=Math.max(
+1,
+Number(
+pending.employeesRequired
+||await getEmployeesRequired(pending.taskId)
+)
+);
 
-/* =====================================================
-   تعبئة المهام
-===================================================== */
+const currentAssignments=getTaskAssignments(pending.taskId);
 
-function fillTaskSelect() {
+if(currentAssignments.length>=required){
+alert(
+"تم استكمال العدد المطلوب لهذه المهمة.\n\n"
++"تم إسناد "
++currentAssignments.length
++" من "
++required
++" موظف."
+);
 
-    const select =
-    document.getElementById(
-        "decisionTask"
-    );
-
-
-    const oldValue =
-    select.value;
-
-
-    select.innerHTML = `
-
-        <option value="">
-            اختر المهمة
-        </option>
-
-    `;
-
-
-    tasks.forEach(
-        task => {
-
-            const option =
-            document.createElement(
-                "option"
-            );
-
-
-            option.value =
-            task.id;
-
-
-            option.textContent =
-            task.task_name
-            ||
-            "مهمة بدون اسم";
-
-
-            select.appendChild(
-                option
-            );
-
-        }
-    );
-
-
-    if (
-        oldValue
-        &&
-        tasks.some(
-            task =>
-                Number(task.id)
-                ===
-                Number(oldValue)
-        )
-    ) {
-
-        select.value =
-        oldValue;
-
-    }
-
+localStorage.removeItem("pendingDecision");
+return;
 }
 
+const selectedId=Number(
+pending.selectedEmployeeId
+||pending.systemCandidateId
+);
 
+const projectManagerId=getTaskProjectManagerId(
+pending.taskId
+);
 
-/* =====================================================
-   متطلبات المهمة
-===================================================== */
-
-async function getTaskRequirements(
-    taskId
-) {
-
-    const {
-        data,
-        error
-    } =
-    await supabaseClient
-        .from(
-            "task_requirements"
-        )
-        .select(`
-            id,
-            task_id,
-            employees_required
-        `)
-        .eq(
-            "task_id",
-            Number(taskId)
-        )
-        .order(
-            "id",
-            {
-                ascending:true
-            }
-        );
-
-
-    if (error) {
-
-        throw error;
-
-    }
-
-
-    return data || [];
-
+if(
+projectManagerId!==null
+&&(
+String(pending.systemCandidateId)===String(projectManagerId)
+||String(selectedId)===String(projectManagerId)
+)
+){
+alert("مدير المشروع لا يمكن اعتماده كموظف منفذ لمهمة داخل مشروعه.");
+localStorage.removeItem("pendingDecision");
+return;
 }
 
-
-
-/* =====================================================
-   عدد الموظفين المطلوب للمهمة
-===================================================== */
-
-async function getEmployeesRequired(
-    taskId
-) {
-
-    const requirements =
-    await getTaskRequirements(
-        taskId
-    );
-
-
-    if (
-        !requirements.length
-    ) {
-
-        return 1;
-
-    }
-
-
-    const value =
-    Number(
-        requirements[0]
-            ?.employees_required
-        ||
-        1
-    );
-
-
-    return Math.max(
-        1,
-        value
-    );
-
+if(isEmployeeAssigned(pending.taskId,selectedId)){
+alert(
+"هذا الموظف تم اعتماده مسبقاً لهذه المهمة.\nاختر موظفاً آخر من صفحة المطابقة."
+);
+localStorage.removeItem("pendingDecision");
+return;
 }
 
+document.getElementById("decisionForm").reset();
+document.getElementById("editDecisionId").value="";
+document.getElementById("decisionSource").value="matching";
 
+document.getElementById("modalTitle").textContent=
+"اعتماد القرار النهائي";
 
-/* =====================================================
-   إسنادات مهمة محددة
+document.getElementById("modalDescription").textContent=
+"تم جلب بيانات الترشيح ونسبة التوافق تلقائياً من صفحة المطابقة. "
++"تم إسناد "
++currentAssignments.length
++" من "
++required
++" موظف حتى الآن.";
 
-   يدعم:
-   1- task_assignments
-   2- assigned_employee_id القديم
+document.getElementById("decisionTask").value=
+String(pending.taskId);
 
-   ويمنع التكرار
-===================================================== */
+updateProjectManagerField();
 
-function getTaskAssignments(
-    taskId
-) {
+fillEmployeeSelects();
 
-    const result =
-    [];
+document.getElementById("systemCandidate").value=
+String(pending.systemCandidateId);
 
+document.getElementById("selectedEmployee").value=
+String(selectedId);
 
-    const employeeIds =
-    new Set();
+const pendingRate=Number(
+pending.matchRate
+??pending.score
+??pending.matchScore
+??0
+);
 
+document.getElementById("matchRate").value=
+Math.max(0,Math.min(100,pendingRate));
 
-    /*
-        أولاً الإسنادات الجديدة
-    */
+document.getElementById("decisionReason").value=
+pending.recommendationReason
+||pending.systemReason
+||"";
 
-    taskAssignments
-        .filter(
-            assignment =>
+document.getElementById("decisionDate").value=
+getTodayDate();
 
-                Number(
-                    assignment.task_id
-                )
-                ===
-                Number(
-                    taskId
-                )
-        )
-        .forEach(
-            assignment => {
+document.getElementById("saveDecisionBtn").textContent=
+"اعتماد وحفظ القرار";
 
-                const employeeId =
-                Number(
-                    assignment.employee_id
-                );
+setMatchingFieldsLocked(true);
 
+checkSelectedEmployeeAvailability();
+updateDecisionStatus();
 
-                if (
-                    !employeeIds.has(
-                        employeeId
-                    )
-                ) {
+decisionModal.classList.add("show");
+document.body.classList.add("modal-open");
 
-                    employeeIds.add(
-                        employeeId
-                    );
-
-
-                    result.push(
-                        assignment
-                    );
-
-                }
-
-            }
-        );
-
-
-    /*
-        دعم assigned_employee_id القديم.
-
-        إذا كان نفس الموظف موجود في
-        task_assignments لن نكرره.
-    */
-
-    const task =
-    tasks.find(
-        item =>
-            Number(
-                item.id
-            )
-            ===
-            Number(
-                taskId
-            )
-    );
-
-
-    if (
-        task
-        &&
-        task.assigned_employee_id
-    ) {
-
-        const legacyEmployeeId =
-        Number(
-            task.assigned_employee_id
-        );
-
-
-        if (
-            !employeeIds.has(
-                legacyEmployeeId
-            )
-        ) {
-
-            result.push({
-
-                id:
-                    "legacy-" + task.id,
-
-                task_id:
-                    Number(task.id),
-
-                employee_id:
-                    legacyEmployeeId,
-
-                decision_id:
-                    null,
-
-                assigned_at:
-                    null,
-
-                created_at:
-                    null,
-
-                legacy:
-                    true
-
-            });
-
-        }
-
-    }
-
-
-    return result;
-
+}catch(error){
+console.error("تعذر قراءة بيانات المطابقة:",error);
+localStorage.removeItem("pendingDecision");
+}
 }
 
+async function loadDecisions(){
+decisionsGrid.innerHTML=`
+<div class="empty-state">
+جارٍ تحميل القرارات...
+</div>
+`;
 
+const{data,error}=await supabaseClient
+.from("decisions")
+.select(`
+id,
+task_id,
+system_candidate_id,
+selected_employee_id,
+match_rate,
+reason,
+decision_date,
+created_at
+`)
+.order("id",{ascending:false});
 
-/* =====================================================
-   هل الموظف مسند لهذه المهمة؟
-===================================================== */
+if(error){
+console.error(error);
 
-function isEmployeeAssigned(
-    taskId,
-    employeeId
-) {
-
-    return getTaskAssignments(
-        taskId
-    )
-    .some(
-        assignment =>
-
-            Number(
-                assignment.employee_id
-            )
-            ===
-            Number(
-                employeeId
-            )
-    );
-
+decisionsGrid.innerHTML=`
+<div class="empty-state error-state">
+<strong>تعذر تحميل القرارات</strong>
+<small>${escapeHtml(error.message||"")}</small>
+</div>
+`;
+return;
 }
 
-
-
-/* =====================================================
-   تعبئة الموظفين
-
-   الموظف المسند مسبقاً لنفس المهمة
-   لا يظهر للاختيار مرة ثانية.
-
-   عند تعديل قرار قديم نظهر الموظف
-   الخاص بنفس القرار حتى يمكن تعديله.
-===================================================== */
-
-function fillEmployeeSelects() {
-
-    const systemCandidate =
-    document.getElementById(
-        "systemCandidate"
-    );
-
-
-    const selectedEmployee =
-    document.getElementById(
-        "selectedEmployee"
-    );
-
-
-    const taskId =
-    Number(
-        document.getElementById(
-            "decisionTask"
-        ).value
-    );
-
-
-    const editId =
-    Number(
-        document.getElementById(
-            "editDecisionId"
-        ).value
-    );
-
-
-    const oldSystemCandidate =
-    Number(
-        systemCandidate.value
-    );
-
-
-    const oldSelectedEmployee =
-    Number(
-        selectedEmployee.value
-    );
-
-
-    const assignedIds =
-    taskId
-    ?
-    getTaskAssignments(
-        taskId
-    )
-    .map(
-        assignment =>
-            Number(
-                assignment.employee_id
-            )
-    )
-    :
-    [];
-
-
-    let editedDecision =
-    null;
-
-
-    if (
-        editId
-    ) {
-
-        editedDecision =
-        decisions.find(
-            decision =>
-                Number(
-                    decision.id
-                )
-                ===
-                editId
-        )
-        ||
-        null;
-
-    }
-
-
-    function createOptions(
-        currentValue,
-        isSystemCandidate
-    ) {
-
-        let html = `
-
-            <option value="">
-                اختر الموظف
-            </option>
-
-        `;
-
-
-        employees.forEach(
-            employee => {
-
-                const employeeId =
-                Number(
-                    employee.id
-                );
-
-
-                let allowed =
-                true;
-
-
-                /*
-                    في مرشح النظام:
-                    عند قرار قادم من المطابقة
-                    نحتاج إبقاء المرشح ظاهرًا.
-                */
-
-                if (
-                    assignedIds.includes(
-                        employeeId
-                    )
-                ) {
-
-                    allowed =
-                    false;
-
-
-                    /*
-                        في التعديل:
-                        نظهر الموظف الخاص
-                        بالقرار نفسه.
-                    */
-
-                    if (
-                        editedDecision
-                    ) {
-
-                        if (
-                            isSystemCandidate
-                            &&
-                            Number(
-                                editedDecision.systemCandidateId
-                            )
-                            ===
-                            employeeId
-                        ) {
-
-                            allowed =
-                            true;
-
-                        }
-
-
-                        if (
-                            !isSystemCandidate
-                            &&
-                            Number(
-                                editedDecision.selectedEmployeeId
-                            )
-                            ===
-                            employeeId
-                        ) {
-
-                            allowed =
-                            true;
-
-                        }
-
-                    }
-
-
-                    /*
-                        نحافظ على القيمة الحالية
-                        أثناء فتح نافذة المطابقة.
-                    */
-
-                    if (
-                        Number(
-                            currentValue
-                        )
-                        ===
-                        employeeId
-                    ) {
-
-                        allowed =
-                        true;
-
-                    }
-
-                }
-
-
-                if (
-                    !allowed
-                ) {
-
-                    return;
-
-                }
-
-
-                html += `
-
-                    <option value="${employee.id}">
-
-                        ${escapeHtml(
-                            employee.name
-                            ||
-                            "موظف"
-                        )}
-
-                    </option>
-
-                `;
-
-            }
-        );
-
-
-        return html;
-
-    }
-
-
-    systemCandidate.innerHTML =
-    createOptions(
-        oldSystemCandidate,
-        true
-    );
-
-
-    selectedEmployee.innerHTML =
-    createOptions(
-        oldSelectedEmployee,
-        false
-    );
-
-
-    if (
-        oldSystemCandidate
-    ) {
-
-        systemCandidate.value =
-        String(
-            oldSystemCandidate
-        );
-
-    }
-
-
-    if (
-        oldSelectedEmployee
-    ) {
-
-        selectedEmployee.value =
-        String(
-            oldSelectedEmployee
-        );
-
-    }
-
+decisions=(data||[]).map(decision=>{
+const task=tasks.find(
+item=>Number(item.id)===Number(decision.task_id)
+);
+
+const systemEmployee=employees.find(
+item=>Number(item.id)===Number(decision.system_candidate_id)
+);
+
+const selectedEmployee=employees.find(
+item=>Number(item.id)===Number(decision.selected_employee_id)
+);
+
+const project=getTaskProject(decision.task_id);
+
+return{
+id:decision.id,
+taskId:decision.task_id,
+taskName:task?.task_name||"مهمة غير معروفة",
+
+projectId:project?.id||null,
+projectName:project?.project_name||"مشروع غير معروف",
+projectManagerId:project?.project_manager_id||null,
+projectManagerName:getTaskProjectManagerName(decision.task_id),
+
+systemCandidateId:decision.system_candidate_id,
+systemCandidateName:systemEmployee?.name||"موظف غير معروف",
+
+selectedEmployeeId:decision.selected_employee_id,
+selectedEmployeeName:selectedEmployee?.name||"موظف غير معروف",
+
+matchRate:Number(decision.match_rate||0),
+reason:decision.reason||"",
+date:decision.decision_date||"",
+createdAt:decision.created_at
+};
+});
+
+updateSummary();
+renderDecisions(decisions);
 }
 
+function updateSummary(){
+const total=decisions.length;
 
+const same=decisions.filter(
+decision=>
+Number(decision.systemCandidateId)
+===Number(decision.selectedEmployeeId)
+).length;
 
-/* =====================================================
-   الإجازة الحالية
-===================================================== */
+const changed=total-same;
 
-function getCurrentLeave(
-    employeeId
-) {
+const average=total
+?decisions.reduce(
+(sum,decision)=>sum+Number(decision.matchRate||0),
+0
+)/total
+:0;
 
-    const today =
-    getTodayDate();
-
-
-    return employeeLeaves
-        .find(
-            leave => {
-
-                const status =
-                String(
-                    leave.status
-                    ||
-                    ""
-                )
-                .trim()
-                .toLowerCase();
-
-
-                const approved =
-                status === "approved"
-                ||
-                status === "معتمدة"
-                ||
-                status === "معتمد"
-                ||
-                status === "مقبول"
-                ||
-                status === "مقبولة";
-
-
-                if (
-                    !approved
-                ) {
-
-                    return false;
-
-                }
-
-
-                return (
-
-                    Number(
-                        leave.employee_id
-                    )
-                    ===
-                    Number(
-                        employeeId
-                    )
-
-                    &&
-
-                    leave.start_date
-                    <=
-                    today
-
-                    &&
-
-                    leave.end_date
-                    >=
-                    today
-
-                );
-
-            }
-        )
-        ||
-        null;
-
+document.getElementById("summaryTotal").textContent=total;
+document.getElementById("summarySame").textContent=same;
+document.getElementById("summaryChanged").textContent=changed;
+document.getElementById("summaryAverage").textContent=
+formatRate(average)+"%";
 }
 
+function renderDecisions(list){
+document.getElementById("decisionsCount").textContent=
+list.length+" قرار";
 
-
-/* =====================================================
-   فحص إجازة الموظف النهائي
-===================================================== */
-
-function checkSelectedEmployeeAvailability() {
-
-    const employeeId =
-    Number(
-        document
-            .getElementById(
-                "selectedEmployee"
-            )
-            .value
-    );
-
-
-    leaveWarning
-        .classList
-        .add(
-            "hidden"
-        );
-
-
-    leaveWarning.textContent =
-    "";
-
-
-    if (
-        !employeeId
-    ) {
-
-        return;
-
-    }
-
-
-    const leave =
-    getCurrentLeave(
-        employeeId
-    );
-
-
-    if (
-        !leave
-    ) {
-
-        return;
-
-    }
-
-
-    leaveWarning.textContent =
-    "تنبيه: الموظف في إجازة معتمدة حالياً من "
-    +
-    formatDate(
-        leave.start_date
-    )
-    +
-    " إلى "
-    +
-    formatDate(
-        leave.end_date
-    )
-    +
-    ".";
-
-
-    leaveWarning
-        .classList
-        .remove(
-            "hidden"
-        );
-
+if(!list.length){
+decisionsGrid.innerHTML=`
+<div class="empty-state">
+لا توجد قرارات مسجلة.
+</div>
+`;
+return;
 }
 
+decisionsGrid.innerHTML=list.map(decision=>{
+const sameSelection=
+Number(decision.systemCandidateId)
+===Number(decision.selectedEmployeeId);
 
+return`
+<article class="decision-card">
 
-/* =====================================================
-   حالة القرار
-===================================================== */
+<div class="decision-card-header">
 
-function updateDecisionStatus() {
+<div>
+<span class="decision-label">قرار نهائي</span>
+<h3>${escapeHtml(decision.taskName)}</h3>
+</div>
 
-    const systemCandidateId =
-    Number(
-        document
-            .getElementById(
-                "systemCandidate"
-            )
-            .value
-    );
+<div class="decision-rate">
+${formatRate(decision.matchRate)}%
+</div>
 
+</div>
 
-    const selectedEmployeeId =
-    Number(
-        document
-            .getElementById(
-                "selectedEmployee"
-            )
-            .value
-    );
+<div class="decision-info">
 
+<div class="decision-info-item">
+<span>مدير المشروع</span>
+<strong>
+${escapeHtml(decision.projectManagerName||"غير محدد")}
+</strong>
+</div>
 
-    const status =
-    document.getElementById(
-        "decisionStatus"
-    );
+<div class="decision-info-item">
+<span>مرشح النظام</span>
+<strong>
+${escapeHtml(decision.systemCandidateName)}
+</strong>
+</div>
 
+<div class="decision-info-item">
+<span>الموظف النهائي</span>
+<strong>
+${escapeHtml(decision.selectedEmployeeName)}
+</strong>
+</div>
 
-    if (
-        !systemCandidateId
-        ||
-        !selectedEmployeeId
-    ) {
+<div class="decision-info-item">
+<span>نتيجة القرار</span>
+<strong>
+${sameSelection
+?"اعتماد ترشيح النظام"
+:"اختيار موظف آخر"}
+</strong>
+</div>
 
-        status.textContent =
-        "";
+<div class="decision-info-item">
+<span>تاريخ القرار</span>
+<strong>${formatDate(decision.date)}</strong>
+</div>
 
-        return;
+</div>
 
-    }
+<div class="decision-reason">
+<span>سبب القرار</span>
+<p>
+${escapeHtml(
+decision.reason||"لا يوجد سبب مسجل"
+)}
+</p>
+</div>
 
+<div class="decision-actions">
 
-    if (
-        systemCandidateId
-        ===
-        selectedEmployeeId
-    ) {
+<button
+type="button"
+class="view-btn"
+data-action="view"
+data-id="${decision.id}"
+>
+عرض
+</button>
 
-        status.textContent =
-        "سيتم اعتماد الموظف الذي رشحه النظام.";
+<button
+type="button"
+class="edit-btn"
+data-action="edit"
+data-id="${decision.id}"
+>
+تعديل
+</button>
 
-    }
+</div>
 
-    else {
-
-        status.textContent =
-        "تم اختيار موظف مختلف عن مرشح النظام، لذلك يجب توضيح سبب القرار.";
-
-    }
-
+</article>
+`;
+}).join("");
 }
 
+async function saveDecision(event){
+event.preventDefault();
 
+const editId=
+document.getElementById("editDecisionId").value;
 
-/* =====================================================
-   قفل بيانات المطابقة
-===================================================== */
+const source=
+document.getElementById("decisionSource").value;
 
-function setMatchingFieldsLocked(
-    locked
-) {
+const taskId=Number(
+document.getElementById("decisionTask").value
+);
 
-    const task =
-    document.getElementById(
-        "decisionTask"
-    );
+const systemCandidateId=Number(
+document.getElementById("systemCandidate").value
+);
 
+const selectedEmployeeId=Number(
+document.getElementById("selectedEmployee").value
+);
 
-    const candidate =
-    document.getElementById(
-        "systemCandidate"
-    );
+const matchRate=Number(
+document.getElementById("matchRate").value
+);
 
+let reason=
+document.getElementById("decisionReason").value.trim();
 
-    const rate =
-    document.getElementById(
-        "matchRate"
-    );
+const decisionDate=
+document.getElementById("decisionDate").value;
 
-
-    task.disabled =
-    locked;
-
-
-    candidate.disabled =
-    locked;
-
-
-    rate.readOnly =
-    locked;
-
-
-    if (
-        locked
-    ) {
-
-        task.setAttribute(
-            "aria-disabled",
-            "true"
-        );
-
-
-        candidate.setAttribute(
-            "aria-disabled",
-            "true"
-        );
-
-
-        rate.setAttribute(
-            "aria-readonly",
-            "true"
-        );
-
-    }
-
-    else {
-
-        task.removeAttribute(
-            "aria-disabled"
-        );
-
-
-        candidate.removeAttribute(
-            "aria-disabled"
-        );
-
-
-        rate.removeAttribute(
-            "aria-readonly"
-        );
-
-    }
-
+if(!taskId||!systemCandidateId||!selectedEmployeeId){
+alert("أكمل بيانات المهمة والموظفين.");
+return;
 }
 
+const projectManagerId=
+getTaskProjectManagerId(taskId);
 
-
-/* =====================================================
-   فتح قرار يدوي
-===================================================== */
-
-async function openDecisionModal() {
-
-    document
-        .getElementById(
-            "decisionForm"
-        )
-        .reset();
-
-
-    document
-        .getElementById(
-            "editDecisionId"
-        )
-        .value =
-        "";
-
-
-    document
-        .getElementById(
-            "decisionSource"
-        )
-        .value =
-        "manual";
-
-
-    document
-        .getElementById(
-            "modalTitle"
-        )
-        .textContent =
-        "تسجيل قرار";
-
-
-    document
-        .getElementById(
-            "modalDescription"
-        )
-        .textContent =
-        "راجع بيانات المهمة ثم اعتمد الموظف النهائي.";
-
-
-    document
-        .getElementById(
-            "decisionDate"
-        )
-        .value =
-        getTodayDate();
-
-
-    document
-        .getElementById(
-            "saveDecisionBtn"
-        )
-        .textContent =
-        "حفظ القرار";
-
-
-    leaveWarning
-        .classList
-        .add(
-            "hidden"
-        );
-
-
-    setMatchingFieldsLocked(
-        false
-    );
-
-
-    try {
-
-        await loadTaskAssignments();
-
-    }
-
-    catch(error) {
-
-        console.warn(
-            error
-        );
-
-    }
-
-
-    fillEmployeeSelects();
-
-
-    updateDecisionStatus();
-
-
-    decisionModal
-        .classList
-        .add(
-            "show"
-        );
-
-
-    document.body
-        .classList
-        .add(
-            "modal-open"
-        );
-
+if(
+projectManagerId!==null
+&&String(systemCandidateId)===String(projectManagerId)
+){
+alert(
+"مدير المشروع لا يمكن أن يكون مرشح النظام لمهمة داخل مشروعه."
+);
+return;
 }
 
-
-
-/* =====================================================
-   استقبال المرشح من المطابقة
-===================================================== */
-
-async function loadPendingDecision() {
-
-    const stored =
-    localStorage.getItem(
-        "pendingDecision"
-    );
-
-
-    if (
-        !stored
-    ) {
-
-        return;
-
-    }
-
-
-    try {
-
-        const pending =
-        JSON.parse(
-            stored
-        );
-
-
-        if (
-            !pending.taskId
-            ||
-            !pending.systemCandidateId
-        ) {
-
-            localStorage.removeItem(
-                "pendingDecision"
-            );
-
-            return;
-
-        }
-
-
-        await loadTaskAssignments();
-
-
-        const required =
-        Math.max(
-            1,
-            Number(
-                pending.employeesRequired
-                ||
-                await getEmployeesRequired(
-                    pending.taskId
-                )
-            )
-        );
-
-
-        const currentAssignments =
-        getTaskAssignments(
-            pending.taskId
-        );
-
-
-        /*
-            إذا اكتمل العدد المطلوب
-            لا نسمح بقرار إضافي.
-        */
-
-        if (
-            currentAssignments.length
-            >=
-            required
-        ) {
-
-            alert(
-                "تم استكمال العدد المطلوب لهذه المهمة.\n\n"
-                +
-                "تم إسناد "
-                +
-                currentAssignments.length
-                +
-                " من "
-                +
-                required
-                +
-                " موظف."
-            );
-
-
-            localStorage.removeItem(
-                "pendingDecision"
-            );
-
-
-            return;
-
-        }
-
-
-        const selectedId =
-        Number(
-            pending.selectedEmployeeId
-            ||
-            pending.systemCandidateId
-        );
-
-
-        /*
-            منع نفس الموظف لنفس المهمة.
-        */
-
-        if (
-            isEmployeeAssigned(
-                pending.taskId,
-                selectedId
-            )
-        ) {
-
-            alert(
-                "هذا الموظف تم اعتماده مسبقاً لهذه المهمة.\nاختر موظفاً آخر من صفحة المطابقة."
-            );
-
-
-            localStorage.removeItem(
-                "pendingDecision"
-            );
-
-
-            return;
-
-        }
-
-
-        document
-            .getElementById(
-                "decisionForm"
-            )
-            .reset();
-
-
-        document
-            .getElementById(
-                "editDecisionId"
-            )
-            .value =
-            "";
-
-
-        document
-            .getElementById(
-                "decisionSource"
-            )
-            .value =
-            "matching";
-
-
-        document
-            .getElementById(
-                "modalTitle"
-            )
-            .textContent =
-            "اعتماد القرار النهائي";
-
-
-        document
-            .getElementById(
-                "modalDescription"
-            )
-            .textContent =
-            "تم جلب بيانات الترشيح ونسبة التوافق تلقائياً من صفحة المطابقة. "
-            +
-            "تم إسناد "
-            +
-            currentAssignments.length
-            +
-            " من "
-            +
-            required
-            +
-            " موظف حتى الآن.";
-
-
-        /*
-            نحدد المهمة أولاً.
-        */
-
-        document
-            .getElementById(
-                "decisionTask"
-            )
-            .value =
-            String(
-                pending.taskId
-            );
-
-
-        /*
-            نعيد بناء الموظفين بعد تحديد المهمة
-            حتى نستبعد المسندين السابقين.
-        */
-
-        fillEmployeeSelects();
-
-
-        /*
-            ثم نضع المرشح القادم من المطابقة.
-        */
-
-        document
-            .getElementById(
-                "systemCandidate"
-            )
-            .value =
-            String(
-                pending.systemCandidateId
-            );
-
-
-        document
-            .getElementById(
-                "selectedEmployee"
-            )
-            .value =
-            String(
-                selectedId
-            );
-
-
-        const pendingRate =
-        Number(
-            pending.matchRate
-            ??
-            pending.score
-            ??
-            pending.matchScore
-            ??
-            0
-        );
-
-
-        document
-            .getElementById(
-                "matchRate"
-            )
-            .value =
-            Math.max(
-                0,
-                Math.min(
-                    100,
-                    pendingRate
-                )
-            );
-
-
-        document
-            .getElementById(
-                "decisionReason"
-            )
-            .value =
-            pending.recommendationReason
-            ||
-            pending.systemReason
-            ||
-            "";
-
-
-        document
-            .getElementById(
-                "decisionDate"
-            )
-            .value =
-            getTodayDate();
-
-
-        document
-            .getElementById(
-                "saveDecisionBtn"
-            )
-            .textContent =
-            "اعتماد وحفظ القرار";
-
-
-        setMatchingFieldsLocked(
-            true
-        );
-
-
-        checkSelectedEmployeeAvailability();
-
-
-        updateDecisionStatus();
-
-
-        decisionModal
-            .classList
-            .add(
-                "show"
-            );
-
-
-        document.body
-            .classList
-            .add(
-                "modal-open"
-            );
-
-    }
-
-    catch(error) {
-
-        console.error(
-            "تعذر قراءة بيانات المطابقة:",
-            error
-        );
-
-
-        localStorage.removeItem(
-            "pendingDecision"
-        );
-
-    }
-
+if(
+projectManagerId!==null
+&&String(selectedEmployeeId)===String(projectManagerId)
+){
+alert(
+"مدير المشروع لا يمكن إسناده كموظف منفذ لمهمة داخل مشروعه."
+);
+return;
 }
 
-
-
-/* =====================================================
-   تحميل القرارات
-===================================================== */
-
-async function loadDecisions() {
-
-    decisionsGrid.innerHTML = `
-
-        <div class="empty-state">
-            جارٍ تحميل القرارات...
-        </div>
-
-    `;
-
-
-    const {
-        data,
-        error
-    } =
-    await supabaseClient
-        .from(
-            "decisions"
-        )
-        .select(`
-            id,
-            task_id,
-            system_candidate_id,
-            selected_employee_id,
-            match_rate,
-            reason,
-            decision_date,
-            created_at
-        `)
-        .order(
-            "id",
-            {
-                ascending:false
-            }
-        );
-
-
-    if (error) {
-
-        console.error(
-            error
-        );
-
-
-        decisionsGrid.innerHTML = `
-
-            <div class="empty-state error-state">
-
-                <strong>
-                    تعذر تحميل القرارات
-                </strong>
-
-                <small>
-                    ${escapeHtml(
-                        error.message
-                        ||
-                        ""
-                    )}
-                </small>
-
-            </div>
-
-        `;
-
-
-        return;
-
-    }
-
-
-    decisions =
-    (data || [])
-        .map(
-            decision => {
-
-                const task =
-                tasks.find(
-                    item =>
-                        Number(
-                            item.id
-                        )
-                        ===
-                        Number(
-                            decision.task_id
-                        )
-                );
-
-
-                const systemEmployee =
-                employees.find(
-                    item =>
-                        Number(
-                            item.id
-                        )
-                        ===
-                        Number(
-                            decision.system_candidate_id
-                        )
-                );
-
-
-                const selectedEmployee =
-                employees.find(
-                    item =>
-                        Number(
-                            item.id
-                        )
-                        ===
-                        Number(
-                            decision.selected_employee_id
-                        )
-                );
-
-
-                return {
-
-                    id:
-                        decision.id,
-
-                    taskId:
-                        decision.task_id,
-
-                    taskName:
-                        task?.task_name
-                        ||
-                        "مهمة غير معروفة",
-
-                    systemCandidateId:
-                        decision.system_candidate_id,
-
-                    systemCandidateName:
-                        systemEmployee?.name
-                        ||
-                        "موظف غير معروف",
-
-                    selectedEmployeeId:
-                        decision.selected_employee_id,
-
-                    selectedEmployeeName:
-                        selectedEmployee?.name
-                        ||
-                        "موظف غير معروف",
-
-                    matchRate:
-                        Number(
-                            decision.match_rate
-                            ||
-                            0
-                        ),
-
-                    reason:
-                        decision.reason
-                        ||
-                        "",
-
-                    date:
-                        decision.decision_date
-                        ||
-                        "",
-
-                    createdAt:
-                        decision.created_at
-
-                };
-
-            }
-        );
-
-
-    updateSummary();
-
-
-    renderDecisions(
-        decisions
-    );
-
+if(
+!Number.isFinite(matchRate)
+||matchRate<0
+||matchRate>100
+){
+alert("نسبة التوافق يجب أن تكون بين 0 و100.");
+return;
 }
 
-
-
-/* =====================================================
-   تحديث الملخص
-===================================================== */
-
-function updateSummary() {
-
-    const total =
-    decisions.length;
-
-
-    const same =
-    decisions.filter(
-        decision =>
-            Number(
-                decision.systemCandidateId
-            )
-            ===
-            Number(
-                decision.selectedEmployeeId
-            )
-    )
-    .length;
-
-
-    const changed =
-    total - same;
-
-
-    const average =
-    total
-    ?
-    decisions.reduce(
-        (
-            sum,
-            decision
-        ) =>
-            sum
-            +
-            Number(
-                decision.matchRate
-                ||
-                0
-            ),
-        0
-    )
-    /
-    total
-    :
-    0;
-
-
-    document
-        .getElementById(
-            "summaryTotal"
-        )
-        .textContent =
-        total;
-
-
-    document
-        .getElementById(
-            "summarySame"
-        )
-        .textContent =
-        same;
-
-
-    document
-        .getElementById(
-            "summaryChanged"
-        )
-        .textContent =
-        changed;
-
-
-    document
-        .getElementById(
-            "summaryAverage"
-        )
-        .textContent =
-        formatRate(
-            average
-        )
-        +
-        "%";
-
+if(!decisionDate){
+alert("حدد تاريخ القرار.");
+return;
 }
 
-
-
-/* =====================================================
-   عرض القرارات
-===================================================== */
-
-function renderDecisions(
-    list
-) {
-
-    document
-        .getElementById(
-            "decisionsCount"
-        )
-        .textContent =
-        list.length
-        +
-        " قرار";
-
-
-    if (
-        !list.length
-    ) {
-
-        decisionsGrid.innerHTML = `
-
-            <div class="empty-state">
-                لا توجد قرارات مسجلة.
-            </div>
-
-        `;
-
-
-        return;
-
-    }
-
-
-    decisionsGrid.innerHTML =
-    list
-        .map(
-            decision => {
-
-                const sameSelection =
-                Number(
-                    decision.systemCandidateId
-                )
-                ===
-                Number(
-                    decision.selectedEmployeeId
-                );
-
-
-                return `
-
-                    <article class="decision-card">
-
-
-                        <div class="decision-card-header">
-
-
-                            <div>
-
-                                <span class="decision-label">
-                                    قرار نهائي
-                                </span>
-
-                                <h3>
-                                    ${escapeHtml(
-                                        decision.taskName
-                                    )}
-                                </h3>
-
-                            </div>
-
-
-                            <div class="decision-rate">
-                                ${formatRate(
-                                    decision.matchRate
-                                )}%
-                            </div>
-
-
-                        </div>
-
-
-
-                        <div class="decision-info">
-
-
-                            <div class="decision-info-item">
-
-                                <span>
-                                    مرشح النظام
-                                </span>
-
-                                <strong>
-                                    ${escapeHtml(
-                                        decision.systemCandidateName
-                                    )}
-                                </strong>
-
-                            </div>
-
-
-
-                            <div class="decision-info-item">
-
-                                <span>
-                                    الموظف النهائي
-                                </span>
-
-                                <strong>
-                                    ${escapeHtml(
-                                        decision.selectedEmployeeName
-                                    )}
-                                </strong>
-
-                            </div>
-
-
-
-                            <div class="decision-info-item">
-
-                                <span>
-                                    نتيجة القرار
-                                </span>
-
-                                <strong>
-
-                                    ${
-                                        sameSelection
-                                        ?
-                                        "اعتماد ترشيح النظام"
-                                        :
-                                        "اختيار موظف آخر"
-                                    }
-
-                                </strong>
-
-                            </div>
-
-
-
-                            <div class="decision-info-item">
-
-                                <span>
-                                    تاريخ القرار
-                                </span>
-
-                                <strong>
-                                    ${formatDate(
-                                        decision.date
-                                    )}
-                                </strong>
-
-                            </div>
-
-
-                        </div>
-
-
-
-                        <div class="decision-reason">
-
-                            <span>
-                                سبب القرار
-                            </span>
-
-                            <p>
-                                ${escapeHtml(
-                                    decision.reason
-                                    ||
-                                    "لا يوجد سبب مسجل"
-                                )}
-                            </p>
-
-                        </div>
-
-
-
-                        <div class="decision-actions">
-
-
-                            <button
-                                type="button"
-                                class="view-btn"
-                                data-action="view"
-                                data-id="${decision.id}"
-                            >
-                                عرض
-                            </button>
-
-
-                            <button
-                                type="button"
-                                class="edit-btn"
-                                data-action="edit"
-                                data-id="${decision.id}"
-                            >
-                                تعديل
-                            </button>
-
-
-                        </div>
-
-
-                    </article>
-
-                `;
-
-            }
-        )
-        .join("");
-
+const sameSelection=
+Number(systemCandidateId)===Number(selectedEmployeeId);
+
+if(!sameSelection&&!reason){
+alert("اكتب سبب اختيار موظف مختلف عن مرشح النظام.");
+document.getElementById("decisionReason").focus();
+return;
 }
 
-
-
-/* =====================================================
-   حفظ القرار
-===================================================== */
-
-async function saveDecision(
-    event
-) {
-
-    event.preventDefault();
-
-
-    const editId =
-    document
-        .getElementById(
-            "editDecisionId"
-        )
-        .value;
-
-
-    const source =
-    document
-        .getElementById(
-            "decisionSource"
-        )
-        .value;
-
-
-    const taskId =
-    Number(
-        document
-            .getElementById(
-                "decisionTask"
-            )
-            .value
-    );
-
-
-    const systemCandidateId =
-    Number(
-        document
-            .getElementById(
-                "systemCandidate"
-            )
-            .value
-    );
-
-
-    const selectedEmployeeId =
-    Number(
-        document
-            .getElementById(
-                "selectedEmployee"
-            )
-            .value
-    );
-
-
-    const matchRate =
-    Number(
-        document
-            .getElementById(
-                "matchRate"
-            )
-            .value
-    );
-
-
-    let reason =
-    document
-        .getElementById(
-            "decisionReason"
-        )
-        .value
-        .trim();
-
-
-    const decisionDate =
-    document
-        .getElementById(
-            "decisionDate"
-        )
-        .value;
-
-
-
-    /* =========================
-       التحقق
-    ========================== */
-
-    if (
-        !taskId
-        ||
-        !systemCandidateId
-        ||
-        !selectedEmployeeId
-    ) {
-
-        alert(
-            "أكمل بيانات المهمة والموظفين."
-        );
-
-        return;
-
-    }
-
-
-    if (
-        !Number.isFinite(
-            matchRate
-        )
-        ||
-        matchRate < 0
-        ||
-        matchRate > 100
-    ) {
-
-        alert(
-            "نسبة التوافق يجب أن تكون بين 0 و100."
-        );
-
-        return;
-
-    }
-
-
-    if (
-        !decisionDate
-    ) {
-
-        alert(
-            "حدد تاريخ القرار."
-        );
-
-        return;
-
-    }
-
-
-    const sameSelection =
-    Number(
-        systemCandidateId
-    )
-    ===
-    Number(
-        selectedEmployeeId
-    );
-
-
-    if (
-        !sameSelection
-        &&
-        !reason
-    ) {
-
-        alert(
-            "اكتب سبب اختيار موظف مختلف عن مرشح النظام."
-        );
-
-
-        document
-            .getElementById(
-                "decisionReason"
-            )
-            .focus();
-
-
-        return;
-
-    }
-
-
-    if (
-        sameSelection
-        &&
-        !reason
-    ) {
-
-        reason =
-        "تم اعتماد مرشح النظام بناءً على نتيجة المطابقة ومتطلبات المهمة.";
-
-    }
-
-
-
-    /* =========================
-       فحص الإجازة
-    ========================== */
-
-    const currentLeave =
-    getCurrentLeave(
-        selectedEmployeeId
-    );
-
-
-    if (
-        currentLeave
-    ) {
-
-        alert(
-            "لا يمكن اعتماد الموظف لأنه في إجازة معتمدة حالياً من "
-            +
-            formatDate(
-                currentLeave.start_date
-            )
-            +
-            " إلى "
-            +
-            formatDate(
-                currentLeave.end_date
-            )
-        );
-
-
-        return;
-
-    }
-
-
-
-    /* =========================
-       حماية بيانات المطابقة
-    ========================== */
-
-    if (
-        source ===
-        "matching"
-    ) {
-
-        const pendingStored =
-        localStorage.getItem(
-            "pendingDecision"
-        );
-
-
-        if (
-            pendingStored
-        ) {
-
-            try {
-
-                const pending =
-                JSON.parse(
-                    pendingStored
-                );
-
-
-                if (
-                    Number(
-                        pending.taskId
-                    )
-                    !==
-                    taskId
-                    ||
-                    Number(
-                        pending.systemCandidateId
-                    )
-                    !==
-                    systemCandidateId
-                ) {
-
-                    alert(
-                        "بيانات الترشيح تغيرت. ارجع إلى صفحة المطابقة وأعد اعتماد المرشح."
-                    );
-
-
-                    return;
-
-                }
-
-            }
-
-            catch(error) {
-
-                console.warn(
-                    error
-                );
-
-            }
-
-        }
-
-    }
-
-
-
-    const saveButton =
-    document.getElementById(
-        "saveDecisionBtn"
-    );
-
-
-    saveButton.disabled =
-    true;
-
-
-    saveButton.textContent =
-    "جارٍ الحفظ...";
-
-
-    try {
-
-
-        /*
-            نحدث الإسنادات أولاً
-            حتى يكون العدد صحيحًا.
-        */
-
-        await loadTaskAssignments();
-
-
-        const required =
-        await getEmployeesRequired(
-            taskId
-        );
-
-
-        let assignments =
-        getTaskAssignments(
-            taskId
-        );
-
-
-
-        /* =================================================
-           تعديل قرار موجود
-        ================================================= */
-
-        if (
-            editId
-        ) {
-
-            const oldDecision =
-            decisions.find(
-                decision =>
-                    Number(
-                        decision.id
-                    )
-                    ===
-                    Number(
-                        editId
-                    )
-            );
-
-
-            if (
-                !oldDecision
-            ) {
-
-                throw new Error(
-                    "تعذر العثور على القرار المراد تعديله."
-                );
-
-            }
-
-
-
-            /*
-                إذا تغير الموظف النهائي،
-                نتأكد أن الجديد غير مسند
-                مسبقًا لنفس المهمة.
-            */
-
-            if (
-                Number(
-                    oldDecision.selectedEmployeeId
-                )
-                !==
-                Number(
-                    selectedEmployeeId
-                )
-            ) {
-
-                const duplicate =
-                assignments.some(
-                    assignment =>
-
-                        Number(
-                            assignment.employee_id
-                        )
-                        ===
-                        Number(
-                            selectedEmployeeId
-                        )
-
-                        &&
-
-                        Number(
-                            assignment.task_id
-                        )
-                        ===
-                        Number(
-                            taskId
-                        )
-
-                        &&
-
-                        Number(
-                            assignment.decision_id
-                        )
-                        !==
-                        Number(
-                            editId
-                        )
-                );
-
-
-                if (
-                    duplicate
-                ) {
-
-                    alert(
-                        "هذا الموظف معتمد مسبقاً لهذه المهمة."
-                    );
-
-
-                    return;
-
-                }
-
-            }
-
-
-
-            const decisionData = {
-
-                task_id:
-                    taskId,
-
-                system_candidate_id:
-                    systemCandidateId,
-
-                selected_employee_id:
-                    selectedEmployeeId,
-
-                match_rate:
-                    Math.round(
-                        matchRate * 100
-                    )
-                    /
-                    100,
-
-                reason:
-                    reason,
-
-                decision_date:
-                    decisionDate
-
-            };
-
-
-            const {
-                error:
-                decisionUpdateError
-            } =
-            await supabaseClient
-                .from(
-                    "decisions"
-                )
-                .update(
-                    decisionData
-                )
-                .eq(
-                    "id",
-                    Number(
-                        editId
-                    )
-                );
-
-
-            if (
-                decisionUpdateError
-            ) {
-
-                throw decisionUpdateError;
-
-            }
-
-
-
-            /*
-                نبحث عن الإسناد المرتبط
-                بنفس القرار.
-            */
-
-            const assignmentByDecision =
-            taskAssignments.find(
-                assignment =>
-
-                    Number(
-                        assignment.decision_id
-                    )
-                    ===
-                    Number(
-                        editId
-                    )
-            );
-
-
-            if (
-                assignmentByDecision
-            ) {
-
-                const {
-                    error:
-                    assignmentUpdateError
-                } =
-                await supabaseClient
-                    .from(
-                        "task_assignments"
-                    )
-                    .update({
-
-                        task_id:
-                            taskId,
-
-                        employee_id:
-                            selectedEmployeeId,
-
-                        assigned_at:
-                            new Date()
-                                .toISOString()
-
-                    })
-                    .eq(
-                        "id",
-                        assignmentByDecision.id
-                    );
-
-
-                if (
-                    assignmentUpdateError
-                ) {
-
-                    throw assignmentUpdateError;
-
-                }
-
-            }
-
-            else {
-
-                /*
-                    قرار قديم ليس له سجل
-                    في task_assignments.
-                */
-
-                const {
-                    error:
-                    assignmentInsertError
-                } =
-                await supabaseClient
-                    .from(
-                        "task_assignments"
-                    )
-                    .insert([{
-
-                        task_id:
-                            taskId,
-
-                        employee_id:
-                            selectedEmployeeId,
-
-                        decision_id:
-                            Number(
-                                editId
-                            )
-
-                    }]);
-
-
-                if (
-                    assignmentInsertError
-                ) {
-
-                    throw assignmentInsertError;
-
-                }
-
-            }
-
-
-
-            /*
-                assigned_employee_id نبقيه
-                للتوافق مع الصفحات القديمة.
-
-                المصدر الحقيقي للإسناد المتعدد
-                هو task_assignments.
-            */
-
-            const {
-                error:
-                taskUpdateError
-            } =
-            await supabaseClient
-                .from(
-                    "tasks"
-                )
-                .update({
-
-                    assigned_employee_id:
-                        selectedEmployeeId
-
-                })
-                .eq(
-                    "id",
-                    taskId
-                );
-
-
-            if (
-                taskUpdateError
-            ) {
-
-                throw taskUpdateError;
-
-            }
-
-
-            localStorage.removeItem(
-                "pendingDecision"
-            );
-
-
-            alert(
-                "تم تعديل القرار وتحديث إسناد الموظف بنجاح."
-            );
-
-        }
-
-
-
-        /* =================================================
-           قرار جديد
-        ================================================= */
-
-        else {
-
-
-            assignments =
-            getTaskAssignments(
-                taskId
-            );
-
-
-            /*
-                هل اكتمل العدد المطلوب؟
-            */
-
-            if (
-                assignments.length
-                >=
-                required
-            ) {
-
-                alert(
-                    "تم استكمال العدد المطلوب لهذه المهمة.\n\n"
-                    +
-                    "تم إسناد "
-                    +
-                    assignments.length
-                    +
-                    " من "
-                    +
-                    required
-                    +
-                    " موظف."
-                );
-
-
-                return;
-
-            }
-
-
-
-            /*
-                منع الموظف نفسه من
-                الإسناد للمهمة مرتين.
-            */
-
-            if (
-                isEmployeeAssigned(
-                    taskId,
-                    selectedEmployeeId
-                )
-            ) {
-
-                alert(
-                    "هذا الموظف تم اعتماده مسبقاً لهذه المهمة.\nاختر موظفاً آخر."
-                );
-
-
-                return;
-
-            }
-
-
-
-            /*
-                حماية إضافية من القرارات القديمة.
-            */
-
-            const duplicateDecision =
-            decisions.some(
-                decision =>
-
-                    Number(
-                        decision.taskId
-                    )
-                    ===
-                    Number(
-                        taskId
-                    )
-
-                    &&
-
-                    Number(
-                        decision.selectedEmployeeId
-                    )
-                    ===
-                    Number(
-                        selectedEmployeeId
-                    )
-            );
-
-
-            if (
-                duplicateDecision
-            ) {
-
-                alert(
-                    "يوجد قرار سابق لهذا الموظف على نفس المهمة."
-                );
-
-
-                return;
-
-            }
-
-
-
-            const decisionData = {
-
-                task_id:
-                    taskId,
-
-                system_candidate_id:
-                    systemCandidateId,
-
-                selected_employee_id:
-                    selectedEmployeeId,
-
-                match_rate:
-                    Math.round(
-                        matchRate * 100
-                    )
-                    /
-                    100,
-
-                reason:
-                    reason,
-
-                decision_date:
-                    decisionDate
-
-            };
-
-
-
-            /*
-                نحفظ القرار أولاً
-                للحصول على ID.
-            */
-
-            const {
-                data:
-                insertedDecision,
-
-                error:
-                insertDecisionError
-            } =
-            await supabaseClient
-                .from(
-                    "decisions"
-                )
-                .insert([
-                    decisionData
-                ])
-                .select(
-                    "id"
-                )
-                .single();
-
-
-            if (
-                insertDecisionError
-            ) {
-
-                throw insertDecisionError;
-
-            }
-
-
-
-            /*
-                ثم نحفظ الإسناد الفعلي.
-            */
-
-            const {
-                error:
-                assignmentError
-            } =
-            await supabaseClient
-                .from(
-                    "task_assignments"
-                )
-                .insert([{
-
-                    task_id:
-                        taskId,
-
-                    employee_id:
-                        selectedEmployeeId,
-
-                    decision_id:
-                        insertedDecision.id
-
-                }]);
-
-
-            /*
-                إذا فشل الإسناد نحذف القرار
-                حتى لا يبقى قرار بدون إسناد.
-            */
-
-            if (
-                assignmentError
-            ) {
-
-                await supabaseClient
-                    .from(
-                        "decisions"
-                    )
-                    .delete()
-                    .eq(
-                        "id",
-                        insertedDecision.id
-                    );
-
-
-                throw assignmentError;
-
-            }
-
-
-
-            /*
-                للتوافق مع الصفحات القديمة فقط.
-            */
-
-            const {
-                error:
-                taskError
-            } =
-            await supabaseClient
-                .from(
-                    "tasks"
-                )
-                .update({
-
-                    assigned_employee_id:
-                        selectedEmployeeId
-
-                })
-                .eq(
-                    "id",
-                    taskId
-                );
-
-
-            if (
-                taskError
-            ) {
-
-                console.warn(
-                    "تم حفظ الإسناد في task_assignments لكن تعذر تحديث assigned_employee_id:",
-                    taskError
-                );
-
-            }
-
-
-
-            /*
-                نعيد التحميل لمعرفة العدد
-                الحقيقي بعد الحفظ.
-            */
-
-            await loadTaskAssignments();
-
-
-            const afterAssignments =
-            getTaskAssignments(
-                taskId
-            );
-
-
-            const assignedCount =
-            afterAssignments.length;
-
-
-            localStorage.removeItem(
-                "pendingDecision"
-            );
-
-
-
-            /*
-                إذا اكتمل العدد المطلوب.
-            */
-
-            if (
-                assignedCount
-                >=
-                required
-            ) {
-
-                alert(
-                    (
-                        sameSelection
-                        ?
-                        "تم اعتماد ترشيح النظام وإسناد المهمة للموظف بنجاح."
-                        :
-                        "تم اعتماد الموظف الذي اختاره المسؤول وإسناد المهمة بنجاح."
-                    )
-                    +
-                    "\n\n"
-                    +
-                    "تم استكمال العدد المطلوب للمهمة: "
-                    +
-                    assignedCount
-                    +
-                    " من "
-                    +
-                    required
-                    +
-                    " موظف."
-                    +
-                    "\n\n"
-                    +
-                    "لن يسمح النظام باعتماد موظف إضافي لهذه المهمة."
-                );
-
-            }
-
-
-            /*
-                إذا ما زال مطلوب موظف إضافي.
-            */
-
-            else {
-
-                const remaining =
-                required
-                -
-                assignedCount;
-
-
-                alert(
-                    (
-                        sameSelection
-                        ?
-                        "تم اعتماد ترشيح النظام وإسناد المهمة للموظف بنجاح."
-                        :
-                        "تم اعتماد الموظف الذي اختاره المسؤول وإسناد المهمة بنجاح."
-                    )
-                    +
-                    "\n\n"
-                    +
-                    "تم إسناد "
-                    +
-                    assignedCount
-                    +
-                    " من "
-                    +
-                    required
-                    +
-                    " موظف."
-                    +
-                    "\n"
-                    +
-                    "متبقي "
-                    +
-                    remaining
-                    +
-                    " موظف للمهمة."
-                );
-
-            }
-
-        }
-
-
-
-        closeDecisionModal();
-
-
-        await Promise.all([
-
-            loadTasks(),
-
-            loadTaskAssignments()
-
-        ]);
-
-
-        await loadDecisions();
-
-
-        fillEmployeeSelects();
-
-    }
-
-    catch(error) {
-
-        console.error(
-            "خطأ حفظ القرار:",
-            error
-        );
-
-
-        alert(
-            "تعذر حفظ القرار.\n\n"
-            +
-            (
-                error.message
-                ||
-                ""
-            )
-        );
-
-    }
-
-    finally {
-
-        saveButton.disabled =
-        false;
-
-
-        saveButton.textContent =
-        editId
-        ?
-        "حفظ التعديلات"
-        :
-        "حفظ القرار";
-
-    }
-
+if(sameSelection&&!reason){
+reason=
+"تم اعتماد مرشح النظام بناءً على نتيجة المطابقة ومتطلبات المهمة.";
 }
 
+const currentLeave=
+getCurrentLeave(selectedEmployeeId);
 
-
-/* =====================================================
-   تعديل القرار
-===================================================== */
-
-async function editDecision(
-    id
-) {
-
-    const decision =
-    decisions.find(
-        item =>
-            Number(
-                item.id
-            )
-            ===
-            Number(
-                id
-            )
-    );
-
-
-    if (
-        !decision
-    ) {
-
-        return;
-
-    }
-
-
-    try {
-
-        await loadTaskAssignments();
-
-    }
-
-    catch(error) {
-
-        console.warn(
-            error
-        );
-
-    }
-
-
-    document
-        .getElementById(
-            "editDecisionId"
-        )
-        .value =
-        decision.id;
-
-
-    document
-        .getElementById(
-            "decisionSource"
-        )
-        .value =
-        "edit";
-
-
-    document
-        .getElementById(
-            "decisionTask"
-        )
-        .value =
-        String(
-            decision.taskId
-        );
-
-
-    /*
-        بعد تحديد المهمة نبني القوائم
-        حتى يستبعد النظام الموظفين
-        المسندين لنفس المهمة.
-    */
-
-    fillEmployeeSelects();
-
-
-    document
-        .getElementById(
-            "systemCandidate"
-        )
-        .value =
-        String(
-            decision.systemCandidateId
-        );
-
-
-    document
-        .getElementById(
-            "selectedEmployee"
-        )
-        .value =
-        String(
-            decision.selectedEmployeeId
-        );
-
-
-    document
-        .getElementById(
-            "matchRate"
-        )
-        .value =
-        decision.matchRate;
-
-
-    document
-        .getElementById(
-            "decisionReason"
-        )
-        .value =
-        decision.reason;
-
-
-    document
-        .getElementById(
-            "decisionDate"
-        )
-        .value =
-        decision.date;
-
-
-    document
-        .getElementById(
-            "modalTitle"
-        )
-        .textContent =
-        "تعديل القرار";
-
-
-    document
-        .getElementById(
-            "modalDescription"
-        )
-        .textContent =
-        "يمكن تعديل الموظف النهائي أو سبب القرار مع الاحتفاظ ببيانات ترشيح النظام.";
-
-
-    document
-        .getElementById(
-            "saveDecisionBtn"
-        )
-        .textContent =
-        "حفظ التعديلات";
-
-
-    setMatchingFieldsLocked(
-        true
-    );
-
-
-    checkSelectedEmployeeAvailability();
-
-
-    updateDecisionStatus();
-
-
-    decisionModal
-        .classList
-        .add(
-            "show"
-        );
-
-
-    document.body
-        .classList
-        .add(
-            "modal-open"
-        );
-
+if(currentLeave){
+alert(
+"لا يمكن اعتماد الموظف لأنه في إجازة معتمدة حالياً من "
++formatDate(currentLeave.start_date)
++" إلى "
++formatDate(currentLeave.end_date)
+);
+return;
 }
 
-
-
-/* =====================================================
-   عرض تفاصيل القرار
-===================================================== */
-
-async function viewDecision(
-    id
-) {
-
-    const decision =
-    decisions.find(
-        item =>
-            Number(
-                item.id
-            )
-            ===
-            Number(
-                id
-            )
-    );
-
-
-    if (
-        !decision
-    ) {
-
-        return;
-
-    }
-
-
-    const sameSelection =
-    Number(
-        decision.systemCandidateId
-    )
-    ===
-    Number(
-        decision.selectedEmployeeId
-    );
-
-
-    let required =
-    1;
-
-
-    try {
-
-        required =
-        await getEmployeesRequired(
-            decision.taskId
-        );
-
-    }
-
-    catch(error) {
-
-        console.warn(
-            error
-        );
-
-    }
-
-
-    const assigned =
-    getTaskAssignments(
-        decision.taskId
-    )
-    .length;
-
-
-    document
-        .getElementById(
-            "decisionDetails"
-        )
-        .innerHTML = `
-
-
-            <div class="detail-item">
-
-                <span>
-                    المهمة
-                </span>
-
-                <strong>
-                    ${escapeHtml(
-                        decision.taskName
-                    )}
-                </strong>
-
-            </div>
-
-
-
-            <div class="detail-item">
-
-                <span>
-                    مرشح النظام
-                </span>
-
-                <strong>
-                    ${escapeHtml(
-                        decision.systemCandidateName
-                    )}
-                </strong>
-
-            </div>
-
-
-
-            <div class="detail-item">
-
-                <span>
-                    نسبة التوافق
-                </span>
-
-                <strong>
-                    ${formatRate(
-                        decision.matchRate
-                    )}%
-                </strong>
-
-            </div>
-
-
-
-            <div class="detail-item">
-
-                <span>
-                    الموظف النهائي
-                </span>
-
-                <strong>
-                    ${escapeHtml(
-                        decision.selectedEmployeeName
-                    )}
-                </strong>
-
-            </div>
-
-
-
-            <div class="detail-item">
-
-                <span>
-                    نتيجة القرار
-                </span>
-
-                <strong>
-
-                    ${
-                        sameSelection
-                        ?
-                        "تم اعتماد ترشيح النظام"
-                        :
-                        "اختار المسؤول موظفاً مختلفاً"
-                    }
-
-                </strong>
-
-            </div>
-
-
-
-            <div class="detail-item">
-
-                <span>
-                    تاريخ القرار
-                </span>
-
-                <strong>
-                    ${formatDate(
-                        decision.date
-                    )}
-                </strong>
-
-            </div>
-
-
-
-            <div class="detail-item">
-
-                <span>
-                    عدد الموظفين المطلوب
-                </span>
-
-                <strong>
-                    ${required}
-                </strong>
-
-            </div>
-
-
-
-            <div class="detail-item">
-
-                <span>
-                    تم إسناد
-                </span>
-
-                <strong>
-                    ${assigned}
-                    من
-                    ${required}
-                </strong>
-
-            </div>
-
-
-
-            <div class="detail-item full-detail">
-
-                <span>
-                    سبب القرار
-                </span>
-
-                <strong>
-                    ${escapeHtml(
-                        decision.reason
-                        ||
-                        "لا يوجد سبب مسجل"
-                    )}
-                </strong>
-
-            </div>
-
-
-        `;
-
-
-    detailsModal
-        .classList
-        .add(
-            "show"
-        );
-
-
-    document.body
-        .classList
-        .add(
-            "modal-open"
-        );
-
+if(source==="matching"){
+const pendingStored=
+localStorage.getItem("pendingDecision");
+
+if(pendingStored){
+try{
+const pending=JSON.parse(pendingStored);
+
+if(
+Number(pending.taskId)!==taskId
+||Number(pending.systemCandidateId)!==systemCandidateId
+){
+alert(
+"بيانات الترشيح تغيرت. ارجع إلى صفحة المطابقة وأعد اعتماد المرشح."
+);
+return;
+}
+}catch(error){
+console.warn(error);
+}
+}
 }
 
+const saveButton=
+document.getElementById("saveDecisionBtn");
 
+saveButton.disabled=true;
+saveButton.textContent="جارٍ الحفظ...";
 
-/* =====================================================
-   البحث
-===================================================== */
+try{
 
-function filterDecisions() {
+await loadTaskAssignments();
 
-    const search =
-    document
-        .getElementById(
-            "searchInput"
-        )
-        .value
-        .trim()
-        .toLowerCase();
+const required=
+await getEmployeesRequired(taskId);
 
+let assignments=
+getTaskAssignments(taskId);
 
-    const filtered =
-    decisions.filter(
-        item => {
+if(editId){
 
-            if (
-                !search
-            ) {
+const oldDecision=decisions.find(
+decision=>Number(decision.id)===Number(editId)
+);
 
-                return true;
-
-            }
-
-
-            const text =
-            [
-
-                item.taskName,
-
-                item.systemCandidateName,
-
-                item.selectedEmployeeName,
-
-                item.reason
-
-            ]
-            .join(
-                " "
-            )
-            .toLowerCase();
-
-
-            return text.includes(
-                search
-            );
-
-        }
-    );
-
-
-    renderDecisions(
-        filtered
-    );
-
+if(!oldDecision){
+throw new Error(
+"تعذر العثور على القرار المراد تعديله."
+);
 }
 
+if(
+Number(oldDecision.selectedEmployeeId)
+!==Number(selectedEmployeeId)
+){
 
+const duplicate=assignments.some(
+assignment=>
+Number(assignment.employee_id)===Number(selectedEmployeeId)
+&&Number(assignment.task_id)===Number(taskId)
+&&Number(assignment.decision_id)!==Number(editId)
+);
 
-/* =====================================================
-   تنسيق النسبة
-===================================================== */
-
-function formatRate(
-    value
-) {
-
-    const number =
-    Number(
-        value
-        ||
-        0
-    );
-
-
-    if (
-        Number.isInteger(
-            number
-        )
-    ) {
-
-        return number;
-
-    }
-
-
-    return number.toFixed(
-        1
-    );
-
+if(duplicate){
+alert("هذا الموظف معتمد مسبقاً لهذه المهمة.");
+return;
+}
 }
 
+const decisionData={
+task_id:taskId,
+system_candidate_id:systemCandidateId,
+selected_employee_id:selectedEmployeeId,
+match_rate:Math.round(matchRate*100)/100,
+reason:reason,
+decision_date:decisionDate
+};
 
+const{error:decisionUpdateError}=
+await supabaseClient
+.from("decisions")
+.update(decisionData)
+.eq("id",Number(editId));
 
-/* =====================================================
-   تاريخ اليوم
-===================================================== */
-
-function getTodayDate() {
-
-    const now =
-    new Date();
-
-
-    const year =
-    now.getFullYear();
-
-
-    const month =
-    String(
-        now.getMonth()
-        +
-        1
-    )
-    .padStart(
-        2,
-        "0"
-    );
-
-
-    const day =
-    String(
-        now.getDate()
-    )
-    .padStart(
-        2,
-        "0"
-    );
-
-
-    return (
-        year
-        +
-        "-"
-        +
-        month
-        +
-        "-"
-        +
-        day
-    );
-
+if(decisionUpdateError){
+throw decisionUpdateError;
 }
 
+const assignmentByDecision=
+taskAssignments.find(
+assignment=>
+Number(assignment.decision_id)===Number(editId)
+);
 
+if(assignmentByDecision){
 
-/* =====================================================
-   تنسيق التاريخ
-===================================================== */
+const{error:assignmentUpdateError}=
+await supabaseClient
+.from("task_assignments")
+.update({
+task_id:taskId,
+employee_id:selectedEmployeeId,
+assigned_at:new Date().toISOString()
+})
+.eq("id",assignmentByDecision.id);
 
-function formatDate(
-    value
-) {
-
-    if (
-        !value
-    ) {
-
-        return "-";
-
-    }
-
-
-    const date =
-    new Date(
-        value
-        +
-        "T00:00:00"
-    );
-
-
-    if (
-        Number.isNaN(
-            date.getTime()
-        )
-    ) {
-
-        return "-";
-
-    }
-
-
-    return date
-        .toLocaleDateString(
-            "ar-SA-u-ca-gregory",
-            {
-
-                year:
-                    "numeric",
-
-                month:
-                    "2-digit",
-
-                day:
-                    "2-digit"
-
-            }
-        );
-
+if(assignmentUpdateError){
+throw assignmentUpdateError;
 }
 
+}else{
 
+const{error:assignmentInsertError}=
+await supabaseClient
+.from("task_assignments")
+.insert([{
+task_id:taskId,
+employee_id:selectedEmployeeId,
+decision_id:Number(editId)
+}]);
 
-/* =====================================================
-   إغلاق نافذة القرار
-===================================================== */
-
-function closeDecisionModal() {
-
-    decisionModal
-        .classList
-        .remove(
-            "show"
-        );
-
-
-    document
-        .getElementById(
-            "decisionForm"
-        )
-        .reset();
-
-
-    document
-        .getElementById(
-            "editDecisionId"
-        )
-        .value =
-        "";
-
-
-    document
-        .getElementById(
-            "decisionSource"
-        )
-        .value =
-        "manual";
-
-
-    leaveWarning
-        .classList
-        .add(
-            "hidden"
-        );
-
-
-    leaveWarning.textContent =
-    "";
-
-
-    document
-        .getElementById(
-            "decisionStatus"
-        )
-        .textContent =
-        "";
-
-
-    setMatchingFieldsLocked(
-        false
-    );
-
-
-    document.body
-        .classList
-        .remove(
-            "modal-open"
-        );
-
+if(assignmentInsertError){
+throw assignmentInsertError;
+}
 }
 
+const{error:taskUpdateError}=
+await supabaseClient
+.from("tasks")
+.update({
+assigned_employee_id:selectedEmployeeId
+})
+.eq("id",taskId);
 
-
-/* =====================================================
-   إغلاق التفاصيل
-===================================================== */
-
-function closeDetailsModal() {
-
-    detailsModal
-        .classList
-        .remove(
-            "show"
-        );
-
-
-    document.body
-        .classList
-        .remove(
-            "modal-open"
-        );
-
+if(taskUpdateError){
+throw taskUpdateError;
 }
 
+localStorage.removeItem("pendingDecision");
 
+alert(
+"تم تعديل القرار وتحديث إسناد الموظف بنجاح."
+);
 
-/* =====================================================
-   القائمة الجانبية
-===================================================== */
+}else{
 
-function openSidebar() {
+assignments=getTaskAssignments(taskId);
 
-    sidebar
-        .classList
-        .add(
-            "show"
-        );
-
-
-    sidebarOverlay
-        .classList
-        .add(
-            "show"
-        );
-
-
-    document.body
-        .classList
-        .add(
-            "menu-open"
-        );
-
+if(assignments.length>=required){
+alert(
+"تم استكمال العدد المطلوب لهذه المهمة.\n\n"
++"تم إسناد "
++assignments.length
++" من "
++required
++" موظف."
+);
+return;
 }
 
-
-function closeSidebar() {
-
-    sidebar
-        .classList
-        .remove(
-            "show"
-        );
-
-
-    sidebarOverlay
-        .classList
-        .remove(
-            "show"
-        );
-
-
-    document.body
-        .classList
-        .remove(
-            "menu-open"
-        );
-
+if(isEmployeeAssigned(taskId,selectedEmployeeId)){
+alert(
+"هذا الموظف تم اعتماده مسبقاً لهذه المهمة.\nاختر موظفاً آخر."
+);
+return;
 }
 
+const duplicateDecision=decisions.some(
+decision=>
+Number(decision.taskId)===Number(taskId)
+&&Number(decision.selectedEmployeeId)===Number(selectedEmployeeId)
+);
 
-
-/* =====================================================
-   تنظيف الجلسة
-===================================================== */
-
-function clearLocalSession() {
-
-    localStorage.removeItem(
-        "miyarRole"
-    );
-
-
-    localStorage.removeItem(
-        "miyarEmail"
-    );
-
-
-    localStorage.removeItem(
-        "pendingDecision"
-    );
-
-
-    localStorage.removeItem(
-        "selectedTaskId"
-    );
-
+if(duplicateDecision){
+alert(
+"يوجد قرار سابق لهذا الموظف على نفس المهمة."
+);
+return;
 }
 
+const decisionData={
+task_id:taskId,
+system_candidate_id:systemCandidateId,
+selected_employee_id:selectedEmployeeId,
+match_rate:Math.round(matchRate*100)/100,
+reason:reason,
+decision_date:decisionDate
+};
 
+const{
+data:newDecision,
+error:decisionInsertError
+}=
+await supabaseClient
+.from("decisions")
+.insert([decisionData])
+.select("id")
+.single();
 
-/* =====================================================
-   تسجيل الخروج
-===================================================== */
-
-async function logout() {
-
-    try {
-
-        await supabaseClient
-            .auth
-            .signOut();
-
-    }
-
-    catch(error) {
-
-        console.error(
-            error
-        );
-
-    }
-
-
-    clearLocalSession();
-
-
-    window.location.href =
-    "login.html";
-
+if(decisionInsertError){
+throw decisionInsertError;
 }
 
+const{error:assignmentInsertError}=
+await supabaseClient
+.from("task_assignments")
+.insert([{
+task_id:taskId,
+employee_id:selectedEmployeeId,
+decision_id:newDecision.id,
+assigned_at:new Date().toISOString()
+}]);
 
+if(assignmentInsertError){
 
-/* =====================================================
-   الأحداث
-===================================================== */
+await supabaseClient
+.from("decisions")
+.delete()
+.eq("id",newDecision.id);
 
+throw assignmentInsertError;
+}
 
-/*
-    تسجيل قرار جديد
-*/
+const{error:taskUpdateError}=
+await supabaseClient
+.from("tasks")
+.update({
+assigned_employee_id:selectedEmployeeId
+})
+.eq("id",taskId);
+
+if(taskUpdateError){
+throw taskUpdateError;
+}
+
+localStorage.removeItem("pendingDecision");
+
+await loadTaskAssignments();
+
+const afterAssignments=
+getTaskAssignments(taskId);
+
+const remaining=Math.max(
+0,
+required-afterAssignments.length
+);
+
+if(remaining>0){
+alert(
+"تم اعتماد الموظف وإسناد المهمة بنجاح.\n\n"
++"تم إسناد "
++afterAssignments.length
++" من "
++required
++" موظف.\n"
++"المتبقي: "
++remaining
++" موظف."
+);
+}else{
+alert(
+"تم اعتماد الموظف وإسناد المهمة بنجاح.\n\n"
++"اكتمل العدد المطلوب للمهمة: "
++required
++" موظف."
+);
+}
+}
+
+closeDecisionModal();
+
+await Promise.all([
+loadTasks(),
+loadTaskAssignments(),
+loadDecisions()
+]);
+
+}catch(error){
+
+console.error(
+"خطأ حفظ القرار:",
+error
+);
+
+alert(
+"تعذر حفظ القرار.\n\n"
++(error.message||"")
+);
+
+}finally{
+
+saveButton.disabled=false;
+
+saveButton.textContent=
+editId
+?"حفظ التعديلات"
+:"حفظ القرار";
+}
+}
+
+async function editDecision(id){
+const decision=decisions.find(
+item=>Number(item.id)===Number(id)
+);
+
+if(!decision)return;
+
+document.getElementById("decisionForm").reset();
+
+document.getElementById("editDecisionId").value=
+decision.id;
+
+document.getElementById("decisionSource").value=
+"edit";
+
+document.getElementById("modalTitle").textContent=
+"تعديل القرار";
+
+document.getElementById("modalDescription").textContent=
+"تعديل بيانات القرار النهائي وإسناد الموظف.";
+
+document.getElementById("decisionTask").value=
+String(decision.taskId);
+
+updateProjectManagerField();
+
+await loadTaskAssignments();
+
+fillEmployeeSelects();
+
+document.getElementById("systemCandidate").value=
+String(decision.systemCandidateId);
+
+document.getElementById("selectedEmployee").value=
+String(decision.selectedEmployeeId);
+
+document.getElementById("matchRate").value=
+decision.matchRate;
+
+document.getElementById("decisionReason").value=
+decision.reason||"";
+
+document.getElementById("decisionDate").value=
+decision.date||getTodayDate();
+
+document.getElementById("saveDecisionBtn").textContent=
+"حفظ التعديلات";
+
+setMatchingFieldsLocked(false);
+
+checkSelectedEmployeeAvailability();
+updateDecisionStatus();
+
+decisionModal.classList.add("show");
+document.body.classList.add("modal-open");
+}
+
+function viewDecision(id){
+const decision=decisions.find(
+item=>Number(item.id)===Number(id)
+);
+
+if(!decision)return;
+
+const sameSelection=
+Number(decision.systemCandidateId)
+===Number(decision.selectedEmployeeId);
+
+document.getElementById("decisionDetails").innerHTML=`
+
+<div class="detail-item">
+<span>المهمة</span>
+<strong>
+${escapeHtml(decision.taskName)}
+</strong>
+</div>
+
+<div class="detail-item">
+<span>المشروع</span>
+<strong>
+${escapeHtml(decision.projectName||"غير محدد")}
+</strong>
+</div>
+
+<div class="detail-item">
+<span>مدير المشروع</span>
+<strong>
+${escapeHtml(decision.projectManagerName||"غير محدد")}
+</strong>
+</div>
+
+<div class="detail-item">
+<span>مرشح النظام</span>
+<strong>
+${escapeHtml(decision.systemCandidateName)}
+</strong>
+</div>
+
+<div class="detail-item">
+<span>الموظف النهائي</span>
+<strong>
+${escapeHtml(decision.selectedEmployeeName)}
+</strong>
+</div>
+
+<div class="detail-item">
+<span>نسبة التوافق</span>
+<strong>
+${formatRate(decision.matchRate)}%
+</strong>
+</div>
+
+<div class="detail-item">
+<span>نتيجة القرار</span>
+<strong>
+${sameSelection
+?"اعتماد ترشيح النظام"
+:"اختيار موظف آخر"}
+</strong>
+</div>
+
+<div class="detail-item">
+<span>تاريخ القرار</span>
+<strong>
+${formatDate(decision.date)}
+</strong>
+</div>
+
+<div class="detail-item full-width">
+<span>سبب القرار</span>
+<strong>
+${escapeHtml(
+decision.reason||"لا يوجد سبب مسجل"
+)}
+</strong>
+</div>
+
+`;
+
+detailsModal.classList.add("show");
+document.body.classList.add("modal-open");
+}
+
+function closeDecisionModal(){
+decisionModal.classList.remove("show");
+document.body.classList.remove("modal-open");
+
+document.getElementById("decisionForm").reset();
+document.getElementById("editDecisionId").value="";
+document.getElementById("decisionSource").value="manual";
+document.getElementById("projectManager").value="-";
+
+leaveWarning.classList.add("hidden");
+leaveWarning.textContent="";
+
+document.getElementById("decisionStatus").textContent="";
+
+setMatchingFieldsLocked(false);
+}
+
+function closeDetailsModal(){
+detailsModal.classList.remove("show");
+document.body.classList.remove("modal-open");
+}
+
+function formatDate(value){
+if(!value)return "-";
+
+const date=new Date(
+String(value).includes("T")
+?value
+:value+"T00:00:00"
+);
+
+if(Number.isNaN(date.getTime())){
+return value;
+}
+
+return date.toLocaleDateString(
+"ar-SA",
+{
+year:"numeric",
+month:"2-digit",
+day:"2-digit"
+}
+);
+}
+
+function formatRate(value){
+const number=Number(value||0);
+
+if(Number.isInteger(number)){
+return String(number);
+}
+
+return number.toFixed(2).replace(/\.?0+$/,"");
+}
+
+function filterDecisions(){
+const query=
+String(
+document.getElementById("searchInput").value||""
+)
+.trim()
+.toLowerCase();
+
+if(!query){
+renderDecisions(decisions);
+return;
+}
+
+const filtered=
+decisions.filter(decision=>{
+return[
+decision.taskName,
+decision.projectName,
+decision.projectManagerName,
+decision.systemCandidateName,
+decision.selectedEmployeeName,
+decision.reason
+]
+.some(value=>
+String(value||"")
+.toLowerCase()
+.includes(query)
+);
+});
+
+renderDecisions(filtered);
+}
+
+function openSidebar(){
+sidebar.classList.add("show");
+sidebarOverlay.classList.add("show");
+document.body.classList.add("menu-open");
+}
+
+function closeSidebar(){
+sidebar.classList.remove("show");
+sidebarOverlay.classList.remove("show");
+document.body.classList.remove("menu-open");
+}
+
+function clearLocalSession(){
+localStorage.removeItem("miyarRole");
+localStorage.removeItem("miyarEmail");
+localStorage.removeItem("pendingDecision");
+localStorage.removeItem("selectedTaskId");
+}
+
+async function logout(){
+try{
+await supabaseClient.auth.signOut();
+}catch(error){
+console.error(error);
+}
+
+clearLocalSession();
+window.location.href="login.html";
+}
 
 document
-    .getElementById(
-        "addDecisionBtn"
-    )
-    .addEventListener(
-        "click",
-        openDecisionModal
-    );
-
-
-
-/*
-    حفظ القرار
-*/
+.getElementById("decisionForm")
+.addEventListener("submit",saveDecision);
 
 document
-    .getElementById(
-        "decisionForm"
-    )
-    .addEventListener(
-        "submit",
-        saveDecision
-    );
-
-
-
-/*
-    عند تغيير المهمة:
-
-    نعيد قائمة الموظفين
-    حتى لا يظهر الموظف المسند
-    مسبقاً لنفس المهمة.
-*/
+.getElementById("addDecisionBtn")
+.addEventListener("click",openDecisionModal);
 
 document
-    .getElementById(
-        "decisionTask"
-    )
-    .addEventListener(
-        "change",
-        async function() {
-
-            try {
-
-                await loadTaskAssignments();
-
-            }
-
-            catch(error) {
-
-                console.warn(
-                    error
-                );
-
-            }
-
-
-            fillEmployeeSelects();
-
-
-            checkSelectedEmployeeAvailability();
-
-
-            updateDecisionStatus();
-
-        }
-    );
-
-
-
-/*
-    الموظف النهائي
-*/
+.getElementById("cancelDecisionBtn")
+.addEventListener("click",closeDecisionModal);
 
 document
-    .getElementById(
-        "selectedEmployee"
-    )
-    .addEventListener(
-        "change",
-        function() {
-
-            checkSelectedEmployeeAvailability();
-
-
-            updateDecisionStatus();
-
-        }
-    );
-
-
-
-/*
-    مرشح النظام
-*/
+.getElementById("closeDecisionBtn")
+.addEventListener("click",closeDecisionModal);
 
 document
-    .getElementById(
-        "systemCandidate"
-    )
-    .addEventListener(
-        "change",
-        updateDecisionStatus
-    );
-
-
-
-/*
-    البحث
-*/
+.getElementById("decisionModalOverlay")
+.addEventListener("click",closeDecisionModal);
 
 document
-    .getElementById(
-        "searchInput"
-    )
-    .addEventListener(
-        "input",
-        filterDecisions
-    );
-
-
-
-/*
-    إغلاق القرار
-*/
+.getElementById("closeDetailsBtn")
+.addEventListener("click",closeDetailsModal);
 
 document
-    .getElementById(
-        "closeDecisionBtn"
-    )
-    .addEventListener(
-        "click",
-        closeDecisionModal
-    );
-
+.getElementById("detailsModalOverlay")
+.addEventListener("click",closeDetailsModal);
 
 document
-    .getElementById(
-        "cancelDecisionBtn"
-    )
-    .addEventListener(
-        "click",
-        closeDecisionModal
-    );
-
+.getElementById("logoutBtn")
+.addEventListener("click",logout);
 
 document
-    .getElementById(
-        "decisionModalOverlay"
-    )
-    .addEventListener(
-        "click",
-        closeDecisionModal
-    );
-
-
-
-/*
-    إغلاق التفاصيل
-*/
+.getElementById("searchInput")
+.addEventListener("input",filterDecisions);
 
 document
-    .getElementById(
-        "closeDetailsBtn"
-    )
-    .addEventListener(
-        "click",
-        closeDetailsModal
-    );
-
+.getElementById("decisionTask")
+.addEventListener("change",function(){
+updateProjectManagerField();
+fillEmployeeSelects();
+updateDecisionStatus();
+});
 
 document
-    .getElementById(
-        "detailsModalOverlay"
-    )
-    .addEventListener(
-        "click",
-        closeDetailsModal
-    );
-
-
-
-/*
-    Sidebar
-*/
-
-mobileMenuBtn
-    .addEventListener(
-        "click",
-        openSidebar
-    );
-
-
-sidebarOverlay
-    .addEventListener(
-        "click",
-        closeSidebar
-    );
-
+.getElementById("systemCandidate")
+.addEventListener("change",updateDecisionStatus);
 
 document
-    .querySelectorAll(
-        ".nav-link"
-    )
-    .forEach(
-        link => {
+.getElementById("selectedEmployee")
+.addEventListener("change",function(){
+checkSelectedEmployeeAvailability();
+updateDecisionStatus();
+});
 
-            link.addEventListener(
-                "click",
-                closeSidebar
-            );
+mobileMenuBtn.addEventListener(
+"click",
+openSidebar
+);
 
-        }
-    );
-
-
-
-/*
-    تسجيل الخروج
-*/
+sidebarOverlay.addEventListener(
+"click",
+closeSidebar
+);
 
 document
-    .getElementById(
-        "logoutBtn"
-    )
-    .addEventListener(
-        "click",
-        logout
-    );
+.querySelectorAll(".nav-link")
+.forEach(link=>{
+link.addEventListener(
+"click",
+closeSidebar
+);
+});
 
+decisionsGrid.addEventListener(
+"click",
+function(event){
 
+const button=
+event.target.closest(
+"button[data-action]"
+);
 
-/*
-    أزرار عرض / تعديل
-*/
+if(!button)return;
 
-decisionsGrid
-    .addEventListener(
-        "click",
-        event => {
+const id=Number(button.dataset.id);
+const action=button.dataset.action;
 
-            const button =
-            event.target.closest(
-                "button[data-action]"
-            );
+if(action==="view"){
+viewDecision(id);
+}else if(action==="edit"){
+editDecision(id);
+}
+}
+);
 
+document.addEventListener(
+"keydown",
+function(event){
 
-            if (
-                !button
-            ) {
+if(event.key!=="Escape")return;
 
-                return;
+if(decisionModal.classList.contains("show")){
+closeDecisionModal();
+}
 
-            }
+if(detailsModal.classList.contains("show")){
+closeDetailsModal();
+}
 
-
-            const id =
-            Number(
-                button.dataset.id
-            );
-
-
-            const action =
-            button.dataset.action;
-
-
-            if (
-                action ===
-                "view"
-            ) {
-
-                viewDecision(
-                    id
-                );
-
-            }
-
-            else if (
-                action ===
-                "edit"
-            ) {
-
-                editDecision(
-                    id
-                );
-
-            }
-
-        }
-    );
-
-
-
-/* =====================================================
-   عند الرجوع للصفحة
-
-   نحدث الإسنادات حتى تكون الصفحة
-   متوافقة مع الموظفين والمطابقة.
-===================================================== */
+closeSidebar();
+}
+);
 
 window.addEventListener(
-    "focus",
-    async function() {
+"focus",
+async function(){
 
-        try {
+try{
 
-            await Promise.all([
+await Promise.all([
+loadProjects(),
+loadEmployees(),
+loadEmployeeLeaves(),
+loadTasks(),
+loadTaskAssignments()
+]);
 
-                loadTasks(),
+await loadDecisions();
 
-                loadEmployees(),
-
-                loadTaskAssignments()
-
-            ]);
-
-
-            await loadDecisions();
-
-
-            fillEmployeeSelects();
-
-        }
-
-        catch(error) {
-
-            console.warn(
-                "تعذر تحديث صفحة القرارات:",
-                error
-            );
-
-        }
-
-    }
+}catch(error){
+console.warn(
+"تعذر تحديث صفحة القرارات:",
+error
+);
+}
+}
 );
 
+async function startPage(){
 
+const allowed=
+await protectPage();
 
-/* =====================================================
-   تشغيل الصفحة
-===================================================== */
+if(!allowed)return;
 
-async function startPage() {
+try{
 
-    const allowed =
-    await protectPage();
+await Promise.all([
+loadProjects(),
+loadEmployees(),
+loadEmployeeLeaves(),
+loadTasks(),
+loadTaskAssignments()
+]);
 
+await loadDecisions();
 
-    if (
-        !allowed
-    ) {
+await loadPendingDecision();
 
-        return;
+}catch(error){
 
-    }
+console.error(
+"خطأ تشغيل صفحة القرارات:",
+error
+);
 
-
-    try {
-
-        /*
-            نحمل البيانات الأساسية أولاً.
-        */
-
-        await Promise.all([
-
-            loadTasks(),
-
-            loadEmployees(),
-
-            loadEmployeeLeaves(),
-
-            loadTaskAssignments()
-
-        ]);
-
-
-        /*
-            الآن نقدر نبني قوائم الموظفين
-            بعد توفر الإسنادات.
-        */
-
-        fillEmployeeSelects();
-
-
-        /*
-            ثم سجل القرارات.
-        */
-
-        await loadDecisions();
-
-
-        /*
-            إذا جاء اعتماد من صفحة المطابقة
-            تفتح نافذة القرار تلقائياً.
-        */
-
-        await loadPendingDecision();
-
-    }
-
-    catch(error) {
-
-        console.error(
-            "خطأ تشغيل الصفحة:",
-            error
-        );
-
-
-        decisionsGrid.innerHTML = `
-
-            <div class="empty-state">
-                تعذر تحميل بيانات القرارات
-            </div>
-
-        `;
-
-
-        alert(
-            "تعذر تحميل بيانات القرارات.\n\n"
-            +
-            (
-                error.message
-                ||
-                ""
-            )
-        );
-
-    }
-
+decisionsGrid.innerHTML=`
+<div class="empty-state error-state">
+<strong>
+تعذر تحميل صفحة القرارات
+</strong>
+<small>
+${escapeHtml(error.message||"")}
+</small>
+</div>
+`;
+}
 }
 
-
 startPage();
-
-
 </script>
-
-
 </body>
-
 </html>
