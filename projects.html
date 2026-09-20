@@ -97,74 +97,47 @@
         <nav class="sidebar-nav">
 
 
-            <a
-                href="dashboard.html"
-                class="nav-link"
-            >
+            <a href="dashboard.html" class="nav-link">
                 لوحة التحكم
             </a>
 
 
-            <a
-                href="employees.html"
-                class="nav-link"
-            >
+            <a href="employees.html" class="nav-link">
                 الموظفون
             </a>
 
 
-            <a
-                href="projects.html"
-                class="nav-link active"
-            >
+            <a href="projects.html" class="nav-link active">
                 المشاريع
             </a>
 
 
-            <a
-                href="tasks.html"
-                class="nav-link"
-            >
+            <a href="tasks.html" class="nav-link">
                 المهام
             </a>
 
 
-            <a
-                href="matching.html"
-                class="nav-link"
-            >
+            <a href="matching.html" class="nav-link">
                 المطابقة والترشيح
             </a>
 
 
-            <a
-                href="evaluations.html"
-                class="nav-link"
-            >
+            <a href="evaluations.html" class="nav-link">
                 التقييمات
             </a>
 
 
-            <a
-                href="decisions.html"
-                class="nav-link"
-            >
+            <a href="decisions.html" class="nav-link">
                 القرارات
             </a>
 
 
-            <a
-                href="leaves.html"
-                class="nav-link"
-            >
+            <a href="leaves.html" class="nav-link">
                 طلبات الإجازات
             </a>
 
 
-            <a
-                href="reports.html"
-                class="nav-link"
-            >
+            <a href="reports.html" class="nav-link">
                 التقارير
             </a>
 
@@ -193,8 +166,6 @@
 
     <main class="main-content">
 
-
-        <!-- العنوان -->
 
         <header class="topbar">
 
@@ -239,7 +210,6 @@
             </div>
 
 
-
             <div class="summary-item">
 
                 <span>
@@ -253,7 +223,6 @@
             </div>
 
 
-
             <div class="summary-item">
 
                 <span>
@@ -265,7 +234,6 @@
                 </strong>
 
             </div>
-
 
 
             <div class="summary-item">
@@ -304,7 +272,6 @@
             </div>
 
 
-
             <div class="filters">
 
                 <select id="statusFilter">
@@ -334,7 +301,6 @@
             </div>
 
 
-
             <button
                 class="add-btn"
                 type="button"
@@ -358,7 +324,6 @@
 
             <div class="section-title">
 
-
                 <div>
 
                     <h2>
@@ -371,9 +336,7 @@
 
                 </div>
 
-
             </div>
-
 
 
             <div
@@ -399,7 +362,6 @@
 
 
 
-
 <!-- =====================================================
      نافذة إضافة / تعديل مشروع
 ===================================================== -->
@@ -414,7 +376,6 @@
         class="modal-overlay"
         id="projectModalOverlay"
     ></div>
-
 
 
     <div class="modal-box project-modal-box">
@@ -437,7 +398,6 @@
                 </p>
 
             </div>
-
 
 
             <button
@@ -463,7 +423,6 @@
             >
 
 
-
             <!-- =========================
                  بيانات المشروع
             ========================== -->
@@ -472,7 +431,6 @@
 
 
                 <div class="form-section-heading">
-
 
                     <div>
 
@@ -485,7 +443,6 @@
                         </p>
 
                     </div>
-
 
                 </div>
 
@@ -523,12 +480,20 @@
                             مدير المشروع
                         </label>
 
-                        <input
-                            type="text"
+                        <select
                             id="projectManager"
-                            placeholder="اكتب اسم مدير المشروع"
                             required
                         >
+
+                            <option value="">
+                                اختر مدير المشروع
+                            </option>
+
+                        </select>
+
+                        <small>
+                            يتم اختيار مدير المشروع من الموظفين المسجلين في النظام.
+                        </small>
 
                     </div>
 
@@ -565,6 +530,31 @@
                             </option>
 
                         </select>
+
+                    </div>
+
+
+
+
+                    <!-- عدد الموظفين المطلوبين -->
+
+                    <div class="form-group">
+
+                        <label for="requiredEmployees">
+                            عدد الموظفين المطلوبين
+                        </label>
+
+                        <input
+                            type="number"
+                            id="requiredEmployees"
+                            min="1"
+                            value="1"
+                            required
+                        >
+
+                        <small>
+                            عدد أعضاء الفريق المطلوب ترشيحهم للمشروع، ولا يشمل مدير المشروع.
+                        </small>
 
                     </div>
 
@@ -663,8 +653,6 @@
 
 
 
-            <!-- الأزرار -->
-
             <div class="modal-actions">
 
 
@@ -700,7 +688,6 @@
 
 
 
-
 <!-- =====================================================
      نافذة تفاصيل المشروع
 ===================================================== -->
@@ -715,7 +702,6 @@
         class="modal-overlay"
         id="detailsModalOverlay"
     ></div>
-
 
 
     <div class="modal-box details-box">
@@ -737,7 +723,6 @@
             </div>
 
 
-
             <button
                 class="close-btn"
                 type="button"
@@ -750,7 +735,6 @@
         </div>
 
 
-
         <div
             id="projectDetails"
             class="details-grid"
@@ -761,7 +745,6 @@
 
 
 </div>
-
 
 
 
@@ -795,7 +778,6 @@ const supabaseClient =
 
 
 
-
 /* =====================================================
    المتغيرات
 ===================================================== */
@@ -805,6 +787,7 @@ let projects = [];
 
 let tasks = [];
 
+let employees = [];
 
 
 const projectsGrid =
@@ -845,7 +828,6 @@ const sidebarOverlay =
 
 
 
-
 /* =====================================================
    حماية النصوص
 ===================================================== */
@@ -853,36 +835,19 @@ const sidebarOverlay =
 
 function escapeHtml(value) {
 
-
     return String(value ?? "")
 
-        .replaceAll(
-            "&",
-            "&amp;"
-        )
+        .replaceAll("&", "&amp;")
 
-        .replaceAll(
-            "<",
-            "&lt;"
-        )
+        .replaceAll("<", "&lt;")
 
-        .replaceAll(
-            ">",
-            "&gt;"
-        )
+        .replaceAll(">", "&gt;")
 
-        .replaceAll(
-            '"',
-            "&quot;"
-        )
+        .replaceAll('"', "&quot;")
 
-        .replaceAll(
-            "'",
-            "&#039;"
-        );
+        .replaceAll("'", "&#039;");
 
 }
-
 
 
 
@@ -933,7 +898,6 @@ function formatDate(value) {
 
 
 
-
 /* =====================================================
    حماية صفحة المسؤول
 ===================================================== */
@@ -954,7 +918,6 @@ async function protectPage() {
                 .getSession();
 
 
-
         if (
             error ||
             !data.session
@@ -968,14 +931,12 @@ async function protectPage() {
         }
 
 
-
         const email =
             String(
                 data.session.user.email || ""
             )
                 .trim()
                 .toLowerCase();
-
 
 
         if (
@@ -999,7 +960,6 @@ async function protectPage() {
             return false;
 
         }
-
 
 
         localStorage.setItem(
@@ -1035,6 +995,140 @@ async function protectPage() {
 
 
 
+/* =====================================================
+   تحميل الموظفين لاختيار مدير المشروع
+===================================================== */
+
+
+async function loadEmployees() {
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+
+            .from("employees")
+
+            .select(`
+                id,
+                name,
+                employee_number,
+                employment_status
+            `)
+
+            .order(
+                "name",
+                {
+                    ascending: true
+                }
+            );
+
+
+    if (error) {
+
+        throw error;
+
+    }
+
+
+    employees =
+        data || [];
+
+
+    renderProjectManagerOptions();
+
+}
+
+
+
+
+/* =====================================================
+   تعبئة قائمة مديري المشاريع
+===================================================== */
+
+
+function renderProjectManagerOptions(
+    selectedEmployeeId = ""
+) {
+
+
+    const select =
+        document.getElementById(
+            "projectManager"
+        );
+
+
+    /*
+        نعرض الموظفين الموجودين على رأس العمل فقط.
+        الموظف المستقيل أو المتقاعد أو منتهي الخدمة
+        لا يظهر كخيار جديد لمدير المشروع.
+    */
+
+    const availableEmployees =
+        employees.filter(
+            employee =>
+
+                !employee.employment_status
+
+                ||
+
+                employee.employment_status ===
+                "على رأس العمل"
+        );
+
+
+    select.innerHTML = `
+
+        <option value="">
+            اختر مدير المشروع
+        </option>
+
+        ${
+            availableEmployees
+                .map(
+                    employee => `
+
+                        <option
+                            value="${employee.id}"
+                            ${
+                                String(employee.id) ===
+                                String(selectedEmployeeId)
+                                ?
+                                "selected"
+                                :
+                                ""
+                            }
+                        >
+
+                            ${escapeHtml(
+                                employee.name
+                            )}
+
+                            ${
+                                employee.employee_number
+                                ?
+                                ` - ${escapeHtml(
+                                    employee.employee_number
+                                )}`
+                                :
+                                ""
+                            }
+
+                        </option>
+
+                    `
+                )
+                .join("")
+        }
+
+    `;
+
+}
+
+
+
 
 /* =====================================================
    تحميل المشاريع والمهام
@@ -1055,7 +1149,6 @@ async function loadProjects() {
     `;
 
 
-
     try {
 
 
@@ -1068,6 +1161,8 @@ async function loadProjects() {
                     id,
                     project_name,
                     project_manager,
+                    project_manager_id,
+                    required_employees,
                     description,
                     start_date,
                     end_date,
@@ -1082,7 +1177,6 @@ async function loadProjects() {
                 );
 
 
-
         if (
             projectsResult.error
         ) {
@@ -1090,18 +1184,6 @@ async function loadProjects() {
             throw projectsResult.error;
 
         }
-
-
-
-        /*
-            نحاول تحميل المهام.
-
-            إذا كان جدول tasks موجودًا
-            يتم حساب عدد المهام تلقائيًا.
-
-            وإذا لم يكن موجودًا أو حصل خطأ
-            لن تتعطل صفحة المشاريع.
-        */
 
 
         const tasksResult =
@@ -1115,7 +1197,6 @@ async function loadProjects() {
                     task_name,
                     status
                 `);
-
 
 
         if (
@@ -1139,7 +1220,6 @@ async function loadProjects() {
                 tasksResult.data || [];
 
         }
-
 
 
         projects =
@@ -1177,6 +1257,16 @@ async function loadProjects() {
                             project.project_manager || "-",
 
 
+                        managerId:
+                            project.project_manager_id || null,
+
+
+                        requiredEmployees:
+                            Number(
+                                project.required_employees || 1
+                            ),
+
+
                         status:
                             project.status || "مخطط",
 
@@ -1205,7 +1295,6 @@ async function loadProjects() {
 
                 }
             );
-
 
 
         renderProjects(
@@ -1250,7 +1339,6 @@ async function loadProjects() {
 
 
 
-
 /* =====================================================
    تحديث الملخص
 ===================================================== */
@@ -1267,7 +1355,6 @@ function updateSummary() {
         projects.length;
 
 
-
     document
         .getElementById(
             "summaryRunning"
@@ -1279,7 +1366,6 @@ function updateSummary() {
                 project.status ===
                 "قيد التنفيذ"
         ).length;
-
 
 
     document
@@ -1295,7 +1381,6 @@ function updateSummary() {
         ).length;
 
 
-
     document
         .getElementById(
             "summaryCompleted"
@@ -1309,7 +1394,6 @@ function updateSummary() {
         ).length;
 
 }
-
 
 
 
@@ -1359,7 +1443,6 @@ function getStatusClass(status) {
 
 
 
-
 /* =====================================================
    عرض المشاريع
 ===================================================== */
@@ -1370,7 +1453,6 @@ function renderProjects(list) {
 
     projectsCount.textContent =
         `${list.length} مشروع`;
-
 
 
     if (
@@ -1392,7 +1474,6 @@ function renderProjects(list) {
         return;
 
     }
-
 
 
     projectsGrid.innerHTML =
@@ -1436,7 +1517,6 @@ function renderProjects(list) {
 
 
                             </div>
-
 
 
                             <span
@@ -1493,6 +1573,23 @@ function renderProjects(list) {
                                     ${escapeHtml(
                                         project.manager
                                     )}
+
+                                </strong>
+
+                            </div>
+
+
+
+
+                            <div class="info-item">
+
+                                <span>
+                                    الموظفون المطلوبون
+                                </span>
+
+                                <strong>
+
+                                    ${project.requiredEmployees}
 
                                 </strong>
 
@@ -1581,7 +1678,6 @@ function renderProjects(list) {
                             </button>
 
 
-
                             <button
                                 type="button"
                                 class="edit-btn"
@@ -1595,7 +1691,6 @@ function renderProjects(list) {
                                 تعديل
 
                             </button>
-
 
 
                             <button
@@ -1630,7 +1725,6 @@ function renderProjects(list) {
 
 
 
-
 /* =====================================================
    البحث والفلترة
 ===================================================== */
@@ -1649,14 +1743,12 @@ function filterProjects() {
             .toLowerCase();
 
 
-
     const status =
         document
             .getElementById(
                 "statusFilter"
             )
             .value;
-
 
 
     const filtered =
@@ -1689,7 +1781,6 @@ function filterProjects() {
                     );
 
 
-
                 const statusMatch =
 
                     !status
@@ -1698,7 +1789,6 @@ function filterProjects() {
 
                     project.status ===
                     status;
-
 
 
                 return (
@@ -1710,13 +1800,11 @@ function filterProjects() {
         );
 
 
-
     renderProjects(
         filtered
     );
 
 }
-
 
 
 
@@ -1736,13 +1824,11 @@ function resetProjectForm() {
         .reset();
 
 
-
     document
         .getElementById(
             "editProjectId"
         )
         .value = "";
-
 
 
     document
@@ -1752,13 +1838,21 @@ function resetProjectForm() {
         .value = "0";
 
 
+    document
+        .getElementById(
+            "requiredEmployees"
+        )
+        .value = "1";
+
+
+    renderProjectManagerOptions();
+
 
     document
         .getElementById(
             "projectStatus"
         )
         .value = "مخطط";
-
 
 
     document
@@ -1769,7 +1863,6 @@ function resetProjectForm() {
         "إضافة مشروع";
 
 }
-
 
 
 
@@ -1804,7 +1897,6 @@ function openAddProject() {
 
 
 
-
 /* =====================================================
    إغلاق نافذة المشروع
 ===================================================== */
@@ -1832,7 +1924,6 @@ function closeProjectModal() {
 
 
 
-
 /* =====================================================
    تعديل مشروع
 ===================================================== */
@@ -1855,7 +1946,6 @@ function openEditProject(
         );
 
 
-
     if (
         !project
     ) {
@@ -1871,9 +1961,7 @@ function openEditProject(
     }
 
 
-
     resetProjectForm();
-
 
 
     document
@@ -1884,14 +1972,12 @@ function openEditProject(
         "تعديل المشروع";
 
 
-
     document
         .getElementById(
             "editProjectId"
         )
         .value =
         project.id;
-
 
 
     document
@@ -1902,18 +1988,17 @@ function openEditProject(
         project.name || "";
 
 
+    renderProjectManagerOptions(
+        project.managerId || ""
+    );
+
 
     document
         .getElementById(
-            "projectManager"
+            "requiredEmployees"
         )
         .value =
-        project.manager === "-"
-            ?
-            ""
-            :
-            project.manager || "";
-
+        project.requiredEmployees || 1;
 
 
     document
@@ -1924,14 +2009,12 @@ function openEditProject(
         project.status || "مخطط";
 
 
-
     document
         .getElementById(
             "projectTasks"
         )
         .value =
         project.tasks || 0;
-
 
 
     document
@@ -1942,7 +2025,6 @@ function openEditProject(
         project.start || "";
 
 
-
     document
         .getElementById(
             "projectEnd"
@@ -1951,14 +2033,12 @@ function openEditProject(
         project.end || "";
 
 
-
     document
         .getElementById(
             "projectDescription"
         )
         .value =
         project.description || "";
-
 
 
     projectModal
@@ -1980,7 +2060,6 @@ function openEditProject(
 
 
 
-
 /* =====================================================
    حفظ المشروع
 ===================================================== */
@@ -1994,12 +2073,10 @@ async function saveProject(
     event.preventDefault();
 
 
-
     const saveButton =
         document.getElementById(
             "saveProjectBtn"
         );
-
 
 
     const editProjectId =
@@ -2008,7 +2085,6 @@ async function saveProject(
                 "editProjectId"
             )
             .value;
-
 
 
     const projectName =
@@ -2020,15 +2096,42 @@ async function saveProject(
             .trim();
 
 
-
-    const projectManager =
+    const projectManagerId =
         document
             .getElementById(
                 "projectManager"
             )
-            .value
-            .trim();
+            .value;
 
+
+    const managerEmployee =
+        employees.find(
+            employee =>
+                String(
+                    employee.id
+                ) ===
+                String(
+                    projectManagerId
+                )
+        );
+
+
+    const projectManager =
+        managerEmployee
+        ?
+        managerEmployee.name
+        :
+        "";
+
+
+    const requiredEmployees =
+        Number(
+            document
+                .getElementById(
+                    "requiredEmployees"
+                )
+                .value
+        );
 
 
     const projectStatus =
@@ -2039,7 +2142,6 @@ async function saveProject(
             .value;
 
 
-
     const startDate =
         document
             .getElementById(
@@ -2048,14 +2150,12 @@ async function saveProject(
             .value;
 
 
-
     const endDate =
         document
             .getElementById(
                 "projectEnd"
             )
             .value;
-
 
 
     const description =
@@ -2067,10 +2167,14 @@ async function saveProject(
             .trim();
 
 
-
     if (
         !projectName ||
+        !projectManagerId ||
         !projectManager ||
+        !Number.isInteger(
+            requiredEmployees
+        ) ||
+        requiredEmployees < 1 ||
         !projectStatus ||
         !startDate ||
         !description
@@ -2085,7 +2189,6 @@ async function saveProject(
         return;
 
     }
-
 
 
     if (
@@ -2109,10 +2212,8 @@ async function saveProject(
     }
 
 
-
     saveButton.disabled =
         true;
-
 
 
     saveButton.textContent =
@@ -2128,7 +2229,6 @@ async function saveProject(
         "جارٍ حفظ المشروع...";
 
 
-
     try {
 
 
@@ -2141,6 +2241,16 @@ async function saveProject(
 
             project_manager:
                 projectManager,
+
+
+            project_manager_id:
+                Number(
+                    projectManagerId
+                ),
+
+
+            required_employees:
+                requiredEmployees,
 
 
             description:
@@ -2160,7 +2270,6 @@ async function saveProject(
 
 
         };
-
 
 
         if (
@@ -2185,7 +2294,6 @@ async function saveProject(
                         "id",
                         editProjectId
                     );
-
 
 
             if (
@@ -2216,7 +2324,6 @@ async function saveProject(
                     );
 
 
-
             if (
                 error
             ) {
@@ -2226,7 +2333,6 @@ async function saveProject(
             }
 
         }
-
 
 
         alert(
@@ -2242,7 +2348,6 @@ async function saveProject(
             "تمت إضافة المشروع بنجاح."
 
         );
-
 
 
         closeProjectModal();
@@ -2289,7 +2394,6 @@ async function saveProject(
 
 
 
-
 /* =====================================================
    حذف المشروع
 ===================================================== */
@@ -2312,7 +2416,6 @@ async function deleteProject(
         );
 
 
-
     if (
         !project
     ) {
@@ -2320,13 +2423,6 @@ async function deleteProject(
         return;
 
     }
-
-
-
-    /*
-        لا نحذف مشروعًا يحتوي على مهام،
-        حتى لا نفقد ارتباط المهام بالمشروع.
-    */
 
 
     if (
@@ -2344,14 +2440,12 @@ async function deleteProject(
     }
 
 
-
     const confirmed =
         confirm(
 
             `هل أنت متأكد من حذف مشروع "${project.name}"؟`
 
         );
-
 
 
     if (
@@ -2361,7 +2455,6 @@ async function deleteProject(
         return;
 
     }
-
 
 
     try {
@@ -2384,7 +2477,6 @@ async function deleteProject(
                 );
 
 
-
         if (
             error
         ) {
@@ -2392,7 +2484,6 @@ async function deleteProject(
             throw error;
 
         }
-
 
 
         alert(
@@ -2430,7 +2521,6 @@ async function deleteProject(
 
 
 
-
 /* =====================================================
    تفاصيل المشروع
 ===================================================== */
@@ -2453,7 +2543,6 @@ function openProjectDetails(
         );
 
 
-
     if (
         !project
     ) {
@@ -2469,10 +2558,8 @@ function openProjectDetails(
     }
 
 
-
     const taskList =
         project.taskList || [];
-
 
 
     const tasksHtml =
@@ -2530,7 +2617,6 @@ function openProjectDetails(
         `;
 
 
-
     document
         .getElementById(
             "projectDetails"
@@ -2568,6 +2654,23 @@ function openProjectDetails(
                     ${escapeHtml(
                         project.manager
                     )}
+
+                </strong>
+
+            </div>
+
+
+
+
+            <div class="detail-item">
+
+                <span>
+                    عدد الموظفين المطلوبين
+                </span>
+
+                <strong>
+
+                    ${project.requiredEmployees}
 
                 </strong>
 
@@ -2694,7 +2797,6 @@ function openProjectDetails(
         `;
 
 
-
     detailsModal
         .classList
         .add(
@@ -2710,7 +2812,6 @@ function openProjectDetails(
         );
 
 }
-
 
 
 
@@ -2738,7 +2839,6 @@ function closeDetailsModal() {
         );
 
 }
-
 
 
 
@@ -2775,9 +2875,6 @@ function openSidebar() {
 }
 
 
-
-
-
 function closeSidebar() {
 
 
@@ -2803,7 +2900,6 @@ function closeSidebar() {
         );
 
 }
-
 
 
 
@@ -2835,7 +2931,6 @@ async function logout() {
     }
 
 
-
     localStorage.clear();
 
 
@@ -2843,7 +2938,6 @@ async function logout() {
         "login.html";
 
 }
-
 
 
 
@@ -2863,7 +2957,6 @@ document
     );
 
 
-
 document
     .getElementById(
         "closeProjectModalBtn"
@@ -2872,7 +2965,6 @@ document
         "click",
         closeProjectModal
     );
-
 
 
 document
@@ -2885,7 +2977,6 @@ document
     );
 
 
-
 document
     .getElementById(
         "projectModalOverlay"
@@ -2894,7 +2985,6 @@ document
         "click",
         closeProjectModal
     );
-
 
 
 document
@@ -2907,7 +2997,6 @@ document
     );
 
 
-
 document
     .getElementById(
         "detailsModalOverlay"
@@ -2916,7 +3005,6 @@ document
         "click",
         closeDetailsModal
     );
-
 
 
 document
@@ -2929,7 +3017,6 @@ document
     );
 
 
-
 document
     .getElementById(
         "searchInput"
@@ -2938,7 +3025,6 @@ document
         "input",
         filterProjects
     );
-
 
 
 document
@@ -2951,7 +3037,6 @@ document
     );
 
 
-
 document
     .getElementById(
         "logoutBtn"
@@ -2960,7 +3045,6 @@ document
         "click",
         logout
     );
-
 
 
 document
@@ -2973,13 +3057,11 @@ document
     );
 
 
-
 sidebarOverlay
     .addEventListener(
         "click",
         closeSidebar
     );
-
 
 
 document
@@ -3010,7 +3092,6 @@ document
 
 
 
-
 /* =====================================================
    تشغيل الصفحة
 ===================================================== */
@@ -3032,10 +3113,43 @@ async function initializePage() {
     }
 
 
-    await loadProjects();
+    try {
+
+
+        await loadEmployees();
+
+
+        await loadProjects();
+
+
+    } catch (error) {
+
+
+        console.error(
+            "خطأ تهيئة صفحة المشاريع:",
+            error
+        );
+
+
+        projectsGrid.innerHTML = `
+
+            <div class="empty-state error-state">
+
+                تعذر تحميل بيانات الصفحة.
+
+                <small>
+                    ${escapeHtml(
+                        error.message || ""
+                    )}
+                </small>
+
+            </div>
+
+        `;
+
+    }
 
 }
-
 
 
 initializePage();
