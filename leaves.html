@@ -1,574 +1,297 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
-
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>معيار | طلبات الإجازات</title>
-
-    <link
-        rel="stylesheet"
-        href="leaves.css"
-    >
-
-    <script
-        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
-    ></script>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>معيار | طلبات الإجازات</title>
+<link rel="stylesheet" href="leaves.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-
 
 <body>
 
-
 <div class="leaves-page">
 
+<header class="mobile-header">
+<button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="فتح القائمة">☰</button>
 
-    <!-- =========================================
-         هيدر الجوال
-    ========================================== -->
+<div class="mobile-header-title">
+<h2>طلبات الإجازات</h2>
+<span>معيار</span>
+</div>
 
-    <header class="mobile-header">
+<img src="assets/logo.png" alt="معيار" class="mobile-logo">
+</header>
 
-        <button
-            type="button"
-            class="mobile-menu-btn"
-            id="mobileMenuBtn"
-            aria-label="فتح القائمة"
-        >
-            ☰
-        </button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
 
+<aside class="sidebar" id="sidebar">
 
-        <div class="mobile-header-title">
+<div class="sidebar-logo">
+<img src="assets/logo.png" alt="معيار">
+</div>
 
-            <h2>
-                طلبات الإجازات
-            </h2>
+<nav class="sidebar-nav">
 
-            <span>
-                معيار
-            </span>
+<a href="dashboard.html" class="nav-link">
+لوحة التحكم
+</a>
 
-        </div>
+<a href="employees.html" class="nav-link">
+الموظفون
+</a>
 
+<a href="projects.html" class="nav-link">
+المشاريع
+</a>
 
-        <img
-            src="assets/logo.png"
-            alt="معيار"
-            class="mobile-logo"
-        >
+<a href="tasks.html" class="nav-link">
+المهام
+</a>
 
-    </header>
+<a href="matching.html" class="nav-link">
+المطابقة والترشيح
+</a>
 
+<a href="evaluations.html" class="nav-link">
+التقييمات
+</a>
 
-    <div
-        class="sidebar-overlay"
-        id="sidebarOverlay"
-    ></div>
+<a href="decisions.html" class="nav-link">
+القرارات
+</a>
 
+<a href="leaves.html" class="nav-link active">
+طلبات الإجازات
+</a>
 
+<a href="reports.html" class="nav-link">
+التقارير
+</a>
 
-    <!-- =========================================
-         القائمة الجانبية
-    ========================================== -->
+</nav>
 
-    <aside
-        class="sidebar"
-        id="sidebar"
-    >
+<button type="button" class="logout-btn" id="logoutBtn">
+تسجيل الخروج
+</button>
 
+</aside>
 
-        <div class="sidebar-logo">
+<main class="main-content">
 
-            <img
-                src="assets/logo.png"
-                alt="معيار"
-            >
+<header class="topbar">
 
-        </div>
+<span class="page-badge">
+إدارة الإجازات
+</span>
 
+<h1>
+طلبات الإجازات
+</h1>
 
-        <nav class="sidebar-nav">
+<p>
+مراجعة طلبات الموظفين واعتمادها أو رفضها ومتابعة الإجازات الحالية والقادمة.
+</p>
 
+</header>
 
-            <a
-                href="dashboard.html"
-                class="nav-link"
-            >
-                لوحة التحكم
-            </a>
+<section class="summary-grid">
 
+<div class="summary-card">
+<span>إجمالي الطلبات</span>
+<strong id="summaryTotal">0</strong>
+</div>
 
-            <a
-                href="employees.html"
-                class="nav-link"
-            >
-                الموظفون
-            </a>
+<div class="summary-card pending-card">
+<span>قيد المراجعة</span>
+<strong id="summaryPending">0</strong>
+</div>
 
+<div class="summary-card approved-card">
+<span>الطلبات المعتمدة</span>
+<strong id="summaryApproved">0</strong>
+</div>
 
-            <a
-                href="projects.html"
-                class="nav-link"
-            >
-                المشاريع
-            </a>
+<div class="summary-card rejected-card">
+<span>الطلبات المرفوضة</span>
+<strong id="summaryRejected">0</strong>
+</div>
 
+<div class="summary-card current-card">
+<span>في إجازة حالياً</span>
+<strong id="summaryCurrent">0</strong>
+</div>
 
-            <a
-                href="tasks.html"
-                class="nav-link"
-            >
-                المهام
-            </a>
+</section>
 
+<section class="toolbar">
 
-            <a
-                href="matching.html"
-                class="nav-link"
-            >
-                المطابقة والترشيح
-            </a>
+<div class="search-box">
+<input
+type="text"
+id="searchInput"
+placeholder="ابحث باسم الموظف أو الرقم الوظيفي أو البريد..."
+>
+</div>
 
+<div class="filters">
 
-            <a
-                href="evaluations.html"
-                class="nav-link"
-            >
-                التقييمات
-            </a>
+<select id="statusFilter">
+<option value="">جميع الحالات</option>
+<option value="قيد المراجعة">قيد المراجعة</option>
+<option value="معتمدة">معتمدة</option>
+<option value="مرفوضة">مرفوضة</option>
+</select>
 
+<select id="leaveTypeFilter">
+<option value="">جميع أنواع الإجازات</option>
+<option value="إجازة سنوية">إجازة سنوية</option>
+<option value="إجازة مرضية">إجازة مرضية</option>
+<option value="إجازة اضطرارية">إجازة اضطرارية</option>
+<option value="إجازة بدون راتب">إجازة بدون راتب</option>
+<option value="أخرى">أخرى</option>
+</select>
 
-            <a
-                href="decisions.html"
-                class="nav-link"
-            >
-                القرارات
-            </a>
+</div>
 
+</section>
 
-            <a
-                href="leaves.html"
-                class="nav-link active"
-            >
-                طلبات الإجازات
-            </a>
+<section class="requests-card">
 
+<div class="section-header">
 
-            <a
-                href="reports.html"
-                class="nav-link"
-            >
-                التقارير
-            </a>
+<div>
+<h2>طلبات الموظفين</h2>
+<p id="requestsCount">-</p>
+</div>
 
+</div>
 
-        </nav>
+<div class="requests-list" id="requestsList">
 
+<div class="loading-state">
+جارٍ تحميل طلبات الإجازة...
+</div>
 
-        <button
-            type="button"
-            class="logout-btn"
-            id="logoutBtn"
-        >
-            تسجيل الخروج
-        </button>
+</div>
 
+</section>
 
-    </aside>
-
-
-
-    <!-- =========================================
-         المحتوى
-    ========================================== -->
-
-    <main class="main-content">
-
-
-        <header class="topbar">
-
-            <span class="page-badge">
-                إدارة الإجازات
-            </span>
-
-
-            <h1>
-                طلبات الإجازات
-            </h1>
-
-
-            <p>
-                مراجعة طلبات الموظفين واعتمادها أو رفضها ومتابعة الإجازات الحالية والقادمة.
-            </p>
-
-        </header>
-
-
-
-        <!-- =========================================
-             ملخص الإجازات
-        ========================================== -->
-
-        <section class="summary-grid">
-
-
-            <div class="summary-card">
-
-                <span>
-                    إجمالي الطلبات
-                </span>
-
-                <strong id="summaryTotal">
-                    0
-                </strong>
-
-            </div>
-
-
-            <div class="summary-card pending-card">
-
-                <span>
-                    قيد المراجعة
-                </span>
-
-                <strong id="summaryPending">
-                    0
-                </strong>
-
-            </div>
-
-
-            <div class="summary-card approved-card">
-
-                <span>
-                    الطلبات المعتمدة
-                </span>
-
-                <strong id="summaryApproved">
-                    0
-                </strong>
-
-            </div>
-
-
-            <div class="summary-card rejected-card">
-
-                <span>
-                    الطلبات المرفوضة
-                </span>
-
-                <strong id="summaryRejected">
-                    0
-                </strong>
-
-            </div>
-
-
-            <div class="summary-card current-card">
-
-                <span>
-                    في إجازة حالياً
-                </span>
-
-                <strong id="summaryCurrent">
-                    0
-                </strong>
-
-            </div>
-
-
-        </section>
-
-
-
-        <!-- =========================================
-             البحث والتصفية
-        ========================================== -->
-
-        <section class="toolbar">
-
-
-            <div class="search-box">
-
-                <input
-                    type="text"
-                    id="searchInput"
-                    placeholder="ابحث باسم الموظف أو الرقم الوظيفي أو البريد..."
-                >
-
-            </div>
-
-
-            <div class="filters">
-
-
-                <select id="statusFilter">
-
-                    <option value="">
-                        جميع الحالات
-                    </option>
-
-                    <option value="قيد المراجعة">
-                        قيد المراجعة
-                    </option>
-
-                    <option value="معتمدة">
-                        معتمدة
-                    </option>
-
-                    <option value="مرفوضة">
-                        مرفوضة
-                    </option>
-
-                </select>
-
-
-                <select id="leaveTypeFilter">
-
-                    <option value="">
-                        جميع أنواع الإجازات
-                    </option>
-
-                    <option value="إجازة سنوية">
-                        إجازة سنوية
-                    </option>
-
-                    <option value="إجازة مرضية">
-                        إجازة مرضية
-                    </option>
-
-                    <option value="إجازة اضطرارية">
-                        إجازة اضطرارية
-                    </option>
-
-                    <option value="إجازة بدون راتب">
-                        إجازة بدون راتب
-                    </option>
-
-                    <option value="أخرى">
-                        أخرى
-                    </option>
-
-                </select>
-
-
-            </div>
-
-
-        </section>
-
-
-
-        <!-- =========================================
-             قائمة الطلبات
-        ========================================== -->
-
-        <section class="requests-card">
-
-
-            <div class="section-header">
-
-                <div>
-
-                    <h2>
-                        طلبات الموظفين
-                    </h2>
-
-                    <p id="requestsCount">
-                        -
-                    </p>
-
-                </div>
-
-            </div>
-
-
-            <div
-                class="requests-list"
-                id="requestsList"
-            >
-
-                <div class="loading-state">
-                    جارٍ تحميل طلبات الإجازة...
-                </div>
-
-            </div>
-
-
-        </section>
-
-
-    </main>
-
+</main>
 
 </div>
 
 
+<div class="modal" id="decisionModal">
 
-<!-- =========================================
-     نافذة مراجعة الطلب
-========================================== -->
+<div class="modal-overlay" id="decisionModalOverlay"></div>
+
+<div class="modal-box">
+
+<div class="modal-header">
+
+<div>
+<h2>مراجعة طلب الإجازة</h2>
+<p>
+راجع بيانات الموظف والطلب قبل اعتماد القرار.
+</p>
+</div>
+
+<button
+type="button"
+class="close-btn"
+id="closeDecisionModalBtn"
+aria-label="إغلاق"
+>
+×
+</button>
+
+</div>
 
 <div
-    class="modal"
-    id="decisionModal"
->
+class="decision-request-info"
+id="decisionRequestInfo"
+></div>
 
+<div
+id="taskConflictBox"
+style="display:none; margin-bottom:18px;"
+></div>
 
-    <div
-        class="modal-overlay"
-        id="decisionModalOverlay"
-    ></div>
+<div class="form-group">
 
+<label for="decisionNote">
+ملاحظة المسؤول
+</label>
 
-    <div class="modal-box">
+<textarea
+id="decisionNote"
+rows="4"
+maxlength="500"
+placeholder="في حالة الرفض يجب كتابة سبب الرفض..."
+></textarea>
 
-
-        <div class="modal-header">
-
-
-            <div>
-
-                <h2>
-                    مراجعة طلب الإجازة
-                </h2>
-
-                <p>
-                    راجع بيانات الموظف والطلب قبل اعتماد القرار.
-                </p>
-
-            </div>
-
-
-            <button
-                type="button"
-                class="close-btn"
-                id="closeDecisionModalBtn"
-                aria-label="إغلاق"
-            >
-                ×
-            </button>
-
-
-        </div>
-
-
-        <div
-            class="decision-request-info"
-            id="decisionRequestInfo"
-        ></div>
-
-
-        <div
-            id="taskConflictBox"
-            style="display:none; margin-bottom:18px;"
-        ></div>
-
-
-        <div class="form-group">
-
-            <label for="decisionNote">
-                ملاحظة المسؤول
-            </label>
-
-            <textarea
-                id="decisionNote"
-                rows="4"
-                maxlength="500"
-                placeholder="في حالة الرفض يجب كتابة سبب الرفض..."
-            ></textarea>
-
-            <small class="form-hint">
-                سبب الرفض إلزامي، أما عند الاعتماد فالملاحظة اختيارية.
-            </small>
-
-        </div>
-
-
-        <div
-            class="form-error"
-            id="decisionError"
-        ></div>
-
-
-        <div class="decision-actions">
-
-
-            <button
-                type="button"
-                class="cancel-btn"
-                id="cancelDecisionBtn"
-            >
-                رجوع
-            </button>
-
-
-            <button
-                type="button"
-                class="reject-btn"
-                id="rejectLeaveBtn"
-            >
-                رفض الطلب
-            </button>
-
-
-            <button
-                type="button"
-                class="approve-btn"
-                id="approveLeaveBtn"
-            >
-                اعتماد الطلب
-            </button>
-
-
-        </div>
-
-
-    </div>
-
+<small class="form-hint">
+سبب الرفض إلزامي، أما عند الاعتماد فالملاحظة اختيارية.
+</small>
 
 </div>
 
+<div
+class="form-error"
+id="decisionError"
+></div>
+
+<div class="decision-actions">
+
+<button
+type="button"
+class="cancel-btn"
+id="cancelDecisionBtn"
+>
+رجوع
+</button>
+
+<button
+type="button"
+class="reject-btn"
+id="rejectLeaveBtn"
+>
+رفض الطلب
+</button>
+
+<button
+type="button"
+class="approve-btn"
+id="approveLeaveBtn"
+>
+اعتماد الطلب
+</button>
+
+</div>
+
+</div>
+
+</div>
 
 
 <script>
 
-
-/* =====================================================
-   Supabase
-===================================================== */
-
 const SUPABASE_URL =
-    "https://avooyglxacytrfhvotsl.supabase.co";
-
+"https://avooyglxacytrfhvotsl.supabase.co";
 
 const SUPABASE_KEY =
-    "sb_publishable_NVlWEnA_w4KbSse_-70zdA_J9ut0Kyo";
-
+"sb_publishable_NVlWEnA_w4KbSse_-70zdA_J9ut0Kyo";
 
 const ADMIN_EMAIL =
-    "admin@gmail.com";
-
+"admin@gmail.com";
 
 const supabaseClient =
-    window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-    );
+window.supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
+);
 
-
-
-/* =====================================================
-   البيانات
-===================================================== */
 
 let leaveRequests = [];
 
@@ -576,3001 +299,2546 @@ let employees = [];
 
 let tasks = [];
 
-
-/*
-    الإسنادات الفعلية للمهام.
-
-    هذا هو التعديل المهم:
-    الصفحة أصبحت تقرأ الموظفين المسندين
-    من task_assignments.
-*/
 let taskAssignments = [];
-
 
 let selectedRequest = null;
 
 let selectedRequestConflicts = [];
 
 
-
-/* =====================================================
-   العناصر
-===================================================== */
-
 const requestsList =
-    document.getElementById(
-        "requestsList"
-    );
-
+document.getElementById(
+"requestsList"
+);
 
 const requestsCount =
-    document.getElementById(
-        "requestsCount"
-    );
-
+document.getElementById(
+"requestsCount"
+);
 
 const decisionModal =
-    document.getElementById(
-        "decisionModal"
-    );
-
+document.getElementById(
+"decisionModal"
+);
 
 const decisionRequestInfo =
-    document.getElementById(
-        "decisionRequestInfo"
-    );
-
+document.getElementById(
+"decisionRequestInfo"
+);
 
 const decisionNote =
-    document.getElementById(
-        "decisionNote"
-    );
-
+document.getElementById(
+"decisionNote"
+);
 
 const decisionError =
-    document.getElementById(
-        "decisionError"
-    );
-
+document.getElementById(
+"decisionError"
+);
 
 const sidebar =
-    document.getElementById(
-        "sidebar"
-    );
-
+document.getElementById(
+"sidebar"
+);
 
 const sidebarOverlay =
-    document.getElementById(
-        "sidebarOverlay"
-    );
-
+document.getElementById(
+"sidebarOverlay"
+);
 
 const taskConflictBox =
-    document.getElementById(
-        "taskConflictBox"
-    );
+document.getElementById(
+"taskConflictBox"
+);
 
-
-
-/* =====================================================
-   حماية النصوص
-===================================================== */
 
 function escapeHtml(value) {
 
-    return String(
-        value ?? ""
-    )
-    .replaceAll(
-        "&",
-        "&amp;"
-    )
-    .replaceAll(
-        "<",
-        "&lt;"
-    )
-    .replaceAll(
-        ">",
-        "&gt;"
-    )
-    .replaceAll(
-        '"',
-        "&quot;"
-    )
-    .replaceAll(
-        "'",
-        "&#039;"
-    );
+return String(
+value ?? ""
+)
+.replaceAll(
+"&",
+"&amp;"
+)
+.replaceAll(
+"<",
+"&lt;"
+)
+.replaceAll(
+">",
+"&gt;"
+)
+.replaceAll(
+'"',
+"&quot;"
+)
+.replaceAll(
+"'",
+"&#039;"
+);
 
 }
 
-
-
-/* =====================================================
-   حماية صفحة المسؤول
-===================================================== */
 
 async function protectPage() {
 
-    try {
+try {
 
-        const {
-            data,
-            error
-        } =
-        await supabaseClient
-            .auth
-            .getSession();
+const {
+data,
+error
+} =
+await supabaseClient
+.auth
+.getSession();
 
+if (
+error
+||
+!data.session
+) {
 
-        if (
-            error
-            ||
-            !data.session
-        ) {
+clearLocalSession();
 
-            clearLocalSession();
+window.location.href =
+"login.html";
 
-
-            window.location.href =
-                "login.html";
-
-
-            return false;
-
-        }
-
-
-        const email =
-            String(
-                data.session.user.email
-                ||
-                ""
-            )
-            .trim()
-            .toLowerCase();
-
-
-        if (
-            email
-            !==
-            ADMIN_EMAIL.toLowerCase()
-        ) {
-
-            await supabaseClient
-                .auth
-                .signOut();
-
-
-            clearLocalSession();
-
-
-            window.location.href =
-                "login.html";
-
-
-            return false;
-
-        }
-
-
-        localStorage.setItem(
-            "miyarRole",
-            "admin"
-        );
-
-
-        localStorage.setItem(
-            "miyarEmail",
-            email
-        );
-
-
-        return true;
-
-    }
-
-    catch(error) {
-
-        console.error(
-            "خطأ التحقق من المسؤول:",
-            error
-        );
-
-
-        return false;
-
-    }
+return false;
 
 }
 
+const email =
+String(
+data.session.user.email
+||
+""
+)
+.trim()
+.toLowerCase();
 
+if (
+email
+!==
+ADMIN_EMAIL.toLowerCase()
+) {
 
-/* =====================================================
-   تحميل الموظفين
-===================================================== */
+await supabaseClient
+.auth
+.signOut();
+
+clearLocalSession();
+
+window.location.href =
+"login.html";
+
+return false;
+
+}
+
+localStorage.setItem(
+"miyarRole",
+"admin"
+);
+
+localStorage.setItem(
+"miyarEmail",
+email
+);
+
+return true;
+
+}
+
+catch(error) {
+
+console.error(
+"خطأ التحقق من المسؤول:",
+error
+);
+
+return false;
+
+}
+
+}
+
 
 async function loadEmployees() {
 
-    const {
-        data,
-        error
-    } =
-    await supabaseClient
-        .from(
-            "employees"
-        )
-        .select(`
-            id,
-            name,
-            employee_number,
-            email,
-            department,
-            job_title
-        `)
-        .order(
-            "name",
-            {
-                ascending:
-                    true
-            }
-        );
+const {
+data,
+error
+} =
+await supabaseClient
+.from(
+"employees"
+)
+.select(`
+id,
+name,
+employee_number,
+email,
+department,
+job_title
+`)
+.order(
+"name",
+{
+ascending:
+true
+}
+);
 
+if (error) {
+throw error;
+}
 
-    if (error) {
-
-        throw error;
-
-    }
-
-
-    employees =
-        Array.isArray(
-            data
-        )
-        ?
-        data
-        :
-        [];
+employees =
+Array.isArray(
+data
+)
+?
+data
+:
+[];
 
 }
 
-
-
-/* =====================================================
-   تحميل المهام
-===================================================== */
 
 async function loadTasks() {
 
-    try {
+try {
 
-        const {
-            data,
-            error
-        } =
-        await supabaseClient
-            .from(
-                "tasks"
-            )
-            .select(`
-                id,
-                task_name,
-                status,
-                assigned_employee_id
-            `)
-            .order(
-                "id",
-                {
-                    ascending:
-                        false
-                }
-            );
+const {
+data,
+error
+} =
+await supabaseClient
+.from(
+"tasks"
+)
+.select(`
+id,
+task_name,
+status,
+assigned_employee_id
+`)
+.order(
+"id",
+{
+ascending:
+false
+}
+);
 
+if (error) {
+throw error;
+}
 
-        if (error) {
-
-            throw error;
-
-        }
-
-
-        tasks =
-            Array.isArray(
-                data
-            )
-            ?
-            data
-            :
-            [];
-
-    }
-
-    catch(error) {
-
-        console.warn(
-            "تعذر تحميل المهام لفحص التعارض:",
-            error
-        );
-
-
-        tasks = [];
-
-    }
+tasks =
+Array.isArray(
+data
+)
+?
+data
+:
+[];
 
 }
 
+catch(error) {
 
+console.warn(
+"تعذر تحميل المهام لفحص التعارض:",
+error
+);
 
-/* =====================================================
-   تحميل إسنادات المهام
-===================================================== */
+tasks = [];
+
+}
+
+}
+
 
 async function loadTaskAssignments() {
 
-    try {
+try {
 
-        const {
-            data,
-            error
-        } =
-        await supabaseClient
-            .from(
-                "task_assignments"
-            )
-            .select(`
-                id,
-                task_id,
-                employee_id,
-                decision_id,
-                assigned_at,
-                created_at
-            `);
+const {
+data,
+error
+} =
+await supabaseClient
+.from(
+"task_assignments"
+)
+.select(`
+id,
+task_id,
+employee_id,
+decision_id,
+assigned_at,
+created_at
+`);
 
+if (error) {
+throw error;
+}
 
-        if (error) {
-
-            throw error;
-
-        }
-
-
-        taskAssignments =
-            Array.isArray(
-                data
-            )
-            ?
-            data
-            :
-            [];
-
-    }
-
-    catch(error) {
-
-        console.warn(
-            "تعذر تحميل إسنادات المهام:",
-            error
-        );
-
-
-        taskAssignments = [];
-
-    }
+taskAssignments =
+Array.isArray(
+data
+)
+?
+data
+:
+[];
 
 }
 
+catch(error) {
 
+console.warn(
+"تعذر تحميل إسنادات المهام:",
+error
+);
 
-/* =====================================================
-   تحميل طلبات الإجازة
-===================================================== */
+taskAssignments = [];
+
+}
+
+}
+
 
 async function loadLeaves() {
 
-    requestsList.innerHTML = `
+requestsList.innerHTML = `
 
-        <div class="loading-state">
-            جارٍ تحميل طلبات الإجازة...
-        </div>
+<div class="loading-state">
+جارٍ تحميل طلبات الإجازة...
+</div>
 
-    `;
+`;
 
+try {
 
-    try {
+const {
+data,
+error
+} =
+await supabaseClient
+.from(
+"employee_leaves"
+)
+.select(`
+id,
+employee_id,
+leave_type,
+start_date,
+end_date,
+status,
+notes,
+created_at,
+reviewed_at,
+decision_note
+`)
+.order(
+"created_at",
+{
+ascending:
+false
+}
+);
 
-        const {
-            data,
-            error
-        } =
-        await supabaseClient
-            .from(
-                "employee_leaves"
-            )
-            .select(`
-                id,
-                employee_id,
-                leave_type,
-                start_date,
-                end_date,
-                status,
-                notes,
-                created_at,
-                reviewed_at,
-                decision_note
-            `)
-            .order(
-                "created_at",
-                {
-                    ascending:
-                        false
-                }
-            );
+if (error) {
+throw error;
+}
 
+leaveRequests =
+Array.isArray(
+data
+)
+?
+data
+:
+[];
 
-        if (error) {
+enrichRequests();
 
-            throw error;
+updateSummary();
 
-        }
-
-
-        leaveRequests =
-            Array.isArray(
-                data
-            )
-            ?
-            data
-            :
-            [];
-
-
-        enrichRequests();
-
-
-        updateSummary();
-
-
-        filterRequests();
-
-    }
-
-    catch(error) {
-
-        console.error(
-            "خطأ تحميل الإجازات:",
-            error
-        );
-
-
-        requestsList.innerHTML = `
-
-            <div class="error-state">
-
-                <strong>
-                    تعذر تحميل طلبات الإجازة
-                </strong>
-
-                <span>
-                    ${escapeHtml(
-                        error.message
-                        ||
-                        ""
-                    )}
-                </span>
-
-            </div>
-
-        `;
-
-    }
+filterRequests();
 
 }
 
+catch(error) {
 
+console.error(
+"خطأ تحميل الإجازات:",
+error
+);
 
-/* =====================================================
-   ربط الطلب ببيانات الموظف
-===================================================== */
+requestsList.innerHTML = `
+
+<div class="error-state">
+
+<strong>
+تعذر تحميل طلبات الإجازة
+</strong>
+
+<span>
+${escapeHtml(
+error.message
+||
+""
+)}
+</span>
+
+</div>
+
+`;
+
+}
+
+}
+
 
 function enrichRequests() {
 
-    leaveRequests =
-        leaveRequests.map(
-            request => {
+leaveRequests =
+leaveRequests.map(
+request => {
 
-                const employee =
-                    employees.find(
-                        item =>
-                            Number(
-                                item.id
-                            )
-                            ===
-                            Number(
-                                request.employee_id
-                            )
-                    )
-                    ||
-                    null;
+const employee =
+employees.find(
+item =>
+Number(
+item.id
+)
+===
+Number(
+request.employee_id
+)
+)
+||
+null;
 
+return {
 
-                return {
+...request,
 
-                    ...request,
+employee
 
-                    employee
+};
 
-                };
-
-            }
-        );
+}
+);
 
 }
 
-
-
-/* =====================================================
-   هل المهمة منتهية؟
-===================================================== */
 
 function isFinishedTaskStatus(
-    status
+status
 ) {
 
-    const value =
-        String(
-            status
-            ||
-            ""
-        )
-        .trim()
-        .toLowerCase();
+const value =
+String(
+status
+||
+""
+)
+.trim()
+.toLowerCase();
 
+const finishedStatuses = [
 
-    const finishedStatuses = [
+"مكتملة",
+"مكتمل",
+"منجزة",
+"منجز",
+"تم الإنجاز",
+"تم الانجاز",
+"completed",
+"done",
+"finished",
+"closed"
 
-        "مكتملة",
+];
 
-        "مكتمل",
-
-        "منجزة",
-
-        "منجز",
-
-        "تم الإنجاز",
-
-        "تم الانجاز",
-
-        "completed",
-
-        "done",
-
-        "finished",
-
-        "closed"
-
-    ];
-
-
-    return finishedStatuses.includes(
-        value
-    );
+return finishedStatuses.includes(
+value
+);
 
 }
 
-
-
-/* =====================================================
-   المهام المسندة للموظف
-
-   مهم:
-   نقرأ من task_assignments.
-
-   ونحتفظ بدعم assigned_employee_id
-   حتى البيانات القديمة تظل تعمل.
-===================================================== */
 
 function getEmployeeAssignedTasks(
-    employeeId
+employeeId
 ) {
 
-    const employeeIdNumber =
-        Number(
-            employeeId
-        );
+const employeeIdNumber =
+Number(
+employeeId
+);
 
+const assignedTaskIds =
+new Set(
 
-    /*
-        أرقام المهام الموجودة في
-        task_assignments.
-    */
+taskAssignments
 
-    const assignedTaskIds =
-        new Set(
+.filter(
+assignment =>
 
-            taskAssignments
+Number(
+assignment.employee_id
+)
+===
+employeeIdNumber
+)
 
-                .filter(
-                    assignment =>
+.map(
+assignment =>
 
-                        Number(
-                            assignment.employee_id
-                        )
-                        ===
-                        employeeIdNumber
-                )
+Number(
+assignment.task_id
+)
+)
 
-                .map(
-                    assignment =>
+);
 
-                        Number(
-                            assignment.task_id
-                        )
-                )
+tasks.forEach(
+task => {
 
-        );
+if (
 
+Number(
+task.assigned_employee_id
+)
+===
+employeeIdNumber
 
-    /*
-        دعم البيانات القديمة.
+&&
 
-        إذا كانت المهمة تحتوي
-        assigned_employee_id
-        نضيفها أيضاً.
+!assignedTaskIds.has(
+Number(
+task.id
+)
+)
 
-        Set يمنع التكرار.
-    */
+) {
 
-    tasks.forEach(
-        task => {
-
-            if (
-
-                Number(
-                    task.assigned_employee_id
-                )
-                ===
-                employeeIdNumber
-
-                &&
-
-                !assignedTaskIds.has(
-                    Number(
-                        task.id
-                    )
-                )
-
-            ) {
-
-                assignedTaskIds.add(
-                    Number(
-                        task.id
-                    )
-                );
-
-            }
-
-        }
-    );
-
-
-    /*
-        نرجع فقط المهام النشطة.
-    */
-
-    return tasks.filter(
-        task =>
-
-            assignedTaskIds.has(
-                Number(
-                    task.id
-                )
-            )
-
-            &&
-
-            !isFinishedTaskStatus(
-                task.status
-            )
-    );
+assignedTaskIds.add(
+Number(
+task.id
+)
+);
 
 }
 
+}
+);
 
+return tasks.filter(
+task =>
 
-/* =====================================================
-   عرض تنبيه المهام
-===================================================== */
+assignedTaskIds.has(
+Number(
+task.id
+)
+)
+
+&&
+
+!isFinishedTaskStatus(
+task.status
+)
+);
+
+}
+
 
 function renderTaskConflictWarning(
-    request
+request
 ) {
 
-    selectedRequestConflicts =
-        getEmployeeAssignedTasks(
-            request.employee_id
-        );
+selectedRequestConflicts =
+getEmployeeAssignedTasks(
+request.employee_id
+);
 
+if (
+selectedRequestConflicts.length
+===
+0
+) {
 
-    if (
-        selectedRequestConflicts.length
-        ===
-        0
-    ) {
+taskConflictBox.style.display =
+"block";
 
-        taskConflictBox.style.display =
-            "block";
+taskConflictBox.innerHTML = `
 
+<div
+style="
+padding:14px;
+border-radius:12px;
+background:rgba(46,125,50,0.08);
+border:1px solid rgba(46,125,50,0.20);
+"
+>
 
-        taskConflictBox.innerHTML = `
+<strong>
+لا توجد مهام نشطة مسندة للموظف حالياً
+</strong>
 
-            <div
-                style="
-                    padding:14px;
-                    border-radius:12px;
-                    background:rgba(46,125,50,0.08);
-                    border:1px solid rgba(46,125,50,0.20);
-                "
-            >
+<p
+style="
+margin:6px 0 0;
+font-size:13px;
+"
+>
+يمكن مراجعة طلب الإجازة واتخاذ القرار.
+</p>
 
-                <strong>
-                    لا توجد مهام نشطة مسندة للموظف حالياً
-                </strong>
+</div>
 
-                <p
-                    style="
-                        margin:6px 0 0;
-                        font-size:13px;
-                    "
-                >
-                    يمكن مراجعة طلب الإجازة واتخاذ القرار.
-                </p>
+`;
 
-            </div>
-
-        `;
-
-
-        return;
-
-    }
-
-
-    const tasksHtml =
-        selectedRequestConflicts
-
-            .map(
-                task => `
-
-                    <li
-                        style="
-                            margin-bottom:6px;
-                        "
-                    >
-
-                        ${escapeHtml(
-                            task.task_name
-                            ||
-                            "مهمة بدون اسم"
-                        )}
-
-                        ${
-                            task.status
-                            ?
-                            ` — ${escapeHtml(
-                                task.status
-                            )}`
-                            :
-                            ""
-                        }
-
-                    </li>
-
-                `
-            )
-
-            .join(
-                ""
-            );
-
-
-    taskConflictBox.style.display =
-        "block";
-
-
-    taskConflictBox.innerHTML = `
-
-        <div
-            style="
-                padding:14px;
-                border-radius:12px;
-                background:rgba(194,122,0,0.08);
-                border:1px solid rgba(194,122,0,0.25);
-            "
-        >
-
-            <strong>
-                تنبيه قبل اعتماد الإجازة
-            </strong>
-
-
-            <p
-                style="
-                    margin:7px 0;
-                    font-size:13px;
-                    line-height:1.8;
-                "
-            >
-
-                لدى الموظف
-                ${selectedRequestConflicts.length}
-                مهمة نشطة مسندة إليه حالياً.
-
-                راجع المهام قبل اعتماد الإجازة.
-
-            </p>
-
-
-            <ul
-                style="
-                    margin:8px 18px 0 0;
-                    padding:0;
-                    font-size:13px;
-                "
-            >
-
-                ${tasksHtml}
-
-            </ul>
-
-
-        </div>
-
-    `;
+return;
 
 }
 
+const tasksHtml =
+selectedRequestConflicts
 
+.map(
+task => `
 
-/* =====================================================
-   عرض الطلبات
-===================================================== */
+<li
+style="
+margin-bottom:6px;
+"
+>
+
+${escapeHtml(
+task.task_name
+||
+"مهمة بدون اسم"
+)}
+
+${
+task.status
+?
+` — ${escapeHtml(
+task.status
+)}`
+:
+""
+}
+
+</li>
+
+`
+)
+
+.join(
+""
+);
+
+taskConflictBox.style.display =
+"block";
+
+taskConflictBox.innerHTML = `
+
+<div
+style="
+padding:14px;
+border-radius:12px;
+background:rgba(194,122,0,0.08);
+border:1px solid rgba(194,122,0,0.25);
+"
+>
+
+<strong>
+تنبيه قبل اعتماد الإجازة
+</strong>
+
+<p
+style="
+margin:7px 0;
+font-size:13px;
+line-height:1.8;
+"
+>
+
+لدى الموظف
+${selectedRequestConflicts.length}
+مهمة نشطة مسندة إليه حالياً.
+
+راجع المهام قبل اعتماد الإجازة.
+
+</p>
+
+<ul
+style="
+margin:8px 18px 0 0;
+padding:0;
+font-size:13px;
+"
+>
+
+${tasksHtml}
+
+</ul>
+
+</div>
+
+`;
+
+}
+
 
 function renderRequests(
-    list
+list
 ) {
 
-    requestsList.innerHTML =
-        "";
+requestsList.innerHTML =
+"";
 
+requestsCount.textContent =
+`${list.length} طلب`;
 
-    requestsCount.textContent =
-        `${list.length} طلب`;
+if (
+list.length
+===
+0
+) {
 
+requestsList.innerHTML = `
 
-    if (
-        list.length
-        ===
-        0
-    ) {
+<div class="empty-state">
 
-        requestsList.innerHTML = `
+لا توجد طلبات مطابقة للبحث أو التصفية الحالية.
 
-            <div class="empty-state">
+</div>
 
-                لا توجد طلبات مطابقة للبحث أو التصفية الحالية.
+`;
 
-            </div>
-
-        `;
-
-
-        return;
-
-    }
-
-
-    list.forEach(
-        request => {
-
-            const employee =
-                request.employee
-                ||
-                {};
-
-
-            const card =
-                document.createElement(
-                    "article"
-                );
-
-
-            card.className =
-                "request-item";
-
-
-            const pending =
-                normalizeStatus(
-                    request.status
-                )
-                ===
-                "قيد المراجعة";
-
-
-            const duration =
-                calculateDays(
-                    request.start_date,
-                    request.end_date
-                );
-
-
-            const assignedTasks =
-                getEmployeeAssignedTasks(
-                    request.employee_id
-                );
-
-
-            card.innerHTML = `
-
-                <div class="request-head">
-
-
-                    <div class="employee-block">
-
-
-                        <div class="avatar">
-
-                            ${escapeHtml(
-                                (
-                                    employee.name
-                                    ||
-                                    "-"
-                                )
-                                .charAt(
-                                    0
-                                )
-                            )}
-
-                        </div>
-
-
-                        <div>
-
-                            <h3>
-
-                                ${escapeHtml(
-                                    employee.name
-                                    ||
-                                    "موظف غير معروف"
-                                )}
-
-                            </h3>
-
-
-                            <p>
-
-                                ${escapeHtml(
-                                    employee.employee_number
-                                    ||
-                                    "-"
-                                )}
-
-                                <span>
-                                    •
-                                </span>
-
-                                ${escapeHtml(
-                                    employee.department
-                                    ||
-                                    "-"
-                                )}
-
-                            </p>
-
-                        </div>
-
-
-                    </div>
-
-
-                    <span
-                        class="
-                            status-badge
-                            ${getStatusClass(
-                                request.status
-                            )}
-                        "
-                    >
-
-                        ${escapeHtml(
-                            normalizeStatus(
-                                request.status
-                            )
-                            ||
-                            "-"
-                        )}
-
-                    </span>
-
-
-                </div>
-
-
-
-                <div class="request-info-grid">
-
-
-                    <div class="info-item">
-
-                        <span>
-                            نوع الإجازة
-                        </span>
-
-                        <strong>
-
-                            ${escapeHtml(
-                                request.leave_type
-                                ||
-                                "-"
-                            )}
-
-                        </strong>
-
-                    </div>
-
-
-                    <div class="info-item">
-
-                        <span>
-                            تاريخ البداية
-                        </span>
-
-                        <strong>
-
-                            ${formatDate(
-                                request.start_date
-                            )}
-
-                        </strong>
-
-                    </div>
-
-
-                    <div class="info-item">
-
-                        <span>
-                            تاريخ النهاية
-                        </span>
-
-                        <strong>
-
-                            ${formatDate(
-                                request.end_date
-                            )}
-
-                        </strong>
-
-                    </div>
-
-
-                    <div class="info-item">
-
-                        <span>
-                            عدد الأيام
-                        </span>
-
-                        <strong>
-
-                            ${duration}
-                            يوم
-
-                        </strong>
-
-                    </div>
-
-
-                    <div class="info-item">
-
-                        <span>
-                            تاريخ تقديم الطلب
-                        </span>
-
-                        <strong>
-
-                            ${formatDateTime(
-                                request.created_at
-                            )}
-
-                        </strong>
-
-                    </div>
-
-
-                    <div class="info-item">
-
-                        <span>
-                            المسمى الوظيفي
-                        </span>
-
-                        <strong>
-
-                            ${escapeHtml(
-                                employee.job_title
-                                ||
-                                "-"
-                            )}
-
-                        </strong>
-
-                    </div>
-
-
-                </div>
-
-
-
-                ${
-                    assignedTasks.length
-                    >
-                    0
-
-                    ?
-
-                    `
-
-                        <div class="request-note">
-
-                            <span>
-                                المهام النشطة المسندة حالياً
-                            </span>
-
-                            <p>
-
-                                لدى الموظف
-                                ${assignedTasks.length}
-                                مهمة نشطة.
-
-                                ستظهر التفاصيل عند مراجعة الطلب.
-
-                            </p>
-
-                        </div>
-
-                    `
-
-                    :
-
-                    ""
-                }
-
-
-
-                ${
-                    request.notes
-
-                    ?
-
-                    `
-
-                        <div class="request-note">
-
-                            <span>
-                                ملاحظة الموظف
-                            </span>
-
-                            <p>
-
-                                ${escapeHtml(
-                                    request.notes
-                                )}
-
-                            </p>
-
-                        </div>
-
-                    `
-
-                    :
-
-                    ""
-                }
-
-
-
-                ${
-                    request.decision_note
-
-                    ?
-
-                    `
-
-                        <div class="decision-note">
-
-                            <span>
-                                ملاحظة المسؤول
-                            </span>
-
-                            <p>
-
-                                ${escapeHtml(
-                                    request.decision_note
-                                )}
-
-                            </p>
-
-                        </div>
-
-                    `
-
-                    :
-
-                    ""
-                }
-
-
-
-                ${
-                    request.reviewed_at
-
-                    ?
-
-                    `
-
-                        <div class="reviewed-info">
-
-                            تم اتخاذ القرار بتاريخ:
-
-                            <strong>
-
-                                ${formatDateTime(
-                                    request.reviewed_at
-                                )}
-
-                            </strong>
-
-                        </div>
-
-                    `
-
-                    :
-
-                    ""
-                }
-
-
-
-                ${
-                    pending
-
-                    ?
-
-                    `
-
-                        <div class="request-actions">
-
-                            <button
-                                type="button"
-                                class="review-btn"
-                                data-action="review"
-                                data-id="${request.id}"
-                            >
-                                مراجعة الطلب
-                            </button>
-
-                        </div>
-
-                    `
-
-                    :
-
-                    ""
-                }
-
-            `;
-
-
-            requestsList.appendChild(
-                card
-            );
-
-        }
-    );
+return;
 
 }
 
+list.forEach(
+request => {
+
+const employee =
+request.employee
+||
+{};
+
+const card =
+document.createElement(
+"article"
+);
+
+card.className =
+"request-item";
+
+const pending =
+normalizeStatus(
+request.status
+)
+===
+"قيد المراجعة";
+
+const duration =
+calculateDays(
+request.start_date,
+request.end_date
+);
+
+const assignedTasks =
+getEmployeeAssignedTasks(
+request.employee_id
+);
+
+card.innerHTML = `
+
+<div class="request-head">
+
+<div class="employee-block">
+
+<div class="avatar">
+
+${escapeHtml(
+(
+employee.name
+||
+"-"
+)
+.charAt(
+0
+)
+)}
+
+</div>
+
+<div>
+
+<h3>
+
+${escapeHtml(
+employee.name
+||
+"موظف غير معروف"
+)}
+
+</h3>
+
+<p>
+
+${escapeHtml(
+employee.employee_number
+||
+"-"
+)}
+
+<span>
+•
+</span>
+
+${escapeHtml(
+employee.department
+||
+"-"
+)}
+
+</p>
+
+</div>
+
+</div>
+
+<span
+class="
+status-badge
+${getStatusClass(
+request.status
+)}
+"
+>
+
+${escapeHtml(
+normalizeStatus(
+request.status
+)
+||
+"-"
+)}
+
+</span>
+
+</div>
 
 
-/* =====================================================
-   فتح نافذة مراجعة الطلب
-===================================================== */
+<div class="request-info-grid">
+
+<div class="info-item">
+
+<span>
+نوع الإجازة
+</span>
+
+<strong>
+
+${escapeHtml(
+request.leave_type
+||
+"-"
+)}
+
+</strong>
+
+</div>
+
+<div class="info-item">
+
+<span>
+تاريخ البداية
+</span>
+
+<strong>
+
+${formatDate(
+request.start_date
+)}
+
+</strong>
+
+</div>
+
+<div class="info-item">
+
+<span>
+تاريخ النهاية
+</span>
+
+<strong>
+
+${formatDate(
+request.end_date
+)}
+
+</strong>
+
+</div>
+
+<div class="info-item">
+
+<span>
+عدد الأيام
+</span>
+
+<strong>
+
+${duration}
+يوم
+
+</strong>
+
+</div>
+
+<div class="info-item">
+
+<span>
+تاريخ تقديم الطلب
+</span>
+
+<strong>
+
+${formatDateTime(
+request.created_at
+)}
+
+</strong>
+
+</div>
+
+<div class="info-item">
+
+<span>
+المسمى الوظيفي
+</span>
+
+<strong>
+
+${escapeHtml(
+employee.job_title
+||
+"-"
+)}
+
+</strong>
+
+</div>
+
+</div>
+
+
+${
+assignedTasks.length
+>
+0
+
+?
+
+`
+
+<div class="request-note">
+
+<span>
+المهام النشطة المسندة حالياً
+</span>
+
+<p>
+
+لدى الموظف
+${assignedTasks.length}
+مهمة نشطة.
+
+ستظهر التفاصيل عند مراجعة الطلب.
+
+</p>
+
+</div>
+
+`
+
+:
+
+""
+}
+
+
+${
+request.notes
+
+?
+
+`
+
+<div class="request-note">
+
+<span>
+ملاحظة الموظف
+</span>
+
+<p>
+
+${escapeHtml(
+request.notes
+)}
+
+</p>
+
+</div>
+
+`
+
+:
+
+""
+}
+
+
+${
+request.decision_note
+
+?
+
+`
+
+<div class="decision-note">
+
+<span>
+ملاحظة المسؤول
+</span>
+
+<p>
+
+${escapeHtml(
+request.decision_note
+)}
+
+</p>
+
+</div>
+
+`
+
+:
+
+""
+}
+
+
+${
+request.reviewed_at
+
+?
+
+`
+
+<div class="reviewed-info">
+
+تم اتخاذ القرار بتاريخ:
+
+<strong>
+
+${formatDateTime(
+request.reviewed_at
+)}
+
+</strong>
+
+</div>
+
+`
+
+:
+
+""
+}
+
+
+${
+pending
+
+?
+
+`
+
+<div class="request-actions">
+
+<button
+type="button"
+class="review-btn"
+data-action="review"
+data-id="${request.id}"
+>
+مراجعة الطلب
+</button>
+
+</div>
+
+`
+
+:
+
+""
+}
+
+`;
+
+requestsList.appendChild(
+card
+);
+
+}
+);
+
+}
+
 
 function openDecisionModal(
-    id
+id
 ) {
 
-    const request =
-        leaveRequests.find(
-            item =>
-
-                Number(
-                    item.id
-                )
-                ===
-                Number(
-                    id
-                )
-        );
-
-
-    if (
-        !request
-    ) {
-
-        return;
-
-    }
-
-
-    if (
-        normalizeStatus(
-            request.status
-        )
-        !==
-        "قيد المراجعة"
-    ) {
-
-        alert(
-            "تم اتخاذ قرار على هذا الطلب مسبقاً"
-        );
-
-
-        return;
-
-    }
-
-
-    selectedRequest =
-        request;
-
-
-    decisionError.textContent =
-        "";
-
-
-    decisionNote.value =
-        "";
-
-
-    const employee =
-        request.employee
-        ||
-        {};
-
-
-    decisionRequestInfo.innerHTML = `
-
-        <div class="decision-employee">
-
-
-            <div>
-
-                <strong>
-
-                    ${escapeHtml(
-                        employee.name
-                        ||
-                        "-"
-                    )}
-
-                </strong>
-
-
-                <small>
-
-                    ${escapeHtml(
-                        employee.job_title
-                        ||
-                        "-"
-                    )}
-
-                </small>
-
-            </div>
-
-
-            <span>
-
-                ${escapeHtml(
-                    employee.employee_number
-                    ||
-                    "-"
-                )}
-
-            </span>
-
-
-        </div>
-
-
-
-        <div class="decision-grid">
-
-
-            <div>
-
-                <span>
-                    نوع الإجازة
-                </span>
-
-                <strong>
-
-                    ${escapeHtml(
-                        request.leave_type
-                        ||
-                        "-"
-                    )}
-
-                </strong>
-
-            </div>
-
-
-            <div>
-
-                <span>
-                    من
-                </span>
-
-                <strong>
-
-                    ${formatDate(
-                        request.start_date
-                    )}
-
-                </strong>
-
-            </div>
-
-
-            <div>
-
-                <span>
-                    إلى
-                </span>
-
-                <strong>
-
-                    ${formatDate(
-                        request.end_date
-                    )}
-
-                </strong>
-
-            </div>
-
-
-            <div>
-
-                <span>
-                    المدة
-                </span>
-
-                <strong>
-
-                    ${calculateDays(
-                        request.start_date,
-                        request.end_date
-                    )}
-
-                    يوم
-
-                </strong>
-
-            </div>
-
-
-        </div>
-
-
-
-        ${
-            request.notes
-
-            ?
-
-            `
-
-                <div class="modal-employee-note">
-
-                    <span>
-                        ملاحظة الموظف
-                    </span>
-
-                    <p>
-
-                        ${escapeHtml(
-                            request.notes
-                        )}
-
-                    </p>
-
-                </div>
-
-            `
-
-            :
-
-            ""
-        }
-
-    `;
-
-
-    renderTaskConflictWarning(
-        request
-    );
-
-
-    decisionModal
-        .classList
-        .add(
-            "show"
-        );
-
-
-    document.body
-        .classList
-        .add(
-            "modal-open"
-        );
+const request =
+leaveRequests.find(
+item =>
+
+Number(
+item.id
+)
+===
+Number(
+id
+)
+);
+
+if (
+!request
+) {
+
+return;
 
 }
 
+if (
+normalizeStatus(
+request.status
+)
+!==
+"قيد المراجعة"
+) {
+
+alert(
+"تم اتخاذ قرار على هذا الطلب مسبقاً"
+);
+
+return;
+
+}
+
+selectedRequest =
+request;
+
+decisionError.textContent =
+"";
+
+decisionNote.value =
+"";
+
+const employee =
+request.employee
+||
+{};
+
+decisionRequestInfo.innerHTML = `
+
+<div class="decision-employee">
+
+<div>
+
+<strong>
+
+${escapeHtml(
+employee.name
+||
+"-"
+)}
+
+</strong>
+
+<small>
+
+${escapeHtml(
+employee.job_title
+||
+"-"
+)}
+
+</small>
+
+</div>
+
+<span>
+
+${escapeHtml(
+employee.employee_number
+||
+"-"
+)}
+
+</span>
+
+</div>
 
 
-/* =====================================================
-   إغلاق نافذة المراجعة
-===================================================== */
+<div class="decision-grid">
+
+<div>
+
+<span>
+نوع الإجازة
+</span>
+
+<strong>
+
+${escapeHtml(
+request.leave_type
+||
+"-"
+)}
+
+</strong>
+
+</div>
+
+<div>
+
+<span>
+من
+</span>
+
+<strong>
+
+${formatDate(
+request.start_date
+)}
+
+</strong>
+
+</div>
+
+<div>
+
+<span>
+إلى
+</span>
+
+<strong>
+
+${formatDate(
+request.end_date
+)}
+
+</strong>
+
+</div>
+
+<div>
+
+<span>
+المدة
+</span>
+
+<strong>
+
+${calculateDays(
+request.start_date,
+request.end_date
+)}
+
+يوم
+
+</strong>
+
+</div>
+
+</div>
+
+
+${
+request.notes
+
+?
+
+`
+
+<div class="modal-employee-note">
+
+<span>
+ملاحظة الموظف
+</span>
+
+<p>
+
+${escapeHtml(
+request.notes
+)}
+
+</p>
+
+</div>
+
+`
+
+:
+
+""
+}
+
+`;
+
+renderTaskConflictWarning(
+request
+);
+
+decisionModal
+.classList
+.add(
+"show"
+);
+
+document.body
+.classList
+.add(
+"modal-open"
+);
+
+}
+
 
 function closeDecisionModal() {
 
-    selectedRequest =
-        null;
+selectedRequest =
+null;
 
+selectedRequestConflicts =
+[];
 
-    selectedRequestConflicts =
-        [];
+decisionNote.value =
+"";
 
+decisionError.textContent =
+"";
 
-    decisionNote.value =
-        "";
+taskConflictBox.innerHTML =
+"";
 
+taskConflictBox.style.display =
+"none";
 
-    decisionError.textContent =
-        "";
+decisionModal
+.classList
+.remove(
+"show"
+);
 
-
-    taskConflictBox.innerHTML =
-        "";
-
-
-    taskConflictBox.style.display =
-        "none";
-
-
-    decisionModal
-        .classList
-        .remove(
-            "show"
-        );
-
-
-    document.body
-        .classList
-        .remove(
-            "modal-open"
-        );
+document.body
+.classList
+.remove(
+"modal-open"
+);
 
 }
 
-
-
-/* =====================================================
-   تأكيد اعتماد الإجازة مع وجود مهام
-===================================================== */
 
 function confirmApprovalWithTasks() {
 
-    if (
-        selectedRequestConflicts.length
-        ===
-        0
-    ) {
+if (
+selectedRequestConflicts.length
+===
+0
+) {
 
-        return true;
-
-    }
-
-
-    const taskNames =
-        selectedRequestConflicts
-
-            .slice(
-                0,
-                5
-            )
-
-            .map(
-                task =>
-
-                    "• "
-                    +
-                    (
-                        task.task_name
-                        ||
-                        "مهمة بدون اسم"
-                    )
-            )
-
-            .join(
-                "\n"
-            );
-
-
-    const extra =
-        selectedRequestConflicts.length
-        >
-        5
-
-        ?
-
-        `\nو${selectedRequestConflicts.length - 5} مهام أخرى.`
-
-        :
-
-        "";
-
-
-    return confirm(
-
-        "تنبيه: الموظف لديه مهام نشطة مسندة إليه حالياً:\n\n"
-
-        +
-
-        taskNames
-
-        +
-
-        extra
-
-        +
-
-        "\n\nاعتماد الإجازة سيجعل الإجازة المعتمدة تؤثر على توفر الموظف في المطابقة خلال مدتها."
-
-        +
-
-        "\n\nهل تريد اعتماد الطلب؟"
-
-    );
+return true;
 
 }
 
+const taskNames =
+selectedRequestConflicts
 
+.slice(
+0,
+5
+)
 
-/* =====================================================
-   تسجيل قرار المسؤول
-===================================================== */
+.map(
+task =>
+
+"• "
++
+(
+task.task_name
+||
+"مهمة بدون اسم"
+)
+)
+
+.join(
+"\n"
+);
+
+const extra =
+selectedRequestConflicts.length
+>
+5
+
+?
+
+`\nو${selectedRequestConflicts.length - 5} مهام أخرى.`
+
+:
+
+"";
+
+return confirm(
+
+"تنبيه: الموظف لديه مهام نشطة مسندة إليه حالياً:\n\n"
+
++
+
+taskNames
+
++
+
+extra
+
++
+
+"\n\nاعتماد الإجازة سيجعل الإجازة المعتمدة تؤثر على توفر الموظف في المطابقة خلال مدتها."
+
++
+
+"\n\nهل تريد اعتماد الطلب؟"
+
+);
+
+}
+
 
 async function updateLeaveStatus(
-    newStatus
+newStatus
 ) {
 
-    if (
-        !selectedRequest
-    ) {
-
-        return;
-
-    }
-
-
-    const currentStatus =
-        normalizeStatus(
-            selectedRequest.status
-        );
-
-
-    if (
-        currentStatus
-        !==
-        "قيد المراجعة"
-    ) {
-
-        alert(
-            "تم اتخاذ قرار على هذا الطلب مسبقاً"
-        );
-
-
-        closeDecisionModal();
-
-
-        return;
-
-    }
-
-
-    const note =
-        decisionNote
-            .value
-            .trim();
-
-
-    /*
-        عند الرفض:
-        السبب إلزامي.
-    */
-
-    if (
-        newStatus
-        ===
-        "مرفوضة"
-
-        &&
-
-        note.length
-        <
-        3
-    ) {
-
-        decisionError.textContent =
-            "يرجى كتابة سبب رفض الطلب.";
-
-
-        decisionNote.focus();
-
-
-        return;
-
-    }
-
-
-    /*
-        عند الاعتماد:
-        إذا الموظف لديه مهام
-        نظهر تأكيداً للمسؤول.
-    */
-
-    if (
-        newStatus
-        ===
-        "معتمدة"
-
-        &&
-
-        selectedRequestConflicts.length
-        >
-        0
-    ) {
-
-        const approved =
-            confirmApprovalWithTasks();
-
-
-        if (
-            !approved
-        ) {
-
-            return;
-
-        }
-
-    }
-
-
-    decisionError.textContent =
-        "";
-
-
-    setDecisionButtonsState(
-        true
-    );
-
-
-    try {
-
-        const {
-            data,
-            error
-        } =
-        await supabaseClient
-            .from(
-                "employee_leaves"
-            )
-            .update({
-
-                status:
-                    newStatus,
-
-                decision_note:
-                    note
-                    ||
-                    null,
-
-                reviewed_at:
-                    new Date()
-                        .toISOString()
-
-            })
-            .eq(
-                "id",
-                selectedRequest.id
-            )
-            .eq(
-                "status",
-                "قيد المراجعة"
-            )
-            .select(`
-                id,
-                status
-            `);
-
-
-        if (
-            error
-        ) {
-
-            throw error;
-
-        }
-
-
-        /*
-            حماية من اتخاذ القرار مرتين.
-        */
-
-        if (
-            !data
-            ||
-            data.length
-            ===
-            0
-        ) {
-
-            throw new Error(
-                "تم تحديث هذا الطلب مسبقاً. حدّث الصفحة وحاول مرة أخرى."
-            );
-
-        }
-
-
-        closeDecisionModal();
-
-
-        await loadLeaves();
-
-
-        if (
-            newStatus
-            ===
-            "معتمدة"
-        ) {
-
-            alert(
-                "تم اعتماد طلب الإجازة بنجاح. ستُستخدم الإجازة المعتمدة عند حساب توفر الموظف في المطابقة."
-            );
-
-        }
-
-        else {
-
-            alert(
-                "تم رفض طلب الإجازة وحفظ سبب الرفض."
-            );
-
-        }
-
-    }
-
-    catch(error) {
-
-        console.error(
-            "خطأ حفظ القرار:",
-            error
-        );
-
-
-        decisionError.textContent =
-            error.message
-            ||
-            "تعذر حفظ القرار.";
-
-    }
-
-    finally {
-
-        setDecisionButtonsState(
-            false
-        );
-
-    }
+if (
+!selectedRequest
+) {
+
+return;
 
 }
 
+const currentStatus =
+normalizeStatus(
+selectedRequest.status
+);
 
+if (
+currentStatus
+!==
+"قيد المراجعة"
+) {
 
-/* =====================================================
-   حالة أزرار القرار
-===================================================== */
+alert(
+"تم اتخاذ قرار على هذا الطلب مسبقاً"
+);
+
+closeDecisionModal();
+
+return;
+
+}
+
+const note =
+decisionNote
+.value
+.trim();
+
+if (
+newStatus
+===
+"مرفوضة"
+
+&&
+
+note.length
+<
+3
+) {
+
+decisionError.textContent =
+"يرجى كتابة سبب رفض الطلب.";
+
+decisionNote.focus();
+
+return;
+
+}
+
+if (
+newStatus
+===
+"معتمدة"
+
+&&
+
+selectedRequestConflicts.length
+>
+0
+) {
+
+const approved =
+confirmApprovalWithTasks();
+
+if (
+!approved
+) {
+
+return;
+
+}
+
+}
+
+decisionError.textContent =
+"";
+
+setDecisionButtonsState(
+true
+);
+
+try {
+
+const {
+data,
+error
+} =
+await supabaseClient
+.from(
+"employee_leaves"
+)
+.update({
+
+status:
+newStatus,
+
+decision_note:
+note
+||
+null,
+
+reviewed_at:
+new Date()
+.toISOString()
+
+})
+.eq(
+"id",
+selectedRequest.id
+)
+.eq(
+"status",
+"قيد المراجعة"
+)
+.select(`
+id,
+status
+`);
+
+if (
+error
+) {
+
+throw error;
+
+}
+
+if (
+!data
+||
+data.length
+===
+0
+) {
+
+throw new Error(
+"تم تحديث هذا الطلب مسبقاً. حدّث الصفحة وحاول مرة أخرى."
+);
+
+}
+
+closeDecisionModal();
+
+await loadLeaves();
+
+if (
+newStatus
+===
+"معتمدة"
+) {
+
+alert(
+"تم اعتماد طلب الإجازة بنجاح. ستُستخدم الإجازة المعتمدة عند حساب توفر الموظف في المطابقة."
+);
+
+}
+
+else {
+
+alert(
+"تم رفض طلب الإجازة وحفظ سبب الرفض."
+);
+
+}
+
+}
+
+catch(error) {
+
+console.error(
+"خطأ حفظ القرار:",
+error
+);
+
+decisionError.textContent =
+error.message
+||
+"تعذر حفظ القرار.";
+
+}
+
+finally {
+
+setDecisionButtonsState(
+false
+);
+
+}
+
+}
+
 
 function setDecisionButtonsState(
-    disabled
+disabled
 ) {
 
-    document
-        .getElementById(
-            "approveLeaveBtn"
-        )
-        .disabled =
-        disabled;
+document
+.getElementById(
+"approveLeaveBtn"
+)
+.disabled =
+disabled;
 
+document
+.getElementById(
+"rejectLeaveBtn"
+)
+.disabled =
+disabled;
 
-    document
-        .getElementById(
-            "rejectLeaveBtn"
-        )
-        .disabled =
-        disabled;
-
-
-    document
-        .getElementById(
-            "cancelDecisionBtn"
-        )
-        .disabled =
-        disabled;
+document
+.getElementById(
+"cancelDecisionBtn"
+)
+.disabled =
+disabled;
 
 }
 
-
-
-/* =====================================================
-   الملخص
-===================================================== */
 
 function updateSummary() {
 
-    const pending =
-        leaveRequests.filter(
-            item =>
+const pending =
+leaveRequests.filter(
+item =>
 
-                normalizeStatus(
-                    item.status
-                )
-                ===
-                "قيد المراجعة"
-        )
-        .length;
+normalizeStatus(
+item.status
+)
+===
+"قيد المراجعة"
+)
+.length;
 
+const approved =
+leaveRequests.filter(
+item =>
 
-    const approved =
-        leaveRequests.filter(
-            item =>
+normalizeStatus(
+item.status
+)
+===
+"معتمدة"
+)
+.length;
 
-                normalizeStatus(
-                    item.status
-                )
-                ===
-                "معتمدة"
-        )
-        .length;
+const rejected =
+leaveRequests.filter(
+item =>
 
+normalizeStatus(
+item.status
+)
+===
+"مرفوضة"
+)
+.length;
 
-    const rejected =
-        leaveRequests.filter(
-            item =>
+const currentEmployeeIds =
+new Set(
 
-                normalizeStatus(
-                    item.status
-                )
-                ===
-                "مرفوضة"
-        )
-        .length;
+leaveRequests
 
+.filter(
+item =>
 
-    /*
-        الموظفون الموجودون في إجازة حالياً.
-        Set يمنع حساب الموظف مرتين.
-    */
+normalizeStatus(
+item.status
+)
+===
+"معتمدة"
 
-    const currentEmployeeIds =
-        new Set(
+&&
 
-            leaveRequests
+isCurrentLeave(
+item
+)
+)
 
-                .filter(
-                    item =>
+.map(
+item =>
 
-                        normalizeStatus(
-                            item.status
-                        )
-                        ===
-                        "معتمدة"
+Number(
+item.employee_id
+)
+)
 
-                        &&
+);
 
-                        isCurrentLeave(
-                            item
-                        )
-                )
+document
+.getElementById(
+"summaryTotal"
+)
+.textContent =
+leaveRequests.length;
 
-                .map(
-                    item =>
+document
+.getElementById(
+"summaryPending"
+)
+.textContent =
+pending;
 
-                        Number(
-                            item.employee_id
-                        )
-                )
+document
+.getElementById(
+"summaryApproved"
+)
+.textContent =
+approved;
 
-        );
+document
+.getElementById(
+"summaryRejected"
+)
+.textContent =
+rejected;
 
-
-    document
-        .getElementById(
-            "summaryTotal"
-        )
-        .textContent =
-        leaveRequests.length;
-
-
-    document
-        .getElementById(
-            "summaryPending"
-        )
-        .textContent =
-        pending;
-
-
-    document
-        .getElementById(
-            "summaryApproved"
-        )
-        .textContent =
-        approved;
-
-
-    document
-        .getElementById(
-            "summaryRejected"
-        )
-        .textContent =
-        rejected;
-
-
-    document
-        .getElementById(
-            "summaryCurrent"
-        )
-        .textContent =
-        currentEmployeeIds.size;
+document
+.getElementById(
+"summaryCurrent"
+)
+.textContent =
+currentEmployeeIds.size;
 
 }
 
-
-
-/* =====================================================
-   البحث والتصفية
-===================================================== */
 
 function filterRequests() {
 
-    const search =
-        document
-            .getElementById(
-                "searchInput"
-            )
-            .value
-            .trim()
-            .toLowerCase();
+const search =
+document
+.getElementById(
+"searchInput"
+)
+.value
+.trim()
+.toLowerCase();
 
+const status =
+document
+.getElementById(
+"statusFilter"
+)
+.value;
 
-    const status =
-        document
-            .getElementById(
-                "statusFilter"
-            )
-            .value;
+const leaveType =
+document
+.getElementById(
+"leaveTypeFilter"
+)
+.value;
 
+const filtered =
+leaveRequests.filter(
+request => {
 
-    const leaveType =
-        document
-            .getElementById(
-                "leaveTypeFilter"
-            )
-            .value;
+const employee =
+request.employee
+||
+{};
 
+const searchableText =
+[
 
-    const filtered =
-        leaveRequests.filter(
-            request => {
+employee.name,
 
-                const employee =
-                    request.employee
-                    ||
-                    {};
+employee.employee_number,
 
+employee.email,
 
-                const searchableText =
-                    [
+employee.department,
 
-                        employee.name,
+employee.job_title,
 
-                        employee.employee_number,
+request.leave_type,
 
-                        employee.email,
+request.notes,
 
-                        employee.department,
+request.decision_note
 
-                        employee.job_title,
+]
+.join(
+" "
+)
+.toLowerCase();
 
-                        request.leave_type,
+const searchMatch =
+!search
+||
+searchableText.includes(
+search
+);
 
-                        request.notes,
+const statusMatch =
+!status
+||
+normalizeStatus(
+request.status
+)
+===
+status;
 
-                        request.decision_note
+const typeMatch =
+!leaveType
+||
+request.leave_type
+===
+leaveType;
 
-                    ]
-                    .join(
-                        " "
-                    )
-                    .toLowerCase();
+return (
 
+searchMatch
 
-                const searchMatch =
-                    !search
-                    ||
-                    searchableText.includes(
-                        search
-                    );
+&&
 
+statusMatch
 
-                const statusMatch =
-                    !status
-                    ||
-                    normalizeStatus(
-                        request.status
-                    )
-                    ===
-                    status;
+&&
 
+typeMatch
 
-                const typeMatch =
-                    !leaveType
-                    ||
-                    request.leave_type
-                    ===
-                    leaveType;
+);
 
+}
+);
 
-                return (
-
-                    searchMatch
-
-                    &&
-
-                    statusMatch
-
-                    &&
-
-                    typeMatch
-
-                );
-
-            }
-        );
-
-
-    renderRequests(
-        filtered
-    );
+renderRequests(
+filtered
+);
 
 }
 
-
-
-/* =====================================================
-   توحيد حالة الطلب
-===================================================== */
 
 function normalizeStatus(
-    status
+status
 ) {
 
-    const value =
-        String(
-            status
-            ||
-            ""
-        )
-        .trim();
+const value =
+String(
+status
+||
+""
+)
+.trim();
 
+if (
+value === "pending"
+||
+value === "قيد المراجعه"
+) {
 
-    if (
-        value === "pending"
-        ||
-        value === "قيد المراجعه"
-    ) {
-
-        return "قيد المراجعة";
-
-    }
-
-
-    if (
-        value === "approved"
-        ||
-        value === "معتمد"
-        ||
-        value === "مقبولة"
-        ||
-        value === "مقبول"
-    ) {
-
-        return "معتمدة";
-
-    }
-
-
-    if (
-        value === "rejected"
-        ||
-        value === "مرفوض"
-    ) {
-
-        return "مرفوضة";
-
-    }
-
-
-    return value;
+return "قيد المراجعة";
 
 }
 
+if (
+value === "approved"
+||
+value === "معتمد"
+||
+value === "مقبولة"
+||
+value === "مقبول"
+) {
 
+return "معتمدة";
 
-/* =====================================================
-   هل الإجازة حالية؟
-===================================================== */
+}
+
+if (
+value === "rejected"
+||
+value === "مرفوض"
+) {
+
+return "مرفوضة";
+
+}
+
+return value;
+
+}
+
 
 function isCurrentLeave(
-    request
+leave
 ) {
 
-    if (
-        !request.start_date
-        ||
-        !request.end_date
-    ) {
+if (
+!leave.start_date
+||
+!leave.end_date
+) {
 
-        return false;
-
-    }
-
-
-    const today =
-        new Date();
-
-
-    today.setHours(
-        0,
-        0,
-        0,
-        0
-    );
-
-
-    const start =
-        new Date(
-            request.start_date
-            +
-            "T00:00:00"
-        );
-
-
-    const end =
-        new Date(
-            request.end_date
-            +
-            "T23:59:59"
-        );
-
-
-    return (
-
-        today
-        >=
-        start
-
-        &&
-
-        today
-        <=
-        end
-
-    );
+return false;
 
 }
 
+const today =
+getTodayDate();
 
+return (
 
-/* =====================================================
-   لون الحالة
-===================================================== */
+today
+>=
+leave.start_date
+
+&&
+
+today
+<=
+leave.end_date
+
+);
+
+}
+
 
 function getStatusClass(
-    status
+status
 ) {
 
-    const normalized =
-        normalizeStatus(
-            status
-        );
+const value =
+normalizeStatus(
+status
+);
 
+if (
+value ===
+"معتمدة"
+) {
 
-    if (
-        normalized
-        ===
-        "معتمدة"
-    ) {
+return "approved";
 
-        return "approved";
+}
 
-    }
+if (
+value ===
+"مرفوضة"
+) {
 
+return "rejected";
 
-    if (
-        normalized
-        ===
-        "مرفوضة"
-    ) {
+}
 
-        return "rejected";
-
-    }
-
-
-    return "pending";
+return "pending";
 
 }
 
 
+function getTodayDate() {
 
-/* =====================================================
-   تنسيق التاريخ
-===================================================== */
+const date =
+new Date();
+
+const year =
+date.getFullYear();
+
+const month =
+String(
+date.getMonth()
++
+1
+)
+.padStart(
+2,
+"0"
+);
+
+const day =
+String(
+date.getDate()
+)
+.padStart(
+2,
+"0"
+);
+
+return `${year}-${month}-${day}`;
+
+}
+
 
 function formatDate(
-    value
+value
 ) {
 
-    if (
-        !value
-    ) {
+if (
+!value
+) {
 
-        return "-";
-
-    }
-
-
-    const date =
-        new Date(
-
-            value
-
-            +
-
-            (
-                String(
-                    value
-                )
-                .includes(
-                    "T"
-                )
-
-                ?
-
-                ""
-
-                :
-
-                "T00:00:00"
-            )
-
-        );
-
-
-    if (
-        Number.isNaN(
-            date.getTime()
-        )
-    ) {
-
-        return "-";
-
-    }
-
-
-    return date
-        .toLocaleDateString(
-            "ar-SA-u-ca-gregory",
-            {
-
-                year:
-                    "numeric",
-
-                month:
-                    "2-digit",
-
-                day:
-                    "2-digit"
-
-            }
-        );
+return "-";
 
 }
 
+const date =
+new Date(
+value
++
+"T00:00:00"
+);
 
+if (
+Number.isNaN(
+date.getTime()
+)
+) {
 
-/* =====================================================
-   تنسيق التاريخ والوقت
-===================================================== */
+return "-";
+
+}
+
+return date
+.toLocaleDateString(
+"ar-SA-u-ca-gregory",
+{
+
+year:
+"numeric",
+
+month:
+"2-digit",
+
+day:
+"2-digit"
+
+}
+);
+
+}
+
 
 function formatDateTime(
-    value
+value
 ) {
 
-    if (
-        !value
-    ) {
+if (
+!value
+) {
 
-        return "-";
-
-    }
-
-
-    const date =
-        new Date(
-            value
-        );
-
-
-    if (
-        Number.isNaN(
-            date.getTime()
-        )
-    ) {
-
-        return "-";
-
-    }
-
-
-    return date
-        .toLocaleString(
-            "ar-SA-u-ca-gregory",
-            {
-
-                year:
-                    "numeric",
-
-                month:
-                    "2-digit",
-
-                day:
-                    "2-digit",
-
-                hour:
-                    "2-digit",
-
-                minute:
-                    "2-digit"
-
-            }
-        );
+return "-";
 
 }
 
+const date =
+new Date(
+value
+);
 
+if (
+Number.isNaN(
+date.getTime()
+)
+) {
 
-/* =====================================================
-   حساب عدد أيام الإجازة
-===================================================== */
+return "-";
+
+}
+
+return date
+.toLocaleString(
+"ar-SA-u-ca-gregory",
+{
+
+year:
+"numeric",
+
+month:
+"2-digit",
+
+day:
+"2-digit",
+
+hour:
+"2-digit",
+
+minute:
+"2-digit"
+
+}
+);
+
+}
+
 
 function calculateDays(
-    startDate,
-    endDate
+startDate,
+endDate
 ) {
 
-    if (
-        !startDate
-        ||
-        !endDate
-    ) {
+if (
+!startDate
+||
+!endDate
+) {
 
-        return 0;
-
-    }
-
-
-    const start =
-        new Date(
-            startDate
-            +
-            "T00:00:00"
-        );
-
-
-    const end =
-        new Date(
-            endDate
-            +
-            "T00:00:00"
-        );
-
-
-    const difference =
-        end
-        -
-        start;
-
-
-    if (
-        difference
-        <
-        0
-    ) {
-
-        return 0;
-
-    }
-
-
-    return (
-
-        Math.floor(
-            difference
-            /
-            86400000
-        )
-
-        +
-
-        1
-
-    );
+return 0;
 
 }
 
+const start =
+new Date(
+startDate
++
+"T00:00:00"
+);
 
+const end =
+new Date(
+endDate
++
+"T00:00:00"
+);
 
-/* =====================================================
-   القائمة الجانبية
-===================================================== */
+const difference =
+end
+-
+start;
+
+if (
+difference
+<
+0
+) {
+
+return 0;
+
+}
+
+return (
+
+Math.floor(
+difference
+/
+86400000
+)
+
++
+
+1
+
+);
+
+}
+
 
 function openSidebar() {
 
-    sidebar
-        .classList
-        .add(
-            "show"
-        );
+sidebar
+.classList
+.add(
+"show"
+);
 
+sidebarOverlay
+.classList
+.add(
+"show"
+);
 
-    sidebarOverlay
-        .classList
-        .add(
-            "show"
-        );
-
-
-    document.body
-        .classList
-        .add(
-            "menu-open"
-        );
+document.body
+.classList
+.add(
+"menu-open"
+);
 
 }
-
 
 
 function closeSidebar() {
 
-    sidebar
-        .classList
-        .remove(
-            "show"
-        );
+sidebar
+.classList
+.remove(
+"show"
+);
 
+sidebarOverlay
+.classList
+.remove(
+"show"
+);
 
-    sidebarOverlay
-        .classList
-        .remove(
-            "show"
-        );
-
-
-    document.body
-        .classList
-        .remove(
-            "menu-open"
-        );
+document.body
+.classList
+.remove(
+"menu-open"
+);
 
 }
 
-
-
-/* =====================================================
-   تنظيف الجلسة
-===================================================== */
 
 function clearLocalSession() {
 
-    localStorage.removeItem(
-        "miyarRole"
-    );
+localStorage.removeItem(
+"miyarRole"
+);
 
+localStorage.removeItem(
+"miyarEmail"
+);
 
-    localStorage.removeItem(
-        "miyarEmail"
-    );
+localStorage.removeItem(
+"miyarEmployeeId"
+);
 
-
-    localStorage.removeItem(
-        "miyarEmployeeId"
-    );
-
-
-    localStorage.removeItem(
-        "miyarEmployeeName"
-    );
+localStorage.removeItem(
+"miyarEmployeeName"
+);
 
 }
 
-
-
-/* =====================================================
-   تسجيل الخروج
-===================================================== */
 
 async function logout() {
 
-    try {
+try {
 
-        await supabaseClient
-            .auth
-            .signOut();
+await supabaseClient
+.auth
+.signOut();
 
-    }
+}
 
-    catch(error) {
+catch(error) {
 
-        console.error(
-            "خطأ تسجيل الخروج:",
-            error
-        );
+console.error(
+"خطأ تسجيل الخروج:",
+error
+);
 
-    }
+}
 
-    finally {
+finally {
 
-        clearLocalSession();
+clearLocalSession();
 
+window.location.href =
+"login.html";
 
-        window.location.href =
-            "login.html";
-
-    }
+}
 
 }
 
 
-
-/* =====================================================
-   الأحداث
-===================================================== */
-
 document
-    .getElementById(
-        "mobileMenuBtn"
-    )
-    .addEventListener(
-        "click",
-        openSidebar
-    );
-
-
-sidebarOverlay
-    .addEventListener(
-        "click",
-        closeSidebar
-    );
-
-
-document
-    .querySelectorAll(
-        ".nav-link"
-    )
-    .forEach(
-        link => {
-
-            link.addEventListener(
-                "click",
-                closeSidebar
-            );
-
-        }
-    );
-
-
-document
-    .getElementById(
-        "searchInput"
-    )
-    .addEventListener(
-        "input",
-        filterRequests
-    );
-
-
-document
-    .getElementById(
-        "statusFilter"
-    )
-    .addEventListener(
-        "change",
-        filterRequests
-    );
-
-
-document
-    .getElementById(
-        "leaveTypeFilter"
-    )
-    .addEventListener(
-        "change",
-        filterRequests
-    );
-
-
-requestsList
-    .addEventListener(
-        "click",
-        function(event) {
-
-            const button =
-                event.target.closest(
-                    "button[data-action='review']"
-                );
-
-
-            if (
-                !button
-            ) {
-
-                return;
-
-            }
-
-
-            openDecisionModal(
-                button.dataset.id
-            );
-
-        }
-    );
-
-
-document
-    .getElementById(
-        "approveLeaveBtn"
-    )
-    .addEventListener(
-        "click",
-        function() {
-
-            updateLeaveStatus(
-                "معتمدة"
-            );
-
-        }
-    );
-
-
-document
-    .getElementById(
-        "rejectLeaveBtn"
-    )
-    .addEventListener(
-        "click",
-        function() {
-
-            updateLeaveStatus(
-                "مرفوضة"
-            );
-
-        }
-    );
-
-
-document
-    .getElementById(
-        "cancelDecisionBtn"
-    )
-    .addEventListener(
-        "click",
-        closeDecisionModal
-    );
-
-
-document
-    .getElementById(
-        "closeDecisionModalBtn"
-    )
-    .addEventListener(
-        "click",
-        closeDecisionModal
-    );
-
-
-document
-    .getElementById(
-        "decisionModalOverlay"
-    )
-    .addEventListener(
-        "click",
-        closeDecisionModal
-    );
-
-
-document
-    .getElementById(
-        "logoutBtn"
-    )
-    .addEventListener(
-        "click",
-        logout
-    );
-
-
-
-/* =====================================================
-   عند الرجوع للصفحة
-   نحدث الإسنادات
-===================================================== */
-
-window.addEventListener(
-    "focus",
-    async function() {
-
-        try {
-
-            await Promise.all([
-
-                loadTasks(),
-
-                loadTaskAssignments()
-
-            ]);
-
-
-            filterRequests();
-
-        }
-
-        catch(error) {
-
-            console.warn(
-                "تعذر تحديث إسنادات المهام:",
-                error
-            );
-
-        }
-
-    }
+.getElementById(
+"mobileMenuBtn"
+)
+.addEventListener(
+"click",
+openSidebar
 );
 
-
-
-/* =====================================================
-   تشغيل الصفحة
-===================================================== */
+sidebarOverlay
+.addEventListener(
+"click",
+closeSidebar
+);
 
 document
-    .addEventListener(
-        "DOMContentLoaded",
-        async function() {
+.querySelectorAll(
+".nav-link"
+)
+.forEach(
+link => {
 
-            const allowed =
-                await protectPage();
+link.addEventListener(
+"click",
+closeSidebar
+);
 
+}
+);
 
-            if (
-                !allowed
-            ) {
+document
+.getElementById(
+"searchInput"
+)
+.addEventListener(
+"input",
+filterRequests
+);
 
-                return;
+document
+.getElementById(
+"statusFilter"
+)
+.addEventListener(
+"change",
+filterRequests
+);
 
-            }
+document
+.getElementById(
+"leaveTypeFilter"
+)
+.addEventListener(
+"change",
+filterRequests
+);
 
+requestsList
+.addEventListener(
+"click",
+function(event) {
 
-            try {
+const button =
+event.target.closest(
+"button[data-action='review']"
+);
 
-                /*
-                    مهم:
-                    نحمل الموظفين
-                    + المهام
-                    + task_assignments
-                    قبل طلبات الإجازات.
+if (
+!button
+) {
 
-                    وبكذا فحص مهام الموظف
-                    يشمل جميع الموظفين المسندين
-                    لنفس المهمة.
-                */
+return;
 
-                await Promise.all([
+}
 
-                    loadEmployees(),
+openDecisionModal(
+button.dataset.id
+);
 
-                    loadTasks(),
+}
+);
 
-                    loadTaskAssignments()
+document
+.getElementById(
+"approveLeaveBtn"
+)
+.addEventListener(
+"click",
+function() {
 
-                ]);
+updateLeaveStatus(
+"معتمدة"
+);
 
+}
+);
 
-                await loadLeaves();
+document
+.getElementById(
+"rejectLeaveBtn"
+)
+.addEventListener(
+"click",
+function() {
 
-            }
+updateLeaveStatus(
+"مرفوضة"
+);
 
-            catch(error) {
+}
+);
 
-                console.error(
-                    "خطأ تحميل الصفحة:",
-                    error
-                );
+document
+.getElementById(
+"cancelDecisionBtn"
+)
+.addEventListener(
+"click",
+closeDecisionModal
+);
 
+document
+.getElementById(
+"closeDecisionModalBtn"
+)
+.addEventListener(
+"click",
+closeDecisionModal
+);
 
-                requestsList.innerHTML = `
+document
+.getElementById(
+"decisionModalOverlay"
+)
+.addEventListener(
+"click",
+closeDecisionModal
+);
 
-                    <div class="error-state">
+document
+.getElementById(
+"logoutBtn"
+)
+.addEventListener(
+"click",
+logout
+);
 
-                        <strong>
-                            تعذر تحميل البيانات
-                        </strong>
+window.addEventListener(
+"focus",
+async function() {
 
-                        <span>
+try {
 
-                            ${escapeHtml(
-                                error.message
-                                ||
-                                ""
-                            )}
+await Promise.all([
 
-                        </span>
+loadTasks(),
 
-                    </div>
+loadTaskAssignments()
 
-                `;
+]);
 
-            }
+filterRequests();
 
-        }
-    );
+}
 
+catch(error) {
+
+console.warn(
+"تعذر تحديث إسنادات المهام:",
+error
+);
+
+}
+
+}
+);
+
+document
+.addEventListener(
+"DOMContentLoaded",
+async function() {
+
+const allowed =
+await protectPage();
+
+if (
+!allowed
+) {
+
+return;
+
+}
+
+try {
+
+await Promise.all([
+
+loadEmployees(),
+
+loadTasks(),
+
+loadTaskAssignments()
+
+]);
+
+await loadLeaves();
+
+}
+
+catch(error) {
+
+console.error(
+"خطأ تحميل الصفحة:",
+error
+);
+
+requestsList.innerHTML = `
+
+<div class="error-state">
+
+<strong>
+تعذر تحميل البيانات
+</strong>
+
+<span>
+
+${escapeHtml(
+error.message
+||
+""
+)}
+
+</span>
+
+</div>
+
+`;
+
+}
+
+}
+);
 
 </script>
 
-
 </body>
-
 </html>
