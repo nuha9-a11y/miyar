@@ -30,10 +30,6 @@
 <div class="evaluations-page">
 
 
-    <!-- =========================================
-         هيدر الجوال
-    ========================================== -->
-
     <header class="mobile-header">
 
         <button
@@ -74,10 +70,6 @@
     ></div>
 
 
-    <!-- =========================================
-         القائمة الجانبية
-    ========================================== -->
-
     <aside
         class="sidebar"
         id="sidebar"
@@ -96,78 +88,23 @@
 
         <nav class="sidebar-nav">
 
+            <a href="dashboard.html" class="nav-link">لوحة التحكم</a>
 
-            
-                href="dashboard.html"
-                class="nav-link"
-            >
-                لوحة التحكم
-            </a>
+            <a href="employees.html" class="nav-link">الموظفون</a>
 
+            <a href="projects.html" class="nav-link">المشاريع</a>
 
-            
-                href="employees.html"
-                class="nav-link"
-            >
-                الموظفون
-            </a>
+            <a href="tasks.html" class="nav-link">المهام</a>
 
+            <a href="matching.html" class="nav-link">المطابقة والترشيح</a>
 
-            
-                href="projects.html"
-                class="nav-link"
-            >
-                المشاريع
-            </a>
+            <a href="evaluations.html" class="nav-link active">التقييمات</a>
 
+            <a href="decisions.html" class="nav-link">القرارات</a>
 
-            
-                href="tasks.html"
-                class="nav-link"
-            >
-                المهام
-            </a>
+            <a href="leaves.html" class="nav-link">طلبات الإجازات</a>
 
-
-            
-                href="matching.html"
-                class="nav-link"
-            >
-                المطابقة والترشيح
-            </a>
-
-
-            
-                href="evaluations.html"
-                class="nav-link active"
-            >
-                التقييمات
-            </a>
-
-
-            
-                href="decisions.html"
-                class="nav-link"
-            >
-                القرارات
-            </a>
-
-
-            
-                href="leaves.html"
-                class="nav-link"
-            >
-                طلبات الإجازات
-            </a>
-
-
-            
-                href="reports.html"
-                class="nav-link"
-            >
-                التقارير
-            </a>
-
+            <a href="reports.html" class="nav-link">التقارير</a>
 
         </nav>
 
@@ -183,10 +120,6 @@
 
     </aside>
 
-
-    <!-- =========================================
-         المحتوى
-    ========================================== -->
 
     <main class="main-content">
 
@@ -209,10 +142,6 @@
 
         </header>
 
-
-        <!-- =========================================
-             ملخص التقييمات
-        ========================================== -->
 
         <section class="evaluations-summary">
 
@@ -271,10 +200,6 @@
 
         </section>
 
-
-        <!-- =========================================
-             الأدوات
-        ========================================== -->
 
         <section class="toolbar">
 
@@ -335,10 +260,6 @@
         </section>
 
 
-        <!-- =========================================
-             سجل التقييمات
-        ========================================== -->
-
         <section class="evaluations-container">
 
 
@@ -384,10 +305,6 @@
 
 </div>
 
-
-<!-- =========================================
-     إضافة / تعديل تقييم
-========================================== -->
 
 <div
     class="modal"
@@ -444,8 +361,6 @@
             <div class="form-grid">
 
 
-                <!-- الموظف -->
-
                 <div class="form-group">
 
                     <label for="employeeSelect">
@@ -466,8 +381,6 @@
 
                 </div>
 
-
-                <!-- المهمة -->
 
                 <div class="form-group">
 
@@ -494,8 +407,6 @@
 
                 </div>
 
-
-                <!-- الإنجاز -->
 
                 <div class="form-group">
 
@@ -538,8 +449,6 @@
                 </div>
 
 
-                <!-- تقييم الأداء -->
-
                 <div class="form-group">
 
                     <label for="performanceRating">
@@ -581,8 +490,6 @@
                 </div>
 
 
-                <!-- التاريخ -->
-
                 <div class="form-group">
 
                     <label for="evaluationDate">
@@ -598,8 +505,6 @@
 
                 </div>
 
-
-                <!-- الملاحظات -->
 
                 <div class="form-group full-width">
 
@@ -665,10 +570,6 @@
 </div>
 
 
-<!-- =========================================
-     تفاصيل التقييم
-========================================== -->
-
 <div
     class="modal"
     id="detailsModal"
@@ -727,10 +628,6 @@
 <script>
 
 
-/* =====================================================
-   SUPABASE
-===================================================== */
-
 const SUPABASE_URL =
     "https://avooyglxacytrfhvotsl.supabase.co";
 
@@ -750,10 +647,6 @@ const supabaseClient =
     );
 
 
-/* =====================================================
-   البيانات
-===================================================== */
-
 let evaluations = [];
 
 let employees = [];
@@ -762,10 +655,6 @@ let tasks = [];
 
 let taskAssignments = [];
 
-
-/* =====================================================
-   العناصر
-===================================================== */
 
 const evaluationsGrid =
     document.getElementById("evaluationsGrid");
@@ -785,10 +674,6 @@ const sidebarOverlay =
 const mobileMenuBtn =
     document.getElementById("mobileMenuBtn");
 
-
-/* =====================================================
-   حماية الصفحة
-===================================================== */
 
 async function protectPage() {
 
@@ -826,10 +711,6 @@ async function protectPage() {
 }
 
 
-/* =====================================================
-   تحميل الموظفين
-===================================================== */
-
 async function loadEmployees() {
 
     const { data, error } = await supabaseClient
@@ -861,10 +742,6 @@ async function loadEmployees() {
 }
 
 
-/* =====================================================
-   تحميل المهام
-===================================================== */
-
 async function loadTasks() {
 
     const { data, error } = await supabaseClient
@@ -883,12 +760,6 @@ async function loadTasks() {
 }
 
 
-/* =====================================================
-   تحميل إسنادات المهام (التعديل المهم)
-   بدون هذا الجدول، أي موظف ثانٍ مُسند لنفس المهمة
-   (من صفحة المطابقة) لن يظهر كمهمة متاحة للتقييم.
-===================================================== */
-
 async function loadTaskAssignments() {
 
     const { data, error } = await supabaseClient
@@ -905,12 +776,6 @@ async function loadTaskAssignments() {
 
 }
 
-
-/* =====================================================
-   إرجاع كل أرقام المهام المسندة فعلياً لموظف معين
-   (التعديل المهم: يدمج task_assignments مع
-   assigned_employee_id القديم، Set يمنع التكرار)
-===================================================== */
 
 function getEmployeeAssignedTaskIds(employeeId) {
 
@@ -934,20 +799,10 @@ function getEmployeeAssignedTaskIds(employeeId) {
 }
 
 
-/* =====================================================
-   هل مهمة معينة مسندة فعلياً لموظف معين؟
-   (التعديل المهم)
-===================================================== */
-
 function isTaskAssignedToEmployee(taskId, employeeId) {
     return getEmployeeAssignedTaskIds(employeeId).includes(Number(taskId));
 }
 
-
-/* =====================================================
-   تعبئة المهام - تظهر فقط مهام الموظف المختار
-   (التعديل المهم: تعتمد على getEmployeeAssignedTaskIds)
-===================================================== */
 
 function fillTaskSelect(employeeId = null, selectedTaskId = null) {
 
@@ -994,10 +849,6 @@ function fillTaskSelect(employeeId = null, selectedTaskId = null) {
 }
 
 
-/* =====================================================
-   تحميل التقييمات
-===================================================== */
-
 async function loadEvaluations() {
 
     evaluationsGrid.innerHTML = `<div class="empty-state">جارٍ تحميل التقييمات...</div>`;
@@ -1030,10 +881,6 @@ async function loadEvaluations() {
 
 }
 
-
-/* =====================================================
-   ملخص التقييمات
-===================================================== */
 
 function updateSummary() {
 
@@ -1069,10 +916,6 @@ function updateSummary() {
 }
 
 
-/* =====================================================
-   فتح إضافة تقييم
-===================================================== */
-
 function openEvaluationModal() {
 
     document.getElementById("evaluationForm").reset();
@@ -1090,10 +933,6 @@ function openEvaluationModal() {
 
 }
 
-
-/* =====================================================
-   تعديل تقييم
-===================================================== */
 
 function editEvaluation(id) {
 
@@ -1121,10 +960,6 @@ function editEvaluation(id) {
 }
 
 
-/* =====================================================
-   حفظ التقييم
-===================================================== */
-
 async function saveEvaluation(event) {
 
     event.preventDefault();
@@ -1145,11 +980,6 @@ async function saveEvaluation(event) {
         return;
     }
 
-    /*
-        التعديل المهم: نستخدم isTaskAssignedToEmployee بدل
-        مقارنة assigned_employee_id مباشرة، حتى يعمل الفحص
-        بشكل صحيح مع المهام التي فيها أكثر من موظف مسند.
-    */
     if (!isTaskAssignedToEmployee(taskId, employeeId)) {
         alert("لا يمكن تسجيل التقييم. هذه المهمة غير مسندة لهذا الموظف.");
         return;
@@ -1235,10 +1065,6 @@ async function saveEvaluation(event) {
 }
 
 
-/* =====================================================
-   عرض التقييمات
-===================================================== */
-
 function renderEvaluations(list) {
 
     evaluationsGrid.innerHTML = "";
@@ -1300,10 +1126,6 @@ function renderEvaluations(list) {
 }
 
 
-/* =====================================================
-   لون التقييم
-===================================================== */
-
 function getRatingClass(rating) {
     const value = Number(rating);
     if (value >= 5) return "excellent";
@@ -1313,10 +1135,6 @@ function getRatingClass(rating) {
     return "poor";
 }
 
-
-/* =====================================================
-   عرض التفاصيل
-===================================================== */
 
 function viewEvaluation(id) {
 
@@ -1372,10 +1190,6 @@ function viewEvaluation(id) {
 }
 
 
-/* =====================================================
-   حذف تقييم
-===================================================== */
-
 async function deleteEvaluation(id) {
 
     const evaluation = evaluations.find(item => Number(item.id) === Number(id));
@@ -1402,10 +1216,6 @@ async function deleteEvaluation(id) {
 
 }
 
-
-/* =====================================================
-   البحث والتصفية
-===================================================== */
 
 function filterEvaluations() {
 
@@ -1436,10 +1246,6 @@ function filterEvaluations() {
 }
 
 
-/* =====================================================
-   إغلاق النوافذ
-===================================================== */
-
 function closeEvaluationModal() {
     evaluationModal.classList.remove("show");
     document.body.classList.remove("modal-open");
@@ -1450,10 +1256,6 @@ function closeDetailsModal() {
     document.body.classList.remove("modal-open");
 }
 
-
-/* =====================================================
-   التاريخ
-===================================================== */
 
 function formatDate(value) {
 
@@ -1472,10 +1274,6 @@ function formatDate(value) {
 }
 
 
-/* =====================================================
-   حماية النص
-===================================================== */
-
 function escapeHtml(value) {
     return String(value ?? "")
         .replaceAll("&", "&amp;")
@@ -1485,10 +1283,6 @@ function escapeHtml(value) {
         .replaceAll("'", "&#039;");
 }
 
-
-/* =====================================================
-   السايد بار
-===================================================== */
 
 function openSidebar() {
     sidebar.classList.add("show");
@@ -1503,10 +1297,6 @@ function closeSidebar() {
 }
 
 
-/* =====================================================
-   تنظيف الجلسة
-===================================================== */
-
 function clearLocalSession() {
     localStorage.removeItem("miyarRole");
     localStorage.removeItem("miyarEmail");
@@ -1514,10 +1304,6 @@ function clearLocalSession() {
     localStorage.removeItem("selectedTaskId");
 }
 
-
-/* =====================================================
-   تسجيل الخروج
-===================================================== */
 
 async function logout() {
 
@@ -1532,10 +1318,6 @@ async function logout() {
 
 }
 
-
-/* =====================================================
-   الأحداث
-===================================================== */
 
 document.getElementById("addEvaluationBtn").addEventListener("click", openEvaluationModal);
 document.getElementById("evaluationForm").addEventListener("submit", saveEvaluation);
@@ -1576,10 +1358,6 @@ evaluationsGrid.addEventListener("click", event => {
 });
 
 
-/* =====================================================
-   تحديث عند الرجوع للصفحة
-===================================================== */
-
 window.addEventListener("focus", async function () {
 
     try {
@@ -1590,10 +1368,6 @@ window.addEventListener("focus", async function () {
 
 });
 
-
-/* =====================================================
-   تشغيل الصفحة
-===================================================== */
 
 async function startPage() {
 
