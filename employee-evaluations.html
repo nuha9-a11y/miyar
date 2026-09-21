@@ -10,7 +10,7 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>معيار | تقييمي</title>
+    <title>معيار | تقييماتي</title>
 
     <link
         rel="stylesheet"
@@ -28,9 +28,9 @@
 <div class="employee-page">
 
 
-    <!-- =========================
+    <!-- =========================================
          هيدر الجوال
-    ========================== -->
+    ========================================== -->
 
     <header class="mobile-header">
 
@@ -47,7 +47,7 @@
         <div class="mobile-header-title">
 
             <h2>
-                تقييمي
+                تقييماتي
             </h2>
 
             <span>
@@ -74,9 +74,9 @@
 
 
 
-    <!-- =========================
+    <!-- =========================================
          السايد بار
-    ========================== -->
+    ========================================== -->
 
     <aside
         class="sidebar"
@@ -92,6 +92,23 @@
             >
 
         </div>
+
+
+
+        <!-- بطاقة الموظف -->
+
+        <div class="employee-sidebar-card">
+
+            <span>
+                بوابة الموظف
+            </span>
+
+            <strong id="sidebarEmployeeName">
+                الموظف
+            </strong>
+
+        </div>
+
 
 
         <nav class="sidebar-nav">
@@ -125,7 +142,7 @@
                 href="employee-profile.html"
                 class="nav-link"
             >
-                ملفي الشخصي
+                ملفي الوظيفي
             </a>
 
 
@@ -133,11 +150,20 @@
                 href="employee-evaluations.html"
                 class="nav-link active"
             >
-                تقييمي
+                تقييماتي
+            </a>
+
+
+            <a
+                href="employee-leaves.html"
+                class="nav-link"
+            >
+                إجازاتي
             </a>
 
 
         </nav>
+
 
 
         <button
@@ -153,9 +179,9 @@
 
 
 
-    <!-- =========================
+    <!-- =========================================
          المحتوى
-    ========================== -->
+    ========================================== -->
 
     <main class="main-content">
 
@@ -170,7 +196,7 @@
 
 
             <h1>
-                تقييمي
+                تقييماتي
             </h1>
 
 
@@ -182,9 +208,9 @@
 
 
 
-        <!-- =========================
+        <!-- =========================================
              ملخص التقييم
-        ========================== -->
+        ========================================== -->
 
         <section class="summary-grid">
 
@@ -246,9 +272,9 @@
 
 
 
-        <!-- =========================
+        <!-- =========================================
              سجل التقييمات
-        ========================== -->
+        ========================================== -->
 
         <section class="evaluations-section">
 
@@ -319,10 +345,9 @@
 
 <script>
 
-
-/* =========================
+/* =========================================================
    Supabase
-========================== */
+========================================================= */
 
 const SUPABASE_URL =
     "https://avooyglxacytrfhvotsl.supabase.co";
@@ -340,26 +365,25 @@ const supabaseClient =
 
 
 
-/* =========================
+/* =========================================================
    البيانات
-========================== */
+========================================================= */
 
-let employeeId =
-    null;
+let currentSession = null;
 
+let currentEmployee = null;
 
-let evaluations =
-    [];
+let employeeId = null;
 
+let evaluations = [];
 
-let tasks =
-    [];
-
+let tasks = [];
 
 
-/* =========================
+
+/* =========================================================
    العناصر
-========================== */
+========================================================= */
 
 const evaluationsList =
     document.getElementById(
@@ -391,121 +415,364 @@ const evaluationsCountBadge =
     );
 
 
-
-/* =========================
-   حماية صفحة الموظف
-========================== */
-
-function protectEmployeePage() {
+const sidebarEmployeeName =
+    document.getElementById(
+        "sidebarEmployeeName"
+    );
 
 
-    const role =
-        localStorage.getItem(
-            "miyarRole"
-        );
+const mobileMenuBtn =
+    document.getElementById(
+        "mobileMenuBtn"
+    );
 
 
-    const savedEmployeeId =
-        localStorage.getItem(
-            "miyarEmployeeId"
-        );
+const sidebar =
+    document.getElementById(
+        "sidebar"
+    );
 
 
-    if (
-        role !== "employee"
-        ||
-        !savedEmployeeId
-    ) {
+const sidebarOverlay =
+    document.getElementById(
+        "sidebarOverlay"
+    );
 
 
-        window.location.href =
-            "login.html";
 
+/* =========================================================
+   تنظيف بيانات الدخول
+========================================================= */
 
-        return false;
+function clearEmployeeSession() {
 
-    }
+    localStorage.removeItem(
+        "miyarRole"
+    );
 
+    localStorage.removeItem(
+        "miyarEmail"
+    );
 
-    employeeId =
-        Number(
-            savedEmployeeId
-        );
+    localStorage.removeItem(
+        "miyarEmployeeId"
+    );
 
-
-    if (
-        !employeeId
-        ||
-        Number.isNaN(
-            employeeId
-        )
-    ) {
-
-
-        clearEmployeeSession();
-
-
-        window.location.href =
-            "login.html";
-
-
-        return false;
-
-    }
-
-
-    return true;
+    localStorage.removeItem(
+        "miyarEmployeeName"
+    );
 
 }
 
 
 
-/* =========================
+/* =========================================================
+   حماية صفحة الموظف
+========================================================= */
+
+async function protectEmployeePage() {
+
+    try {
+
+        const {
+            data: sessionData,
+            error: sessionError
+        } =
+            await supabaseClient
+                .auth
+                .getSession();
+
+
+        if (sessionError) {
+
+            console.error(
+                "خطأ قراءة الجلسة:",
+                sessionError
+            );
+
+            window.location.href =
+                "login.html";
+
+            return false;
+        }
+
+
+        currentSession =
+            sessionData?.session || null;
+
+
+        if (
+            !currentSession
+            ||
+            !currentSession.user
+        ) {
+
+            clearEmployeeSession();
+
+            window.location.href =
+                "login.html";
+
+            return false;
+        }
+
+
+        const authUser =
+            currentSession.user;
+
+
+
+        /* منع حساب المسؤول من دخول صفحة الموظف */
+
+        if (
+            String(
+                authUser.email || ""
+            )
+            .trim()
+            .toLowerCase()
+            ===
+            "admin@gmail.com"
+        ) {
+
+            window.location.href =
+                "dashboard.html";
+
+            return false;
+        }
+
+
+
+        /*
+            نبحث عن الموظف المرتبط
+            بالمستخدم المسجل في Supabase Auth
+        */
+
+        const {
+            data: employee,
+            error: employeeError
+        } =
+            await supabaseClient
+                .from("employees")
+                .select(`
+                    id,
+                    name,
+                    email,
+                    employee_number,
+                    auth_user_id,
+                    employment_status
+                `)
+                .eq(
+                    "auth_user_id",
+                    authUser.id
+                )
+                .maybeSingle();
+
+
+        if (employeeError) {
+
+            console.error(
+                "خطأ تحميل الموظف:",
+                employeeError
+            );
+
+            alert(
+                "تعذر التحقق من بيانات الموظف."
+            );
+
+            await supabaseClient
+                .auth
+                .signOut();
+
+            clearEmployeeSession();
+
+            window.location.href =
+                "login.html";
+
+            return false;
+        }
+
+
+        if (!employee) {
+
+            alert(
+                "هذا الحساب غير مرتبط بموظف في النظام."
+            );
+
+            await supabaseClient
+                .auth
+                .signOut();
+
+            clearEmployeeSession();
+
+            window.location.href =
+                "login.html";
+
+            return false;
+        }
+
+
+        /*
+            إذا الموظف ليس على رأس العمل
+            نمنع الدخول
+        */
+
+        if (
+            employee.employment_status
+            &&
+            employee.employment_status
+            !==
+            "على رأس العمل"
+        ) {
+
+            alert(
+                "حسابك الوظيفي غير نشط حاليًا."
+            );
+
+            await supabaseClient
+                .auth
+                .signOut();
+
+            clearEmployeeSession();
+
+            window.location.href =
+                "login.html";
+
+            return false;
+        }
+
+
+
+        currentEmployee =
+            employee;
+
+
+        employeeId =
+            Number(
+                employee.id
+            );
+
+
+        if (
+            !employeeId
+            ||
+            Number.isNaN(
+                employeeId
+            )
+        ) {
+
+            clearEmployeeSession();
+
+            window.location.href =
+                "login.html";
+
+            return false;
+        }
+
+
+
+        /*
+            حفظ البيانات محليًا
+            لاستخدامها في باقي الصفحات
+        */
+
+        localStorage.setItem(
+            "miyarRole",
+            "employee"
+        );
+
+
+        localStorage.setItem(
+            "miyarEmail",
+            employee.email
+            ||
+            authUser.email
+            ||
+            ""
+        );
+
+
+        localStorage.setItem(
+            "miyarEmployeeId",
+            String(employee.id)
+        );
+
+
+        localStorage.setItem(
+            "miyarEmployeeName",
+            employee.name || ""
+        );
+
+
+        sidebarEmployeeName.textContent =
+            employee.name
+            ||
+            "الموظف";
+
+
+        return true;
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "خطأ حماية صفحة الموظف:",
+            error
+        );
+
+        clearEmployeeSession();
+
+        window.location.href =
+            "login.html";
+
+        return false;
+    }
+
+}
+
+
+
+/* =========================================================
    تحميل تقييمات الموظف
-========================== */
+========================================================= */
 
 async function loadEvaluations() {
-
 
     const {
         data,
         error
     } =
-    await supabaseClient
-        .from("evaluations")
-        .select(`
-            id,
-            employee_id,
-            task_id,
-            achievement_level,
-            performance_rating,
-            notes,
-            evaluation_date,
-            created_at
-        `)
-        .eq(
-            "employee_id",
-            employeeId
-        )
-        .order(
-            "evaluation_date",
-            {
-                ascending: false
-            }
-        );
+        await supabaseClient
+            .from("evaluations")
+            .select(`
+                id,
+                employee_id,
+                task_id,
+                achievement_level,
+                performance_rating,
+                notes,
+                evaluation_date,
+                created_at
+            `)
+            .eq(
+                "employee_id",
+                employeeId
+            )
+            .order(
+                "evaluation_date",
+                {
+                    ascending: false
+                }
+            );
 
 
     if (error) {
-
 
         console.error(
             "خطأ تحميل التقييمات:",
             error
         );
 
-
         throw error;
-
     }
 
 
@@ -516,12 +783,11 @@ async function loadEvaluations() {
 
 
 
-/* =========================
-   تحميل المهام المرتبطة
-========================== */
+/* =========================================================
+   تحميل المهام المرتبطة بالتقييمات
+========================================================= */
 
 async function loadTasks() {
-
 
     const taskIds =
         [
@@ -547,13 +813,9 @@ async function loadTasks() {
         taskIds.length === 0
     ) {
 
-
-        tasks =
-            [];
-
+        tasks = [];
 
         return;
-
     }
 
 
@@ -561,37 +823,32 @@ async function loadTasks() {
         data,
         error
     } =
-    await supabaseClient
-        .from("tasks")
-        .select(`
-            id,
-            task_name,
-            project_id,
-            priority,
-            status,
-            due_date
-        `)
-        .in(
-            "id",
-            taskIds
-        );
+        await supabaseClient
+            .from("tasks")
+            .select(`
+                id,
+                task_name,
+                project_id,
+                priority,
+                status,
+                due_date
+            `)
+            .in(
+                "id",
+                taskIds
+            );
 
 
     if (error) {
-
 
         console.error(
             "خطأ تحميل المهام:",
             error
         );
 
-
-        tasks =
-            [];
-
+        tasks = [];
 
         return;
-
     }
 
 
@@ -602,14 +859,13 @@ async function loadTasks() {
 
 
 
-/* =========================
-   اسم المهمة
-========================== */
+/* =========================================================
+   الحصول على اسم المهمة
+========================================================= */
 
 function getTaskName(
     taskId
 ) {
-
 
     const task =
         tasks.find(
@@ -634,12 +890,11 @@ function getTaskName(
 
 
 
-/* =========================
+/* =========================================================
    عرض التقييمات
-========================== */
+========================================================= */
 
 function renderEvaluations() {
-
 
     evaluationsList.innerHTML =
         "";
@@ -648,13 +903,18 @@ function renderEvaluations() {
     evaluationsCountBadge.textContent =
         evaluations.length
         +
-        " تقييمات";
+        (
+            evaluations.length === 1
+            ?
+            " تقييم"
+            :
+            " تقييمات"
+        );
 
 
     if (
         evaluations.length === 0
     ) {
-
 
         evaluationsList.innerHTML = `
 
@@ -665,7 +925,7 @@ function renderEvaluations() {
                 </div>
 
                 <h3>
-                    لا توجد تقييمات حالياً
+                    لا توجد تقييمات حاليًا
                 </h3>
 
                 <p>
@@ -679,15 +939,13 @@ function renderEvaluations() {
 
         updateSummary();
 
-
         return;
-
     }
 
 
 
     evaluations.forEach(
-        function(evaluation) {
+        evaluation => {
 
 
             const taskName =
@@ -709,9 +967,17 @@ function renderEvaluations() {
 
 
             const date =
-                evaluation.evaluation_date
+                formatDate(
+                    evaluation.evaluation_date
+                    ||
+                    evaluation.created_at
+                );
+
+
+            const notes =
+                evaluation.notes
                 ||
-                "غير محدد";
+                "لا توجد ملاحظات مسجلة";
 
 
             const card =
@@ -745,6 +1011,7 @@ function renderEvaluations() {
                         </h3>
 
                     </div>
+
 
 
                     <div class="rating-box">
@@ -817,15 +1084,11 @@ function renderEvaluations() {
                     </span>
 
                     <p>
-
                         ${
                             escapeHtml(
-                                evaluation.notes
-                                ||
-                                "لا توجد ملاحظات مسجلة"
+                                notes
                             )
                         }
-
                     </p>
 
                 </div>
@@ -837,7 +1100,6 @@ function renderEvaluations() {
                 card
             );
 
-
         }
     );
 
@@ -848,14 +1110,61 @@ function renderEvaluations() {
 
 
 
-/* =========================
+/* =========================================================
+   تنسيق التاريخ
+========================================================= */
+
+function formatDate(
+    value
+) {
+
+    if (!value) {
+
+        return "غير محدد";
+    }
+
+
+    const date =
+        new Date(
+            value
+        );
+
+
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return String(
+            value
+        );
+    }
+
+
+    return new Intl.DateTimeFormat(
+        "ar-SA-u-ca-gregory",
+        {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit"
+        }
+    )
+    .format(
+        date
+    );
+
+}
+
+
+
+/* =========================================================
    تنسيق التقييم
-========================== */
+========================================================= */
 
 function formatRating(
     rating
 ) {
-
 
     const value =
         Number(
@@ -870,12 +1179,11 @@ function formatRating(
     ) {
 
         return "—";
-
     }
 
 
     /*
-        إذا التقييم من 5
+        إذا كان نظام التقييم من 5
     */
 
     if (
@@ -887,12 +1195,11 @@ function formatRating(
             +
             " / 5"
         );
-
     }
 
 
     /*
-        إذا التقييم من 100
+        إذا كان نظام التقييم من 100
     */
 
     return (
@@ -905,12 +1212,11 @@ function formatRating(
 
 
 
-/* =========================
-   تحديث الملخص
-========================== */
+/* =========================================================
+   تحديث ملخص التقييم
+========================================================= */
 
 function updateSummary() {
-
 
     const count =
         evaluations.length;
@@ -924,7 +1230,6 @@ function updateSummary() {
         count === 0
     ) {
 
-
         averageRating.textContent =
             "—";
 
@@ -934,7 +1239,6 @@ function updateSummary() {
 
 
         return;
-
     }
 
 
@@ -942,25 +1246,24 @@ function updateSummary() {
     const validRatings =
         evaluations
 
-        .map(
-            evaluation =>
-                Number(
-                    evaluation.performance_rating
-                )
-        )
+            .map(
+                evaluation =>
+                    Number(
+                        evaluation.performance_rating
+                    )
+            )
 
-        .filter(
-            value =>
-                !Number.isNaN(
-                    value
-                )
-        );
+            .filter(
+                value =>
+                    !Number.isNaN(
+                        value
+                    )
+            );
 
 
     if (
         validRatings.length === 0
     ) {
-
 
         averageRating.textContent =
             "—";
@@ -971,7 +1274,6 @@ function updateSummary() {
 
 
         return;
-
     }
 
 
@@ -997,8 +1299,7 @@ function updateSummary() {
 
 
     /*
-        نحدد هل نظام التقييم
-        من 5 أو من 100
+        نحدد هل التقييم من 5 أو من 100
     */
 
     const maximumRating =
@@ -1010,7 +1311,6 @@ function updateSummary() {
     if (
         maximumRating <= 5
     ) {
-
 
         averageRating.textContent =
             average.toFixed(
@@ -1025,12 +1325,9 @@ function updateSummary() {
                 average
             );
 
-
     }
 
-
     else {
-
 
         averageRating.textContent =
             average.toFixed(
@@ -1051,21 +1348,19 @@ function updateSummary() {
 
 
 
-/* =========================
-   مستوى الأداء من 5
-========================== */
+/* =========================================================
+   مستوى الأداء - تقييم من 5
+========================================================= */
 
 function getPerformanceLevelFromFive(
     average
 ) {
-
 
     if (
         average >= 4.5
     ) {
 
         return "ممتاز";
-
     }
 
 
@@ -1073,8 +1368,7 @@ function getPerformanceLevelFromFive(
         average >= 4
     ) {
 
-        return "جيد جداً";
-
+        return "جيد جدًا";
     }
 
 
@@ -1083,7 +1377,6 @@ function getPerformanceLevelFromFive(
     ) {
 
         return "جيد";
-
     }
 
 
@@ -1092,7 +1385,6 @@ function getPerformanceLevelFromFive(
     ) {
 
         return "مقبول";
-
     }
 
 
@@ -1102,21 +1394,19 @@ function getPerformanceLevelFromFive(
 
 
 
-/* =========================
-   مستوى الأداء من 100
-========================== */
+/* =========================================================
+   مستوى الأداء - تقييم من 100
+========================================================= */
 
 function getPerformanceLevelFromHundred(
     average
 ) {
-
 
     if (
         average >= 90
     ) {
 
         return "ممتاز";
-
     }
 
 
@@ -1124,8 +1414,7 @@ function getPerformanceLevelFromHundred(
         average >= 80
     ) {
 
-        return "جيد جداً";
-
+        return "جيد جدًا";
     }
 
 
@@ -1134,7 +1423,6 @@ function getPerformanceLevelFromHundred(
     ) {
 
         return "جيد";
-
     }
 
 
@@ -1143,7 +1431,6 @@ function getPerformanceLevelFromHundred(
     ) {
 
         return "مقبول";
-
     }
 
 
@@ -1153,14 +1440,13 @@ function getPerformanceLevelFromHundred(
 
 
 
-/* =========================
+/* =========================================================
    حماية النصوص
-========================== */
+========================================================= */
 
 function escapeHtml(
     value
 ) {
-
 
     return String(
         value ?? ""
@@ -1195,30 +1481,11 @@ function escapeHtml(
 
 
 
-/* =========================
-   سايد بار الجوال
-========================== */
-
-const mobileMenuBtn =
-    document.getElementById(
-        "mobileMenuBtn"
-    );
-
-
-const sidebar =
-    document.getElementById(
-        "sidebar"
-    );
-
-
-const sidebarOverlay =
-    document.getElementById(
-        "sidebarOverlay"
-    );
-
+/* =========================================================
+   فتح السايد بار بالجوال
+========================================================= */
 
 function openSidebar() {
-
 
     sidebar.classList.add(
         "show"
@@ -1238,8 +1505,11 @@ function openSidebar() {
 
 
 
-function closeSidebar() {
+/* =========================================================
+   إغلاق السايد بار بالجوال
+========================================================= */
 
+function closeSidebar() {
 
     sidebar.classList.remove(
         "show"
@@ -1259,46 +1529,28 @@ function closeSidebar() {
 
 
 
-/* =========================
-   تنظيف الجلسة
-========================== */
-
-function clearEmployeeSession() {
-
-
-    localStorage.removeItem(
-        "miyarRole"
-    );
-
-
-    localStorage.removeItem(
-        "miyarEmail"
-    );
-
-
-    localStorage.removeItem(
-        "miyarEmployeeId"
-    );
-
-
-    localStorage.removeItem(
-        "miyarEmployeeName"
-    );
-
-}
-
-
-
-/* =========================
+/* =========================================================
    تسجيل الخروج
-========================== */
+========================================================= */
 
 async function logout() {
 
+    try {
 
-    await supabaseClient
-        .auth
-        .signOut();
+        await supabaseClient
+            .auth
+            .signOut();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "خطأ تسجيل الخروج:",
+            error
+        );
+
+    }
 
 
     clearEmployeeSession();
@@ -1311,9 +1563,9 @@ async function logout() {
 
 
 
-/* =========================
+/* =========================================================
    الأحداث
-========================== */
+========================================================= */
 
 mobileMenuBtn
     .addEventListener(
@@ -1334,14 +1586,12 @@ document
         ".nav-link"
     )
     .forEach(
-        function(link) {
-
+        link => {
 
             link.addEventListener(
                 "click",
                 closeSidebar
             );
-
 
         }
     );
@@ -1357,42 +1607,50 @@ document
     );
 
 
+document
+    .addEventListener(
+        "keydown",
+        event => {
 
-/* =========================
+            if (
+                event.key === "Escape"
+            ) {
+
+                closeSidebar();
+            }
+
+        }
+    );
+
+
+
+/* =========================================================
    تشغيل الصفحة
-========================== */
+========================================================= */
 
 async function startPage() {
 
-
     const allowed =
-        protectEmployeePage();
+        await protectEmployeePage();
 
 
     if (!allowed) {
 
         return;
-
     }
 
 
     try {
 
-
         await loadEvaluations();
-
 
         await loadTasks();
 
-
         renderEvaluations();
-
 
     }
 
-
-    catch(error) {
-
+    catch (error) {
 
         console.error(
             "خطأ تشغيل صفحة التقييمات:",
@@ -1403,6 +1661,10 @@ async function startPage() {
         evaluationsList.innerHTML = `
 
             <div class="empty-state">
+
+                <div class="empty-icon">
+                    !
+                </div>
 
                 <h3>
                     تعذر تحميل التقييمات
@@ -1423,10 +1685,8 @@ async function startPage() {
 
 startPage();
 
-
 </script>
 
 
 </body>
-
 </html>
