@@ -55,7 +55,7 @@
                 </h1>
 
                 <p id="loginDescription">
-                    أدخل بريدك الإلكتروني وكلمة المرور
+                    أدخل بريدك المسجل والرقم الوظيفي
                 </p>
 
             </div>
@@ -105,7 +105,7 @@
             <form id="loginForm">
 
 
-                <!-- البريد -->
+                <!-- البريد الإلكتروني -->
 
                 <div class="input-group">
 
@@ -125,7 +125,7 @@
 
 
 
-                <!-- كلمة المرور -->
+                <!-- الرقم الوظيفي / كلمة المرور -->
 
                 <div class="input-group">
 
@@ -133,15 +133,14 @@
                         for="loginSecret"
                         id="secretLabel"
                     >
-                        كلمة المرور
+                        الرقم الوظيفي
                     </label>
 
                     <input
-                        type="password"
+                        type="text"
                         id="loginSecret"
-                        placeholder="أدخل كلمة المرور"
-                        autocomplete="current-password"
-                        minlength="6"
+                        placeholder="أدخل الرقم الوظيفي"
+                        autocomplete="off"
                         required
                     >
 
@@ -155,7 +154,7 @@
                     class="employee-note"
                     id="employeeNote"
                 >
-                    استخدم البريد الإلكتروني وكلمة المرور الخاصة بحسابك.
+                    استخدم البريد والرقم الوظيفي المسجلين لدى الجهة.
                 </p>
 
 
@@ -229,7 +228,7 @@ const supabaseClient =
 
 
 /* =========================================
-   إعدادات النظام
+   إعدادات المسؤول
 ========================================= */
 
 const ADMIN_EMAIL =
@@ -307,10 +306,10 @@ const loginButton =
 
 
 /* =========================================
-   تنظيف بيانات الدخول القديمة
+   تنظيف بيانات الدخول المحلية
 ========================================= */
 
-function clearStoredLoginData() {
+function clearLocalLogin() {
 
 
     localStorage.removeItem(
@@ -331,41 +330,6 @@ function clearStoredLoginData() {
     localStorage.removeItem(
         "miyarEmployeeName"
     );
-
-}
-
-
-
-/* =========================================
-   تسجيل الخروج من أي جلسة قديمة
-========================================= */
-
-async function clearOldSession() {
-
-
-    try {
-
-
-        await supabaseClient
-            .auth
-            .signOut();
-
-
-    }
-
-
-    catch(error) {
-
-
-        console.log(
-            "لا توجد جلسة سابقة"
-        );
-
-
-    }
-
-
-    clearStoredLoginData();
 
 }
 
@@ -416,30 +380,29 @@ function selectRole(role) {
 
 
         loginDescription.textContent =
-            "أدخل بريدك الإلكتروني وكلمة المرور";
+            "أدخل بريدك المسجل والرقم الوظيفي";
 
 
         secretLabel.textContent =
-            "كلمة المرور";
+            "الرقم الوظيفي";
 
 
         secretInput.type =
-            "password";
+            "text";
 
 
         secretInput.placeholder =
-            "أدخل كلمة المرور";
+            "أدخل الرقم الوظيفي";
 
 
-        secretInput.setAttribute(
-            "minlength",
-            "6"
+        secretInput.removeAttribute(
+            "minlength"
         );
 
 
         secretInput.setAttribute(
             "autocomplete",
-            "current-password"
+            "off"
         );
 
 
@@ -448,7 +411,7 @@ function selectRole(role) {
 
 
         employeeNote.textContent =
-            "استخدم البريد الإلكتروني وكلمة المرور الخاصة بحسابك.";
+            "استخدم البريد والرقم الوظيفي المسجلين لدى الجهة.";
 
 
     }
@@ -501,26 +464,280 @@ function selectRole(role) {
 
 
 /* =========================================
-   تسجيل الدخول في Supabase Authentication
+   دخول الموظف المؤقت
 ========================================= */
 
-async function signInWithSupabase(
+async function loginEmployee(
+    email,
+    employeeNumber
+) {
+
+
+    /*
+        حالياً أثناء تطوير واجهات الموظف:
+
+        لا نستخدم Supabase Authentication
+        للموظف.
+
+        نعتمد فقط على:
+        البريد + الرقم الوظيفي.
+
+        الصلاحيات النهائية سيتم تطبيقها
+        بعد الانتهاء من واجهات الموظف.
+    */
+
+
+    if (
+        email ===
+        ADMIN_EMAIL.toLowerCase()
+    ) {
+
+
+        errorMessage.textContent =
+            "هذا حساب مسؤول، يرجى اختيار مسؤول";
+
+
+        return false;
+
+    }
+
+
+
+    /*
+        مهم جداً:
+
+        لو كانت هناك جلسة مسؤول قديمة
+        في Supabase Auth ننهيها أولاً.
+
+        حتى لا تدخل صفحة الموظف
+        وتعتقد أن المستخدم مسؤول.
+    */
+
+    try {
+
+
+        await supabaseClient
+            .auth
+            .signOut();
+
+
+    }
+
+
+    catch(error) {
+
+
+        console.log(
+            "لا توجد جلسة Auth سابقة"
+        );
+
+
+    }
+
+
+
+    /*
+        تنظيف أي بيانات دخول قديمة
+    */
+
+    clearLocalLogin();
+
+
+
+    /*
+        التحقق من الموظف عن طريق
+        الدالة الموجودة في Supabase
+    */
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .rpc(
+            "employee_login",
+            {
+
+                input_email:
+                    email,
+
+                input_employee_number:
+                    employeeNumber
+
+            }
+        );
+
+
+
+    if (error) {
+
+
+        console.error(
+            "خطأ دخول الموظف:",
+            error
+        );
+
+
+        errorMessage.textContent =
+            "تعذر التحقق من بيانات الموظف";
+
+
+        return false;
+
+    }
+
+
+
+    /*
+        employee_login ترجع Array
+    */
+
+    const employee =
+        data
+        &&
+        data.length > 0
+        ?
+        data[0]
+        :
+        null;
+
+
+
+    /*
+        البيانات غير صحيحة
+    */
+
+    if (!employee) {
+
+
+        errorMessage.textContent =
+            "البريد الإلكتروني أو الرقم الوظيفي غير صحيح";
+
+
+        return false;
+
+    }
+
+
+
+    /*
+        حماية بسيطة مؤقتة:
+
+        حساب المسؤول لا يدخل
+        من واجهة الموظف
+    */
+
+    const employeeEmail =
+        String(
+            employee.email || ""
+        )
+        .trim()
+        .toLowerCase();
+
+
+
+    if (
+        employeeEmail ===
+        ADMIN_EMAIL.toLowerCase()
+    ) {
+
+
+        errorMessage.textContent =
+            "هذا الحساب مخصص للمسؤول";
+
+
+        return false;
+
+    }
+
+
+
+    /*
+        حفظ هوية الموظف مؤقتاً
+        في localStorage
+    */
+
+    localStorage.setItem(
+        "miyarRole",
+        "employee"
+    );
+
+
+    localStorage.setItem(
+        "miyarEmail",
+        employee.email || email
+    );
+
+
+    localStorage.setItem(
+        "miyarEmployeeId",
+        String(employee.id)
+    );
+
+
+    localStorage.setItem(
+        "miyarEmployeeName",
+        employee.name || ""
+    );
+
+
+
+    /*
+        الانتقال لصفحة الموظف
+    */
+
+    window.location.href =
+        "employee-home.html";
+
+
+    return true;
+
+}
+
+
+
+/* =========================================
+   دخول المسؤول
+========================================= */
+
+async function loginAdmin(
     email,
     password
 ) {
 
 
     /*
-        إنهاء أي جلسة قديمة.
-
-        هذا يمنع بقاء جلسة المسؤول
-        عند محاولة الدخول بحساب موظف.
+        المسؤول له بريد محدد فقط
     */
 
+    if (
+        email !==
+        ADMIN_EMAIL.toLowerCase()
+    ) {
 
-    await clearOldSession();
+
+        errorMessage.textContent =
+            "هذا الحساب غير مصرح له بالدخول كمسؤول";
 
 
+        return false;
+
+    }
+
+
+
+    /*
+        تنظيف البيانات المحلية القديمة
+    */
+
+    clearLocalLogin();
+
+
+
+    /*
+        تسجيل دخول المسؤول
+        باستخدام Supabase Authentication
+    */
 
     const {
         data,
@@ -550,128 +767,9 @@ async function signInWithSupabase(
 
 
         console.error(
-            "خطأ تسجيل الدخول:",
+            "خطأ دخول المسؤول:",
             error
         );
-
-
-        return null;
-
-    }
-
-
-
-    return data.user;
-
-}
-
-
-
-/* =========================================
-   البحث عن الموظف بواسطة Auth User ID
-========================================= */
-
-async function getEmployeeByAuthUserId(
-    authUserId
-) {
-
-
-    const {
-        data,
-        error
-    } =
-    await supabaseClient
-        .from(
-            "employees"
-        )
-        .select(`
-            id,
-            name,
-            email,
-            employee_number,
-            auth_user_id,
-            employment_status
-        `)
-        .eq(
-            "auth_user_id",
-            authUserId
-        )
-        .maybeSingle();
-
-
-
-    if (error) {
-
-
-        console.error(
-            "خطأ جلب بيانات الموظف:",
-            error
-        );
-
-
-        return {
-            employee: null,
-            error: error
-        };
-
-    }
-
-
-
-    return {
-        employee: data,
-        error: null
-    };
-
-}
-
-
-
-/* =========================================
-   دخول الموظف
-========================================= */
-
-async function loginEmployee(
-    email,
-    password
-) {
-
-
-    /*
-        منع بريد المسؤول من الدخول
-        من خيار موظف
-    */
-
-    if (
-        email ===
-        ADMIN_EMAIL.toLowerCase()
-    ) {
-
-
-        errorMessage.textContent =
-            "هذا حساب مسؤول، يرجى اختيار مسؤول";
-
-
-        return false;
-
-    }
-
-
-
-    /*
-        تسجيل الدخول الحقيقي
-        في Supabase Auth
-    */
-
-    const user =
-        await signInWithSupabase(
-            email,
-            password
-        );
-
-
-
-    if (!user) {
 
 
         errorMessage.textContent =
@@ -685,266 +783,13 @@ async function loginEmployee(
 
 
     /*
-        التأكد أن الحساب
-        ليس حساب المسؤول
+        التحقق من البريد الموجود
+        داخل جلسة Authentication
     */
 
     const authEmail =
         String(
-            user.email || ""
-        )
-        .trim()
-        .toLowerCase();
-
-
-
-    if (
-        authEmail ===
-        ADMIN_EMAIL.toLowerCase()
-    ) {
-
-
-        await clearOldSession();
-
-
-        errorMessage.textContent =
-            "هذا الحساب مخصص للمسؤول";
-
-
-        return false;
-
-    }
-
-
-
-    /*
-        جلب الملف الوظيفي المرتبط
-        بحساب Authentication
-    */
-
-    const result =
-        await getEmployeeByAuthUserId(
-            user.id
-        );
-
-
-    const employee =
-        result.employee;
-
-
-
-    if (
-        result.error
-    ) {
-
-
-        await clearOldSession();
-
-
-        errorMessage.textContent =
-            "تعذر التحقق من بيانات الموظف";
-
-
-        return false;
-
-    }
-
-
-
-    /*
-        إذا الحساب موجود في Auth
-        لكنه غير مربوط بموظف
-    */
-
-    if (!employee) {
-
-
-        await clearOldSession();
-
-
-        errorMessage.textContent =
-            "هذا الحساب غير مرتبط بملف موظف";
-
-
-        return false;
-
-    }
-
-
-
-    /*
-        مقارنة البريد الموجود في Auth
-        بالبريد الموجود في جدول الموظفين
-    */
-
-    const employeeEmail =
-        String(
-            employee.email || ""
-        )
-        .trim()
-        .toLowerCase();
-
-
-
-    if (
-        employeeEmail
-        &&
-        authEmail
-        &&
-        employeeEmail !== authEmail
-    ) {
-
-
-        await clearOldSession();
-
-
-        errorMessage.textContent =
-            "البريد غير مرتبط ببيانات هذا الموظف";
-
-
-        return false;
-
-    }
-
-
-
-    /*
-        حماية إضافية
-        لمنع حساب المسؤول
-        من الظهور كموظف
-    */
-
-    if (
-        employeeEmail ===
-        ADMIN_EMAIL.toLowerCase()
-    ) {
-
-
-        await clearOldSession();
-
-
-        errorMessage.textContent =
-            "هذا الحساب مخصص للمسؤول";
-
-
-        return false;
-
-    }
-
-
-
-    /*
-        حفظ البيانات للتوافق
-        مع بقية صفحات الموظف القديمة.
-
-        لكن التحقق الحقيقي أصبح Auth.
-    */
-
-    localStorage.setItem(
-        "miyarRole",
-        "employee"
-    );
-
-
-    localStorage.setItem(
-        "miyarEmail",
-        employee.email || authEmail
-    );
-
-
-    localStorage.setItem(
-        "miyarEmployeeId",
-        String(employee.id)
-    );
-
-
-    localStorage.setItem(
-        "miyarEmployeeName",
-        employee.name || ""
-    );
-
-
-
-    /*
-        الانتقال إلى الصفحة الرئيسية
-        الخاصة بالموظف
-    */
-
-    window.location.href =
-        "employee-home.html";
-
-
-    return true;
-
-}
-
-
-
-/* =========================================
-   دخول المسؤول
-========================================= */
-
-async function loginAdmin(
-    email,
-    password
-) {
-
-
-    /*
-        لا يسمح بالدخول كمسؤول
-        إلا بالبريد المحدد
-    */
-
-    if (
-        email !==
-        ADMIN_EMAIL.toLowerCase()
-    ) {
-
-
-        errorMessage.textContent =
-            "هذا الحساب غير مصرح له بالدخول كمسؤول";
-
-
-        return false;
-
-    }
-
-
-
-    /*
-        تسجيل الدخول
-        في Supabase Auth
-    */
-
-    const user =
-        await signInWithSupabase(
-            email,
-            password
-        );
-
-
-
-    if (!user) {
-
-
-        errorMessage.textContent =
-            "البريد الإلكتروني أو كلمة المرور غير صحيحة";
-
-
-        return false;
-
-    }
-
-
-
-    /*
-        نتأكد مرة أخرى من البريد
-        الموجود داخل جلسة Auth نفسها
-    */
-
-    const authEmail =
-        String(
-            user.email || ""
+            data.user.email || ""
         )
         .trim()
         .toLowerCase();
@@ -957,7 +802,12 @@ async function loginAdmin(
     ) {
 
 
-        await clearOldSession();
+        await supabaseClient
+            .auth
+            .signOut();
+
+
+        clearLocalLogin();
 
 
         errorMessage.textContent =
@@ -1012,7 +862,7 @@ async function loginAdmin(
 
 
 /* =========================================
-   إرسال نموذج تسجيل الدخول
+   إرسال النموذج
 ========================================= */
 
 loginForm
@@ -1043,25 +893,45 @@ loginForm
 
 
 
-            const password =
+            const secret =
                 secretInput
-                    .value;
+                    .value
+                    .trim();
 
 
 
             /*
-                التأكد من تعبئة البيانات
+                التأكد من إدخال البيانات
             */
 
             if (
                 !email
                 ||
-                !password
+                !secret
             ) {
 
 
-                errorMessage.textContent =
-                    "يرجى إدخال البريد الإلكتروني وكلمة المرور";
+                if (
+                    selectedRole ===
+                    "employee"
+                ) {
+
+
+                    errorMessage.textContent =
+                        "يرجى إدخال البريد الإلكتروني والرقم الوظيفي";
+
+
+                }
+
+
+                else {
+
+
+                    errorMessage.textContent =
+                        "يرجى إدخال البريد الإلكتروني وكلمة المرور";
+
+
+                }
 
 
                 return;
@@ -1071,11 +941,15 @@ loginForm
 
 
             /*
-                الحد الأدنى لكلمة المرور
+                كلمة مرور المسؤول
+                لا تقل عن 6 أحرف
             */
 
             if (
-                password.length < 6
+                selectedRole ===
+                "admin"
+                &&
+                secret.length < 6
             ) {
 
 
@@ -1106,7 +980,7 @@ loginForm
 
 
                 /*
-                    دخول موظف
+                    الموظف
                 */
 
                 if (
@@ -1117,7 +991,7 @@ loginForm
 
                     await loginEmployee(
                         email,
-                        password
+                        secret
                     );
 
 
@@ -1125,7 +999,7 @@ loginForm
 
 
                 /*
-                    دخول مسؤول
+                    المسؤول
                 */
 
                 else {
@@ -1133,7 +1007,7 @@ loginForm
 
                     await loginAdmin(
                         email,
-                        password
+                        secret
                     );
 
 
@@ -1179,7 +1053,7 @@ loginForm
 
 
 /* =========================================
-   اختيار موظف
+   زر الموظف
 ========================================= */
 
 employeeBtn
@@ -1199,7 +1073,7 @@ employeeBtn
 
 
 /* =========================================
-   اختيار مسؤول
+   زر المسؤول
 ========================================= */
 
 adminBtn
@@ -1219,7 +1093,7 @@ adminBtn
 
 
 /* =========================================
-   العودة إلى الصفحة الرئيسية
+   العودة للرئيسية
 ========================================= */
 
 document
@@ -1241,7 +1115,7 @@ document
 
 
 /* =========================================
-   الحالة الافتراضية
+   الوضع الافتراضي
 ========================================= */
 
 selectRole(
