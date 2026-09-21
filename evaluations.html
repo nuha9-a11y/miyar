@@ -30,6 +30,10 @@
 <div class="evaluations-page">
 
 
+    <!-- =========================================
+         هيدر الجوال
+    ========================================== -->
+
     <header class="mobile-header">
 
         <button
@@ -70,6 +74,10 @@
     ></div>
 
 
+    <!-- =========================================
+         القائمة الجانبية
+    ========================================== -->
+
     <aside
         class="sidebar"
         id="sidebar"
@@ -88,23 +96,78 @@
 
         <nav class="sidebar-nav">
 
-            <a href="dashboard.html" class="nav-link">لوحة التحكم</a>
 
-            <a href="employees.html" class="nav-link">الموظفون</a>
+            <a
+                href="dashboard.html"
+                class="nav-link"
+            >
+                لوحة التحكم
+            </a>
 
-            <a href="projects.html" class="nav-link">المشاريع</a>
 
-            <a href="tasks.html" class="nav-link">المهام</a>
+            <a
+                href="employees.html"
+                class="nav-link"
+            >
+                الموظفون
+            </a>
 
-            <a href="matching.html" class="nav-link">المطابقة والترشيح</a>
 
-            <a href="evaluations.html" class="nav-link active">التقييمات</a>
+            <a
+                href="projects.html"
+                class="nav-link"
+            >
+                المشاريع
+            </a>
 
-            <a href="decisions.html" class="nav-link">القرارات</a>
 
-            <a href="leaves.html" class="nav-link">طلبات الإجازات</a>
+            <a
+                href="tasks.html"
+                class="nav-link"
+            >
+                المهام
+            </a>
 
-            <a href="reports.html" class="nav-link">التقارير</a>
+
+            <a
+                href="matching.html"
+                class="nav-link"
+            >
+                المطابقة والترشيح
+            </a>
+
+
+            <a
+                href="evaluations.html"
+                class="nav-link active"
+            >
+                التقييمات
+            </a>
+
+
+            <a
+                href="decisions.html"
+                class="nav-link"
+            >
+                القرارات
+            </a>
+
+
+            <a
+                href="leaves.html"
+                class="nav-link"
+            >
+                طلبات الإجازات
+            </a>
+
+
+            <a
+                href="reports.html"
+                class="nav-link"
+            >
+                التقارير
+            </a>
+
 
         </nav>
 
@@ -120,6 +183,10 @@
 
     </aside>
 
+
+    <!-- =========================================
+         المحتوى
+    ========================================== -->
 
     <main class="main-content">
 
@@ -142,6 +209,10 @@
 
         </header>
 
+
+        <!-- =========================================
+             ملخص التقييمات
+        ========================================== -->
 
         <section class="evaluations-summary">
 
@@ -200,6 +271,10 @@
 
         </section>
 
+
+        <!-- =========================================
+             الأدوات
+        ========================================== -->
 
         <section class="toolbar">
 
@@ -260,6 +335,10 @@
         </section>
 
 
+        <!-- =========================================
+             سجل التقييمات
+        ========================================== -->
+
         <section class="evaluations-container">
 
 
@@ -305,6 +384,10 @@
 
 </div>
 
+
+<!-- =========================================
+     إضافة / تعديل تقييم
+========================================== -->
 
 <div
     class="modal"
@@ -361,6 +444,8 @@
             <div class="form-grid">
 
 
+                <!-- الموظف -->
+
                 <div class="form-group">
 
                     <label for="employeeSelect">
@@ -381,6 +466,8 @@
 
                 </div>
 
+
+                <!-- المهمة -->
 
                 <div class="form-group">
 
@@ -407,6 +494,8 @@
 
                 </div>
 
+
+                <!-- الإنجاز -->
 
                 <div class="form-group">
 
@@ -449,6 +538,8 @@
                 </div>
 
 
+                <!-- تقييم الأداء -->
+
                 <div class="form-group">
 
                     <label for="performanceRating">
@@ -490,6 +581,8 @@
                 </div>
 
 
+                <!-- التاريخ -->
+
                 <div class="form-group">
 
                     <label for="evaluationDate">
@@ -505,6 +598,8 @@
 
                 </div>
 
+
+                <!-- الملاحظات -->
 
                 <div class="form-group full-width">
 
@@ -570,6 +665,10 @@
 </div>
 
 
+<!-- =========================================
+     تفاصيل التقييم
+========================================== -->
+
 <div
     class="modal"
     id="detailsModal"
@@ -628,6 +727,10 @@
 <script>
 
 
+/* =====================================================
+   SUPABASE
+===================================================== */
+
 const SUPABASE_URL =
     "https://avooyglxacytrfhvotsl.supabase.co";
 
@@ -647,754 +750,2375 @@ const supabaseClient =
     );
 
 
+/* =====================================================
+   البيانات
+===================================================== */
+
 let evaluations = [];
 
 let employees = [];
 
 let tasks = [];
 
-let taskAssignments = [];
 
+/* =====================================================
+   العناصر
+===================================================== */
 
 const evaluationsGrid =
-    document.getElementById("evaluationsGrid");
+    document.getElementById(
+        "evaluationsGrid"
+    );
+
 
 const evaluationModal =
-    document.getElementById("evaluationModal");
+    document.getElementById(
+        "evaluationModal"
+    );
+
 
 const detailsModal =
-    document.getElementById("detailsModal");
+    document.getElementById(
+        "detailsModal"
+    );
+
 
 const sidebar =
-    document.getElementById("sidebar");
+    document.getElementById(
+        "sidebar"
+    );
+
 
 const sidebarOverlay =
-    document.getElementById("sidebarOverlay");
+    document.getElementById(
+        "sidebarOverlay"
+    );
+
 
 const mobileMenuBtn =
-    document.getElementById("mobileMenuBtn");
+    document.getElementById(
+        "mobileMenuBtn"
+    );
 
+
+/* =====================================================
+   حماية الصفحة
+===================================================== */
 
 async function protectPage() {
 
     try {
 
-        const { data, error } =
-            await supabaseClient.auth.getSession();
+        const {
+            data,
+            error
+        } =
+        await supabaseClient
+            .auth
+            .getSession();
 
-        if (error || !data.session) {
-            window.location.href = "login.html";
+
+        if (
+            error
+            ||
+            !data.session
+        ) {
+
+            window.location.href =
+                "login.html";
+
             return false;
         }
 
-        const email = String(data.session.user.email || "")
+
+        const email =
+            String(
+                data.session.user.email
+                ||
+                ""
+            )
             .trim()
             .toLowerCase();
 
-        if (email !== ADMIN_EMAIL.toLowerCase()) {
-            await supabaseClient.auth.signOut();
+
+        if (
+            email !==
+            ADMIN_EMAIL.toLowerCase()
+        ) {
+
+            await supabaseClient
+                .auth
+                .signOut();
+
+
             clearLocalSession();
-            window.location.href = "login.html";
+
+
+            window.location.href =
+                "login.html";
+
+
             return false;
         }
 
-        localStorage.setItem("miyarRole", "admin");
-        localStorage.setItem("miyarEmail", email);
+
+        localStorage.setItem(
+            "miyarRole",
+            "admin"
+        );
+
+
+        localStorage.setItem(
+            "miyarEmail",
+            email
+        );
+
 
         return true;
 
-    } catch (error) {
-        console.error("خطأ حماية الصفحة:", error);
+    }
+
+    catch(error) {
+
+        console.error(
+            "خطأ حماية الصفحة:",
+            error
+        );
+
+
         return false;
     }
 
 }
 
 
+/* =====================================================
+   تحميل الموظفين
+===================================================== */
+
 async function loadEmployees() {
 
-    const { data, error } = await supabaseClient
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
         .from("employees")
-        .select(`id, name, employee_number`)
-        .order("name", { ascending: true });
+        .select(`
+            id,
+            name,
+            employee_number
+        `)
+        .order(
+            "name",
+            {
+                ascending:
+                    true
+            }
+        );
+
 
     if (error) {
-        console.error("خطأ تحميل الموظفين:", error);
-        employees = [];
+
+        console.error(
+            "خطأ تحميل الموظفين:",
+            error
+        );
+
+
+        employees =
+            [];
+
+
         return;
     }
 
-    employees = data || [];
 
-    const select = document.getElementById("employeeSelect");
+    employees =
+        data || [];
 
-    select.innerHTML = `<option value="">اختر الموظف</option>`;
 
-    employees.forEach(employee => {
-        const option = document.createElement("option");
-        option.value = employee.id;
-        option.textContent =
-            employee.name +
-            (employee.employee_number ? ` - ${employee.employee_number}` : "");
-        select.appendChild(option);
-    });
+    const select =
+        document.getElementById(
+            "employeeSelect"
+        );
+
+
+    select.innerHTML = `
+
+        <option value="">
+            اختر الموظف
+        </option>
+
+    `;
+
+
+    employees.forEach(
+        employee => {
+
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+
+            option.value =
+                employee.id;
+
+
+            option.textContent =
+                employee.name
+                +
+                (
+                    employee.employee_number
+                    ?
+                    ` - ${employee.employee_number}`
+                    :
+                    ""
+                );
+
+
+            select.appendChild(
+                option
+            );
+
+        }
+    );
 
 }
 
+
+/* =====================================================
+   تحميل المهام
+===================================================== */
 
 async function loadTasks() {
 
-    const { data, error } = await supabaseClient
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
         .from("tasks")
-        .select(`id, task_name, status, assigned_employee_id`)
-        .order("id", { ascending: false });
+        .select(`
+            id,
+            task_name,
+            status,
+            assigned_employee_id
+        `)
+        .order(
+            "id",
+            {
+                ascending:
+                    false
+            }
+        );
+
 
     if (error) {
-        console.error("خطأ تحميل المهام:", error);
-        tasks = [];
+
+        console.error(
+            "خطأ تحميل المهام:",
+            error
+        );
+
+
+        tasks =
+            [];
+
+
         return;
     }
 
-    tasks = data || [];
+
+    tasks =
+        data || [];
+
+
+    fillTaskSelect();
 
 }
 
 
-async function loadTaskAssignments() {
+/* =====================================================
+   تعبئة المهام
+   تظهر فقط مهام الموظف المختار
+===================================================== */
 
-    const { data, error } = await supabaseClient
-        .from("task_assignments")
-        .select(`id, task_id, employee_id, decision_id, assigned_at, created_at`);
+function fillTaskSelect(
+    employeeId = null,
+    selectedTaskId = null
+) {
 
-    if (error) {
-        console.warn("تعذر تحميل إسنادات المهام:", error);
-        taskAssignments = [];
+    const select =
+        document.getElementById(
+            "taskSelect"
+        );
+
+
+    select.innerHTML = `
+
+        <option value="">
+            اختر المهمة
+        </option>
+
+    `;
+
+
+    if (
+        !employeeId
+    ) {
+
+        const option =
+            document.createElement(
+                "option"
+            );
+
+
+        option.value =
+            "";
+
+
+        option.disabled =
+            true;
+
+
+        option.textContent =
+            "اختر الموظف أولاً";
+
+
+        select.appendChild(
+            option
+        );
+
+
         return;
     }
 
-    taskAssignments = data || [];
 
-}
+    const employeeTasks =
+        tasks.filter(
+            task =>
+
+                Number(
+                    task.assigned_employee_id
+                )
+
+                ===
+
+                Number(
+                    employeeId
+                )
+        );
 
 
-function getEmployeeAssignedTaskIds(employeeId) {
+    if (
+        employeeTasks.length === 0
+    ) {
 
-    const id = Number(employeeId);
-    const taskIds = new Set();
+        const option =
+            document.createElement(
+                "option"
+            );
 
-    taskAssignments.forEach(assignment => {
-        if (Number(assignment.employee_id) === id) {
-            taskIds.add(Number(assignment.task_id));
+
+        option.value =
+            "";
+
+
+        option.disabled =
+            true;
+
+
+        option.textContent =
+            "لا توجد مهام مسندة لهذا الموظف";
+
+
+        select.appendChild(
+            option
+        );
+
+
+        return;
+    }
+
+
+    employeeTasks.forEach(
+        task => {
+
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+
+            option.value =
+                task.id;
+
+
+            option.textContent =
+                task.task_name
+                +
+                (
+                    task.status
+                    ?
+                    ` - ${task.status}`
+                    :
+                    ""
+                );
+
+
+            select.appendChild(
+                option
+            );
+
         }
-    });
-
-    tasks.forEach(task => {
-        if (Number(task.assigned_employee_id) === id) {
-            taskIds.add(Number(task.id));
-        }
-    });
-
-    return [...taskIds];
-
-}
-
-
-function isTaskAssignedToEmployee(taskId, employeeId) {
-    return getEmployeeAssignedTaskIds(employeeId).includes(Number(taskId));
-}
-
-
-function fillTaskSelect(employeeId = null, selectedTaskId = null) {
-
-    const select = document.getElementById("taskSelect");
-
-    select.innerHTML = `<option value="">اختر المهمة</option>`;
-
-    if (!employeeId) {
-        const option = document.createElement("option");
-        option.value = "";
-        option.disabled = true;
-        option.textContent = "اختر الموظف أولاً";
-        select.appendChild(option);
-        return;
-    }
-
-    const assignedTaskIds = getEmployeeAssignedTaskIds(employeeId);
-
-    const employeeTasks = tasks.filter(task =>
-        assignedTaskIds.includes(Number(task.id))
     );
 
-    if (employeeTasks.length === 0) {
-        const option = document.createElement("option");
-        option.value = "";
-        option.disabled = true;
-        option.textContent = "لا توجد مهام مسندة لهذا الموظف";
-        select.appendChild(option);
-        return;
-    }
 
-    employeeTasks.forEach(task => {
-        const option = document.createElement("option");
-        option.value = task.id;
-        option.textContent =
-            task.task_name + (task.status ? ` - ${task.status}` : "");
-        select.appendChild(option);
-    });
+    if (
+        selectedTaskId
+    ) {
 
-    if (selectedTaskId) {
-        select.value = String(selectedTaskId);
+        select.value =
+            String(
+                selectedTaskId
+            );
+
     }
 
 }
 
+
+/* =====================================================
+   تحميل التقييمات
+===================================================== */
 
 async function loadEvaluations() {
 
-    evaluationsGrid.innerHTML = `<div class="empty-state">جارٍ تحميل التقييمات...</div>`;
+    evaluationsGrid.innerHTML = `
 
-    const { data, error } = await supabaseClient
+        <div class="empty-state">
+            جارٍ تحميل التقييمات...
+        </div>
+
+    `;
+
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
         .from("evaluations")
         .select(`
-            id, employee_id, task_id, achievement_level, performance_rating,
-            notes, evaluation_date,
-            employees ( name, employee_number ),
-            tasks ( task_name )
+            id,
+            employee_id,
+            task_id,
+            achievement_level,
+            performance_rating,
+            notes,
+            evaluation_date,
+            employees (
+                name,
+                employee_number
+            ),
+            tasks (
+                task_name
+            )
         `)
-        .order("id", { ascending: false });
+        .order(
+            "id",
+            {
+                ascending:
+                    false
+            }
+        );
+
 
     if (error) {
-        console.error("خطأ تحميل التقييمات:", error);
+
+        console.error(
+            "خطأ تحميل التقييمات:",
+            error
+        );
+
+
         evaluationsGrid.innerHTML = `
+
             <div class="empty-state error-state">
-                <strong>تعذر تحميل التقييمات</strong>
-                <small>${escapeHtml(error.message)}</small>
+
+                <strong>
+                    تعذر تحميل التقييمات
+                </strong>
+
+                <small>
+                    ${escapeHtml(
+                        error.message
+                    )}
+                </small>
+
             </div>
+
         `;
+
+
         return;
     }
 
-    evaluations = data || [];
+
+    evaluations =
+        data || [];
+
 
     updateSummary();
+
+
     filterEvaluations();
 
 }
 
 
+/* =====================================================
+   ملخص التقييمات
+===================================================== */
+
 function updateSummary() {
 
-    const total = evaluations.length;
-    let average = 0;
+    const total =
+        evaluations.length;
 
-    if (total > 0) {
-        const sum = evaluations.reduce(
-            (result, evaluation) =>
-                result + Number(evaluation.performance_rating || 0),
-            0
-        );
-        average = sum / total;
+
+    let average =
+        0;
+
+
+    if (
+        total > 0
+    ) {
+
+        const sum =
+            evaluations.reduce(
+                (
+                    result,
+                    evaluation
+                ) => {
+
+                    return (
+                        result
+                        +
+                        Number(
+                            evaluation.performance_rating
+                            ||
+                            0
+                        )
+                    );
+
+                },
+                0
+            );
+
+
+        average =
+            sum / total;
+
     }
 
-    const excellent = evaluations.filter(
-        evaluation => Number(evaluation.performance_rating) === 5
-    ).length;
 
-    const needsImprovement = evaluations.filter(evaluation => {
-        return (
-            Number(evaluation.performance_rating) <= 2 ||
-            evaluation.achievement_level === "يحتاج تحسين"
-        );
-    }).length;
+    const excellent =
+        evaluations.filter(
+            evaluation =>
 
-    document.getElementById("summaryTotal").textContent = total;
-    document.getElementById("summaryAverage").textContent =
-        total ? average.toFixed(1) + "/5" : "0";
-    document.getElementById("summaryExcellent").textContent = excellent;
-    document.getElementById("summaryNeedsImprovement").textContent = needsImprovement;
+                Number(
+                    evaluation.performance_rating
+                )
+                ===
+                5
+
+        ).length;
+
+
+    const needsImprovement =
+        evaluations.filter(
+            evaluation => {
+
+                return (
+
+                    Number(
+                        evaluation.performance_rating
+                    )
+                    <=
+                    2
+
+                    ||
+
+                    evaluation.achievement_level
+                    ===
+                    "يحتاج تحسين"
+
+                );
+
+            }
+        ).length;
+
+
+    document
+        .getElementById(
+            "summaryTotal"
+        )
+        .textContent =
+        total;
+
+
+    document
+        .getElementById(
+            "summaryAverage"
+        )
+        .textContent =
+        total
+        ?
+        average.toFixed(1)
+        +
+        "/5"
+        :
+        "0";
+
+
+    document
+        .getElementById(
+            "summaryExcellent"
+        )
+        .textContent =
+        excellent;
+
+
+    document
+        .getElementById(
+            "summaryNeedsImprovement"
+        )
+        .textContent =
+        needsImprovement;
 
 }
 
+
+/* =====================================================
+   فتح إضافة تقييم
+===================================================== */
 
 function openEvaluationModal() {
 
-    document.getElementById("evaluationForm").reset();
-    document.getElementById("editEvaluationId").value = "";
-    document.getElementById("modalTitle").textContent = "إضافة تقييم";
-    document.getElementById("saveEvaluationBtn").textContent = "حفظ التقييم";
+    document
+        .getElementById(
+            "evaluationForm"
+        )
+        .reset();
 
-    const today = new Date().toISOString().split("T")[0];
-    document.getElementById("evaluationDate").value = today;
+
+    document
+        .getElementById(
+            "editEvaluationId"
+        )
+        .value =
+        "";
+
+
+    document
+        .getElementById(
+            "modalTitle"
+        )
+        .textContent =
+        "إضافة تقييم";
+
+
+    document
+        .getElementById(
+            "saveEvaluationBtn"
+        )
+        .textContent =
+        "حفظ التقييم";
+
+
+    const today =
+        new Date()
+            .toISOString()
+            .split("T")[0];
+
+
+    document
+        .getElementById(
+            "evaluationDate"
+        )
+        .value =
+        today;
+
 
     fillTaskSelect();
 
-    evaluationModal.classList.add("show");
-    document.body.classList.add("modal-open");
+
+    evaluationModal
+        .classList
+        .add(
+            "show"
+        );
+
+
+    document.body
+        .classList
+        .add(
+            "modal-open"
+        );
 
 }
 
+
+/* =====================================================
+   تعديل تقييم
+===================================================== */
 
 function editEvaluation(id) {
 
-    const evaluation = evaluations.find(
-        item => Number(item.id) === Number(id)
+    const evaluation =
+        evaluations.find(
+            item =>
+
+                Number(
+                    item.id
+                )
+                ===
+                Number(
+                    id
+                )
+        );
+
+
+    if (
+        !evaluation
+    ) {
+
+        return;
+    }
+
+
+    document
+        .getElementById(
+            "editEvaluationId"
+        )
+        .value =
+        evaluation.id;
+
+
+    document
+        .getElementById(
+            "employeeSelect"
+        )
+        .value =
+        evaluation.employee_id;
+
+
+    fillTaskSelect(
+        evaluation.employee_id,
+        evaluation.task_id
     );
 
-    if (!evaluation) return;
 
-    document.getElementById("editEvaluationId").value = evaluation.id;
-    document.getElementById("employeeSelect").value = evaluation.employee_id;
+    document
+        .getElementById(
+            "achievementLevel"
+        )
+        .value =
+        evaluation.achievement_level;
 
-    fillTaskSelect(evaluation.employee_id, evaluation.task_id);
 
-    document.getElementById("achievementLevel").value = evaluation.achievement_level;
-    document.getElementById("performanceRating").value = evaluation.performance_rating;
-    document.getElementById("evaluationNotes").value = evaluation.notes || "";
-    document.getElementById("evaluationDate").value = evaluation.evaluation_date;
-    document.getElementById("modalTitle").textContent = "تعديل التقييم";
-    document.getElementById("saveEvaluationBtn").textContent = "حفظ التعديلات";
+    document
+        .getElementById(
+            "performanceRating"
+        )
+        .value =
+        evaluation.performance_rating;
 
-    evaluationModal.classList.add("show");
-    document.body.classList.add("modal-open");
+
+    document
+        .getElementById(
+            "evaluationNotes"
+        )
+        .value =
+        evaluation.notes
+        ||
+        "";
+
+
+    document
+        .getElementById(
+            "evaluationDate"
+        )
+        .value =
+        evaluation.evaluation_date;
+
+
+    document
+        .getElementById(
+            "modalTitle"
+        )
+        .textContent =
+        "تعديل التقييم";
+
+
+    document
+        .getElementById(
+            "saveEvaluationBtn"
+        )
+        .textContent =
+        "حفظ التعديلات";
+
+
+    evaluationModal
+        .classList
+        .add(
+            "show"
+        );
+
+
+    document.body
+        .classList
+        .add(
+            "modal-open"
+        );
 
 }
 
+
+/* =====================================================
+   حفظ التقييم
+===================================================== */
 
 async function saveEvaluation(event) {
 
     event.preventDefault();
 
-    const editId = document.getElementById("editEvaluationId").value;
-    const employeeId = Number(document.getElementById("employeeSelect").value);
-    const taskId = Number(document.getElementById("taskSelect").value);
 
-    if (!employeeId || !taskId) {
-        alert("اختر الموظف والمهمة.");
+    const editId =
+        document
+            .getElementById(
+                "editEvaluationId"
+            )
+            .value;
+
+
+    const employeeId =
+        Number(
+            document
+                .getElementById(
+                    "employeeSelect"
+                )
+                .value
+        );
+
+
+    const taskId =
+        Number(
+            document
+                .getElementById(
+                    "taskSelect"
+                )
+                .value
+        );
+
+
+    if (
+        !employeeId
+        ||
+        !taskId
+    ) {
+
+        alert(
+            "اختر الموظف والمهمة."
+        );
+
+
         return;
     }
 
-    const selectedTask = tasks.find(task => Number(task.id) === taskId);
 
-    if (!selectedTask) {
-        alert("تعذر العثور على المهمة.");
+    const selectedTask =
+        tasks.find(
+            task =>
+
+                Number(
+                    task.id
+                )
+                ===
+                taskId
+        );
+
+
+    if (
+        !selectedTask
+    ) {
+
+        alert(
+            "تعذر العثور على المهمة."
+        );
+
+
         return;
     }
 
-    if (!isTaskAssignedToEmployee(taskId, employeeId)) {
-        alert("لا يمكن تسجيل التقييم. هذه المهمة غير مسندة لهذا الموظف.");
+
+    /*
+        لا يمكن تقييم موظف
+        على مهمة غير مسندة له
+    */
+
+    if (
+
+        !selectedTask.assigned_employee_id
+
+        ||
+
+        Number(
+            selectedTask.assigned_employee_id
+        )
+        !==
+        employeeId
+
+    ) {
+
+        alert(
+            "لا يمكن تسجيل التقييم. هذه المهمة غير مسندة لهذا الموظف."
+        );
+
+
         return;
     }
 
-    const achievementLevel = document.getElementById("achievementLevel").value;
-    const performanceRating = Number(document.getElementById("performanceRating").value);
-    const evaluationDate = document.getElementById("evaluationDate").value;
 
-    if (!achievementLevel || !performanceRating || !evaluationDate) {
-        alert("أكمل جميع البيانات المطلوبة.");
+    const achievementLevel =
+        document
+            .getElementById(
+                "achievementLevel"
+            )
+            .value;
+
+
+    const performanceRating =
+        Number(
+            document
+                .getElementById(
+                    "performanceRating"
+                )
+                .value
+        );
+
+
+    const evaluationDate =
+        document
+            .getElementById(
+                "evaluationDate"
+            )
+            .value;
+
+
+    if (
+        !achievementLevel
+        ||
+        !performanceRating
+        ||
+        !evaluationDate
+    ) {
+
+        alert(
+            "أكمل جميع البيانات المطلوبة."
+        );
+
+
         return;
     }
 
-    const button = document.getElementById("saveEvaluationBtn");
-    button.disabled = true;
-    button.textContent = "جارٍ الحفظ...";
+
+    const button =
+        document.getElementById(
+            "saveEvaluationBtn"
+        );
+
+
+    button.disabled =
+        true;
+
+
+    button.textContent =
+        "جارٍ الحفظ...";
+
 
     const evaluationData = {
-        employee_id: employeeId,
-        task_id: taskId,
-        achievement_level: achievementLevel,
-        performance_rating: performanceRating,
-        notes: document.getElementById("evaluationNotes").value.trim() || null,
-        evaluation_date: evaluationDate
+
+
+        employee_id:
+            employeeId,
+
+
+        task_id:
+            taskId,
+
+
+        achievement_level:
+            achievementLevel,
+
+
+        performance_rating:
+            performanceRating,
+
+
+        notes:
+            document
+                .getElementById(
+                    "evaluationNotes"
+                )
+                .value
+                .trim()
+            ||
+            null,
+
+
+        evaluation_date:
+            evaluationDate
+
     };
+
 
     try {
 
-        if (editId) {
 
-            const { error } = await supabaseClient
+        if (
+            editId
+        ) {
+
+
+            const {
+                error
+            } =
+            await supabaseClient
                 .from("evaluations")
-                .update(evaluationData)
-                .eq("id", Number(editId));
+                .update(
+                    evaluationData
+                )
+                .eq(
+                    "id",
+                    Number(
+                        editId
+                    )
+                );
 
-            if (error) throw error;
 
-            alert("تم تعديل التقييم بنجاح.");
+            if (
+                error
+            ) {
 
-        } else {
-
-            const { data: existingEvaluation, error: checkError } =
-                await supabaseClient
-                    .from("evaluations")
-                    .select("id")
-                    .eq("employee_id", employeeId)
-                    .eq("task_id", taskId)
-                    .maybeSingle();
-
-            if (checkError) throw checkError;
-
-            if (existingEvaluation) {
-                alert("يوجد تقييم مسجل مسبقاً لهذا الموظف في هذه المهمة. يمكنك تعديل التقييم الموجود.");
-                return;
+                throw error;
             }
 
-            const { error } = await supabaseClient
-                .from("evaluations")
-                .insert([evaluationData]);
 
-            if (error) throw error;
-
-            alert("تمت إضافة التقييم بنجاح.");
+            alert(
+                "تم تعديل التقييم بنجاح."
+            );
 
         }
 
+
+        else {
+
+
+            /*
+                منع تكرار تقييم
+                نفس الموظف لنفس المهمة
+            */
+
+            const {
+                data:
+                    existingEvaluation,
+                error:
+                    checkError
+            } =
+            await supabaseClient
+                .from("evaluations")
+                .select("id")
+                .eq(
+                    "employee_id",
+                    employeeId
+                )
+                .eq(
+                    "task_id",
+                    taskId
+                )
+                .maybeSingle();
+
+
+            if (
+                checkError
+            ) {
+
+                throw checkError;
+            }
+
+
+            if (
+                existingEvaluation
+            ) {
+
+                alert(
+                    "يوجد تقييم مسجل مسبقاً لهذا الموظف في هذه المهمة. يمكنك تعديل التقييم الموجود."
+                );
+
+
+                return;
+            }
+
+
+            const {
+                error
+            } =
+            await supabaseClient
+                .from("evaluations")
+                .insert([
+                    evaluationData
+                ]);
+
+
+            if (
+                error
+            ) {
+
+                throw error;
+            }
+
+
+            alert(
+                "تمت إضافة التقييم بنجاح."
+            );
+
+        }
+
+
         closeEvaluationModal();
+
+
         await loadEvaluations();
 
-    } catch (error) {
+    }
 
-        console.error("خطأ حفظ التقييم:", error);
-        alert("تعذر حفظ التقييم.\n\n" + (error.message || ""));
+    catch(error) {
 
-    } finally {
 
-        button.disabled = false;
-        button.textContent = editId ? "حفظ التعديلات" : "حفظ التقييم";
+        console.error(
+            "خطأ حفظ التقييم:",
+            error
+        );
+
+
+        alert(
+            "تعذر حفظ التقييم.\n\n"
+            +
+            (
+                error.message
+                ||
+                ""
+            )
+        );
+
+    }
+
+    finally {
+
+
+        button.disabled =
+            false;
+
+
+        button.textContent =
+            editId
+            ?
+            "حفظ التعديلات"
+            :
+            "حفظ التقييم";
 
     }
 
 }
 
+
+/* =====================================================
+   عرض التقييمات
+===================================================== */
 
 function renderEvaluations(list) {
 
-    evaluationsGrid.innerHTML = "";
-    document.getElementById("evaluationsCount").textContent = list.length + " تقييم";
+    evaluationsGrid.innerHTML =
+        "";
 
-    if (!list || list.length === 0) {
-        evaluationsGrid.innerHTML = `<div class="empty-state">لا توجد تقييمات حالياً</div>`;
+
+    document
+        .getElementById(
+            "evaluationsCount"
+        )
+        .textContent =
+        list.length
+        +
+        " تقييم";
+
+
+    if (
+        !list
+        ||
+        list.length === 0
+    ) {
+
+
+        evaluationsGrid.innerHTML = `
+
+            <div class="empty-state">
+                لا توجد تقييمات حالياً
+            </div>
+
+        `;
+
+
         return;
     }
 
-    list.forEach(evaluation => {
 
-        const employeeName = evaluation.employees?.name || "-";
-        const taskName = evaluation.tasks?.task_name || "-";
+    list.forEach(
+        evaluation => {
 
-        const card = document.createElement("article");
-        card.className = "evaluation-card";
 
-        card.innerHTML = `
-            <div class="card-top">
-                <div>
-                    <span class="evaluation-label">تقييم موظف</span>
-                    <h3>${escapeHtml(employeeName)}</h3>
-                    <p class="task-name">${escapeHtml(taskName)}</p>
+            const employeeName =
+                evaluation.employees?.name
+                ||
+                "-";
+
+
+            const taskName =
+                evaluation.tasks?.task_name
+                ||
+                "-";
+
+
+            const card =
+                document.createElement(
+                    "article"
+                );
+
+
+            card.className =
+                "evaluation-card";
+
+
+            card.innerHTML = `
+
+
+                <div class="card-top">
+
+
+                    <div>
+
+                        <span class="evaluation-label">
+                            تقييم موظف
+                        </span>
+
+
+                        <h3>
+                            ${escapeHtml(
+                                employeeName
+                            )}
+                        </h3>
+
+
+                        <p class="task-name">
+                            ${escapeHtml(
+                                taskName
+                            )}
+                        </p>
+
+                    </div>
+
+
+                    <div
+                        class="
+                            rating-badge
+                            ${getRatingClass(
+                                evaluation.performance_rating
+                            )}
+                        "
+                    >
+
+                        <span>
+                            التقييم
+                        </span>
+
+                        <strong>
+                            ${evaluation.performance_rating}/5
+                        </strong>
+
+                    </div>
+
+
                 </div>
-                <div class="rating-badge ${getRatingClass(evaluation.performance_rating)}">
-                    <span>التقييم</span>
-                    <strong>${evaluation.performance_rating}/5</strong>
+
+
+                <div class="evaluation-info">
+
+
+                    <div class="info-item">
+
+                        <span>
+                            مستوى الإنجاز
+                        </span>
+
+                        <strong>
+                            ${escapeHtml(
+                                evaluation.achievement_level
+                            )}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <span>
+                            تاريخ التقييم
+                        </span>
+
+                        <strong>
+                            ${formatDate(
+                                evaluation.evaluation_date
+                            )}
+                        </strong>
+
+                    </div>
+
+
                 </div>
-            </div>
 
-            <div class="evaluation-info">
-                <div class="info-item">
-                    <span>مستوى الإنجاز</span>
-                    <strong>${escapeHtml(evaluation.achievement_level)}</strong>
+
+                <div class="notes-preview">
+
+                    <span>
+                        ملاحظات المسؤول
+                    </span>
+
+                    <p>
+                        ${escapeHtml(
+                            evaluation.notes
+                            ||
+                            "لا توجد ملاحظات"
+                        )}
+                    </p>
+
                 </div>
-                <div class="info-item">
-                    <span>تاريخ التقييم</span>
-                    <strong>${formatDate(evaluation.evaluation_date)}</strong>
+
+
+                <div class="evaluation-actions">
+
+
+                    <button
+                        type="button"
+                        class="view-btn"
+                        data-action="view"
+                        data-id="${evaluation.id}"
+                    >
+                        عرض
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="edit-btn"
+                        data-action="edit"
+                        data-id="${evaluation.id}"
+                    >
+                        تعديل
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="delete-btn"
+                        data-action="delete"
+                        data-id="${evaluation.id}"
+                    >
+                        حذف
+                    </button>
+
+
                 </div>
-            </div>
 
-            <div class="notes-preview">
-                <span>ملاحظات المسؤول</span>
-                <p>${escapeHtml(evaluation.notes || "لا توجد ملاحظات")}</p>
-            </div>
 
-            <div class="evaluation-actions">
-                <button type="button" class="view-btn" data-action="view" data-id="${evaluation.id}">عرض</button>
-                <button type="button" class="edit-btn" data-action="edit" data-id="${evaluation.id}">تعديل</button>
-                <button type="button" class="delete-btn" data-action="delete" data-id="${evaluation.id}">حذف</button>
-            </div>
-        `;
+            `;
 
-        evaluationsGrid.appendChild(card);
 
-    });
+            evaluationsGrid.appendChild(
+                card
+            );
+
+
+        }
+    );
 
 }
 
+
+/* =====================================================
+   لون التقييم
+===================================================== */
 
 function getRatingClass(rating) {
-    const value = Number(rating);
-    if (value >= 5) return "excellent";
-    if (value >= 4) return "very-good";
-    if (value >= 3) return "good";
-    if (value >= 2) return "acceptable";
+
+    const value =
+        Number(
+            rating
+        );
+
+
+    if (
+        value >= 5
+    ) {
+
+        return "excellent";
+    }
+
+
+    if (
+        value >= 4
+    ) {
+
+        return "very-good";
+    }
+
+
+    if (
+        value >= 3
+    ) {
+
+        return "good";
+    }
+
+
+    if (
+        value >= 2
+    ) {
+
+        return "acceptable";
+    }
+
+
     return "poor";
+
 }
 
+
+/* =====================================================
+   عرض التفاصيل
+===================================================== */
 
 function viewEvaluation(id) {
 
-    const evaluation = evaluations.find(item => Number(item.id) === Number(id));
+    const evaluation =
+        evaluations.find(
+            item =>
 
-    if (!evaluation) return;
+                Number(
+                    item.id
+                )
+                ===
+                Number(
+                    id
+                )
+        );
 
-    document.getElementById("evaluationDetails").innerHTML = `
-        <div class="detail-item">
-            <span>اسم الموظف</span>
-            <strong>${escapeHtml(evaluation.employees?.name || "-")}</strong>
-        </div>
 
-        <div class="detail-item">
-            <span>الرقم الوظيفي</span>
-            <strong>${escapeHtml(evaluation.employees?.employee_number || "-")}</strong>
-        </div>
+    if (
+        !evaluation
+    ) {
 
-        <div class="detail-item">
-            <span>اسم المهمة</span>
-            <strong>${escapeHtml(evaluation.tasks?.task_name || "-")}</strong>
-        </div>
+        return;
+    }
 
-        <div class="detail-item">
-            <span>مستوى الإنجاز</span>
-            <strong>${escapeHtml(evaluation.achievement_level)}</strong>
-        </div>
 
-        <div class="detail-item">
-            <span>تقييم الأداء</span>
-            <strong>${evaluation.performance_rating} من 5</strong>
-        </div>
+    document
+        .getElementById(
+            "evaluationDetails"
+        )
+        .innerHTML = `
 
-        <div class="detail-item">
-            <span>نسبة الأداء</span>
-            <strong>${Math.round(Number(evaluation.performance_rating) / 5 * 100)}%</strong>
-        </div>
 
-        <div class="detail-item">
-            <span>تاريخ التقييم</span>
-            <strong>${formatDate(evaluation.evaluation_date)}</strong>
-        </div>
+            <div class="detail-item">
 
-        <div class="detail-item full-detail">
-            <span>ملاحظات المسؤول</span>
-            <strong>${escapeHtml(evaluation.notes || "لا توجد ملاحظات")}</strong>
-        </div>
-    `;
+                <span>
+                    اسم الموظف
+                </span>
 
-    detailsModal.classList.add("show");
-    document.body.classList.add("modal-open");
+                <strong>
+                    ${escapeHtml(
+                        evaluation.employees?.name
+                        ||
+                        "-"
+                    )}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    الرقم الوظيفي
+                </span>
+
+                <strong>
+                    ${escapeHtml(
+                        evaluation.employees?.employee_number
+                        ||
+                        "-"
+                    )}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    اسم المهمة
+                </span>
+
+                <strong>
+                    ${escapeHtml(
+                        evaluation.tasks?.task_name
+                        ||
+                        "-"
+                    )}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    مستوى الإنجاز
+                </span>
+
+                <strong>
+                    ${escapeHtml(
+                        evaluation.achievement_level
+                    )}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    تقييم الأداء
+                </span>
+
+                <strong>
+                    ${evaluation.performance_rating}
+                    من 5
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    نسبة الأداء
+                </span>
+
+                <strong>
+                    ${
+                        Math.round(
+                            Number(
+                                evaluation.performance_rating
+                            )
+                            /
+                            5
+                            *
+                            100
+                        )
+                    }%
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    تاريخ التقييم
+                </span>
+
+                <strong>
+                    ${formatDate(
+                        evaluation.evaluation_date
+                    )}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item full-detail">
+
+                <span>
+                    ملاحظات المسؤول
+                </span>
+
+                <strong>
+                    ${escapeHtml(
+                        evaluation.notes
+                        ||
+                        "لا توجد ملاحظات"
+                    )}
+                </strong>
+
+            </div>
+
+
+        `;
+
+
+    detailsModal
+        .classList
+        .add(
+            "show"
+        );
+
+
+    document.body
+        .classList
+        .add(
+            "modal-open"
+        );
 
 }
 
 
+/* =====================================================
+   حذف تقييم
+===================================================== */
+
 async function deleteEvaluation(id) {
 
-    const evaluation = evaluations.find(item => Number(item.id) === Number(id));
+    const evaluation =
+        evaluations.find(
+            item =>
 
-    if (!evaluation) return;
+                Number(
+                    item.id
+                )
+                ===
+                Number(
+                    id
+                )
+        );
 
-    const confirmed = confirm("هل تريد حذف هذا التقييم؟");
 
-    if (!confirmed) return;
+    if (
+        !evaluation
+    ) {
 
-    const { error } = await supabaseClient
-        .from("evaluations")
-        .delete()
-        .eq("id", Number(id));
-
-    if (error) {
-        console.error(error);
-        alert("تعذر حذف التقييم.\n\n" + error.message);
         return;
     }
 
-    alert("تم حذف التقييم بنجاح.");
+
+    const confirmed =
+        confirm(
+            "هل تريد حذف هذا التقييم؟"
+        );
+
+
+    if (
+        !confirmed
+    ) {
+
+        return;
+    }
+
+
+    const {
+        error
+    } =
+    await supabaseClient
+        .from("evaluations")
+        .delete()
+        .eq(
+            "id",
+            Number(
+                id
+            )
+        );
+
+
+    if (
+        error
+    ) {
+
+
+        console.error(
+            error
+        );
+
+
+        alert(
+            "تعذر حذف التقييم.\n\n"
+            +
+            error.message
+        );
+
+
+        return;
+    }
+
+
+    alert(
+        "تم حذف التقييم بنجاح."
+    );
+
+
     await loadEvaluations();
 
 }
 
 
+/* =====================================================
+   البحث والتصفية
+===================================================== */
+
 function filterEvaluations() {
 
-    const search = document.getElementById("searchInput").value.trim().toLowerCase();
-    const rating = document.getElementById("ratingFilter").value;
+    const search =
+        document
+            .getElementById(
+                "searchInput"
+            )
+            .value
+            .trim()
+            .toLowerCase();
 
-    const filtered = evaluations.filter(evaluation => {
 
-        const employee = String(evaluation.employees?.name || "").toLowerCase();
-        const employeeNumber = String(evaluation.employees?.employee_number || "").toLowerCase();
-        const task = String(evaluation.tasks?.task_name || "").toLowerCase();
+    const rating =
+        document
+            .getElementById(
+                "ratingFilter"
+            )
+            .value;
 
-        const matchSearch =
-            !search ||
-            employee.includes(search) ||
-            employeeNumber.includes(search) ||
-            task.includes(search);
 
-        const matchRating =
-            !rating || Number(evaluation.performance_rating) === Number(rating);
+    const filtered =
+        evaluations.filter(
+            evaluation => {
 
-        return matchSearch && matchRating;
 
-    });
+                const employee =
+                    String(
+                        evaluation.employees?.name
+                        ||
+                        ""
+                    )
+                    .toLowerCase();
 
-    renderEvaluations(filtered);
+
+                const employeeNumber =
+                    String(
+                        evaluation.employees?.employee_number
+                        ||
+                        ""
+                    )
+                    .toLowerCase();
+
+
+                const task =
+                    String(
+                        evaluation.tasks?.task_name
+                        ||
+                        ""
+                    )
+                    .toLowerCase();
+
+
+                const matchSearch =
+                    !search
+                    ||
+                    employee.includes(
+                        search
+                    )
+                    ||
+                    employeeNumber.includes(
+                        search
+                    )
+                    ||
+                    task.includes(
+                        search
+                    );
+
+
+                const matchRating =
+                    !rating
+                    ||
+                    Number(
+                        evaluation.performance_rating
+                    )
+                    ===
+                    Number(
+                        rating
+                    );
+
+
+                return (
+                    matchSearch
+                    &&
+                    matchRating
+                );
+
+            }
+        );
+
+
+    renderEvaluations(
+        filtered
+    );
 
 }
 
+
+/* =====================================================
+   إغلاق النوافذ
+===================================================== */
 
 function closeEvaluationModal() {
-    evaluationModal.classList.remove("show");
-    document.body.classList.remove("modal-open");
+
+    evaluationModal
+        .classList
+        .remove(
+            "show"
+        );
+
+
+    document.body
+        .classList
+        .remove(
+            "modal-open"
+        );
+
 }
+
 
 function closeDetailsModal() {
-    detailsModal.classList.remove("show");
-    document.body.classList.remove("modal-open");
+
+    detailsModal
+        .classList
+        .remove(
+            "show"
+        );
+
+
+    document.body
+        .classList
+        .remove(
+            "modal-open"
+        );
+
 }
 
+
+/* =====================================================
+   التاريخ
+===================================================== */
 
 function formatDate(value) {
 
-    if (!value) return "-";
+    if (
+        !value
+    ) {
 
-    const date = new Date(value + "T00:00:00");
+        return "-";
+    }
 
-    if (Number.isNaN(date.getTime())) return "-";
 
-    return date.toLocaleDateString("ar-SA-u-ca-gregory", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit"
-    });
+    const date =
+        new Date(
+            value
+            +
+            "T00:00:00"
+        );
+
+
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return "-";
+    }
+
+
+    return date
+        .toLocaleDateString(
+            "ar-SA-u-ca-gregory",
+            {
+
+                year:
+                    "numeric",
+
+                month:
+                    "2-digit",
+
+                day:
+                    "2-digit"
+
+            }
+        );
 
 }
 
+
+/* =====================================================
+   حماية النص
+===================================================== */
 
 function escapeHtml(value) {
-    return String(value ?? "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+
+    return String(
+        value ?? ""
+    )
+    .replaceAll(
+        "&",
+        "&amp;"
+    )
+    .replaceAll(
+        "<",
+        "&lt;"
+    )
+    .replaceAll(
+        ">",
+        "&gt;"
+    )
+    .replaceAll(
+        '"',
+        "&quot;"
+    )
+    .replaceAll(
+        "'",
+        "&#039;"
+    );
+
 }
 
+
+/* =====================================================
+   السايد بار
+===================================================== */
 
 function openSidebar() {
-    sidebar.classList.add("show");
-    sidebarOverlay.classList.add("show");
-    document.body.classList.add("menu-open");
+
+    sidebar
+        .classList
+        .add(
+            "show"
+        );
+
+
+    sidebarOverlay
+        .classList
+        .add(
+            "show"
+        );
+
+
+    document.body
+        .classList
+        .add(
+            "menu-open"
+        );
+
 }
+
 
 function closeSidebar() {
-    sidebar.classList.remove("show");
-    sidebarOverlay.classList.remove("show");
-    document.body.classList.remove("menu-open");
+
+    sidebar
+        .classList
+        .remove(
+            "show"
+        );
+
+
+    sidebarOverlay
+        .classList
+        .remove(
+            "show"
+        );
+
+
+    document.body
+        .classList
+        .remove(
+            "menu-open"
+        );
+
 }
 
+
+/* =====================================================
+   تنظيف الجلسة
+===================================================== */
 
 function clearLocalSession() {
-    localStorage.removeItem("miyarRole");
-    localStorage.removeItem("miyarEmail");
-    localStorage.removeItem("pendingDecision");
-    localStorage.removeItem("selectedTaskId");
+
+    localStorage.removeItem(
+        "miyarRole"
+    );
+
+
+    localStorage.removeItem(
+        "miyarEmail"
+    );
+
+
+    localStorage.removeItem(
+        "pendingDecision"
+    );
+
+
+    localStorage.removeItem(
+        "selectedTaskId"
+    );
+
 }
 
+
+/* =====================================================
+   تسجيل الخروج
+===================================================== */
 
 async function logout() {
 
     try {
-        await supabaseClient.auth.signOut();
-    } catch (error) {
-        console.error(error);
+
+        await supabaseClient
+            .auth
+            .signOut();
+
     }
 
+    catch(error) {
+
+        console.error(
+            error
+        );
+
+    }
+
+
     clearLocalSession();
-    window.location.href = "login.html";
+
+
+    window.location.href =
+        "login.html";
 
 }
 
 
-document.getElementById("addEvaluationBtn").addEventListener("click", openEvaluationModal);
-document.getElementById("evaluationForm").addEventListener("submit", saveEvaluation);
-document.getElementById("searchInput").addEventListener("input", filterEvaluations);
-document.getElementById("ratingFilter").addEventListener("change", filterEvaluations);
+/* =====================================================
+   الأحداث
+===================================================== */
 
-document.getElementById("employeeSelect").addEventListener("change", function () {
-    fillTaskSelect(this.value ? Number(this.value) : null);
-});
-
-document.getElementById("cancelEvaluationBtn").addEventListener("click", closeEvaluationModal);
-document.getElementById("closeEvaluationBtn").addEventListener("click", closeEvaluationModal);
-document.getElementById("evaluationModalOverlay").addEventListener("click", closeEvaluationModal);
-document.getElementById("closeDetailsBtn").addEventListener("click", closeDetailsModal);
-document.getElementById("detailsModalOverlay").addEventListener("click", closeDetailsModal);
-
-mobileMenuBtn.addEventListener("click", openSidebar);
-sidebarOverlay.addEventListener("click", closeSidebar);
-
-document.querySelectorAll(".nav-link").forEach(link => {
-    link.addEventListener("click", closeSidebar);
-});
-
-document.getElementById("logoutBtn").addEventListener("click", logout);
-
-evaluationsGrid.addEventListener("click", event => {
-
-    const button = event.target.closest("button[data-action]");
-    if (!button) return;
-
-    const action = button.dataset.action;
-    const id = Number(button.dataset.id);
-
-    if (action === "view") viewEvaluation(id);
-    else if (action === "edit") editEvaluation(id);
-    else if (action === "delete") deleteEvaluation(id);
-
-});
+document
+    .getElementById(
+        "addEvaluationBtn"
+    )
+    .addEventListener(
+        "click",
+        openEvaluationModal
+    );
 
 
-window.addEventListener("focus", async function () {
+document
+    .getElementById(
+        "evaluationForm"
+    )
+    .addEventListener(
+        "submit",
+        saveEvaluation
+    );
 
-    try {
-        await Promise.all([loadTasks(), loadTaskAssignments()]);
-    } catch (error) {
-        console.warn("تعذر تحديث بيانات المهام:", error);
-    }
 
-});
+document
+    .getElementById(
+        "searchInput"
+    )
+    .addEventListener(
+        "input",
+        filterEvaluations
+    );
 
+
+document
+    .getElementById(
+        "ratingFilter"
+    )
+    .addEventListener(
+        "change",
+        filterEvaluations
+    );
+
+
+document
+    .getElementById(
+        "employeeSelect"
+    )
+    .addEventListener(
+        "change",
+        function() {
+
+            fillTaskSelect(
+                this.value
+                ?
+                Number(
+                    this.value
+                )
+                :
+                null
+            );
+
+        }
+    );
+
+
+document
+    .getElementById(
+        "cancelEvaluationBtn"
+    )
+    .addEventListener(
+        "click",
+        closeEvaluationModal
+    );
+
+
+document
+    .getElementById(
+        "closeEvaluationBtn"
+    )
+    .addEventListener(
+        "click",
+        closeEvaluationModal
+    );
+
+
+document
+    .getElementById(
+        "evaluationModalOverlay"
+    )
+    .addEventListener(
+        "click",
+        closeEvaluationModal
+    );
+
+
+document
+    .getElementById(
+        "closeDetailsBtn"
+    )
+    .addEventListener(
+        "click",
+        closeDetailsModal
+    );
+
+
+document
+    .getElementById(
+        "detailsModalOverlay"
+    )
+    .addEventListener(
+        "click",
+        closeDetailsModal
+    );
+
+
+mobileMenuBtn
+    .addEventListener(
+        "click",
+        openSidebar
+    );
+
+
+sidebarOverlay
+    .addEventListener(
+        "click",
+        closeSidebar
+    );
+
+
+document
+    .querySelectorAll(
+        ".nav-link"
+    )
+    .forEach(
+        link => {
+
+            link.addEventListener(
+                "click",
+                closeSidebar
+            );
+
+        }
+    );
+
+
+document
+    .getElementById(
+        "logoutBtn"
+    )
+    .addEventListener(
+        "click",
+        logout
+    );
+
+
+evaluationsGrid
+    .addEventListener(
+        "click",
+        event => {
+
+
+            const button =
+                event.target.closest(
+                    "button[data-action]"
+                );
+
+
+            if (
+                !button
+            ) {
+
+                return;
+            }
+
+
+            const action =
+                button.dataset.action;
+
+
+            const id =
+                Number(
+                    button.dataset.id
+                );
+
+
+            if (
+                action ===
+                "view"
+            ) {
+
+                viewEvaluation(
+                    id
+                );
+
+            }
+
+
+            else if (
+                action ===
+                "edit"
+            ) {
+
+                editEvaluation(
+                    id
+                );
+
+            }
+
+
+            else if (
+                action ===
+                "delete"
+            ) {
+
+                deleteEvaluation(
+                    id
+                );
+
+            }
+
+
+        }
+    );
+
+
+/* =====================================================
+   تشغيل الصفحة
+===================================================== */
 
 async function startPage() {
 
-    const allowed = await protectPage();
+    const allowed =
+        await protectPage();
 
-    if (!allowed) return;
+
+    if (
+        !allowed
+    ) {
+
+        return;
+    }
+
 
     try {
 
+
         await Promise.all([
+
             loadEmployees(),
-            loadTasks(),
-            loadTaskAssignments()
+
+            loadTasks()
+
         ]);
+
 
         await loadEvaluations();
 
-    } catch (error) {
 
-        console.error("خطأ تشغيل صفحة التقييمات:", error);
-        evaluationsGrid.innerHTML = `<div class="empty-state">تعذر تحميل بيانات الصفحة</div>`;
+    }
+
+    catch(error) {
+
+
+        console.error(
+            "خطأ تشغيل صفحة التقييمات:",
+            error
+        );
+
+
+        evaluationsGrid.innerHTML = `
+
+            <div class="empty-state">
+                تعذر تحميل بيانات الصفحة
+            </div>
+
+        `;
 
     }
 
 }
 
+
 startPage();
+
 
 </script>
 
