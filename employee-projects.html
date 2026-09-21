@@ -28,9 +28,9 @@
 <div class="employee-page">
 
 
-    <!-- ==============================
+    <!-- =========================================
          هيدر الجوال
-    =============================== -->
+    ========================================== -->
 
     <header class="mobile-header">
 
@@ -74,9 +74,9 @@
 
 
 
-    <!-- ==============================
+    <!-- =========================================
          القائمة الجانبية
-    =============================== -->
+    ========================================== -->
 
     <aside
         class="sidebar"
@@ -91,7 +91,24 @@
                 alt="معيار"
             >
 
-        
+        </div>
+
+
+
+        <!-- بيانات الموظف -->
+
+        <div class="employee-sidebar-card">
+
+            <span>
+                بوابة الموظف
+            </span>
+
+            <strong id="sidebarEmployeeName">
+                الموظف
+            </strong>
+
+        </div>
+
 
 
         <nav class="sidebar-nav">
@@ -162,12 +179,14 @@
 
 
 
-    <!-- ==============================
-         المحتوى
-    =============================== -->
+    <!-- =========================================
+         المحتوى الرئيسي
+    ========================================== -->
 
     <main class="main-content">
 
+
+        <!-- رأس الصفحة -->
 
         <header class="topbar">
 
@@ -189,9 +208,9 @@
 
 
 
-        <!-- ==============================
+        <!-- =========================================
              الملخص
-        =============================== -->
+        ========================================== -->
 
         <section class="summary-grid">
 
@@ -255,9 +274,9 @@
 
 
 
-        <!-- ==============================
+        <!-- =========================================
              البحث
-        =============================== -->
+        ========================================== -->
 
         <section class="toolbar">
 
@@ -271,6 +290,7 @@
                 >
 
             </div>
+
 
 
             <div class="filters">
@@ -306,9 +326,9 @@
 
 
 
-        <!-- ==============================
-             قائمة المشاريع
-        =============================== -->
+        <!-- =========================================
+             المشاريع
+        ========================================== -->
 
         <section class="projects-container">
 
@@ -363,9 +383,9 @@
 
 
 
-<!-- ==============================
+<!-- =========================================
      نافذة تفاصيل المشروع
-=============================== -->
+========================================== -->
 
 <div
     class="modal"
@@ -377,6 +397,7 @@
         class="modal-overlay"
         id="detailsModalOverlay"
     ></div>
+
 
 
     <div class="modal-box">
@@ -511,7 +532,7 @@ const sidebarEmployeeName =
 
 
 /* =========================================================
-   تنظيف التخزين
+   تنظيف بيانات الموظف
 ========================================================= */
 
 function clearEmployeeSession() {
@@ -536,13 +557,11 @@ async function protectEmployeePage() {
 
     try {
 
-
         const {
             data: sessionData,
             error: sessionError
         } =
             await supabaseClient.auth.getSession();
-
 
 
         if (sessionError) {
@@ -559,10 +578,8 @@ async function protectEmployeePage() {
         }
 
 
-
         currentSession =
             sessionData?.session || null;
-
 
 
         if (
@@ -580,10 +597,8 @@ async function protectEmployeePage() {
         }
 
 
-
         const authUser =
             currentSession.user;
-
 
 
         if (
@@ -601,7 +616,6 @@ async function protectEmployeePage() {
 
             return false;
         }
-
 
 
         const {
@@ -623,7 +637,6 @@ async function protectEmployeePage() {
                     authUser.id
                 )
                 .maybeSingle();
-
 
 
         if (employeeError) {
@@ -648,7 +661,6 @@ async function protectEmployeePage() {
         }
 
 
-
         if (!employee) {
 
             alert(
@@ -664,7 +676,6 @@ async function protectEmployeePage() {
 
             return false;
         }
-
 
 
         if (
@@ -690,7 +701,6 @@ async function protectEmployeePage() {
         }
 
 
-
         currentEmployee =
             employee;
 
@@ -699,7 +709,6 @@ async function protectEmployeePage() {
             Number(
                 employee.id
             );
-
 
 
         localStorage.setItem(
@@ -730,7 +739,6 @@ async function protectEmployeePage() {
         );
 
 
-
         if (sidebarEmployeeName) {
 
             sidebarEmployeeName.textContent =
@@ -739,30 +747,23 @@ async function protectEmployeePage() {
         }
 
 
-
         return true;
-
 
     }
 
     catch (error) {
-
 
         console.error(
             "خطأ حماية الصفحة:",
             error
         );
 
-
         clearEmployeeSession();
-
 
         window.location.href =
             "login.html";
 
-
         return false;
-
     }
 
 }
@@ -774,7 +775,6 @@ async function protectEmployeePage() {
 ========================================================= */
 
 async function loadAssignments() {
-
 
     const {
         data,
@@ -795,7 +795,6 @@ async function loadAssignments() {
             );
 
 
-
     if (error) {
 
         console.error(
@@ -807,7 +806,6 @@ async function loadAssignments() {
     }
 
 
-
     assignments =
         data || [];
 
@@ -816,11 +814,10 @@ async function loadAssignments() {
 
 
 /* =========================================================
-   تحميل المهام
+   تحميل مهام الموظف
 ========================================================= */
 
 async function loadEmployeeTasks() {
-
 
     const taskIds =
         [
@@ -842,7 +839,6 @@ async function loadEmployeeTasks() {
         ];
 
 
-
     if (
         taskIds.length === 0
     ) {
@@ -851,7 +847,6 @@ async function loadEmployeeTasks() {
 
         return;
     }
-
 
 
     const {
@@ -880,7 +875,6 @@ async function loadEmployeeTasks() {
             );
 
 
-
     if (error) {
 
         console.error(
@@ -892,12 +886,10 @@ async function loadEmployeeTasks() {
     }
 
 
-
     employeeTasks =
         (data || [])
             .map(
                 task => {
-
 
                     const assignment =
                         assignments.find(
@@ -929,15 +921,13 @@ async function loadEmployeeTasks() {
 
 
 /* =========================================================
-   حالة المهمة
+   حالة مهمة الموظف
 ========================================================= */
 
 function getTaskStatusText(task) {
 
-
     const assignment =
         task?.assignment;
-
 
 
     const rawStatus =
@@ -950,7 +940,6 @@ function getTaskStatusText(task) {
         )
         .trim()
         .toLowerCase();
-
 
 
     if (
@@ -971,20 +960,16 @@ function getTaskStatusText(task) {
     }
 
 
-
     if (
         rawStatus === "pending_approval"
         ||
         rawStatus === "submitted"
         ||
         rawStatus === "بانتظار الاعتماد"
-        ||
-        assignment?.submitted_at
     ) {
 
         return "بانتظار الاعتماد";
     }
-
 
 
     if (
@@ -995,13 +980,10 @@ function getTaskStatusText(task) {
         rawStatus === "قيد التنفيذ"
         ||
         rawStatus === "جاري"
-        ||
-        assignment?.started_at
     ) {
 
         return "قيد التنفيذ";
     }
-
 
 
     return "جديدة";
@@ -1011,11 +993,10 @@ function getTaskStatusText(task) {
 
 
 /* =========================================================
-   تحديد المهمة الحالية داخل المشروع
+   المهمة الحالية داخل المشروع
 ========================================================= */
 
 function getCurrentProjectTask(project) {
-
 
     if (
         !project.employeeTasks
@@ -1027,12 +1008,6 @@ function getCurrentProjectTask(project) {
     }
 
 
-
-    /*
-        الأولوية الأولى:
-        المهمة التي بدأ الموظف تنفيذها
-    */
-
     let currentTask =
         project.employeeTasks.find(
             task =>
@@ -1041,11 +1016,6 @@ function getCurrentProjectTask(project) {
                 "قيد التنفيذ"
         );
 
-
-
-    /*
-        ثم المهمة التي أرسلها للاعتماد
-    */
 
     if (!currentTask) {
 
@@ -1060,11 +1030,6 @@ function getCurrentProjectTask(project) {
     }
 
 
-
-    /*
-        ثم المهمة الجديدة
-    */
-
     if (!currentTask) {
 
         currentTask =
@@ -1078,18 +1043,12 @@ function getCurrentProjectTask(project) {
     }
 
 
-
-    /*
-        إذا جميع المهام مكتملة
-    */
-
     if (!currentTask) {
 
         currentTask =
             project.employeeTasks[0];
 
     }
-
 
 
     return currentTask;
@@ -1103,7 +1062,6 @@ function getCurrentProjectTask(project) {
 ========================================================= */
 
 async function loadProjects() {
-
 
     const projectIds =
         [
@@ -1125,7 +1083,6 @@ async function loadProjects() {
         ];
 
 
-
     if (
         projectIds.length === 0
     ) {
@@ -1134,7 +1091,6 @@ async function loadProjects() {
 
         return;
     }
-
 
 
     const {
@@ -1165,7 +1121,6 @@ async function loadProjects() {
             );
 
 
-
     if (error) {
 
         console.error(
@@ -1177,12 +1132,10 @@ async function loadProjects() {
     }
 
 
-
     projects =
         (data || [])
             .map(
                 project => {
-
 
                     const projectTasks =
                         employeeTasks.filter(
@@ -1197,7 +1150,6 @@ async function loadProjects() {
                         );
 
 
-
                     const completedTasks =
                         projectTasks.filter(
                             task =>
@@ -1205,7 +1157,6 @@ async function loadProjects() {
                                 ===
                                 "مكتملة"
                         );
-
 
 
                     return {
@@ -1236,14 +1187,12 @@ async function loadProjects() {
 
 function getProjectStatusText(status) {
 
-
     const value =
         String(
             status || ""
         )
         .trim()
         .toLowerCase();
-
 
 
     if (
@@ -1256,7 +1205,6 @@ function getProjectStatusText(status) {
 
         return "مكتمل";
     }
-
 
 
     if (
@@ -1273,7 +1221,6 @@ function getProjectStatusText(status) {
     }
 
 
-
     if (
         value === "stopped"
         ||
@@ -1284,7 +1231,6 @@ function getProjectStatusText(status) {
 
         return "متوقف";
     }
-
 
 
     if (
@@ -1299,7 +1245,6 @@ function getProjectStatusText(status) {
     }
 
 
-
     return status || "غير محدد";
 
 }
@@ -1312,10 +1257,8 @@ function getProjectStatusText(status) {
 
 function getStatusClass(status) {
 
-
     const value =
         getProjectStatusText(status);
-
 
 
     if (
@@ -1326,14 +1269,12 @@ function getStatusClass(status) {
     }
 
 
-
     if (
         value === "مكتمل"
     ) {
 
         return "completed";
     }
-
 
 
     if (
@@ -1344,7 +1285,6 @@ function getStatusClass(status) {
     }
 
 
-
     return "planned";
 
 }
@@ -1352,17 +1292,10 @@ function getStatusClass(status) {
 
 
 /* =========================================================
-   تحديث الإحصائيات
+   تحديث الملخص
 ========================================================= */
 
 function updateSummary() {
-
-
-    /*
-        المشروع يعتبر نشطاً للموظف
-        إذا عنده مهمة قيد التنفيذ
-        أو بانتظار الاعتماد
-    */
 
     const activeProjects =
         projects.filter(
@@ -1385,7 +1318,6 @@ function updateSummary() {
         );
 
 
-
     const totalTasks =
         projects.reduce(
             (total, project) =>
@@ -1394,7 +1326,6 @@ function updateSummary() {
                 project.tasksCount,
             0
         );
-
 
 
     const completedTasks =
@@ -1407,14 +1338,12 @@ function updateSummary() {
         );
 
 
-
     document
         .getElementById(
             "allProjectsCount"
         )
         .textContent =
             projects.length;
-
 
 
     document
@@ -1425,14 +1354,12 @@ function updateSummary() {
             activeProjects.length;
 
 
-
     document
         .getElementById(
             "projectTasksCount"
         )
         .textContent =
             totalTasks;
-
 
 
     document
@@ -1452,7 +1379,6 @@ function updateSummary() {
 
 function renderProjects(list) {
 
-
     projectsGrid.innerHTML =
         "";
 
@@ -1460,35 +1386,35 @@ function renderProjects(list) {
     projectsCount.textContent =
         list.length
         +
-        " مشاريع";
-
+        (
+            list.length === 1
+            ?
+            " مشروع"
+            :
+            " مشاريع"
+        );
 
 
     if (
         list.length === 0
     ) {
 
-
         projectsGrid.innerHTML = `
 
             <div class="empty-state">
 
-                لا توجد مشاريع مرتبطة بمهامك حالياً
+                لا توجد مشاريع مرتبطة بمهامك حاليًا
 
             </div>
 
         `;
 
-
         return;
-
     }
-
 
 
     list.forEach(
         project => {
-
 
             const status =
                 getProjectStatusText(
@@ -1496,24 +1422,16 @@ function renderProjects(list) {
                 );
 
 
-
-            /*
-                المهمة الحالية للموظف
-                داخل هذا المشروع
-            */
-
             const currentTask =
                 getCurrentProjectTask(
                     project
                 );
 
 
-
             const currentTaskName =
                 currentTask?.task_name
                 ||
                 "لا توجد مهمة حالية";
-
 
 
             const currentTaskStatus =
@@ -1526,7 +1444,6 @@ function renderProjects(list) {
                 "لا توجد مهمة";
 
 
-
             const currentTaskDueDate =
                 currentTask?.due_date
                 ?
@@ -1537,12 +1454,10 @@ function renderProjects(list) {
                 "غير محدد";
 
 
-
             const managerName =
                 project.project_manager
                 ||
                 "غير محدد";
-
 
 
             const card =
@@ -1555,14 +1470,13 @@ function renderProjects(list) {
                 "project-card";
 
 
-
             card.innerHTML = `
 
 
                 <div class="project-card-top">
 
 
-                    <div>
+                    <div class="project-heading">
 
                         <span class="project-label">
                             مشروع
@@ -1570,7 +1484,6 @@ function renderProjects(list) {
 
 
                         <h3>
-
                             ${
                                 escapeHtml(
                                     project.project_name
@@ -1578,7 +1491,6 @@ function renderProjects(list) {
                                     "مشروع بدون اسم"
                                 )
                             }
-
                         </h3>
 
                     </div>
@@ -1591,13 +1503,11 @@ function renderProjects(list) {
                             ${getStatusClass(status)}
                         "
                     >
-
                         ${
                             escapeHtml(
                                 status
                             )
                         }
-
                     </span>
 
 
@@ -1629,13 +1539,11 @@ function renderProjects(list) {
                         </span>
 
                         <strong>
-
                             ${
                                 escapeHtml(
                                     currentTaskStatus
                                 )
                             }
-
                         </strong>
 
                     </div>
@@ -1649,13 +1557,11 @@ function renderProjects(list) {
                         </span>
 
                         <strong>
-
                             ${
                                 escapeHtml(
                                     currentTaskName
                                 )
                             }
-
                         </strong>
 
                     </div>
@@ -1669,9 +1575,7 @@ function renderProjects(list) {
                         </span>
 
                         <strong>
-
                             ${currentTaskDueDate}
-
                         </strong>
 
                     </div>
@@ -1685,13 +1589,11 @@ function renderProjects(list) {
                         </span>
 
                         <strong>
-
                             ${
                                 escapeHtml(
                                     managerName
                                 )
                             }
-
                         </strong>
 
                     </div>
@@ -1730,11 +1632,9 @@ function renderProjects(list) {
             `;
 
 
-
             projectsGrid.appendChild(
                 card
             );
-
 
         }
     );
@@ -1749,7 +1649,6 @@ function renderProjects(list) {
 
 function filterProjects() {
 
-
     const search =
         String(
             searchInput.value || ""
@@ -1758,16 +1657,13 @@ function filterProjects() {
         .toLowerCase();
 
 
-
     const selectedStatus =
         statusFilter.value;
-
 
 
     const filtered =
         projects.filter(
             project => {
-
 
                 const projectName =
                     String(
@@ -1776,7 +1672,6 @@ function filterProjects() {
                         ""
                     )
                     .toLowerCase();
-
 
 
                 const description =
@@ -1788,12 +1683,10 @@ function filterProjects() {
                     .toLowerCase();
 
 
-
                 const projectStatus =
                     getProjectStatusText(
                         project.status
                     );
-
 
 
                 const matchSearch =
@@ -1808,14 +1701,12 @@ function filterProjects() {
                     );
 
 
-
                 const matchStatus =
                     !selectedStatus
                     ||
                     projectStatus
                     ===
                     selectedStatus;
-
 
 
                 return (
@@ -1826,7 +1717,6 @@ function filterProjects() {
 
             }
         );
-
 
 
     renderProjects(
@@ -1843,23 +1733,23 @@ function filterProjects() {
 
 function viewProject(id) {
 
-
     const project =
         projects.find(
             item =>
-                Number(item.id)
+                Number(
+                    item.id
+                )
                 ===
-                Number(id)
+                Number(
+                    id
+                )
         );
-
 
 
     if (!project) {
 
         return;
-
     }
-
 
 
     const status =
@@ -1868,19 +1758,16 @@ function viewProject(id) {
         );
 
 
-
     const currentTask =
         getCurrentProjectTask(
             project
         );
 
 
-
     const currentTaskName =
         currentTask?.task_name
         ||
         "لا توجد مهمة حالية";
-
 
 
     const currentTaskStatus =
@@ -1893,7 +1780,6 @@ function viewProject(id) {
         "لا توجد مهمة";
 
 
-
     const currentTaskDueDate =
         currentTask?.due_date
         ?
@@ -1904,106 +1790,91 @@ function viewProject(id) {
         "غير محدد";
 
 
-
     let tasksHtml =
         "";
-
 
 
     if (
         project.employeeTasks.length === 0
     ) {
 
-
         tasksHtml = `
 
             <div class="project-task-empty">
-
-                لا توجد مهام مرتبطة بك
-
+                لا توجد مهام مسندة لك داخل هذا المشروع.
             </div>
 
         `;
-
 
     }
 
     else {
 
+        tasksHtml =
+            project.employeeTasks
+                .map(
+                    task => {
 
-        project.employeeTasks.forEach(
-            task => {
-
-
-                const taskStatus =
-                    getTaskStatusText(
-                        task
-                    );
-
-
-
-                tasksHtml += `
-
-                    <div class="project-task-row">
+                        const taskStatus =
+                            getTaskStatusText(
+                                task
+                            );
 
 
-                        <div>
+                        return `
 
-                            <strong>
-
-                                ${
-                                    escapeHtml(
-                                        task.task_name
-                                        ||
-                                        "مهمة بدون اسم"
-                                    )
-                                }
-
-                            </strong>
+                            <div class="project-task-row">
 
 
-                            <span>
+                                <div>
 
-                                ${
-                                    task.due_date
-                                    ?
-                                    "موعد التسليم: "
-                                    +
-                                    formatDate(
-                                        task.due_date
-                                    )
-                                    :
-                                    "بدون تاريخ تسليم"
-                                }
-
-                            </span>
-
-                        </div>
+                                    <strong>
+                                        ${
+                                            escapeHtml(
+                                                task.task_name
+                                                ||
+                                                "مهمة بدون اسم"
+                                            )
+                                        }
+                                    </strong>
 
 
+                                    <span>
 
-                        <span class="task-status-mini">
+                                        موعد التسليم:
+                                        ${
+                                            task.due_date
+                                            ?
+                                            formatDate(
+                                                task.due_date
+                                            )
+                                            :
+                                            "غير محدد"
+                                        }
 
-                            ${
-                                escapeHtml(
-                                    taskStatus
-                                )
-                            }
+                                    </span>
 
-                        </span>
+                                </div>
 
 
-                    </div>
+                                <span class="task-status-mini">
+                                    ${
+                                        escapeHtml(
+                                            taskStatus
+                                        )
+                                    }
+                                </span>
 
-                `;
 
+                            </div>
 
-            }
-        );
+                        `;
 
+                    }
+                )
+                .join("");
 
     }
-
 
 
     projectDetails.innerHTML = `
@@ -2016,15 +1887,13 @@ function viewProject(id) {
             </span>
 
             <strong>
-
                 ${
                     escapeHtml(
                         project.project_name
                         ||
-                        "مشروع بدون اسم"
+                        "غير محدد"
                     )
                 }
-
             </strong>
 
         </div>
@@ -2038,13 +1907,11 @@ function viewProject(id) {
             </span>
 
             <strong>
-
                 ${
                     escapeHtml(
                         status
                     )
                 }
-
             </strong>
 
         </div>
@@ -2058,7 +1925,6 @@ function viewProject(id) {
             </span>
 
             <strong>
-
                 ${
                     escapeHtml(
                         project.project_manager
@@ -2066,7 +1932,6 @@ function viewProject(id) {
                         "غير محدد"
                     )
                 }
-
             </strong>
 
         </div>
@@ -2080,13 +1945,15 @@ function viewProject(id) {
             </span>
 
             <strong>
-
                 ${
+                    project.start_date
+                    ?
                     formatDate(
                         project.start_date
                     )
+                    :
+                    "غير محدد"
                 }
-
             </strong>
 
         </div>
@@ -2100,13 +1967,15 @@ function viewProject(id) {
             </span>
 
             <strong>
-
                 ${
+                    project.end_date
+                    ?
                     formatDate(
                         project.end_date
                     )
+                    :
+                    "غير محدد"
                 }
-
             </strong>
 
         </div>
@@ -2120,13 +1989,11 @@ function viewProject(id) {
             </span>
 
             <strong>
-
                 ${
                     escapeHtml(
                         currentTaskStatus
                     )
                 }
-
             </strong>
 
         </div>
@@ -2140,13 +2007,11 @@ function viewProject(id) {
             </span>
 
             <strong>
-
                 ${
                     escapeHtml(
                         currentTaskName
                     )
                 }
-
             </strong>
 
         </div>
@@ -2160,9 +2025,7 @@ function viewProject(id) {
             </span>
 
             <strong>
-
                 ${currentTaskDueDate}
-
             </strong>
 
         </div>
@@ -2178,7 +2041,9 @@ function viewProject(id) {
             <strong>
 
                 ${project.completedTasksCount}
+
                 من
+
                 ${project.tasksCount}
 
             </strong>
@@ -2187,19 +2052,13 @@ function viewProject(id) {
 
 
 
-        <div
-            class="
-                detail-item
-                full-detail
-            "
-        >
+        <div class="detail-item full-detail">
 
             <span>
                 وصف المشروع
             </span>
 
             <strong>
-
                 ${
                     escapeHtml(
                         project.description
@@ -2207,24 +2066,17 @@ function viewProject(id) {
                         "لا يوجد وصف للمشروع"
                     )
                 }
-
             </strong>
 
         </div>
 
 
 
-        <div
-            class="
-                detail-item
-                full-detail
-            "
-        >
+        <div class="detail-item full-detail">
 
             <span>
                 مهامي داخل المشروع
             </span>
-
 
             <div class="project-tasks-list">
 
@@ -2238,62 +2090,13 @@ function viewProject(id) {
     `;
 
 
-
-    detailsModal
-        .classList
-        .add(
-            "show"
-        );
-
-}
+    detailsModal.classList.add(
+        "show"
+    );
 
 
-
-/* =========================================================
-   تنسيق التاريخ
-========================================================= */
-
-function formatDate(value) {
-
-
-    if (!value) {
-
-        return "غير محدد";
-
-    }
-
-
-
-    const date =
-        new Date(value);
-
-
-
-    if (
-        Number.isNaN(
-            date.getTime()
-        )
-    ) {
-
-        return escapeHtml(
-            value
-        );
-
-    }
-
-
-
-    return escapeHtml(
-
-        date.toLocaleDateString(
-            "ar-SA-u-ca-gregory",
-            {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit"
-            }
-        )
-
+    document.body.classList.add(
+        "menu-open"
     );
 
 }
@@ -2306,48 +2109,86 @@ function formatDate(value) {
 
 function closeDetailsModal() {
 
+    detailsModal.classList.remove(
+        "show"
+    );
 
-    detailsModal
-        .classList
-        .remove(
-            "show"
-        );
+
+    document.body.classList.remove(
+        "menu-open"
+    );
 
 }
 
 
 
 /* =========================================================
-   حماية النصوص
+   التاريخ
+========================================================= */
+
+function formatDate(value) {
+
+    if (!value) {
+
+        return "غير محدد";
+    }
+
+
+    const date =
+        new Date(value);
+
+
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return value;
+    }
+
+
+    return new Intl.DateTimeFormat(
+        "ar-SA-u-ca-gregory",
+        {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit"
+        }
+    )
+    .format(
+        date
+    );
+
+}
+
+
+
+/* =========================================================
+   حماية النص
 ========================================================= */
 
 function escapeHtml(value) {
 
-
     return String(
         value ?? ""
     )
-
     .replaceAll(
         "&",
         "&amp;"
     )
-
     .replaceAll(
         "<",
         "&lt;"
     )
-
     .replaceAll(
         ">",
         "&gt;"
     )
-
     .replaceAll(
         '"',
         "&quot;"
     )
-
     .replaceAll(
         "'",
         "&#039;"
@@ -2358,137 +2199,42 @@ function escapeHtml(value) {
 
 
 /* =========================================================
-   السايدبار
+   أحداث المشاريع
 ========================================================= */
 
-function openSidebar() {
-
-
-    sidebar
-        .classList
-        .add(
-            "show"
-        );
-
-
-    sidebarOverlay
-        .classList
-        .add(
-            "show"
-        );
-
-
-    document.body
-        .classList
-        .add(
-            "menu-open"
-        );
-
-}
-
-
-
-function closeSidebar() {
-
-
-    sidebar
-        .classList
-        .remove(
-            "show"
-        );
-
-
-    sidebarOverlay
-        .classList
-        .remove(
-            "show"
-        );
-
-
-    document.body
-        .classList
-        .remove(
-            "menu-open"
-        );
-
-}
-
-
-
-/* =========================================================
-   تسجيل الخروج
-========================================================= */
-
-async function logout() {
-
-
-    try {
-
-        await supabaseClient.auth.signOut();
-
-    }
-
-    catch (error) {
-
-        console.warn(
-            "خطأ تسجيل الخروج:",
-            error
-        );
-
-    }
-
-
-
-    clearEmployeeSession();
-
-
-    window.location.href =
-        "login.html";
-
-}
-
-
-
-/* =========================================================
-   الأحداث
-========================================================= */
-
-mobileMenuBtn.addEventListener(
+projectsGrid.addEventListener(
     "click",
-    openSidebar
-);
+    event => {
 
-
-
-sidebarOverlay.addEventListener(
-    "click",
-    closeSidebar
-);
-
-
-
-document
-    .querySelectorAll(
-        ".nav-link"
-    )
-    .forEach(
-        link => {
-
-            link.addEventListener(
-                "click",
-                closeSidebar
+        const button =
+            event.target.closest(
+                ".details-btn"
             );
 
+
+        if (!button) {
+
+            return;
         }
-    );
 
 
+        viewProject(
+            button.dataset.id
+        );
+
+    }
+);
+
+
+
+/* =========================================================
+   البحث
+========================================================= */
 
 searchInput.addEventListener(
     "input",
     filterProjects
 );
-
 
 
 statusFilter.addEventListener(
@@ -2498,16 +2244,9 @@ statusFilter.addEventListener(
 
 
 
-document
-    .getElementById(
-        "logoutBtn"
-    )
-    .addEventListener(
-        "click",
-        logout
-    );
-
-
+/* =========================================================
+   المودال
+========================================================= */
 
 document
     .getElementById(
@@ -2517,7 +2256,6 @@ document
         "click",
         closeDetailsModal
     );
-
 
 
 document
@@ -2531,51 +2269,19 @@ document
 
 
 
-projectsGrid.addEventListener(
-    "click",
-    event => {
-
-
-        const button =
-            event.target.closest(
-                ".details-btn"
-            );
-
-
-        if (!button) {
-
-            return;
-
-        }
-
-
-        viewProject(
-            Number(
-                button.dataset.id
-            )
-        );
-
-
-    }
-);
-
-
-
 document.addEventListener(
     "keydown",
     event => {
-
 
         if (
             event.key === "Escape"
         ) {
 
-            closeSidebar();
-
             closeDetailsModal();
 
-        }
+            closeMobileMenu();
 
+        }
 
     }
 );
@@ -2583,24 +2289,99 @@ document.addEventListener(
 
 
 /* =========================================================
-   تشغيل الصفحة
+   قائمة الجوال
 ========================================================= */
 
-async function startPage() {
+function openMobileMenu() {
+
+    sidebar.classList.add(
+        "show"
+    );
 
 
-    const allowed =
-        await protectEmployeePage();
+    sidebarOverlay.classList.add(
+        "show"
+    );
+
+
+    document.body.classList.add(
+        "menu-open"
+    );
+
+}
 
 
 
-    if (!allowed) {
+function closeMobileMenu() {
 
-        return;
+    sidebar.classList.remove(
+        "show"
+    );
+
+
+    sidebarOverlay.classList.remove(
+        "show"
+    );
+
+
+    if (
+        !detailsModal.classList.contains(
+            "show"
+        )
+    ) {
+
+        document.body.classList.remove(
+            "menu-open"
+        );
 
     }
 
+}
 
+
+
+mobileMenuBtn.addEventListener(
+    "click",
+    openMobileMenu
+);
+
+
+sidebarOverlay.addEventListener(
+    "click",
+    closeMobileMenu
+);
+
+
+
+/* =========================================================
+   تسجيل الخروج
+========================================================= */
+
+document
+    .getElementById(
+        "logoutBtn"
+    )
+    .addEventListener(
+        "click",
+        async () => {
+
+            await supabaseClient.auth.signOut();
+
+            clearEmployeeSession();
+
+            window.location.href =
+                "login.html";
+
+        }
+    );
+
+
+
+/* =========================================================
+   تشغيل الصفحة
+========================================================= */
+
+async function initPage() {
 
     projectsGrid.innerHTML = `
 
@@ -2611,58 +2392,37 @@ async function startPage() {
     `;
 
 
+    const allowed =
+        await protectEmployeePage();
+
+
+    if (!allowed) {
+
+        return;
+    }
+
 
     try {
 
-
-        /*
-            1- تكليفات الموظف
-        */
-
         await loadAssignments();
 
-
-
-        /*
-            2- بيانات المهام
-        */
-
         await loadEmployeeTasks();
-
-
-
-        /*
-            3- المشاريع المرتبطة بالمهام
-        */
 
         await loadProjects();
 
 
-
-        /*
-            4- الإحصائيات
-        */
-
         updateSummary();
-
-
-
-        /*
-            5- عرض المشاريع
-        */
 
         renderProjects(
             projects
         );
 
-
     }
 
     catch (error) {
 
-
         console.error(
-            "خطأ تشغيل صفحة المشاريع:",
+            "خطأ تحميل صفحة مشاريعي:",
             error
         );
 
@@ -2670,13 +2430,10 @@ async function startPage() {
         projectsGrid.innerHTML = `
 
             <div class="empty-state">
-
-                حدث خطأ أثناء تحميل المشاريع
-
+                تعذر تحميل المشاريع، حاول مرة أخرى.
             </div>
 
         `;
-
 
     }
 
@@ -2684,7 +2441,7 @@ async function startPage() {
 
 
 
-startPage();
+initPage();
 
 
 </script>
