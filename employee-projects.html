@@ -28,9 +28,9 @@
 <div class="employee-page">
 
 
-    <!-- =========================================
+    <!-- ==============================
          هيدر الجوال
-    ========================================== -->
+    =============================== -->
 
     <header class="mobile-header">
 
@@ -67,8 +67,6 @@
 
 
 
-    <!-- خلفية القائمة في الجوال -->
-
     <div
         class="sidebar-overlay"
         id="sidebarOverlay"
@@ -76,9 +74,9 @@
 
 
 
-    <!-- =========================================
+    <!-- ==============================
          القائمة الجانبية
-    ========================================== -->
+    =============================== -->
 
     <aside
         class="sidebar"
@@ -96,8 +94,6 @@
         </div>
 
 
-
-        <!-- بوابة الموظف -->
 
         <div class="employee-sidebar-card">
 
@@ -181,14 +177,12 @@
 
 
 
-    <!-- =========================================
-         المحتوى الرئيسي
-    ========================================== -->
+    <!-- ==============================
+         المحتوى
+    =============================== -->
 
     <main class="main-content">
 
-
-        <!-- عنوان الصفحة -->
 
         <header class="topbar">
 
@@ -203,16 +197,16 @@
 
 
             <p>
-                عرض المشاريع التي تعمل عليها ومتابعة المهام ونسبة الإنجاز
+                عرض المشاريع المرتبطة بمهامك ومتابعة حالة عملك داخل كل مشروع
             </p>
 
         </header>
 
 
 
-        <!-- =========================================
-             ملخص المشاريع
-        ========================================== -->
+        <!-- ==============================
+             الملخص
+        =============================== -->
 
         <section class="summary-grid">
 
@@ -234,7 +228,7 @@
             <article class="summary-card">
 
                 <span>
-                    مشاريع جارية
+                    مشاريع نشطة
                 </span>
 
                 <strong id="runningProjectsCount">
@@ -262,11 +256,11 @@
             <article class="summary-card">
 
                 <span>
-                    متوسط الإنجاز
+                    المهام المكتملة
                 </span>
 
-                <strong id="averageProgress">
-                    0%
+                <strong id="completedTasksCount">
+                    0
                 </strong>
 
             </article>
@@ -276,9 +270,9 @@
 
 
 
-        <!-- =========================================
-             البحث والتصفية
-        ========================================== -->
+        <!-- ==============================
+             البحث
+        =============================== -->
 
         <section class="toolbar">
 
@@ -327,9 +321,9 @@
 
 
 
-        <!-- =========================================
-             المشاريع
-        ========================================== -->
+        <!-- ==============================
+             قائمة المشاريع
+        =============================== -->
 
         <section class="projects-container">
 
@@ -384,9 +378,9 @@
 
 
 
-<!-- =========================================
+<!-- ==============================
      نافذة تفاصيل المشروع
-========================================== -->
+=============================== -->
 
 <div
     class="modal"
@@ -413,7 +407,7 @@
                 </h2>
 
                 <p>
-                    عرض معلومات المشروع والمهام المرتبطة بك
+                    معلومات المشروع والمهام المسندة لك
                 </p>
 
             </div>
@@ -469,7 +463,7 @@ const supabaseClient =
 
 
 /* =========================================================
-   البيانات
+   المتغيرات
 ========================================================= */
 
 let employeeId = null;
@@ -491,87 +485,59 @@ let projects = [];
 ========================================================= */
 
 const projectsGrid =
-    document.getElementById(
-        "projectsGrid"
-    );
+    document.getElementById("projectsGrid");
 
 
 const projectsCount =
-    document.getElementById(
-        "projectsCount"
-    );
+    document.getElementById("projectsCount");
 
 
 const searchInput =
-    document.getElementById(
-        "searchInput"
-    );
+    document.getElementById("searchInput");
 
 
 const statusFilter =
-    document.getElementById(
-        "statusFilter"
-    );
+    document.getElementById("statusFilter");
 
 
 const detailsModal =
-    document.getElementById(
-        "detailsModal"
-    );
+    document.getElementById("detailsModal");
 
 
 const projectDetails =
-    document.getElementById(
-        "projectDetails"
-    );
+    document.getElementById("projectDetails");
 
 
 const mobileMenuBtn =
-    document.getElementById(
-        "mobileMenuBtn"
-    );
+    document.getElementById("mobileMenuBtn");
 
 
 const sidebar =
-    document.getElementById(
-        "sidebar"
-    );
+    document.getElementById("sidebar");
 
 
 const sidebarOverlay =
-    document.getElementById(
-        "sidebarOverlay"
-    );
+    document.getElementById("sidebarOverlay");
 
 
 const sidebarEmployeeName =
-    document.getElementById(
-        "sidebarEmployeeName"
-    );
+    document.getElementById("sidebarEmployeeName");
 
 
 
 /* =========================================================
-   تنظيف بيانات الموظف
+   تنظيف التخزين
 ========================================================= */
 
 function clearEmployeeSession() {
 
-    localStorage.removeItem(
-        "miyarRole"
-    );
+    localStorage.removeItem("miyarRole");
 
-    localStorage.removeItem(
-        "miyarEmail"
-    );
+    localStorage.removeItem("miyarEmail");
 
-    localStorage.removeItem(
-        "miyarEmployeeId"
-    );
+    localStorage.removeItem("miyarEmployeeId");
 
-    localStorage.removeItem(
-        "miyarEmployeeName"
-    );
+    localStorage.removeItem("miyarEmployeeName");
 
 }
 
@@ -635,8 +601,6 @@ async function protectEmployeePage() {
 
 
 
-        /* منع المسؤول من دخول صفحة الموظف */
-
         if (
             String(
                 authUser.email || ""
@@ -680,7 +644,7 @@ async function protectEmployeePage() {
         if (employeeError) {
 
             console.error(
-                "خطأ تحميل بيانات الموظف:",
+                "خطأ تحميل الموظف:",
                 employeeError
             );
 
@@ -782,14 +746,10 @@ async function protectEmployeePage() {
 
 
 
-        if (
-            sidebarEmployeeName
-        ) {
+        if (sidebarEmployeeName) {
 
             sidebarEmployeeName.textContent =
-                employee.name
-                ||
-                "الموظف";
+                employee.name || "الموظف";
 
         }
 
@@ -804,7 +764,7 @@ async function protectEmployeePage() {
 
 
         console.error(
-            "خطأ حماية صفحة الموظف:",
+            "خطأ حماية الصفحة:",
             error
         );
 
@@ -826,9 +786,6 @@ async function protectEmployeePage() {
 
 /* =========================================================
    تحميل تكليفات الموظف
-
-   نفس طريقة صفحة مهامي:
-   نأخذ المهام من task_assignments
 ========================================================= */
 
 async function loadAssignments() {
@@ -857,7 +814,7 @@ async function loadAssignments() {
     if (error) {
 
         console.error(
-            "خطأ تحميل تكليفات الموظف:",
+            "خطأ تحميل التكليفات:",
             error
         );
 
@@ -874,7 +831,7 @@ async function loadAssignments() {
 
 
 /* =========================================================
-   تحميل المهام المرتبطة بالتكليفات
+   تحميل المهام
 ========================================================= */
 
 async function loadEmployeeTasks() {
@@ -942,7 +899,7 @@ async function loadEmployeeTasks() {
     if (error) {
 
         console.error(
-            "خطأ تحميل مهام الموظف:",
+            "خطأ تحميل المهام:",
             error
         );
 
@@ -981,6 +938,176 @@ async function loadEmployeeTasks() {
 
                 }
             );
+
+}
+
+
+
+/* =========================================================
+   حالة المهمة
+========================================================= */
+
+function getTaskStatusText(task) {
+
+
+    const assignment =
+        task?.assignment;
+
+
+
+    const rawStatus =
+        String(
+            assignment?.status
+            ||
+            task?.status
+            ||
+            ""
+        )
+        .trim()
+        .toLowerCase();
+
+
+
+    if (
+        rawStatus === "completed"
+        ||
+        rawStatus === "done"
+        ||
+        rawStatus === "مكتملة"
+        ||
+        rawStatus === "مكتمل"
+        ||
+        rawStatus === "منجز"
+        ||
+        assignment?.completed_at
+    ) {
+
+        return "مكتملة";
+    }
+
+
+
+    if (
+        rawStatus === "pending_approval"
+        ||
+        rawStatus === "submitted"
+        ||
+        rawStatus === "بانتظار الاعتماد"
+        ||
+        assignment?.submitted_at
+    ) {
+
+        return "بانتظار الاعتماد";
+    }
+
+
+
+    if (
+        rawStatus === "in_progress"
+        ||
+        rawStatus === "running"
+        ||
+        rawStatus === "قيد التنفيذ"
+        ||
+        rawStatus === "جاري"
+        ||
+        assignment?.started_at
+    ) {
+
+        return "قيد التنفيذ";
+    }
+
+
+
+    return "جديدة";
+
+}
+
+
+
+/* =========================================================
+   تحديد المهمة الحالية داخل المشروع
+========================================================= */
+
+function getCurrentProjectTask(project) {
+
+
+    if (
+        !project.employeeTasks
+        ||
+        project.employeeTasks.length === 0
+    ) {
+
+        return null;
+    }
+
+
+
+    /*
+        الأولوية الأولى:
+        المهمة التي بدأ الموظف تنفيذها
+    */
+
+    let currentTask =
+        project.employeeTasks.find(
+            task =>
+                getTaskStatusText(task)
+                ===
+                "قيد التنفيذ"
+        );
+
+
+
+    /*
+        ثم المهمة التي أرسلها للاعتماد
+    */
+
+    if (!currentTask) {
+
+        currentTask =
+            project.employeeTasks.find(
+                task =>
+                    getTaskStatusText(task)
+                    ===
+                    "بانتظار الاعتماد"
+            );
+
+    }
+
+
+
+    /*
+        ثم المهمة الجديدة
+    */
+
+    if (!currentTask) {
+
+        currentTask =
+            project.employeeTasks.find(
+                task =>
+                    getTaskStatusText(task)
+                    ===
+                    "جديدة"
+            );
+
+    }
+
+
+
+    /*
+        إذا جميع المهام مكتملة
+    */
+
+    if (!currentTask) {
+
+        currentTask =
+            project.employeeTasks[0];
+
+    }
+
+
+
+    return currentTask;
 
 }
 
@@ -1089,35 +1216,10 @@ async function loadProjects() {
                     const completedTasks =
                         projectTasks.filter(
                             task =>
-                                getTaskStatusText(
-                                    task
-                                )
+                                getTaskStatusText(task)
                                 ===
                                 "مكتملة"
                         );
-
-
-
-                    const progress =
-                        projectTasks.length > 0
-
-                        ?
-
-                        Math.round(
-
-                            (
-                                completedTasks.length
-                                /
-                                projectTasks.length
-                            )
-                            *
-                            100
-
-                        )
-
-                        :
-
-                        0;
 
 
 
@@ -1130,9 +1232,6 @@ async function loadProjects() {
 
                         completedTasksCount:
                             completedTasks.length,
-
-                        progress:
-                            progress,
 
                         employeeTasks:
                             projectTasks
@@ -1147,98 +1246,10 @@ async function loadProjects() {
 
 
 /* =========================================================
-   حالة المهمة
-
-   نستخدم حالة التكليف أولاً
-   لأنها تخص هذا الموظف تحديداً
-========================================================= */
-
-function getTaskStatusText(
-    task
-) {
-
-
-    const assignment =
-        task?.assignment;
-
-
-    const rawStatus =
-        String(
-            assignment?.status
-            ||
-            task?.status
-            ||
-            ""
-        )
-        .trim()
-        .toLowerCase();
-
-
-
-    if (
-        rawStatus === "completed"
-        ||
-        rawStatus === "done"
-        ||
-        rawStatus === "مكتملة"
-        ||
-        rawStatus === "مكتمل"
-        ||
-        rawStatus === "منجز"
-        ||
-        assignment?.completed_at
-    ) {
-
-        return "مكتملة";
-    }
-
-
-
-    if (
-        rawStatus === "pending_approval"
-        ||
-        rawStatus === "submitted"
-        ||
-        rawStatus === "بانتظار الاعتماد"
-        ||
-        assignment?.submitted_at
-    ) {
-
-        return "بانتظار الاعتماد";
-    }
-
-
-
-    if (
-        rawStatus === "in_progress"
-        ||
-        rawStatus === "running"
-        ||
-        rawStatus === "قيد التنفيذ"
-        ||
-        rawStatus === "جاري"
-        ||
-        assignment?.started_at
-    ) {
-
-        return "قيد التنفيذ";
-    }
-
-
-
-    return "جديدة";
-
-}
-
-
-
-/* =========================================================
    حالة المشروع
 ========================================================= */
 
-function getProjectStatusText(
-    status
-) {
+function getProjectStatusText(status) {
 
 
     const value =
@@ -1255,9 +1266,7 @@ function getProjectStatusText(
         ||
         value === "done"
         ||
-        value.includes(
-            "مكتمل"
-        )
+        value.includes("مكتمل")
     ) {
 
         return "مكتمل";
@@ -1272,9 +1281,7 @@ function getProjectStatusText(
         ||
         value === "in_progress"
         ||
-        value.includes(
-            "قيد التنفيذ"
-        )
+        value.includes("قيد التنفيذ")
     ) {
 
         return "قيد التنفيذ";
@@ -1287,9 +1294,7 @@ function getProjectStatusText(
         ||
         value === "paused"
         ||
-        value.includes(
-            "متوقف"
-        )
+        value.includes("متوقف")
     ) {
 
         return "متوقف";
@@ -1302,9 +1307,7 @@ function getProjectStatusText(
         ||
         value === "planning"
         ||
-        value.includes(
-            "مخطط"
-        )
+        value.includes("مخطط")
     ) {
 
         return "مخطط";
@@ -1312,11 +1315,7 @@ function getProjectStatusText(
 
 
 
-    return (
-        status
-        ||
-        "غير محدد"
-    );
+    return status || "غير محدد";
 
 }
 
@@ -1326,15 +1325,11 @@ function getProjectStatusText(
    كلاس حالة المشروع
 ========================================================= */
 
-function getStatusClass(
-    status
-) {
+function getStatusClass(status) {
 
 
     const value =
-        getProjectStatusText(
-            status
-        );
+        getProjectStatusText(status);
 
 
 
@@ -1372,30 +1367,43 @@ function getStatusClass(
 
 
 /* =========================================================
-   تحديث الملخص
+   تحديث الإحصائيات
 ========================================================= */
 
 function updateSummary() {
 
 
-    const running =
+    /*
+        المشروع يعتبر نشطاً للموظف
+        إذا عنده مهمة قيد التنفيذ
+        أو بانتظار الاعتماد
+    */
+
+    const activeProjects =
         projects.filter(
             project =>
-                getProjectStatusText(
-                    project.status
+                project.employeeTasks.some(
+                    task => {
+
+                        const status =
+                            getTaskStatusText(task);
+
+
+                        return (
+                            status === "قيد التنفيذ"
+                            ||
+                            status === "بانتظار الاعتماد"
+                        );
+
+                    }
                 )
-                ===
-                "قيد التنفيذ"
         );
 
 
 
     const totalTasks =
         projects.reduce(
-            (
-                total,
-                project
-            ) =>
+            (total, project) =>
                 total
                 +
                 project.tasksCount,
@@ -1404,38 +1412,14 @@ function updateSummary() {
 
 
 
-    const totalCompletedTasks =
+    const completedTasks =
         projects.reduce(
-            (
-                total,
-                project
-            ) =>
+            (total, project) =>
                 total
                 +
                 project.completedTasksCount,
             0
         );
-
-
-
-    const averageProgress =
-        totalTasks > 0
-
-        ?
-
-        Math.round(
-            (
-                totalCompletedTasks
-                /
-                totalTasks
-            )
-            *
-            100
-        )
-
-        :
-
-        0;
 
 
 
@@ -1453,7 +1437,7 @@ function updateSummary() {
             "runningProjectsCount"
         )
         .textContent =
-            running.length;
+            activeProjects.length;
 
 
 
@@ -1468,12 +1452,10 @@ function updateSummary() {
 
     document
         .getElementById(
-            "averageProgress"
+            "completedTasksCount"
         )
         .textContent =
-            averageProgress
-            +
-            "%";
+            completedTasks;
 
 }
 
@@ -1483,9 +1465,7 @@ function updateSummary() {
    عرض المشاريع
 ========================================================= */
 
-function renderProjects(
-    list
-) {
+function renderProjects(list) {
 
 
     projectsGrid.innerHTML =
@@ -1507,7 +1487,9 @@ function renderProjects(
         projectsGrid.innerHTML = `
 
             <div class="empty-state">
+
                 لا توجد مشاريع مرتبطة بمهامك حالياً
+
             </div>
 
         `;
@@ -1527,6 +1509,54 @@ function renderProjects(
                 getProjectStatusText(
                     project.status
                 );
+
+
+
+            /*
+                المهمة الحالية للموظف
+                داخل هذا المشروع
+            */
+
+            const currentTask =
+                getCurrentProjectTask(
+                    project
+                );
+
+
+
+            const currentTaskName =
+                currentTask?.task_name
+                ||
+                "لا توجد مهمة حالية";
+
+
+
+            const currentTaskStatus =
+                currentTask
+                ?
+                getTaskStatusText(
+                    currentTask
+                )
+                :
+                "لا توجد مهمة";
+
+
+
+            const currentTaskDueDate =
+                currentTask?.due_date
+                ?
+                formatDate(
+                    currentTask.due_date
+                )
+                :
+                "غير محدد";
+
+
+
+            const managerName =
+                project.project_manager
+                ||
+                "غير محدد";
 
 
 
@@ -1573,11 +1603,7 @@ function renderProjects(
                     <span
                         class="
                             project-status
-                            ${
-                                getStatusClass(
-                                    status
-                                )
-                            }
+                            ${getStatusClass(status)}
                         "
                     >
 
@@ -1614,14 +1640,14 @@ function renderProjects(
                     <div class="info-item">
 
                         <span>
-                            الحالة
+                            حالتي في المشروع
                         </span>
 
                         <strong>
 
                             ${
                                 escapeHtml(
-                                    status
+                                    currentTaskStatus
                                 )
                             }
 
@@ -1634,28 +1660,14 @@ function renderProjects(
                     <div class="info-item">
 
                         <span>
-                            مهامي في المشروع
-                        </span>
-
-                        <strong>
-                            ${project.tasksCount}
-                        </strong>
-
-                    </div>
-
-
-
-                    <div class="info-item">
-
-                        <span>
-                            تاريخ البداية
+                            المهمة الحالية
                         </span>
 
                         <strong>
 
                             ${
-                                formatDate(
-                                    project.start_date
+                                escapeHtml(
+                                    currentTaskName
                                 )
                             }
 
@@ -1668,49 +1680,34 @@ function renderProjects(
                     <div class="info-item">
 
                         <span>
-                            تاريخ الانتهاء
+                            موعد تسليم المهمة
+                        </span>
+
+                        <strong>
+
+                            ${currentTaskDueDate}
+
+                        </strong>
+
+                    </div>
+
+
+
+                    <div class="info-item">
+
+                        <span>
+                            مدير المشروع
                         </span>
 
                         <strong>
 
                             ${
-                                formatDate(
-                                    project.end_date
+                                escapeHtml(
+                                    managerName
                                 )
                             }
 
                         </strong>
-
-                    </div>
-
-
-                </div>
-
-
-
-                <div class="progress-section">
-
-
-                    <div class="progress-heading">
-
-                        <span>
-                            نسبة إنجاز مهامي
-                        </span>
-
-                        <strong>
-                            ${project.progress}%
-                        </strong>
-
-                    </div>
-
-
-
-                    <div class="progress-bar">
-
-                        <div
-                            class="progress-fill"
-                            style="width: ${project.progress}%;"
-                        ></div>
 
                     </div>
 
@@ -1724,7 +1721,7 @@ function renderProjects(
 
                     <span class="tasks-label">
 
-                        مكتملة:
+                        المهام المكتملة:
                         ${project.completedTasksCount}
                         من
                         ${project.tasksCount}
@@ -1797,7 +1794,7 @@ function filterProjects() {
 
 
 
-                const projectDescription =
+                const description =
                     String(
                         project.description
                         ||
@@ -1821,7 +1818,7 @@ function filterProjects() {
                         search
                     )
                     ||
-                    projectDescription.includes(
+                    description.includes(
                         search
                     );
 
@@ -1842,7 +1839,6 @@ function filterProjects() {
                     matchStatus
                 );
 
-
             }
         );
 
@@ -1860,21 +1856,15 @@ function filterProjects() {
    تفاصيل المشروع
 ========================================================= */
 
-function viewProject(
-    id
-) {
+function viewProject(id) {
 
 
     const project =
         projects.find(
             item =>
-                Number(
-                    item.id
-                )
+                Number(item.id)
                 ===
-                Number(
-                    id
-                )
+                Number(id)
         );
 
 
@@ -1894,6 +1884,42 @@ function viewProject(
 
 
 
+    const currentTask =
+        getCurrentProjectTask(
+            project
+        );
+
+
+
+    const currentTaskName =
+        currentTask?.task_name
+        ||
+        "لا توجد مهمة حالية";
+
+
+
+    const currentTaskStatus =
+        currentTask
+        ?
+        getTaskStatusText(
+            currentTask
+        )
+        :
+        "لا توجد مهمة";
+
+
+
+    const currentTaskDueDate =
+        currentTask?.due_date
+        ?
+        formatDate(
+            currentTask.due_date
+        )
+        :
+        "غير محدد";
+
+
+
     let tasksHtml =
         "";
 
@@ -1907,7 +1933,9 @@ function viewProject(
         tasksHtml = `
 
             <div class="project-task-empty">
+
                 لا توجد مهام مرتبطة بك
+
             </div>
 
         `;
@@ -2063,7 +2091,7 @@ function viewProject(
         <div class="detail-item">
 
             <span>
-                تاريخ البداية
+                تاريخ بداية المشروع
             </span>
 
             <strong>
@@ -2083,7 +2111,7 @@ function viewProject(
         <div class="detail-item">
 
             <span>
-                تاريخ الانتهاء
+                تاريخ انتهاء المشروع
             </span>
 
             <strong>
@@ -2103,11 +2131,53 @@ function viewProject(
         <div class="detail-item">
 
             <span>
-                عدد مهامي
+                حالتي في المشروع
             </span>
 
             <strong>
-                ${project.tasksCount}
+
+                ${
+                    escapeHtml(
+                        currentTaskStatus
+                    )
+                }
+
+            </strong>
+
+        </div>
+
+
+
+        <div class="detail-item">
+
+            <span>
+                المهمة الحالية
+            </span>
+
+            <strong>
+
+                ${
+                    escapeHtml(
+                        currentTaskName
+                    )
+                }
+
+            </strong>
+
+        </div>
+
+
+
+        <div class="detail-item">
+
+            <span>
+                موعد تسليم المهمة
+            </span>
+
+            <strong>
+
+                ${currentTaskDueDate}
+
             </strong>
 
         </div>
@@ -2121,21 +2191,11 @@ function viewProject(
             </span>
 
             <strong>
+
                 ${project.completedTasksCount}
-            </strong>
+                من
+                ${project.tasksCount}
 
-        </div>
-
-
-
-        <div class="detail-item">
-
-            <span>
-                نسبة إنجاز مهامي
-            </span>
-
-            <strong>
-                ${project.progress}%
             </strong>
 
         </div>
@@ -2208,9 +2268,7 @@ function viewProject(
    تنسيق التاريخ
 ========================================================= */
 
-function formatDate(
-    value
-) {
+function formatDate(value) {
 
 
     if (!value) {
@@ -2222,9 +2280,7 @@ function formatDate(
 
 
     const date =
-        new Date(
-            value
-        );
+        new Date(value);
 
 
 
@@ -2277,12 +2333,10 @@ function closeDetailsModal() {
 
 
 /* =========================================================
-   حماية النص
+   حماية النصوص
 ========================================================= */
 
-function escapeHtml(
-    value
-) {
+function escapeHtml(value) {
 
 
     return String(
@@ -2319,7 +2373,7 @@ function escapeHtml(
 
 
 /* =========================================================
-   فتح السايد بار
+   السايدبار
 ========================================================= */
 
 function openSidebar() {
@@ -2348,10 +2402,6 @@ function openSidebar() {
 }
 
 
-
-/* =========================================================
-   إغلاق السايد بار
-========================================================= */
 
 function closeSidebar() {
 
@@ -2418,19 +2468,17 @@ async function logout() {
    الأحداث
 ========================================================= */
 
-mobileMenuBtn
-    .addEventListener(
-        "click",
-        openSidebar
-    );
+mobileMenuBtn.addEventListener(
+    "click",
+    openSidebar
+);
 
 
 
-sidebarOverlay
-    .addEventListener(
-        "click",
-        closeSidebar
-    );
+sidebarOverlay.addEventListener(
+    "click",
+    closeSidebar
+);
 
 
 
@@ -2441,31 +2489,27 @@ document
     .forEach(
         link => {
 
-
             link.addEventListener(
                 "click",
                 closeSidebar
             );
-
 
         }
     );
 
 
 
-searchInput
-    .addEventListener(
-        "input",
-        filterProjects
-    );
+searchInput.addEventListener(
+    "input",
+    filterProjects
+);
 
 
 
-statusFilter
-    .addEventListener(
-        "change",
-        filterProjects
-    );
+statusFilter.addEventListener(
+    "change",
+    filterProjects
+);
 
 
 
@@ -2502,58 +2546,54 @@ document
 
 
 
-projectsGrid
-    .addEventListener(
-        "click",
-        event => {
+projectsGrid.addEventListener(
+    "click",
+    event => {
 
 
-            const button =
-                event.target.closest(
-                    ".details-btn"
-                );
-
-
-
-            if (!button) {
-
-                return;
-
-            }
-
-
-
-            viewProject(
-                Number(
-                    button.dataset.id
-                )
+        const button =
+            event.target.closest(
+                ".details-btn"
             );
 
 
-        }
-    );
+        if (!button) {
 
-
-
-document
-    .addEventListener(
-        "keydown",
-        event => {
-
-
-            if (
-                event.key === "Escape"
-            ) {
-
-                closeSidebar();
-
-                closeDetailsModal();
-
-            }
-
+            return;
 
         }
-    );
+
+
+        viewProject(
+            Number(
+                button.dataset.id
+            )
+        );
+
+
+    }
+);
+
+
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+
+        if (
+            event.key === "Escape"
+        ) {
+
+            closeSidebar();
+
+            closeDetailsModal();
+
+        }
+
+
+    }
+);
 
 
 
@@ -2590,31 +2630,41 @@ async function startPage() {
     try {
 
 
-        /* أولاً: تكليفات الموظف */
+        /*
+            1- تكليفات الموظف
+        */
 
         await loadAssignments();
 
 
 
-        /* ثانياً: المهام المرتبطة بالتكليفات */
+        /*
+            2- بيانات المهام
+        */
 
         await loadEmployeeTasks();
 
 
 
-        /* ثالثاً: المشاريع المرتبطة بهذه المهام */
+        /*
+            3- المشاريع المرتبطة بالمهام
+        */
 
         await loadProjects();
 
 
 
-        /* تحديث الأرقام */
+        /*
+            4- الإحصائيات
+        */
 
         updateSummary();
 
 
 
-        /* عرض المشاريع */
+        /*
+            5- عرض المشاريع
+        */
 
         renderProjects(
             projects
@@ -2635,7 +2685,9 @@ async function startPage() {
         projectsGrid.innerHTML = `
 
             <div class="empty-state">
+
                 حدث خطأ أثناء تحميل المشاريع
+
             </div>
 
         `;
