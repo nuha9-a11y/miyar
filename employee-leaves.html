@@ -1,0 +1,2456 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>معيار | إجازاتي</title>
+
+    <link
+        rel="stylesheet"
+        href="employee-leaves.css"
+    >
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+</head>
+
+
+<body>
+
+
+<div class="employee-page">
+
+
+    <!-- =========================================
+         هيدر الجوال
+    ========================================== -->
+
+    <header class="mobile-header">
+
+        <button
+            type="button"
+            class="mobile-menu-btn"
+            id="mobileMenuBtn"
+            aria-label="فتح القائمة"
+        >
+            ☰
+        </button>
+
+
+        <div class="mobile-header-title">
+
+            <h2>إجازاتي</h2>
+
+            <span>معيار</span>
+
+        </div>
+
+
+        <img
+            src="assets/logo.png"
+            alt="معيار"
+            class="mobile-logo"
+        >
+
+    </header>
+
+
+
+    <div
+        class="sidebar-overlay"
+        id="sidebarOverlay"
+    ></div>
+
+
+
+    <!-- =========================================
+         السايد بار
+    ========================================== -->
+
+    <aside
+        class="sidebar"
+        id="sidebar"
+    >
+
+
+        <div class="sidebar-logo">
+
+            <img
+                src="assets/logo.png"
+                alt="معيار"
+            >
+
+        </div>
+
+
+
+        <div class="employee-sidebar-card">
+
+            <span>
+                بوابة الموظف
+            </span>
+
+            <strong id="sidebarEmployeeName">
+                الموظف
+            </strong>
+
+        </div>
+
+
+
+        <nav class="sidebar-nav">
+
+
+            <a
+                href="employee-home.html"
+                class="nav-link"
+            >
+                الرئيسية
+            </a>
+
+
+            <a
+                href="employee-tasks.html"
+                class="nav-link"
+            >
+                مهامي
+            </a>
+
+
+            <a
+                href="employee-projects.html"
+                class="nav-link"
+            >
+                مشاريعي
+            </a>
+
+
+            <a
+                href="employee-profile.html"
+                class="nav-link"
+            >
+                ملفي الوظيفي
+            </a>
+
+
+            <a
+                href="employee-evaluations.html"
+                class="nav-link"
+            >
+                تقييماتي
+            </a>
+
+
+            <a
+                href="employee-leaves.html"
+                class="nav-link active"
+            >
+                إجازاتي
+            </a>
+
+
+        </nav>
+
+
+
+        <button
+            type="button"
+            class="logout-btn"
+            id="logoutBtn"
+        >
+            تسجيل الخروج
+        </button>
+
+
+    </aside>
+
+
+
+    <!-- =========================================
+         المحتوى
+    ========================================== -->
+
+    <main class="main-content">
+
+
+        <!-- رأس الصفحة -->
+
+        <header class="topbar">
+
+            <div class="topbar-content">
+
+                <div>
+
+                    <span class="page-badge">
+                        طلبات الإجازة
+                    </span>
+
+
+                    <h1>
+                        إجازاتي
+                    </h1>
+
+
+                    <p>
+                        تقديم طلبات الإجازة ومتابعة حالة الطلب
+                    </p>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="new-leave-btn"
+                    id="openLeaveModalBtn"
+                >
+                    + طلب إجازة جديد
+                </button>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =========================================
+             الملخص
+        ========================================== -->
+
+        <section class="summary-grid">
+
+
+            <article class="summary-card">
+
+                <span class="summary-title">
+                    جميع الطلبات
+                </span>
+
+                <strong id="countAll">
+                    0
+                </strong>
+
+                <p>
+                    إجمالي طلبات الإجازة
+                </p>
+
+            </article>
+
+
+
+            <article class="summary-card">
+
+                <span class="summary-title">
+                    قيد المراجعة
+                </span>
+
+                <strong id="countPending">
+                    0
+                </strong>
+
+                <p>
+                    بانتظار قرار المسؤول
+                </p>
+
+            </article>
+
+
+
+            <article class="summary-card">
+
+                <span class="summary-title">
+                    مقبولة
+                </span>
+
+                <strong id="countApproved">
+                    0
+                </strong>
+
+                <p>
+                    الطلبات المعتمدة
+                </p>
+
+            </article>
+
+
+
+            <article class="summary-card">
+
+                <span class="summary-title">
+                    مرفوضة
+                </span>
+
+                <strong id="countRejected">
+                    0
+                </strong>
+
+                <p>
+                    الطلبات غير المعتمدة
+                </p>
+
+            </article>
+
+
+        </section>
+
+
+
+        <!-- =========================================
+             الفلترة
+        ========================================== -->
+
+        <section class="toolbar">
+
+            <div class="filter-group">
+
+                <label for="statusFilter">
+                    حالة الطلب
+                </label>
+
+
+                <select id="statusFilter">
+
+                    <option value="all">
+                        جميع الطلبات
+                    </option>
+
+                    <option value="pending">
+                        قيد المراجعة
+                    </option>
+
+                    <option value="approved">
+                        مقبولة
+                    </option>
+
+                    <option value="rejected">
+                        مرفوضة
+                    </option>
+
+                </select>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================
+             قائمة الإجازات
+        ========================================== -->
+
+        <section class="leaves-section">
+
+
+            <div class="section-heading">
+
+                <div>
+
+                    <span class="section-number">
+                        01
+                    </span>
+
+                    <h2>
+                        طلبات الإجازة
+                    </h2>
+
+                    <p>
+                        سجل الطلبات التي قمت بإرسالها
+                    </p>
+
+                </div>
+
+
+                <span
+                    class="leaves-count"
+                    id="leavesCount"
+                >
+                    0 طلب
+                </span>
+
+            </div>
+
+
+
+            <div
+                class="leaves-list"
+                id="leavesList"
+            >
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        ◷
+                    </div>
+
+                    <h3>
+                        جارٍ تحميل الطلبات...
+                    </h3>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+</div>
+
+
+
+<!-- =========================================
+     نافذة طلب إجازة
+========================================== -->
+
+<div
+    class="modal"
+    id="leaveModal"
+>
+
+
+    <div class="modal-box">
+
+
+        <div class="modal-header">
+
+            <div>
+
+                <span>
+                    طلب جديد
+                </span>
+
+                <h2>
+                    تقديم طلب إجازة
+                </h2>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="modal-close"
+                id="closeLeaveModalBtn"
+                aria-label="إغلاق"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+
+        <form id="leaveForm">
+
+
+            <div class="form-group">
+
+                <label for="leaveType">
+                    نوع الإجازة
+                </label>
+
+
+                <select
+                    id="leaveType"
+                    required
+                >
+
+                    <option value="">
+                        اختر نوع الإجازة
+                    </option>
+
+                    <option value="سنوية">
+                        إجازة سنوية
+                    </option>
+
+                    <option value="مرضية">
+                        إجازة مرضية
+                    </option>
+
+                    <option value="اضطرارية">
+                        إجازة اضطرارية
+                    </option>
+
+                    <option value="بدون راتب">
+                        إجازة بدون راتب
+                    </option>
+
+                    <option value="أخرى">
+                        أخرى
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <div class="date-grid">
+
+
+                <div class="form-group">
+
+                    <label for="startDate">
+                        تاريخ بداية الإجازة
+                    </label>
+
+
+                    <input
+                        type="date"
+                        id="startDate"
+                        required
+                    >
+
+                </div>
+
+
+
+                <div class="form-group">
+
+                    <label for="endDate">
+                        تاريخ نهاية الإجازة
+                    </label>
+
+
+                    <input
+                        type="date"
+                        id="endDate"
+                        required
+                    >
+
+                </div>
+
+
+            </div>
+
+
+
+            <div class="leave-duration-box">
+
+                <span>
+                    مدة الإجازة
+                </span>
+
+                <strong id="leaveDuration">
+                    —
+                </strong>
+
+            </div>
+
+
+
+            <div class="form-group">
+
+                <label for="leaveReason">
+                    سبب الإجازة
+                </label>
+
+
+                <textarea
+                    id="leaveReason"
+                    rows="4"
+                    maxlength="500"
+                    placeholder="اكتب سبب طلب الإجازة..."
+                    required
+                ></textarea>
+
+            </div>
+
+
+
+            <div
+                class="form-message"
+                id="formMessage"
+            ></div>
+
+
+
+            <div class="modal-actions">
+
+
+                <button
+                    type="button"
+                    class="cancel-btn"
+                    id="cancelLeaveBtn"
+                >
+                    إلغاء
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="submit-btn"
+                    id="submitLeaveBtn"
+                >
+                    إرسال الطلب
+                </button>
+
+
+            </div>
+
+
+        </form>
+
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+/* =========================================================
+   Supabase
+========================================================= */
+
+const SUPABASE_URL =
+    "https://avooyglxacytrfhvotsl.supabase.co";
+
+
+const SUPABASE_KEY =
+    "sb_publishable_NVlWEnA_w4KbSse_-70zdA_J9ut0Kyo";
+
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+
+
+/* =========================================================
+   المتغيرات
+========================================================= */
+
+let currentSession = null;
+
+let currentEmployee = null;
+
+let employeeId = null;
+
+let employeeLeaves = [];
+
+
+
+/* =========================================================
+   العناصر
+========================================================= */
+
+const sidebar =
+    document.getElementById(
+        "sidebar"
+    );
+
+
+const sidebarOverlay =
+    document.getElementById(
+        "sidebarOverlay"
+    );
+
+
+const mobileMenuBtn =
+    document.getElementById(
+        "mobileMenuBtn"
+    );
+
+
+const sidebarEmployeeName =
+    document.getElementById(
+        "sidebarEmployeeName"
+    );
+
+
+const leaveModal =
+    document.getElementById(
+        "leaveModal"
+    );
+
+
+const leaveForm =
+    document.getElementById(
+        "leaveForm"
+    );
+
+
+const openLeaveModalBtn =
+    document.getElementById(
+        "openLeaveModalBtn"
+    );
+
+
+const closeLeaveModalBtn =
+    document.getElementById(
+        "closeLeaveModalBtn"
+    );
+
+
+const cancelLeaveBtn =
+    document.getElementById(
+        "cancelLeaveBtn"
+    );
+
+
+const submitLeaveBtn =
+    document.getElementById(
+        "submitLeaveBtn"
+    );
+
+
+const startDate =
+    document.getElementById(
+        "startDate"
+    );
+
+
+const endDate =
+    document.getElementById(
+        "endDate"
+    );
+
+
+const leaveDuration =
+    document.getElementById(
+        "leaveDuration"
+    );
+
+
+const formMessage =
+    document.getElementById(
+        "formMessage"
+    );
+
+
+const statusFilter =
+    document.getElementById(
+        "statusFilter"
+    );
+
+
+const leavesList =
+    document.getElementById(
+        "leavesList"
+    );
+
+
+
+/* =========================================================
+   تنظيف بيانات الجلسة المحلية
+========================================================= */
+
+function clearEmployeeSession() {
+
+    localStorage.removeItem(
+        "miyarRole"
+    );
+
+    localStorage.removeItem(
+        "miyarEmail"
+    );
+
+    localStorage.removeItem(
+        "miyarEmployeeId"
+    );
+
+    localStorage.removeItem(
+        "miyarEmployeeName"
+    );
+
+}
+
+
+
+/* =========================================================
+   حماية الصفحة
+========================================================= */
+
+async function protectEmployeePage() {
+
+    try {
+
+        const {
+            data: sessionData,
+            error: sessionError
+        } =
+            await supabaseClient
+                .auth
+                .getSession();
+
+
+        if (sessionError) {
+
+            console.error(
+                "خطأ قراءة الجلسة:",
+                sessionError
+            );
+
+            window.location.href =
+                "login.html";
+
+            return false;
+        }
+
+
+        currentSession =
+            sessionData?.session
+            ||
+            null;
+
+
+        if (
+            !currentSession
+            ||
+            !currentSession.user
+        ) {
+
+            clearEmployeeSession();
+
+            window.location.href =
+                "login.html";
+
+            return false;
+        }
+
+
+        const authUser =
+            currentSession.user;
+
+
+
+        /* منع المسؤول من دخول صفحة الموظف */
+
+        if (
+            String(
+                authUser.email || ""
+            )
+            .trim()
+            .toLowerCase()
+            ===
+            "admin@gmail.com"
+        ) {
+
+            window.location.href =
+                "dashboard.html";
+
+            return false;
+        }
+
+
+
+        const {
+            data: employee,
+            error: employeeError
+        } =
+            await supabaseClient
+                .from("employees")
+                .select(`
+                    id,
+                    name,
+                    email,
+                    employee_number,
+                    auth_user_id,
+                    employment_status
+                `)
+                .eq(
+                    "auth_user_id",
+                    authUser.id
+                )
+                .maybeSingle();
+
+
+        if (employeeError) {
+
+            console.error(
+                "خطأ تحميل الموظف:",
+                employeeError
+            );
+
+            alert(
+                "تعذر التحقق من بيانات الموظف."
+            );
+
+            await supabaseClient
+                .auth
+                .signOut();
+
+            clearEmployeeSession();
+
+            window.location.href =
+                "login.html";
+
+            return false;
+        }
+
+
+        if (!employee) {
+
+            alert(
+                "هذا الحساب غير مرتبط بموظف في النظام."
+            );
+
+            await supabaseClient
+                .auth
+                .signOut();
+
+            clearEmployeeSession();
+
+            window.location.href =
+                "login.html";
+
+            return false;
+        }
+
+
+        if (
+            employee.employment_status
+            &&
+            employee.employment_status
+            !==
+            "على رأس العمل"
+        ) {
+
+            alert(
+                "حسابك الوظيفي غير نشط حاليًا."
+            );
+
+            await supabaseClient
+                .auth
+                .signOut();
+
+            clearEmployeeSession();
+
+            window.location.href =
+                "login.html";
+
+            return false;
+        }
+
+
+        currentEmployee =
+            employee;
+
+
+        employeeId =
+            Number(
+                employee.id
+            );
+
+
+        localStorage.setItem(
+            "miyarRole",
+            "employee"
+        );
+
+
+        localStorage.setItem(
+            "miyarEmail",
+            employee.email
+            ||
+            authUser.email
+            ||
+            ""
+        );
+
+
+        localStorage.setItem(
+            "miyarEmployeeId",
+            String(employee.id)
+        );
+
+
+        localStorage.setItem(
+            "miyarEmployeeName",
+            employee.name || ""
+        );
+
+
+        sidebarEmployeeName.textContent =
+            employee.name
+            ||
+            "الموظف";
+
+
+        return true;
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "خطأ حماية الصفحة:",
+            error
+        );
+
+        clearEmployeeSession();
+
+        window.location.href =
+            "login.html";
+
+        return false;
+    }
+
+}
+
+
+
+/* =========================================================
+   تحميل طلبات الإجازة
+========================================================= */
+
+async function loadLeaves() {
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("employee_leaves")
+            .select("*")
+            .eq(
+                "employee_id",
+                employeeId
+            )
+            .order(
+                "created_at",
+                {
+                    ascending: false
+                }
+            );
+
+
+    if (error) {
+
+        console.error(
+            "خطأ تحميل الإجازات:",
+            error
+        );
+
+        throw error;
+    }
+
+
+    employeeLeaves =
+        data || [];
+
+
+    updateSummary();
+
+    renderLeaves();
+
+}
+
+
+
+/* =========================================================
+   حالة الإجازة
+========================================================= */
+
+function normalizeLeaveStatus(
+    status
+) {
+
+    const value =
+        String(
+            status || ""
+        )
+        .trim()
+        .toLowerCase();
+
+
+    if (
+        value === "approved"
+        ||
+        value === "مقبول"
+        ||
+        value === "مقبولة"
+        ||
+        value === "معتمد"
+        ||
+        value === "معتمدة"
+    ) {
+
+        return "approved";
+    }
+
+
+    if (
+        value === "rejected"
+        ||
+        value === "مرفوض"
+        ||
+        value === "مرفوضة"
+    ) {
+
+        return "rejected";
+    }
+
+
+    return "pending";
+
+}
+
+
+
+/* =========================================================
+   نص الحالة
+========================================================= */
+
+function getLeaveStatusText(
+    status
+) {
+
+    const value =
+        normalizeLeaveStatus(
+            status
+        );
+
+
+    if (
+        value === "approved"
+    ) {
+
+        return "مقبولة";
+    }
+
+
+    if (
+        value === "rejected"
+    ) {
+
+        return "مرفوضة";
+    }
+
+
+    return "قيد المراجعة";
+
+}
+
+
+
+/* =========================================================
+   الملخص
+========================================================= */
+
+function updateSummary() {
+
+    const all =
+        employeeLeaves.length;
+
+
+    const pending =
+        employeeLeaves.filter(
+            leave =>
+                normalizeLeaveStatus(
+                    leave.status
+                )
+                ===
+                "pending"
+        ).length;
+
+
+    const approved =
+        employeeLeaves.filter(
+            leave =>
+                normalizeLeaveStatus(
+                    leave.status
+                )
+                ===
+                "approved"
+        ).length;
+
+
+    const rejected =
+        employeeLeaves.filter(
+            leave =>
+                normalizeLeaveStatus(
+                    leave.status
+                )
+                ===
+                "rejected"
+        ).length;
+
+
+    document
+        .getElementById(
+            "countAll"
+        )
+        .textContent =
+            all;
+
+
+    document
+        .getElementById(
+            "countPending"
+        )
+        .textContent =
+            pending;
+
+
+    document
+        .getElementById(
+            "countApproved"
+        )
+        .textContent =
+            approved;
+
+
+    document
+        .getElementById(
+            "countRejected"
+        )
+        .textContent =
+            rejected;
+
+}
+
+
+
+/* =========================================================
+   عرض الإجازات
+========================================================= */
+
+function renderLeaves() {
+
+    const selectedStatus =
+        statusFilter.value;
+
+
+    let filteredLeaves =
+        [...employeeLeaves];
+
+
+    if (
+        selectedStatus
+        !==
+        "all"
+    ) {
+
+        filteredLeaves =
+            filteredLeaves.filter(
+                leave =>
+                    normalizeLeaveStatus(
+                        leave.status
+                    )
+                    ===
+                    selectedStatus
+            );
+
+    }
+
+
+    const leavesCount =
+        document.getElementById(
+            "leavesCount"
+        );
+
+
+    leavesCount.textContent =
+        filteredLeaves.length
+        +
+        " طلب";
+
+
+    leavesList.innerHTML =
+        "";
+
+
+    if (
+        filteredLeaves.length === 0
+    ) {
+
+        leavesList.innerHTML = `
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    ◷
+                </div>
+
+                <h3>
+                    لا توجد طلبات إجازة
+                </h3>
+
+                <p>
+                    يمكنك تقديم طلب جديد من زر
+                    "طلب إجازة جديد"
+                </p>
+
+            </div>
+
+        `;
+
+
+        return;
+    }
+
+
+
+    filteredLeaves.forEach(
+        leave => {
+
+
+            const status =
+                normalizeLeaveStatus(
+                    leave.status
+                );
+
+
+            const statusText =
+                getLeaveStatusText(
+                    leave.status
+                );
+
+
+            const type =
+                leave.leave_type
+                ||
+                leave.type
+                ||
+                "إجازة";
+
+
+            const fromDate =
+                leave.start_date
+                ||
+                leave.from_date
+                ||
+                null;
+
+
+            const toDate =
+                leave.end_date
+                ||
+                leave.to_date
+                ||
+                null;
+
+
+            const reason =
+                leave.reason
+                ||
+                leave.notes
+                ||
+                "لا يوجد سبب مسجل";
+
+
+            const reviewNote =
+                leave.review_note
+                ||
+                leave.admin_note
+                ||
+                leave.rejection_reason
+                ||
+                "";
+
+
+            const days =
+                calculateDays(
+                    fromDate,
+                    toDate
+                );
+
+
+            const card =
+                document.createElement(
+                    "article"
+                );
+
+
+            card.className =
+                "leave-card";
+
+
+            card.innerHTML = `
+
+                <div class="leave-card-header">
+
+
+                    <div>
+
+                        <span class="leave-label">
+                            طلب إجازة
+                        </span>
+
+
+                        <h3>
+                            ${
+                                escapeHtml(
+                                    type
+                                )
+                            }
+                        </h3>
+
+                    </div>
+
+
+                    <span
+                        class="status-badge ${status}"
+                    >
+                        ${
+                            escapeHtml(
+                                statusText
+                            )
+                        }
+                    </span>
+
+
+                </div>
+
+
+
+                <div class="leave-info-grid">
+
+
+                    <div class="leave-info-item">
+
+                        <span>
+                            من تاريخ
+                        </span>
+
+                        <strong>
+                            ${
+                                escapeHtml(
+                                    formatDate(
+                                        fromDate
+                                    )
+                                )
+                            }
+                        </strong>
+
+                    </div>
+
+
+
+                    <div class="leave-info-item">
+
+                        <span>
+                            إلى تاريخ
+                        </span>
+
+                        <strong>
+                            ${
+                                escapeHtml(
+                                    formatDate(
+                                        toDate
+                                    )
+                                )
+                            }
+                        </strong>
+
+                    </div>
+
+
+
+                    <div class="leave-info-item">
+
+                        <span>
+                            المدة
+                        </span>
+
+                        <strong>
+                            ${
+                                days
+                                ?
+                                days + " يوم"
+                                :
+                                "—"
+                            }
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <div class="leave-reason">
+
+                    <span>
+                        سبب الإجازة
+                    </span>
+
+                    <p>
+                        ${
+                            escapeHtml(
+                                reason
+                            )
+                        }
+                    </p>
+
+                </div>
+
+
+                ${
+                    reviewNote
+                    ?
+                    `
+
+                        <div class="review-note">
+
+                            <span>
+                                ملاحظة المسؤول
+                            </span>
+
+                            <p>
+                                ${
+                                    escapeHtml(
+                                        reviewNote
+                                    )
+                                }
+                            </p>
+
+                        </div>
+
+                    `
+                    :
+                    ""
+                }
+
+            `;
+
+
+            leavesList.appendChild(
+                card
+            );
+
+        }
+    );
+
+}
+
+
+
+/* =========================================================
+   فتح نافذة الطلب
+========================================================= */
+
+function openLeaveModal() {
+
+    leaveForm.reset();
+
+
+    formMessage.textContent =
+        "";
+
+
+    formMessage.className =
+        "form-message";
+
+
+    leaveDuration.textContent =
+        "—";
+
+
+    const today =
+        getTodayString();
+
+
+    startDate.min =
+        today;
+
+
+    endDate.min =
+        today;
+
+
+    leaveModal.classList.add(
+        "show"
+    );
+
+
+    document.body.classList.add(
+        "modal-open"
+    );
+
+}
+
+
+
+/* =========================================================
+   إغلاق النافذة
+========================================================= */
+
+function closeLeaveModal() {
+
+    leaveModal.classList.remove(
+        "show"
+    );
+
+
+    document.body.classList.remove(
+        "modal-open"
+    );
+
+}
+
+
+
+/* =========================================================
+   تاريخ اليوم
+========================================================= */
+
+function getTodayString() {
+
+    const date =
+        new Date();
+
+
+    const year =
+        date.getFullYear();
+
+
+    const month =
+        String(
+            date.getMonth() + 1
+        )
+        .padStart(
+            2,
+            "0"
+        );
+
+
+    const day =
+        String(
+            date.getDate()
+        )
+        .padStart(
+            2,
+            "0"
+        );
+
+
+    return (
+        year
+        +
+        "-"
+        +
+        month
+        +
+        "-"
+        +
+        day
+    );
+
+}
+
+
+
+/* =========================================================
+   حساب الأيام
+========================================================= */
+
+function calculateDays(
+    start,
+    end
+) {
+
+    if (
+        !start
+        ||
+        !end
+    ) {
+
+        return 0;
+    }
+
+
+    const startValue =
+        new Date(
+            start
+            +
+            "T00:00:00"
+        );
+
+
+    const endValue =
+        new Date(
+            end
+            +
+            "T00:00:00"
+        );
+
+
+    if (
+        Number.isNaN(
+            startValue.getTime()
+        )
+        ||
+        Number.isNaN(
+            endValue.getTime()
+        )
+    ) {
+
+        return 0;
+    }
+
+
+    const difference =
+        endValue
+        -
+        startValue;
+
+
+    if (
+        difference < 0
+    ) {
+
+        return 0;
+    }
+
+
+    return (
+        Math.floor(
+            difference
+            /
+            86400000
+        )
+        +
+        1
+    );
+
+}
+
+
+
+/* =========================================================
+   تحديث مدة الإجازة
+========================================================= */
+
+function updateLeaveDuration() {
+
+    if (
+        startDate.value
+    ) {
+
+        endDate.min =
+            startDate.value;
+
+    }
+
+
+    if (
+        startDate.value
+        &&
+        endDate.value
+        &&
+        endDate.value
+        <
+        startDate.value
+    ) {
+
+        endDate.value =
+            "";
+    }
+
+
+    const days =
+        calculateDays(
+            startDate.value,
+            endDate.value
+        );
+
+
+    leaveDuration.textContent =
+        days
+        ?
+        days + " يوم"
+        :
+        "—";
+
+}
+
+
+
+/* =========================================================
+   التحقق من وجود إجازة متداخلة
+========================================================= */
+
+function hasOverlappingLeave(
+    newStart,
+    newEnd
+) {
+
+    const newStartDate =
+        new Date(
+            newStart
+            +
+            "T00:00:00"
+        );
+
+
+    const newEndDate =
+        new Date(
+            newEnd
+            +
+            "T00:00:00"
+        );
+
+
+    return employeeLeaves.some(
+        leave => {
+
+
+            const status =
+                normalizeLeaveStatus(
+                    leave.status
+                );
+
+
+            /*
+                الإجازة المرفوضة لا تمنع
+                تقديم طلب جديد
+            */
+
+            if (
+                status ===
+                "rejected"
+            ) {
+
+                return false;
+            }
+
+
+            const oldStart =
+                leave.start_date
+                ||
+                leave.from_date;
+
+
+            const oldEnd =
+                leave.end_date
+                ||
+                leave.to_date;
+
+
+            if (
+                !oldStart
+                ||
+                !oldEnd
+            ) {
+
+                return false;
+            }
+
+
+            const oldStartDate =
+                new Date(
+                    oldStart
+                    +
+                    "T00:00:00"
+                );
+
+
+            const oldEndDate =
+                new Date(
+                    oldEnd
+                    +
+                    "T00:00:00"
+                );
+
+
+            return (
+                newStartDate
+                <=
+                oldEndDate
+                &&
+                newEndDate
+                >=
+                oldStartDate
+            );
+
+        }
+    );
+
+}
+
+
+
+/* =========================================================
+   إرسال طلب الإجازة
+========================================================= */
+
+async function submitLeaveRequest(
+    event
+) {
+
+    event.preventDefault();
+
+
+    formMessage.textContent =
+        "";
+
+
+    formMessage.className =
+        "form-message";
+
+
+    const leaveType =
+        document
+            .getElementById(
+                "leaveType"
+            )
+            .value
+            .trim();
+
+
+    const start =
+        startDate.value;
+
+
+    const end =
+        endDate.value;
+
+
+    const reason =
+        document
+            .getElementById(
+                "leaveReason"
+            )
+            .value
+            .trim();
+
+
+
+    if (
+        !leaveType
+        ||
+        !start
+        ||
+        !end
+        ||
+        !reason
+    ) {
+
+        showFormError(
+            "يرجى تعبئة جميع الحقول المطلوبة."
+        );
+
+        return;
+    }
+
+
+
+    if (
+        end < start
+    ) {
+
+        showFormError(
+            "تاريخ نهاية الإجازة يجب أن يكون بعد أو مساويًا لتاريخ البداية."
+        );
+
+        return;
+    }
+
+
+
+    if (
+        hasOverlappingLeave(
+            start,
+            end
+        )
+    ) {
+
+        showFormError(
+            "يوجد لديك طلب إجازة آخر يتداخل مع هذه الفترة."
+        );
+
+        return;
+    }
+
+
+
+    submitLeaveBtn.disabled =
+        true;
+
+
+    submitLeaveBtn.textContent =
+        "جارٍ الإرسال...";
+
+
+
+    try {
+
+        const {
+            error
+        } =
+            await supabaseClient
+                .from(
+                    "employee_leaves"
+                )
+                .insert({
+
+                    employee_id:
+                        employeeId,
+
+                    leave_type:
+                        leaveType,
+
+                    start_date:
+                        start,
+
+                    end_date:
+                        end,
+
+                    reason:
+                        reason,
+
+                    status:
+                        "pending"
+
+                });
+
+
+        if (error) {
+
+            throw error;
+        }
+
+
+        formMessage.textContent =
+            "تم إرسال طلب الإجازة بنجاح.";
+
+
+        formMessage.className =
+            "form-message success";
+
+
+        await loadLeaves();
+
+
+        setTimeout(
+            () => {
+
+                closeLeaveModal();
+
+            },
+            700
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "خطأ إرسال طلب الإجازة:",
+            error
+        );
+
+
+        showFormError(
+            "تعذر إرسال طلب الإجازة. تأكد من إعداد جدول employee_leaves."
+        );
+
+    }
+
+    finally {
+
+        submitLeaveBtn.disabled =
+            false;
+
+
+        submitLeaveBtn.textContent =
+            "إرسال الطلب";
+
+    }
+
+}
+
+
+
+/* =========================================================
+   رسالة الخطأ
+========================================================= */
+
+function showFormError(
+    message
+) {
+
+    formMessage.textContent =
+        message;
+
+
+    formMessage.className =
+        "form-message error";
+
+}
+
+
+
+/* =========================================================
+   تنسيق التاريخ
+========================================================= */
+
+function formatDate(
+    value
+) {
+
+    if (!value) {
+
+        return "غير محدد";
+    }
+
+
+    const date =
+        new Date(
+            value
+            +
+            "T00:00:00"
+        );
+
+
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return String(
+            value
+        );
+    }
+
+
+    return new Intl.DateTimeFormat(
+        "ar-SA-u-ca-gregory",
+        {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit"
+        }
+    )
+    .format(
+        date
+    );
+
+}
+
+
+
+/* =========================================================
+   حماية النصوص
+========================================================= */
+
+function escapeHtml(
+    value
+) {
+
+    return String(
+        value ?? ""
+    )
+
+    .replaceAll(
+        "&",
+        "&amp;"
+    )
+
+    .replaceAll(
+        "<",
+        "&lt;"
+    )
+
+    .replaceAll(
+        ">",
+        "&gt;"
+    )
+
+    .replaceAll(
+        '"',
+        "&quot;"
+    )
+
+    .replaceAll(
+        "'",
+        "&#039;"
+    );
+
+}
+
+
+
+/* =========================================================
+   السايد بار
+========================================================= */
+
+function openSidebar() {
+
+    sidebar.classList.add(
+        "show"
+    );
+
+
+    sidebarOverlay.classList.add(
+        "show"
+    );
+
+
+    document.body.classList.add(
+        "menu-open"
+    );
+
+}
+
+
+function closeSidebar() {
+
+    sidebar.classList.remove(
+        "show"
+    );
+
+
+    sidebarOverlay.classList.remove(
+        "show"
+    );
+
+
+    document.body.classList.remove(
+        "menu-open"
+    );
+
+}
+
+
+
+/* =========================================================
+   تسجيل الخروج
+========================================================= */
+
+async function logout() {
+
+    try {
+
+        await supabaseClient
+            .auth
+            .signOut();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "خطأ تسجيل الخروج:",
+            error
+        );
+
+    }
+
+
+    clearEmployeeSession();
+
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+
+/* =========================================================
+   الأحداث
+========================================================= */
+
+openLeaveModalBtn
+    .addEventListener(
+        "click",
+        openLeaveModal
+    );
+
+
+closeLeaveModalBtn
+    .addEventListener(
+        "click",
+        closeLeaveModal
+    );
+
+
+cancelLeaveBtn
+    .addEventListener(
+        "click",
+        closeLeaveModal
+    );
+
+
+leaveForm
+    .addEventListener(
+        "submit",
+        submitLeaveRequest
+    );
+
+
+startDate
+    .addEventListener(
+        "change",
+        updateLeaveDuration
+    );
+
+
+endDate
+    .addEventListener(
+        "change",
+        updateLeaveDuration
+    );
+
+
+statusFilter
+    .addEventListener(
+        "change",
+        renderLeaves
+    );
+
+
+mobileMenuBtn
+    .addEventListener(
+        "click",
+        openSidebar
+    );
+
+
+sidebarOverlay
+    .addEventListener(
+        "click",
+        closeSidebar
+    );
+
+
+document
+    .getElementById(
+        "logoutBtn"
+    )
+    .addEventListener(
+        "click",
+        logout
+    );
+
+
+document
+    .querySelectorAll(
+        ".nav-link"
+    )
+    .forEach(
+        link => {
+
+            link.addEventListener(
+                "click",
+                closeSidebar
+            );
+
+        }
+    );
+
+
+leaveModal
+    .addEventListener(
+        "click",
+        event => {
+
+            if (
+                event.target
+                ===
+                leaveModal
+            ) {
+
+                closeLeaveModal();
+
+            }
+
+        }
+    );
+
+
+document
+    .addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key
+                ===
+                "Escape"
+            ) {
+
+                closeSidebar();
+
+                closeLeaveModal();
+
+            }
+
+        }
+    );
+
+
+
+/* =========================================================
+   تشغيل الصفحة
+========================================================= */
+
+async function startPage() {
+
+    const allowed =
+        await protectEmployeePage();
+
+
+    if (!allowed) {
+
+        return;
+    }
+
+
+    try {
+
+        await loadLeaves();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "خطأ تشغيل صفحة الإجازات:",
+            error
+        );
+
+
+        leavesList.innerHTML = `
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    !
+                </div>
+
+                <h3>
+                    تعذر تحميل طلبات الإجازة
+                </h3>
+
+                <p>
+                    تأكد من إعداد جدول
+                    employee_leaves
+                    وصلاحيات الوصول إليه
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+startPage();
+
+</script>
+
+
+</body>
+
+</html>
