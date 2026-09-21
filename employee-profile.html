@@ -2,7 +2,6 @@
 <html lang="ar" dir="rtl">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta
@@ -10,7 +9,7 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>معيار | ملفي الشخصي</title>
+    <title>معيار | ملفي الوظيفي</title>
 
     <link
         rel="stylesheet"
@@ -18,19 +17,17 @@
     >
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 </head>
 
 
 <body>
 
-
 <div class="employee-page">
 
 
-    <!-- =========================
+    <!-- =========================================
          هيدر الجوال
-    ========================== -->
+    ========================================== -->
 
     <header class="mobile-header">
 
@@ -45,15 +42,8 @@
 
 
         <div class="mobile-header-title">
-
-            <h2>
-                ملفي الشخصي
-            </h2>
-
-            <span>
-                معيار
-            </span>
-
+            <h2>ملفي الوظيفي</h2>
+            <span>معيار</span>
         </div>
 
 
@@ -74,9 +64,9 @@
 
 
 
-    <!-- =========================
+    <!-- =========================================
          السايد بار
-    ========================== -->
+    ========================================== -->
 
     <aside
         class="sidebar"
@@ -92,6 +82,23 @@
             >
 
         </div>
+
+
+
+        <!-- بيانات الموظف -->
+
+        <div class="employee-sidebar-card">
+
+            <span>
+                بوابة الموظف
+            </span>
+
+            <strong id="sidebarEmployeeName">
+                الموظف
+            </strong>
+
+        </div>
+
 
 
         <nav class="sidebar-nav">
@@ -125,7 +132,7 @@
                 href="employee-profile.html"
                 class="nav-link active"
             >
-                ملفي الشخصي
+                ملفي الوظيفي
             </a>
 
 
@@ -133,11 +140,20 @@
                 href="employee-evaluations.html"
                 class="nav-link"
             >
-                تقييمي
+                تقييماتي
+            </a>
+
+
+            <a
+                href="employee-leaves.html"
+                class="nav-link"
+            >
+                إجازاتي
             </a>
 
 
         </nav>
+
 
 
         <button
@@ -153,12 +169,14 @@
 
 
 
-    <!-- =========================
+    <!-- =========================================
          المحتوى
-    ========================== -->
+    ========================================== -->
 
     <main class="main-content">
 
+
+        <!-- رأس الصفحة -->
 
         <header class="topbar">
 
@@ -168,7 +186,7 @@
 
 
             <h1>
-                ملفي الشخصي
+                ملفي الوظيفي
             </h1>
 
 
@@ -180,9 +198,9 @@
 
 
 
-        <!-- =========================
+        <!-- =========================================
              بطاقة الملف
-        ========================== -->
+        ========================================== -->
 
         <section class="profile-card">
 
@@ -197,6 +215,7 @@
                     </span>
 
                 </div>
+
 
 
                 <div class="profile-heading">
@@ -218,10 +237,11 @@
                 </div>
 
 
+
                 <div class="profile-status-wrapper">
 
                     <span
-                        class="profile-status"
+                        class="profile-status default"
                         id="profileStatus"
                     >
                         —
@@ -234,9 +254,7 @@
 
 
 
-            <!-- =========================
-                 البيانات الأساسية
-            ========================== -->
+            <!-- البيانات الأساسية -->
 
             <div class="profile-info-grid">
 
@@ -359,22 +377,24 @@
 
 
 
-        <!-- =========================
+        <!-- =========================================
              حالة العمل
-        ========================== -->
+        ========================================== -->
 
         <section class="work-card">
 
 
             <div class="section-heading">
 
-                <h2>
-                    حالة العمل
-                </h2>
+                <div>
+                    <h2>
+                        حالة العمل
+                    </h2>
 
-                <p>
-                    معلومات التوفر وضغط العمل الحالي
-                </p>
+                    <p>
+                        معلومات التوفر وضغط العمل الحالي
+                    </p>
+                </div>
 
             </div>
 
@@ -445,14 +465,15 @@
 
 
 
-        <!-- =========================
+        <!-- =========================================
              المهارات
-        ========================== -->
+        ========================================== -->
 
         <section class="skills-card">
 
 
             <div class="section-heading">
+
 
                 <div>
 
@@ -503,10 +524,9 @@
 
 <script>
 
-
-/* =========================
+/* =========================================================
    Supabase
-========================== */
+========================================================= */
 
 const SUPABASE_URL =
     "https://avooyglxacytrfhvotsl.supabase.co";
@@ -524,136 +544,346 @@ const supabaseClient =
 
 
 
-/* =========================
-   البيانات
-========================== */
+/* =========================================================
+   المتغيرات
+========================================================= */
 
-let employeeId =
-    null;
+let currentSession = null;
 
+let currentEmployee = null;
 
-let employeeData =
-    null;
+let employeeId = null;
 
+let employeeData = null;
 
-let employeeSkills =
-    [];
-
+let employeeSkills = [];
 
 
-/* =========================
-   حماية الصفحة
-========================== */
 
-function protectEmployeePage() {
+/* =========================================================
+   العناصر
+========================================================= */
 
-
-    const role =
-        localStorage.getItem(
-            "miyarRole"
-        );
+const mobileMenuBtn =
+    document.getElementById(
+        "mobileMenuBtn"
+    );
 
 
-    const savedEmployeeId =
-        localStorage.getItem(
-            "miyarEmployeeId"
-        );
+const sidebar =
+    document.getElementById(
+        "sidebar"
+    );
 
 
-    if (
-        role !== "employee"
-        ||
-        !savedEmployeeId
-    ) {
+const sidebarOverlay =
+    document.getElementById(
+        "sidebarOverlay"
+    );
 
 
-        window.location.href =
-            "login.html";
+const sidebarEmployeeName =
+    document.getElementById(
+        "sidebarEmployeeName"
+    );
 
 
-        return false;
 
-    }
+/* =========================================================
+   تنظيف بيانات الدخول
+========================================================= */
 
+function clearEmployeeSession() {
 
-    employeeId =
-        Number(
-            savedEmployeeId
-        );
+    localStorage.removeItem(
+        "miyarRole"
+    );
 
+    localStorage.removeItem(
+        "miyarEmail"
+    );
 
-    if (
-        !employeeId
-        ||
-        Number.isNaN(
-            employeeId
-        )
-    ) {
+    localStorage.removeItem(
+        "miyarEmployeeId"
+    );
 
-
-        clearEmployeeSession();
-
-
-        window.location.href =
-            "login.html";
-
-
-        return false;
-
-    }
-
-
-    return true;
+    localStorage.removeItem(
+        "miyarEmployeeName"
+    );
 
 }
 
 
 
-/* =========================
+/* =========================================================
+   حماية صفحة الموظف
+========================================================= */
+
+async function protectEmployeePage() {
+
+    try {
+
+        const {
+            data: sessionData,
+            error: sessionError
+        } =
+            await supabaseClient
+                .auth
+                .getSession();
+
+
+        if (sessionError) {
+
+            console.error(
+                "خطأ قراءة الجلسة:",
+                sessionError
+            );
+
+            window.location.href =
+                "login.html";
+
+            return false;
+        }
+
+
+        currentSession =
+            sessionData?.session || null;
+
+
+        if (
+            !currentSession
+            ||
+            !currentSession.user
+        ) {
+
+            clearEmployeeSession();
+
+            window.location.href =
+                "login.html";
+
+            return false;
+        }
+
+
+        const authUser =
+            currentSession.user;
+
+
+        /* منع المسؤول من دخول صفحة الموظف */
+
+        if (
+            String(
+                authUser.email || ""
+            )
+            .trim()
+            .toLowerCase()
+            ===
+            "admin@gmail.com"
+        ) {
+
+            window.location.href =
+                "dashboard.html";
+
+            return false;
+        }
+
+
+
+        const {
+            data: employee,
+            error: employeeError
+        } =
+            await supabaseClient
+                .from("employees")
+                .select(`
+                    id,
+                    name,
+                    email,
+                    employee_number,
+                    auth_user_id,
+                    employment_status
+                `)
+                .eq(
+                    "auth_user_id",
+                    authUser.id
+                )
+                .maybeSingle();
+
+
+        if (employeeError) {
+
+            console.error(
+                "خطأ تحميل الموظف:",
+                employeeError
+            );
+
+            alert(
+                "تعذر التحقق من بيانات الموظف."
+            );
+
+            await supabaseClient
+                .auth
+                .signOut();
+
+            clearEmployeeSession();
+
+            window.location.href =
+                "login.html";
+
+            return false;
+        }
+
+
+        if (!employee) {
+
+            alert(
+                "هذا الحساب غير مرتبط بموظف في النظام."
+            );
+
+            await supabaseClient
+                .auth
+                .signOut();
+
+            clearEmployeeSession();
+
+            window.location.href =
+                "login.html";
+
+            return false;
+        }
+
+
+        if (
+            employee.employment_status
+            &&
+            employee.employment_status
+            !==
+            "على رأس العمل"
+        ) {
+
+            alert(
+                "حسابك الوظيفي غير نشط حاليًا."
+            );
+
+            await supabaseClient
+                .auth
+                .signOut();
+
+            clearEmployeeSession();
+
+            window.location.href =
+                "login.html";
+
+            return false;
+        }
+
+
+        currentEmployee =
+            employee;
+
+
+        employeeId =
+            Number(
+                employee.id
+            );
+
+
+        localStorage.setItem(
+            "miyarRole",
+            "employee"
+        );
+
+
+        localStorage.setItem(
+            "miyarEmail",
+            employee.email
+            ||
+            authUser.email
+            ||
+            ""
+        );
+
+
+        localStorage.setItem(
+            "miyarEmployeeId",
+            String(employee.id)
+        );
+
+
+        localStorage.setItem(
+            "miyarEmployeeName",
+            employee.name || ""
+        );
+
+
+        sidebarEmployeeName.textContent =
+            employee.name || "الموظف";
+
+
+        return true;
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "خطأ حماية الصفحة:",
+            error
+        );
+
+        clearEmployeeSession();
+
+        window.location.href =
+            "login.html";
+
+        return false;
+    }
+
+}
+
+
+
+/* =========================================================
    تحميل بيانات الموظف
-========================== */
+========================================================= */
 
 async function loadEmployeeData() {
-
 
     const {
         data,
         error
     } =
-    await supabaseClient
-        .from("employees")
-        .select(`
-            id,
-            name,
-            email,
-            job_title,
-            department,
-            experience_years,
-            job_level,
-            availability,
-            workload,
-            status,
-            employee_number
-        `)
-        .eq(
-            "id",
-            employeeId
-        )
-        .single();
-
+        await supabaseClient
+            .from("employees")
+            .select(`
+                id,
+                name,
+                email,
+                job_title,
+                department,
+                experience_years,
+                job_level,
+                availability,
+                workload,
+                status,
+                employment_status,
+                employee_number
+            `)
+            .eq(
+                "id",
+                employeeId
+            )
+            .single();
 
 
     if (error) {
-
 
         console.error(
             "خطأ تحميل بيانات الموظف:",
             error
         );
 
-
         throw error;
-
     }
 
 
@@ -667,11 +897,15 @@ async function loadEmployeeData() {
 
 
 
-/* =========================
+/* =========================================================
    عرض بيانات الموظف
-========================== */
+========================================================= */
 
 function renderEmployeeData() {
+
+    if (!employeeData) {
+        return;
+    }
 
 
     const name =
@@ -693,7 +927,7 @@ function renderEmployeeData() {
             "profileInitial"
         )
         .textContent =
-        firstLetter;
+            firstLetter;
 
 
     document
@@ -701,7 +935,7 @@ function renderEmployeeData() {
             "profileName"
         )
         .textContent =
-        name;
+            name;
 
 
     document
@@ -709,9 +943,9 @@ function renderEmployeeData() {
             "profileTitle"
         )
         .textContent =
-        employeeData.job_title
-        ||
-        "غير محدد";
+            employeeData.job_title
+            ||
+            "غير محدد";
 
 
     document
@@ -719,9 +953,9 @@ function renderEmployeeData() {
             "profileEmail"
         )
         .textContent =
-        employeeData.email
-        ||
-        "—";
+            employeeData.email
+            ||
+            "—";
 
 
     document
@@ -729,9 +963,9 @@ function renderEmployeeData() {
             "employeeNumber"
         )
         .textContent =
-        employeeData.employee_number
-        ||
-        "—";
+            employeeData.employee_number
+            ||
+            "—";
 
 
     document
@@ -739,9 +973,9 @@ function renderEmployeeData() {
             "jobTitle"
         )
         .textContent =
-        employeeData.job_title
-        ||
-        "—";
+            employeeData.job_title
+            ||
+            "—";
 
 
     document
@@ -749,9 +983,9 @@ function renderEmployeeData() {
             "department"
         )
         .textContent =
-        employeeData.department
-        ||
-        "—";
+            employeeData.department
+            ||
+            "—";
 
 
     document
@@ -759,9 +993,9 @@ function renderEmployeeData() {
             "jobLevel"
         )
         .textContent =
-        employeeData.job_level
-        ||
-        "—";
+            employeeData.job_level
+            ||
+            "—";
 
 
     document
@@ -769,15 +1003,14 @@ function renderEmployeeData() {
             "experienceYears"
         )
         .textContent =
-        employeeData.experience_years !== null
-        &&
-        employeeData.experience_years !== undefined
-        ?
-        employeeData.experience_years
-        +
-        " سنوات"
-        :
-        "—";
+            employeeData.experience_years !== null
+            &&
+            employeeData.experience_years !== undefined
+            ?
+            employeeData.experience_years
+            + " سنوات"
+            :
+            "—";
 
 
     const availability =
@@ -797,9 +1030,7 @@ function renderEmployeeData() {
             "availability"
         )
         .textContent =
-        availability
-        +
-        "%";
+            availability + "%";
 
 
     document
@@ -807,9 +1038,7 @@ function renderEmployeeData() {
             "workload"
         )
         .textContent =
-        workload
-        +
-        "%";
+            workload + "%";
 
 
     document
@@ -817,9 +1046,7 @@ function renderEmployeeData() {
             "availabilityValue"
         )
         .textContent =
-        availability
-        +
-        "%";
+            availability + "%";
 
 
     document
@@ -827,9 +1054,7 @@ function renderEmployeeData() {
             "workloadValue"
         )
         .textContent =
-        workload
-        +
-        "%";
+            workload + "%";
 
 
     document
@@ -837,9 +1062,7 @@ function renderEmployeeData() {
             "availabilityBar"
         )
         .style.width =
-        availability
-        +
-        "%";
+            availability + "%";
 
 
     document
@@ -847,13 +1070,13 @@ function renderEmployeeData() {
             "workloadBar"
         )
         .style.width =
-        workload
-        +
-        "%";
+            workload + "%";
 
 
     const status =
         employeeData.status
+        ||
+        employeeData.employment_status
         ||
         "غير محدد";
 
@@ -876,6 +1099,10 @@ function renderEmployeeData() {
         );
 
 
+    sidebarEmployeeName.textContent =
+        name;
+
+
     localStorage.setItem(
         "miyarEmployeeName",
         name
@@ -885,29 +1112,21 @@ function renderEmployeeData() {
 
 
 
-/* =========================
+/* =========================================================
    النسبة
-========================== */
+========================================================= */
 
-function normalizePercentage(
-    value
-) {
-
+function normalizePercentage(value) {
 
     const number =
-        Number(
-            value
-        );
+        Number(value);
 
 
     if (
-        Number.isNaN(
-            number
-        )
+        Number.isNaN(number)
     ) {
 
         return 0;
-
     }
 
 
@@ -923,20 +1142,15 @@ function normalizePercentage(
 
 
 
-/* =========================
-   لون حالة الموظف
-========================== */
+/* =========================================================
+   حالة الموظف
+========================================================= */
 
-function getStatusClass(
-    status
-) {
-
+function getStatusClass(status) {
 
     const value =
         String(
-            status
-            ||
-            ""
+            status || ""
         )
         .trim()
         .toLowerCase();
@@ -946,10 +1160,11 @@ function getStatusClass(
         value === "متاح"
         ||
         value === "available"
+        ||
+        value === "على رأس العمل"
     ) {
 
         return "available";
-
     }
 
 
@@ -960,7 +1175,6 @@ function getStatusClass(
     ) {
 
         return "busy";
-
     }
 
 
@@ -970,54 +1184,43 @@ function getStatusClass(
 
 
 
-/* =========================
+/* =========================================================
    تحميل مهارات الموظف
-========================== */
+========================================================= */
 
 async function loadEmployeeSkills() {
-
 
     const {
         data,
         error
     } =
-    await supabaseClient
-        .from(
-            "employee_skills"
-        )
-        .select(`
-            id,
-            employee_id,
-            skill_id,
-            skill_level
-        `)
-        .eq(
-            "employee_id",
-            employeeId
-        );
-
+        await supabaseClient
+            .from("employee_skills")
+            .select(`
+                id,
+                employee_id,
+                skill_id,
+                skill_level
+            `)
+            .eq(
+                "employee_id",
+                employeeId
+            );
 
 
     if (error) {
-
 
         console.error(
             "خطأ تحميل مهارات الموظف:",
             error
         );
 
-
-        employeeSkills =
-            [];
-
+        employeeSkills = [];
 
         renderSkills();
 
-
         return;
-
     }
-
 
 
     const relations =
@@ -1028,18 +1231,12 @@ async function loadEmployeeSkills() {
         relations.length === 0
     ) {
 
-
-        employeeSkills =
-            [];
-
+        employeeSkills = [];
 
         renderSkills();
 
-
         return;
-
     }
-
 
 
     const skillIds =
@@ -1062,88 +1259,64 @@ async function loadEmployeeSkills() {
         ];
 
 
-
     if (
         skillIds.length === 0
     ) {
 
-
-        employeeSkills =
-            [];
-
+        employeeSkills = [];
 
         renderSkills();
 
-
         return;
-
     }
-
 
 
     const {
         data: skillsData,
         error: skillsError
     } =
-    await supabaseClient
-        .from(
-            "skills"
-        )
-        .select(`
-            id,
-            skill_name,
-            description
-        `)
-        .in(
-            "id",
-            skillIds
-        );
-
+        await supabaseClient
+            .from("skills")
+            .select(`
+                id,
+                skill_name,
+                description
+            `)
+            .in(
+                "id",
+                skillIds
+            );
 
 
     if (skillsError) {
-
 
         console.error(
             "خطأ تحميل أسماء المهارات:",
             skillsError
         );
 
-
-        employeeSkills =
-            [];
-
+        employeeSkills = [];
 
         renderSkills();
 
-
         return;
-
     }
-
 
 
     employeeSkills =
         relations.map(
-            function(relation) {
-
+            relation => {
 
                 const skill =
-                    (
-                        skillsData
-                        ||
-                        []
-                    )
-                    .find(
-                        item =>
-                            Number(
-                                item.id
-                            )
-                            ===
-                            Number(
-                                relation.skill_id
-                            )
-                    );
+                    (skillsData || [])
+                        .find(
+                            item =>
+                                Number(item.id)
+                                ===
+                                Number(
+                                    relation.skill_id
+                                )
+                        );
 
 
                 return {
@@ -1183,12 +1356,11 @@ async function loadEmployeeSkills() {
 
 
 
-/* =========================
+/* =========================================================
    عرض المهارات
-========================== */
+========================================================= */
 
 function renderSkills() {
-
 
     const container =
         document.getElementById(
@@ -1216,25 +1388,20 @@ function renderSkills() {
         employeeSkills.length === 0
     ) {
 
-
         container.innerHTML = `
 
             <div class="empty-state">
-                لا توجد مهارات مسجلة حالياً
+                لا توجد مهارات مسجلة حاليًا
             </div>
 
         `;
 
-
         return;
-
     }
 
 
-
     employeeSkills.forEach(
-        function(skill) {
-
+        skill => {
 
             const level =
                 normalizeSkillLevel(
@@ -1259,13 +1426,11 @@ function renderSkills() {
                     <div class="skill-title">
 
                         <strong>
-
                             ${
                                 escapeHtml(
                                     skill.name
                                 )
                             }
-
                         </strong>
 
 
@@ -1310,10 +1475,7 @@ function renderSkills() {
 
                         <div
                             class="skill-progress-fill"
-                            style="
-                                width:
-                                ${level}%;
-                            "
+                            style="width: ${level}%;"
                         ></div>
 
                     </div>
@@ -1327,7 +1489,6 @@ function renderSkills() {
                 item
             );
 
-
         }
     );
 
@@ -1335,27 +1496,21 @@ function renderSkills() {
 
 
 
-/* =========================
+/* =========================================================
    مستوى المهارة
-========================== */
+========================================================= */
 
-function normalizeSkillLevel(
-    level
-) {
-
+function normalizeSkillLevel(level) {
 
     const value =
-        Number(
-            level
-        );
+        Number(level);
 
 
     if (
-        !Number.isNaN(
-            value
-        )
+        !Number.isNaN(value)
+        &&
+        String(level).trim() !== ""
     ) {
-
 
         if (
             value <= 5
@@ -1368,7 +1523,6 @@ function normalizeSkillLevel(
                     value * 20
                 )
             );
-
         }
 
 
@@ -1385,63 +1539,49 @@ function normalizeSkillLevel(
 
     const text =
         String(
-            level
-            ||
-            ""
+            level || ""
         )
         .trim()
         .toLowerCase();
 
 
     if (
-        text.includes(
-            "مبتد"
-        )
+        text.includes("مبتد")
         ||
         text === "beginner"
     ) {
 
         return 30;
-
     }
 
 
     if (
-        text.includes(
-            "متوسط"
-        )
+        text.includes("متوسط")
         ||
         text === "intermediate"
     ) {
 
         return 60;
-
     }
 
 
     if (
-        text.includes(
-            "متقدم"
-        )
+        text.includes("متقدم")
         ||
         text === "advanced"
     ) {
 
         return 85;
-
     }
 
 
     if (
-        text.includes(
-            "خبير"
-        )
+        text.includes("خبير")
         ||
         text === "expert"
     ) {
 
         return 100;
-
     }
 
 
@@ -1451,39 +1591,31 @@ function normalizeSkillLevel(
 
 
 
-/* =========================
+/* =========================================================
    حماية النص
-========================== */
+========================================================= */
 
-function escapeHtml(
-    value
-) {
-
+function escapeHtml(value) {
 
     return String(
         value ?? ""
     )
-
     .replaceAll(
         "&",
         "&amp;"
     )
-
     .replaceAll(
         "<",
         "&lt;"
     )
-
     .replaceAll(
         ">",
         "&gt;"
     )
-
     .replaceAll(
         '"',
         "&quot;"
     )
-
     .replaceAll(
         "'",
         "&#039;"
@@ -1493,40 +1625,19 @@ function escapeHtml(
 
 
 
-/* =========================
-   السايد بار
-========================== */
-
-const mobileMenuBtn =
-    document.getElementById(
-        "mobileMenuBtn"
-    );
-
-
-const sidebar =
-    document.getElementById(
-        "sidebar"
-    );
-
-
-const sidebarOverlay =
-    document.getElementById(
-        "sidebarOverlay"
-    );
-
+/* =========================================================
+   فتح السايد بار بالجوال
+========================================================= */
 
 function openSidebar() {
-
 
     sidebar.classList.add(
         "show"
     );
 
-
     sidebarOverlay.classList.add(
         "show"
     );
-
 
     document.body.classList.add(
         "menu-open"
@@ -1536,18 +1647,19 @@ function openSidebar() {
 
 
 
-function closeSidebar() {
+/* =========================================================
+   إغلاق السايد بار
+========================================================= */
 
+function closeSidebar() {
 
     sidebar.classList.remove(
         "show"
     );
 
-
     sidebarOverlay.classList.remove(
         "show"
     );
-
 
     document.body.classList.remove(
         "menu-open"
@@ -1557,46 +1669,28 @@ function closeSidebar() {
 
 
 
-/* =========================
-   تنظيف الدخول
-========================== */
-
-function clearEmployeeSession() {
-
-
-    localStorage.removeItem(
-        "miyarRole"
-    );
-
-
-    localStorage.removeItem(
-        "miyarEmail"
-    );
-
-
-    localStorage.removeItem(
-        "miyarEmployeeId"
-    );
-
-
-    localStorage.removeItem(
-        "miyarEmployeeName"
-    );
-
-}
-
-
-
-/* =========================
+/* =========================================================
    تسجيل الخروج
-========================== */
+========================================================= */
 
 async function logout() {
 
+    try {
 
-    await supabaseClient
-        .auth
-        .signOut();
+        await supabaseClient
+            .auth
+            .signOut();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "خطأ تسجيل الخروج:",
+            error
+        );
+
+    }
 
 
     clearEmployeeSession();
@@ -1609,22 +1703,20 @@ async function logout() {
 
 
 
-/* =========================
+/* =========================================================
    الأحداث
-========================== */
+========================================================= */
 
-mobileMenuBtn
-    .addEventListener(
-        "click",
-        openSidebar
-    );
+mobileMenuBtn.addEventListener(
+    "click",
+    openSidebar
+);
 
 
-sidebarOverlay
-    .addEventListener(
-        "click",
-        closeSidebar
-    );
+sidebarOverlay.addEventListener(
+    "click",
+    closeSidebar
+);
 
 
 document
@@ -1632,14 +1724,12 @@ document
         ".nav-link"
     )
     .forEach(
-        function(link) {
-
+        link => {
 
             link.addEventListener(
                 "click",
                 closeSidebar
             );
-
 
         }
     );
@@ -1655,41 +1745,51 @@ document
     );
 
 
+document.addEventListener(
+    "keydown",
+    event => {
 
-/* =========================
+        if (
+            event.key === "Escape"
+        ) {
+
+            closeSidebar();
+
+        }
+
+    }
+);
+
+
+
+/* =========================================================
    تشغيل الصفحة
-========================== */
+========================================================= */
 
 async function startPage() {
 
-
     const allowed =
-        protectEmployeePage();
+        await protectEmployeePage();
 
 
     if (!allowed) {
 
         return;
-
     }
 
 
     try {
 
-
         await loadEmployeeData();
-
 
         await loadEmployeeSkills();
 
-
     }
 
-    catch(error) {
-
+    catch (error) {
 
         console.error(
-            "خطأ تشغيل صفحة الملف الشخصي:",
+            "خطأ تشغيل صفحة الملف الوظيفي:",
             error
         );
 
@@ -1699,8 +1799,7 @@ async function startPage() {
                 "profileName"
             )
             .textContent =
-            "تعذر تحميل البيانات";
-
+                "تعذر تحميل البيانات";
 
     }
 
@@ -1709,10 +1808,8 @@ async function startPage() {
 
 startPage();
 
-
 </script>
 
 
 </body>
-
 </html>
