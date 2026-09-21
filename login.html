@@ -55,14 +55,12 @@
                 </h1>
 
                 <p id="loginDescription">
-                    أدخل بريدك المسجل والرقم الوظيفي
+                    أدخل بريدك الإلكتروني وكلمة المرور
                 </p>
 
             </div>
 
 
-
-            <!-- نوع المستخدم -->
 
             <div class="role-title">
                 نوع المستخدم
@@ -105,8 +103,6 @@
             <form id="loginForm">
 
 
-                <!-- البريد الإلكتروني -->
-
                 <div class="input-group">
 
                     <label for="email">
@@ -125,22 +121,18 @@
 
 
 
-                <!-- الرقم الوظيفي / كلمة المرور -->
-
                 <div class="input-group">
 
-                    <label
-                        for="loginSecret"
-                        id="secretLabel"
-                    >
-                        الرقم الوظيفي
+                    <label for="loginSecret">
+                        كلمة المرور
                     </label>
 
                     <input
-                        type="text"
+                        type="password"
                         id="loginSecret"
-                        placeholder="أدخل الرقم الوظيفي"
-                        autocomplete="off"
+                        placeholder="أدخل كلمة المرور"
+                        autocomplete="current-password"
+                        minlength="6"
                         required
                     >
 
@@ -148,18 +140,14 @@
 
 
 
-                <!-- ملاحظة الموظف -->
-
                 <p
                     class="employee-note"
                     id="employeeNote"
                 >
-                    استخدم البريد والرقم الوظيفي المسجلين لدى الجهة.
+                    إذا كانت هذه أول مرة تدخل فيها، فعّل حسابك أولاً.
                 </p>
 
 
-
-                <!-- رسالة الخطأ -->
 
                 <p
                     class="error-message"
@@ -167,8 +155,6 @@
                 ></p>
 
 
-
-                <!-- تسجيل الدخول -->
 
                 <button
                     type="submit"
@@ -180,7 +166,25 @@
 
 
 
-                <!-- العودة -->
+                <button
+                    type="button"
+                    class="back-btn"
+                    id="activateButton"
+                >
+                    تفعيل حساب الموظف لأول مرة
+                </button>
+
+
+
+                <button
+                    type="button"
+                    class="back-btn"
+                    id="forgotPasswordButton"
+                >
+                    نسيت كلمة المرور
+                </button>
+
+
 
                 <button
                     type="button"
@@ -228,7 +232,7 @@ const supabaseClient =
 
 
 /* =========================================
-   إعدادات المسؤول
+   إعدادات النظام
 ========================================= */
 
 const ADMIN_EMAIL =
@@ -274,12 +278,6 @@ const secretInput =
     );
 
 
-const secretLabel =
-    document.getElementById(
-        "secretLabel"
-    );
-
-
 const employeeNote =
     document.getElementById(
         "employeeNote"
@@ -304,12 +302,47 @@ const loginButton =
     );
 
 
+const activateButton =
+    document.getElementById(
+        "activateButton"
+    );
+
+
+const forgotPasswordButton =
+    document.getElementById(
+        "forgotPasswordButton"
+    );
+
+
 
 /* =========================================
-   تنظيف بيانات الدخول المحلية
+   رسالة
 ========================================= */
 
-function clearLocalLogin() {
+function showMessage(
+    message,
+    success = false
+) {
+
+
+    errorMessage.textContent =
+        message;
+
+
+    errorMessage.classList.toggle(
+        "success-message",
+        success
+    );
+
+}
+
+
+
+/* =========================================
+   تنظيف التخزين المحلي
+========================================= */
+
+function clearLocalData() {
 
 
     localStorage.removeItem(
@@ -356,17 +389,9 @@ function selectRole(role) {
     );
 
 
-    errorMessage.textContent =
-        "";
-
-
-    errorMessage.classList.remove(
-        "success-message"
+    showMessage(
+        ""
     );
-
-
-    secretInput.value =
-        "";
 
 
     if (
@@ -380,38 +405,19 @@ function selectRole(role) {
 
 
         loginDescription.textContent =
-            "أدخل بريدك المسجل والرقم الوظيفي";
-
-
-        secretLabel.textContent =
-            "الرقم الوظيفي";
-
-
-        secretInput.type =
-            "text";
-
-
-        secretInput.placeholder =
-            "أدخل الرقم الوظيفي";
-
-
-        secretInput.removeAttribute(
-            "minlength"
-        );
-
-
-        secretInput.setAttribute(
-            "autocomplete",
-            "off"
-        );
+            "أدخل بريدك الإلكتروني وكلمة المرور";
 
 
         employeeNote.style.display =
             "block";
 
 
-        employeeNote.textContent =
-            "استخدم البريد والرقم الوظيفي المسجلين لدى الجهة.";
+        activateButton.style.display =
+            "block";
+
+
+        forgotPasswordButton.style.display =
+            "block";
 
 
     }
@@ -429,31 +435,15 @@ function selectRole(role) {
             "أدخل بيانات حساب المسؤول";
 
 
-        secretLabel.textContent =
-            "كلمة المرور";
-
-
-        secretInput.type =
-            "password";
-
-
-        secretInput.placeholder =
-            "أدخل كلمة المرور";
-
-
-        secretInput.setAttribute(
-            "minlength",
-            "6"
-        );
-
-
-        secretInput.setAttribute(
-            "autocomplete",
-            "current-password"
-        );
-
-
         employeeNote.style.display =
+            "none";
+
+
+        activateButton.style.display =
+            "none";
+
+
+        forgotPasswordButton.style.display =
             "none";
 
 
@@ -464,53 +454,18 @@ function selectRole(role) {
 
 
 /* =========================================
-   دخول الموظف المؤقت
+   تسجيل الدخول
 ========================================= */
 
-async function loginEmployee(
+async function signIn(
     email,
-    employeeNumber
+    password
 ) {
 
 
     /*
-        حالياً أثناء تطوير واجهات الموظف:
-
-        لا نستخدم Supabase Authentication
-        للموظف.
-
-        نعتمد فقط على:
-        البريد + الرقم الوظيفي.
-
-        الصلاحيات النهائية سيتم تطبيقها
-        بعد الانتهاء من واجهات الموظف.
-    */
-
-
-    if (
-        email ===
-        ADMIN_EMAIL.toLowerCase()
-    ) {
-
-
-        errorMessage.textContent =
-            "هذا حساب مسؤول، يرجى اختيار مسؤول";
-
-
-        return false;
-
-    }
-
-
-
-    /*
-        مهم جداً:
-
-        لو كانت هناك جلسة مسؤول قديمة
-        في Supabase Auth ننهيها أولاً.
-
-        حتى لا تدخل صفحة الموظف
-        وتعتقد أن المستخدم مسؤول.
+        ننهي الجلسة القديمة أولاً
+        حتى لا تختلط جلسة المسؤول والموظف
     */
 
     try {
@@ -528,44 +483,127 @@ async function loginEmployee(
 
 
         console.log(
-            "لا توجد جلسة Auth سابقة"
+            error
         );
 
 
     }
 
 
-
-    /*
-        تنظيف أي بيانات دخول قديمة
-    */
-
-    clearLocalLogin();
+    clearLocalData();
 
 
-
-    /*
-        التحقق من الموظف عن طريق
-        الدالة الموجودة في Supabase
-    */
 
     const {
         data,
         error
     } =
     await supabaseClient
-        .rpc(
-            "employee_login",
-            {
+        .auth
+        .signInWithPassword({
 
-                input_email:
-                    email,
+            email:
+                email,
 
-                input_employee_number:
-                    employeeNumber
+            password:
+                password
 
-            }
+        });
+
+
+
+    if (
+        error
+        ||
+        !data.user
+    ) {
+
+
+        console.error(
+            error
         );
+
+
+        return null;
+
+    }
+
+
+    return data.user;
+
+}
+
+
+
+/* =========================================
+   دخول الموظف
+========================================= */
+
+async function loginEmployee(
+    email,
+    password
+) {
+
+
+    if (
+        email ===
+        ADMIN_EMAIL
+    ) {
+
+
+        showMessage(
+            "هذا الحساب مخصص للمسؤول"
+        );
+
+
+        return false;
+
+    }
+
+
+
+    const user =
+        await signIn(
+            email,
+            password
+        );
+
+
+    if (!user) {
+
+
+        showMessage(
+            "البريد الإلكتروني أو كلمة المرور غير صحيحة"
+        );
+
+
+        return false;
+
+    }
+
+
+
+    const {
+        data: employee,
+        error
+    } =
+    await supabaseClient
+        .from(
+            "employees"
+        )
+        .select(`
+            id,
+            name,
+            email,
+            employee_number,
+            auth_user_id,
+            employment_status
+        `)
+        .eq(
+            "auth_user_id",
+            user.id
+        )
+        .maybeSingle();
 
 
 
@@ -573,13 +611,18 @@ async function loginEmployee(
 
 
         console.error(
-            "خطأ دخول الموظف:",
             error
         );
 
 
-        errorMessage.textContent =
-            "تعذر التحقق من بيانات الموظف";
+        await supabaseClient
+            .auth
+            .signOut();
+
+
+        showMessage(
+            "تعذر التحقق من بيانات الموظف"
+        );
 
 
         return false;
@@ -587,31 +630,18 @@ async function loginEmployee(
     }
 
 
-
-    /*
-        employee_login ترجع Array
-    */
-
-    const employee =
-        data
-        &&
-        data.length > 0
-        ?
-        data[0]
-        :
-        null;
-
-
-
-    /*
-        البيانات غير صحيحة
-    */
 
     if (!employee) {
 
 
-        errorMessage.textContent =
-            "البريد الإلكتروني أو الرقم الوظيفي غير صحيح";
+        await supabaseClient
+            .auth
+            .signOut();
+
+
+        showMessage(
+            "الحساب غير مرتبط بملف موظف"
+        );
 
 
         return false;
@@ -619,43 +649,6 @@ async function loginEmployee(
     }
 
 
-
-    /*
-        حماية بسيطة مؤقتة:
-
-        حساب المسؤول لا يدخل
-        من واجهة الموظف
-    */
-
-    const employeeEmail =
-        String(
-            employee.email || ""
-        )
-        .trim()
-        .toLowerCase();
-
-
-
-    if (
-        employeeEmail ===
-        ADMIN_EMAIL.toLowerCase()
-    ) {
-
-
-        errorMessage.textContent =
-            "هذا الحساب مخصص للمسؤول";
-
-
-        return false;
-
-    }
-
-
-
-    /*
-        حفظ هوية الموظف مؤقتاً
-        في localStorage
-    */
 
     localStorage.setItem(
         "miyarRole",
@@ -681,11 +674,6 @@ async function loginEmployee(
     );
 
 
-
-    /*
-        الانتقال لصفحة الموظف
-    */
-
     window.location.href =
         "employee-home.html";
 
@@ -706,74 +694,36 @@ async function loginAdmin(
 ) {
 
 
-    /*
-        المسؤول له بريد محدد فقط
-    */
-
     if (
         email !==
-        ADMIN_EMAIL.toLowerCase()
+        ADMIN_EMAIL
     ) {
 
 
-        errorMessage.textContent =
-            "هذا الحساب غير مصرح له بالدخول كمسؤول";
-
-
-        return false;
-
-    }
-
-
-
-    /*
-        تنظيف البيانات المحلية القديمة
-    */
-
-    clearLocalLogin();
-
-
-
-    /*
-        تسجيل دخول المسؤول
-        باستخدام Supabase Authentication
-    */
-
-    const {
-        data,
-        error
-    } =
-    await supabaseClient
-        .auth
-        .signInWithPassword({
-
-            email:
-                email,
-
-            password:
-                password
-
-        });
-
-
-
-    if (
-        error
-        ||
-        !data
-        ||
-        !data.user
-    ) {
-
-
-        console.error(
-            "خطأ دخول المسؤول:",
-            error
+        showMessage(
+            "هذا الحساب غير مصرح له بالدخول كمسؤول"
         );
 
 
-        errorMessage.textContent =
-            "البريد الإلكتروني أو كلمة المرور غير صحيحة";
+        return false;
+
+    }
+
+
+
+    const user =
+        await signIn(
+            email,
+            password
+        );
+
+
+    if (!user) {
+
+
+        showMessage(
+            "البريد الإلكتروني أو كلمة المرور غير صحيحة"
+        );
 
 
         return false;
@@ -782,14 +732,9 @@ async function loginAdmin(
 
 
 
-    /*
-        التحقق من البريد الموجود
-        داخل جلسة Authentication
-    */
-
     const authEmail =
         String(
-            data.user.email || ""
+            user.email || ""
         )
         .trim()
         .toLowerCase();
@@ -798,7 +743,7 @@ async function loginAdmin(
 
     if (
         authEmail !==
-        ADMIN_EMAIL.toLowerCase()
+        ADMIN_EMAIL
     ) {
 
 
@@ -807,11 +752,9 @@ async function loginAdmin(
             .signOut();
 
 
-        clearLocalLogin();
-
-
-        errorMessage.textContent =
-            "هذا الحساب غير مصرح له بالدخول كمسؤول";
+        showMessage(
+            "هذا الحساب غير مصرح له بالدخول كمسؤول"
+        );
 
 
         return false;
@@ -819,10 +762,6 @@ async function loginAdmin(
     }
 
 
-
-    /*
-        حفظ بيانات المسؤول
-    */
 
     localStorage.setItem(
         "miyarRole",
@@ -835,21 +774,6 @@ async function loginAdmin(
         authEmail
     );
 
-
-    localStorage.removeItem(
-        "miyarEmployeeId"
-    );
-
-
-    localStorage.removeItem(
-        "miyarEmployeeName"
-    );
-
-
-
-    /*
-        الانتقال إلى لوحة المسؤول
-    */
 
     window.location.href =
         "dashboard.html";
@@ -865,236 +789,323 @@ async function loginAdmin(
    إرسال النموذج
 ========================================= */
 
-loginForm
-    .addEventListener(
-        "submit",
-        async function(event) {
+loginForm.addEventListener(
+    "submit",
+    async function(event) {
 
 
-            event.preventDefault();
+        event.preventDefault();
 
 
+        showMessage(
+            ""
+        );
 
-            errorMessage.textContent =
-                "";
+
+        const email =
+            emailInput
+                .value
+                .trim()
+                .toLowerCase();
 
 
-            errorMessage.classList.remove(
-                "success-message"
+        const password =
+            secretInput
+                .value;
+
+
+        if (
+            !email
+            ||
+            !password
+        ) {
+
+
+            showMessage(
+                "يرجى إدخال البريد الإلكتروني وكلمة المرور"
             );
 
 
+            return;
 
-            const email =
-                emailInput
-                    .value
-                    .trim()
-                    .toLowerCase();
+        }
 
 
 
-            const secret =
-                secretInput
-                    .value
-                    .trim();
+        if (
+            password.length < 6
+        ) {
+
+
+            showMessage(
+                "كلمة المرور يجب أن تكون 6 أحرف على الأقل"
+            );
+
+
+            return;
+
+        }
 
 
 
-            /*
-                التأكد من إدخال البيانات
-            */
-
-            if (
-                !email
-                ||
-                !secret
-            ) {
+        loginButton.disabled =
+            true;
 
 
-                if (
-                    selectedRole ===
-                    "employee"
-                ) {
-
-
-                    errorMessage.textContent =
-                        "يرجى إدخال البريد الإلكتروني والرقم الوظيفي";
-
-
-                }
-
-
-                else {
-
-
-                    errorMessage.textContent =
-                        "يرجى إدخال البريد الإلكتروني وكلمة المرور";
-
-
-                }
-
-
-                return;
-
-            }
+        loginButton.textContent =
+            "جارٍ تسجيل الدخول...";
 
 
 
-            /*
-                كلمة مرور المسؤول
-                لا تقل عن 6 أحرف
-            */
+        try {
+
 
             if (
                 selectedRole ===
-                "admin"
-                &&
-                secret.length < 6
+                "employee"
             ) {
 
 
-                errorMessage.textContent =
-                    "كلمة المرور يجب أن تكون 6 أحرف على الأقل";
+                await loginEmployee(
+                    email,
+                    password
+                );
 
-
-                return;
 
             }
 
 
+            else {
 
-            /*
-                تعطيل الزر أثناء الدخول
-            */
+
+                await loginAdmin(
+                    email,
+                    password
+                );
+
+
+            }
+
+
+        }
+
+
+        catch(error) {
+
+
+            console.error(
+                error
+            );
+
+
+            showMessage(
+                "حدث خطأ أثناء تسجيل الدخول"
+            );
+
+
+        }
+
+
+        finally {
+
 
             loginButton.disabled =
-                true;
+                false;
 
 
             loginButton.textContent =
-                "جارٍ تسجيل الدخول...";
+                "تسجيل الدخول";
+
+
+        }
+
+
+    }
+);
 
 
 
-            try {
+/* =========================================
+   تفعيل حساب الموظف
+========================================= */
+
+activateButton.addEventListener(
+    "click",
+    function() {
 
 
-                /*
-                    الموظف
-                */
-
-                if (
-                    selectedRole ===
-                    "employee"
-                ) {
+        showMessage(
+            "لتفعيل الحساب لأول مرة يجب أن تصل دعوة الموظف إلى بريده المسجل. افتح رسالة الدعوة وحدد كلمة المرور الخاصة بك."
+        );
 
 
-                    await loginEmployee(
-                        email,
-                        secret
-                    );
+    }
+);
 
 
-                }
+
+/* =========================================
+   نسيت كلمة المرور
+========================================= */
+
+forgotPasswordButton.addEventListener(
+    "click",
+    async function() {
 
 
-                /*
-                    المسؤول
-                */
-
-                else {
-
-
-                    await loginAdmin(
-                        email,
-                        secret
-                    );
+        const email =
+            emailInput
+                .value
+                .trim()
+                .toLowerCase();
 
 
-                }
+
+        if (!email) {
 
 
-            }
+            showMessage(
+                "أدخل بريدك الإلكتروني أولاً"
+            );
 
 
-            catch(error) {
+            return;
+
+        }
+
+
+
+        if (
+            email ===
+            ADMIN_EMAIL
+        ) {
+
+
+            showMessage(
+                "استخدم دخول المسؤول لهذا الحساب"
+            );
+
+
+            return;
+
+        }
+
+
+
+        try {
+
+
+            /*
+                نرسل رابط استعادة كلمة المرور.
+
+                بعد فتح الرابط يتم توجيه الموظف
+                إلى set-password.html
+            */
+
+            const redirectTo =
+                new URL(
+                    "set-password.html",
+                    window.location.href
+                ).href;
+
+
+
+            const {
+                error
+            } =
+            await supabaseClient
+                .auth
+                .resetPasswordForEmail(
+                    email,
+                    {
+                        redirectTo:
+                            redirectTo
+                    }
+                );
+
+
+
+            if (error) {
 
 
                 console.error(
-                    "خطأ تسجيل الدخول:",
                     error
                 );
 
 
-                errorMessage.textContent =
-                    "حدث خطأ أثناء تسجيل الدخول";
+                showMessage(
+                    "تعذر إرسال رابط إنشاء كلمة المرور"
+                );
 
 
-            }
-
-
-            finally {
-
-
-                loginButton.disabled =
-                    false;
-
-
-                loginButton.textContent =
-                    "تسجيل الدخول";
-
+                return;
 
             }
 
 
-        }
-    );
 
-
-
-/* =========================================
-   زر الموظف
-========================================= */
-
-employeeBtn
-    .addEventListener(
-        "click",
-        function() {
-
-
-            selectRole(
-                "employee"
+            showMessage(
+                "إذا كان البريد مسجلاً، ستصلك رسالة لإنشاء كلمة المرور.",
+                true
             );
 
 
         }
-    );
 
 
-
-/* =========================================
-   زر المسؤول
-========================================= */
-
-adminBtn
-    .addEventListener(
-        "click",
-        function() {
+        catch(error) {
 
 
-            selectRole(
-                "admin"
+            console.error(
+                error
+            );
+
+
+            showMessage(
+                "حدث خطأ أثناء إرسال الرسالة"
             );
 
 
         }
-    );
+
+
+    }
+);
 
 
 
 /* =========================================
-   العودة للرئيسية
+   الأزرار
 ========================================= */
+
+employeeBtn.addEventListener(
+    "click",
+    function() {
+
+
+        selectRole(
+            "employee"
+        );
+
+
+    }
+);
+
+
+adminBtn.addEventListener(
+    "click",
+    function() {
+
+
+        selectRole(
+            "admin"
+        );
+
+
+    }
+);
+
+
 
 document
     .getElementById(
