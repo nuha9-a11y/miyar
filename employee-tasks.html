@@ -213,7 +213,7 @@
         </section>
 
 
-        <!-- البحث والتصفية -->
+        <!-- البحث والفلاتر -->
         <section class="toolbar">
 
             <div class="search-box">
@@ -381,7 +381,7 @@
 </div>
 
 
-<!-- رسالة التأكيد -->
+<!-- نافذة التأكيد -->
 <div
     class="confirm-modal"
     id="confirmModal"
@@ -452,19 +452,14 @@ const supabaseClient =
 ========================================================= */
 
 let employeeId = null;
-
 let currentSession = null;
 
 let assignments = [];
-
 let tasks = [];
-
 let projects = [];
-
 let employeeLeaves = [];
 
 let selectedTask = null;
-
 let pendingAction = null;
 
 
@@ -671,9 +666,7 @@ async function protectEmployeePage() {
 
 
         employeeId =
-            Number(
-                employee.id
-            );
+            Number(employee.id);
 
 
         localStorage.setItem(
@@ -700,8 +693,6 @@ async function protectEmployeePage() {
             employee.name || ""
         );
 
-
-        /* اسم الموظف في السايدبار */
 
         if (sidebarEmployeeName) {
 
@@ -841,7 +832,24 @@ async function loadTasks() {
     } =
         await supabaseClient
             .from("tasks")
-            .select("*")
+            .select(`
+                id,
+                project_id,
+                task_name,
+                description,
+                priority,
+                due_date,
+                status,
+                assigned_employee_id,
+                started_at,
+                completed_at,
+                original_due_date,
+                extended_at,
+                extension_reason,
+                extension_count,
+                created_at,
+                updated_at
+            `)
             .in(
                 "id",
                 taskIds
@@ -907,7 +915,19 @@ async function loadProjects() {
     } =
         await supabaseClient
             .from("projects")
-            .select("*")
+            .select(`
+                id,
+                project_name,
+                description,
+                start_date,
+                end_date,
+                status,
+                project_manager,
+                required_experience_years,
+                minimum_availability,
+                project_manager_id,
+                required_employees
+            `)
             .in(
                 "id",
                 projectIds
@@ -932,7 +952,7 @@ async function loadProjects() {
 
 
 /* =========================================================
-   تحميل إجازات الموظف
+   تحميل الإجازات
 ========================================================= */
 
 async function loadEmployeeLeaves() {
@@ -970,12 +990,10 @@ async function loadEmployeeLeaves() {
 
 
 /* =========================================================
-   الحصول على المهمة
+   البحث عن مهمة
 ========================================================= */
 
-function getTaskById(
-    taskId
-) {
+function getTaskById(taskId) {
 
     return tasks.find(
         task =>
@@ -988,12 +1006,10 @@ function getTaskById(
 
 
 /* =========================================================
-   الحصول على المشروع
+   البحث عن مشروع
 ========================================================= */
 
-function getProjectById(
-    projectId
-) {
+function getProjectById(projectId) {
 
     return projects.find(
         project =>
@@ -1006,7 +1022,7 @@ function getProjectById(
 
 
 /* =========================================================
-   حالة التكليف
+   حالة المهمة بالنسبة للموظف
 ========================================================= */
 
 function getAssignmentStatus(
@@ -1147,7 +1163,7 @@ function getTaskPriority(
 
 
 /* =========================================================
-   تجهيز بيانات المهمة
+   تجهيز المهمة
 ========================================================= */
 
 function buildTaskItem(
@@ -1196,7 +1212,7 @@ function buildTaskItem(
 
 
 /* =========================================================
-   مهام الموظف
+   جميع مهام الموظف
 ========================================================= */
 
 function getEmployeeTaskItems() {
@@ -1315,11 +1331,11 @@ function filterTasks() {
         items.filter(
             item => {
 
+                /* أسماء الأعمدة الصحيحة من Supabase */
+
                 const taskName =
                     String(
-                        item.task?.name
-                        ||
-                        item.task?.title
+                        item.task?.task_name
                         ||
                         ""
                     )
@@ -1328,9 +1344,7 @@ function filterTasks() {
 
                 const projectName =
                     String(
-                        item.project?.name
-                        ||
-                        item.project?.title
+                        item.project?.project_name
                         ||
                         ""
                     )
@@ -1444,21 +1458,21 @@ function createTaskCard(
     } = item;
 
 
+    /* task_name هو اسم العمود الصحيح */
+
     const taskName =
         escapeHtml(
-            task?.name
-            ||
-            task?.title
+            task?.task_name
             ||
             "مهمة بدون اسم"
         );
 
 
+    /* project_name هو اسم العمود الصحيح */
+
     const projectName =
         escapeHtml(
-            project?.name
-            ||
-            project?.title
+            project?.project_name
             ||
             "بدون مشروع"
         );
@@ -1472,16 +1486,23 @@ function createTaskCard(
         );
 
 
+    /*
+       جدول tasks عندك لا يحتوي start_date.
+       لذلك بداية المهمة تعتمد على started_at.
+    */
+
     const startDate =
         formatDate(
-            task?.start_date
+            assignment?.started_at
+            ||
+            task?.started_at
         );
 
 
+    /* تاريخ نهاية المهمة عندك due_date */
+
     const endDate =
         formatDate(
-            task?.end_date
-            ||
             task?.due_date
         );
 
@@ -1616,7 +1637,7 @@ function createTaskCard(
                 <div class="task-info-item">
 
                     <span>
-                        تاريخ البداية
+                        تاريخ البدء
                     </span>
 
                     <strong>
@@ -1709,7 +1730,7 @@ function getStatusClass(
 
 
 /* =========================================================
-   تنسيق التاريخ
+   التاريخ
 ========================================================= */
 
 function formatDate(
@@ -1723,9 +1744,7 @@ function formatDate(
 
 
     const date =
-        new Date(
-            value
-        );
+        new Date(value);
 
 
     if (
@@ -1734,14 +1753,12 @@ function formatDate(
         )
     ) {
 
-        return String(
-            value
-        );
+        return String(value);
     }
 
 
     return date.toLocaleDateString(
-        "ar-SA",
+        "ar-SA-u-ca-gregory",
         {
             year: "numeric",
             month: "2-digit",
@@ -1819,21 +1836,21 @@ function viewTask(
     };
 
 
+    /* الاسم الصحيح للمهمة */
+
     const taskName =
         escapeHtml(
-            task.name
-            ||
-            task.title
+            task?.task_name
             ||
             "مهمة بدون اسم"
         );
 
 
+    /* الاسم الصحيح للمشروع */
+
     const projectName =
         escapeHtml(
-            project?.name
-            ||
-            project?.title
+            project?.project_name
             ||
             "بدون مشروع"
         );
@@ -1841,9 +1858,23 @@ function viewTask(
 
     const description =
         escapeHtml(
-            task.description
+            task?.description
             ||
             "لا يوجد وصف للمهمة."
+        );
+
+
+    const startDate =
+        formatDate(
+            assignment?.started_at
+            ||
+            task?.started_at
+        );
+
+
+    const dueDate =
+        formatDate(
+            task?.due_date
         );
 
 
@@ -1908,15 +1939,11 @@ function viewTask(
             <div class="detail-item">
 
                 <span>
-                    تاريخ البداية
+                    تاريخ البدء
                 </span>
 
                 <strong>
-                    ${escapeHtml(
-                        formatDate(
-                            task.start_date
-                        )
-                    )}
+                    ${escapeHtml(startDate)}
                 </strong>
 
             </div>
@@ -1929,13 +1956,7 @@ function viewTask(
                 </span>
 
                 <strong>
-                    ${escapeHtml(
-                        formatDate(
-                            task.end_date
-                            ||
-                            task.due_date
-                        )
-                    )}
+                    ${escapeHtml(dueDate)}
                 </strong>
 
             </div>
@@ -1972,7 +1993,7 @@ function viewTask(
 
 
 /* =========================================================
-   أزرار نافذة التفاصيل
+   أزرار التفاصيل
 ========================================================= */
 
 function renderModalActions(
@@ -2056,7 +2077,7 @@ function renderModalActions(
 
 
 /* =========================================================
-   التحقق من الإجازة
+   الإجازة النشطة
 ========================================================= */
 
 function isEmployeeOnActiveLeave() {
@@ -2221,7 +2242,7 @@ function askStartTask(
 
 
 /* =========================================================
-   طلب إرسال المهمة
+   إرسال المهمة للاعتماد
 ========================================================= */
 
 function askSubmitTask(
@@ -2313,9 +2334,7 @@ async function startTask(
         error
     } =
         await supabaseClient
-            .from(
-                "task_assignments"
-            )
+            .from("task_assignments")
             .update({
 
                 status:
@@ -2385,7 +2404,7 @@ async function startTask(
 
 
 /* =========================================================
-   إرسال المهمة للاعتماد
+   إرسال الإنجاز
 ========================================================= */
 
 async function submitTask(
@@ -2407,9 +2426,7 @@ async function submitTask(
         error
     } =
         await supabaseClient
-            .from(
-                "task_assignments"
-            )
+            .from("task_assignments")
             .update({
 
                 status:
@@ -2520,7 +2537,7 @@ async function executePendingAction() {
 
 
 /* =========================================================
-   تحميل زر التأكيد
+   حالة زر الحفظ
 ========================================================= */
 
 function setActionLoading(
@@ -2535,6 +2552,7 @@ function setActionLoading(
 
         confirmActionBtn.textContent =
             "جارٍ الحفظ...";
+
     }
 
 }
@@ -2594,7 +2612,7 @@ function closeDetailsModal() {
 
 
 /* =========================================================
-   تحديث الصفحة
+   تحديث البيانات
 ========================================================= */
 
 async function refreshPageData() {
@@ -2772,18 +2790,16 @@ async function logout() {
    الأحداث
 ========================================================= */
 
-mobileMenuBtn
-    .addEventListener(
-        "click",
-        openSidebar
-    );
+mobileMenuBtn.addEventListener(
+    "click",
+    openSidebar
+);
 
 
-sidebarOverlay
-    .addEventListener(
-        "click",
-        closeSidebar
-    );
+sidebarOverlay.addEventListener(
+    "click",
+    closeSidebar
+);
 
 
 document
@@ -2802,25 +2818,22 @@ document
     );
 
 
-searchInput
-    .addEventListener(
-        "input",
-        filterTasks
-    );
+searchInput.addEventListener(
+    "input",
+    filterTasks
+);
 
 
-statusFilter
-    .addEventListener(
-        "change",
-        filterTasks
-    );
+statusFilter.addEventListener(
+    "change",
+    filterTasks
+);
 
 
-priorityFilter
-    .addEventListener(
-        "change",
-        filterTasks
-    );
+priorityFilter.addEventListener(
+    "change",
+    filterTasks
+);
 
 
 document
@@ -2873,163 +2886,159 @@ document
     );
 
 
-confirmActionBtn
-    .addEventListener(
-        "click",
-        executePendingAction
-    );
+confirmActionBtn.addEventListener(
+    "click",
+    executePendingAction
+);
 
 
 /* =========================================================
    أزرار بطاقات المهام
 ========================================================= */
 
-tasksGrid
-    .addEventListener(
-        "click",
-        function(event) {
+tasksGrid.addEventListener(
+    "click",
+    function(event) {
 
-            const detailsButton =
-                event.target.closest(
-                    ".details-btn"
-                );
-
-
-            if (detailsButton) {
-
-                viewTask(
-                    Number(
-                        detailsButton.dataset.id
-                    ),
-                    Number(
-                        detailsButton.dataset.assignmentId
-                    )
-                );
-
-                return;
-            }
+        const detailsButton =
+            event.target.closest(
+                ".details-btn"
+            );
 
 
-            const startButton =
-                event.target.closest(
-                    ".start-task-btn"
-                );
+        if (detailsButton) {
+
+            viewTask(
+                Number(
+                    detailsButton.dataset.id
+                ),
+                Number(
+                    detailsButton.dataset.assignmentId
+                )
+            );
+
+            return;
+        }
 
 
-            if (startButton) {
-
-                askStartTask(
-                    Number(
-                        startButton.dataset.assignmentId
-                    )
-                );
-
-                return;
-            }
+        const startButton =
+            event.target.closest(
+                ".start-task-btn"
+            );
 
 
-            const submitButton =
-                event.target.closest(
-                    ".submit-task-btn"
-                );
+        if (startButton) {
+
+            askStartTask(
+                Number(
+                    startButton.dataset.assignmentId
+                )
+            );
+
+            return;
+        }
 
 
-            if (submitButton) {
+        const submitButton =
+            event.target.closest(
+                ".submit-task-btn"
+            );
 
-                askSubmitTask(
-                    Number(
-                        submitButton.dataset.assignmentId
-                    )
-                );
 
-            }
+        if (submitButton) {
+
+            askSubmitTask(
+                Number(
+                    submitButton.dataset.assignmentId
+                )
+            );
 
         }
-    );
+
+    }
+);
 
 
 /* =========================================================
    أزرار نافذة التفاصيل
 ========================================================= */
 
-modalActions
-    .addEventListener(
-        "click",
-        function(event) {
+modalActions.addEventListener(
+    "click",
+    function(event) {
 
-            const startButton =
-                event.target.closest(
-                    ".start-task-btn"
-                );
-
-
-            if (startButton) {
-
-                closeDetailsModal();
-
-                askStartTask(
-                    Number(
-                        startButton.dataset.assignmentId
-                    )
-                );
-
-                return;
-            }
+        const startButton =
+            event.target.closest(
+                ".start-task-btn"
+            );
 
 
-            const submitButton =
-                event.target.closest(
-                    ".submit-task-btn"
-                );
-
-
-            if (submitButton) {
-
-                closeDetailsModal();
-
-                askSubmitTask(
-                    Number(
-                        submitButton.dataset.assignmentId
-                    )
-                );
-
-            }
-
-        }
-    );
-
-
-/* =========================================================
-   Escape
-========================================================= */
-
-document
-    .addEventListener(
-        "keydown",
-        function(event) {
-
-            if (
-                event.key
-                !==
-                "Escape"
-            ) {
-
-                return;
-            }
-
-
-            closeSidebar();
+        if (startButton) {
 
             closeDetailsModal();
 
-            closeConfirmModal();
+            askStartTask(
+                Number(
+                    startButton.dataset.assignmentId
+                )
+            );
+
+            return;
+        }
+
+
+        const submitButton =
+            event.target.closest(
+                ".submit-task-btn"
+            );
+
+
+        if (submitButton) {
+
+            closeDetailsModal();
+
+            askSubmitTask(
+                Number(
+                    submitButton.dataset.assignmentId
+                )
+            );
 
         }
-    );
+
+    }
+);
 
 
 /* =========================================================
-   مراقبة تسجيل الدخول
+   زر Escape
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key
+            !==
+            "Escape"
+        ) {
+
+            return;
+        }
+
+
+        closeSidebar();
+
+        closeDetailsModal();
+
+        closeConfirmModal();
+
+    }
+);
+
+
+/* =========================================================
+   مراقبة الجلسة
 ========================================================= */
 
 supabaseClient.auth.onAuthStateChange(
