@@ -1,2131 +1,1404 @@
-/* =====================================================
-   معيار | التقييمات
-===================================================== */
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+<head>
 
+    <meta charset="UTF-8">
 
-html,
-body {
-    width: 100%;
-    min-height: 100%;
-}
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
+    <title>معيار | التقييمات</title>
 
-html {
-    scroll-behavior: smooth;
-}
+    <link
+        rel="stylesheet"
+        href="evaluations.css"
+    >
 
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    ></script>
 
-body {
-    font-family:
-        "Segoe UI",
-        Tahoma,
-        Arial,
-        sans-serif;
+</head>
 
-    color: #263f4f;
 
-    background: #f5f2ec;
+<body>
 
-    overflow-x: hidden;
-}
 
+<div class="evaluations-page">
 
-body.menu-open,
-body.modal-open {
-    overflow: hidden;
-}
 
+    <header class="mobile-header">
 
-button,
-input,
-select,
-textarea {
-    font-family: inherit;
-}
+        <button
+            class="mobile-menu-btn"
+            id="mobileMenuBtn"
+            type="button"
+            aria-label="فتح القائمة"
+        >
+            ☰
+        </button>
 
 
+        <div class="mobile-header-title">
 
-/* =====================================================
-   الصفحة
-===================================================== */
+            <h2>
+                التقييمات
+            </h2>
 
-.evaluations-page {
-    width: 100%;
-    min-height: 100vh;
+            <span>
+                معيار
+            </span>
 
-    display: flex;
-}
+        </div>
 
 
+        <img
+            src="assets/logo.png"
+            alt="معيار"
+            class="mobile-logo"
+        >
 
-/* =====================================================
-   عناصر الجوال
-===================================================== */
+    </header>
 
-.mobile-header,
-.mobile-menu-btn,
-.sidebar-overlay {
-    display: none;
-}
 
+    <div
+        class="sidebar-overlay"
+        id="sidebarOverlay"
+    ></div>
 
 
-/* =====================================================
-   Sidebar
-===================================================== */
+    <aside
+        class="sidebar"
+        id="sidebar"
+    >
 
-.sidebar {
-    width: 245px;
-    height: 100vh;
 
-    position: fixed;
+        <div class="sidebar-logo">
 
-    top: 0;
-    right: 0;
+            <img
+                src="assets/logo.png"
+                alt="معيار"
+            >
 
-    z-index: 1000;
+        </div>
 
-    padding:
-        25px
-        17px;
 
-    display: flex;
+        <nav class="sidebar-nav">
 
-    flex-direction: column;
+            <a href="dashboard.html" class="nav-link">لوحة التحكم</a>
 
-    overflow-y: auto;
+            <a href="employees.html" class="nav-link">الموظفون</a>
 
-    background:
-        linear-gradient(
-            180deg,
-            #31586c 0%,
-            #3c667a 52%,
-            #456f82 100%
-        );
+            <a href="projects.html" class="nav-link">المشاريع</a>
 
-    box-shadow:
-        -8px 0 28px
-        rgba(
-            38,
-            59,
-            70,
-            0.10
-        );
-}
+            <a href="tasks.html" class="nav-link">المهام</a>
 
+            <a href="matching.html" class="nav-link">المطابقة والترشيح</a>
 
-.sidebar-logo {
-    display: flex;
+            <a href="evaluations.html" class="nav-link active">التقييمات</a>
 
-    justify-content: center;
+            <a href="decisions.html" class="nav-link">القرارات</a>
 
-    align-items: center;
+            <a href="leaves.html" class="nav-link">طلبات الإجازات</a>
 
-    margin-bottom: 25px;
-}
+            <a href="reports.html" class="nav-link">التقارير</a>
 
+        </nav>
 
-.sidebar-logo img {
-    width: 92px;
 
-    height: auto;
+        <button
+            class="logout-btn"
+            id="logoutBtn"
+            type="button"
+        >
+            تسجيل الخروج
+        </button>
 
-    object-fit: contain;
-}
 
+    </aside>
 
-.sidebar-nav {
-    display: flex;
 
-    flex-direction: column;
+    <main class="main-content">
 
-    gap: 7px;
-}
 
+        <header class="topbar">
 
-.nav-link {
-    width: 100%;
+            <span class="page-badge">
+                تقييم الأداء
+            </span>
 
-    min-height: 44px;
 
-    display: flex;
+            <h1>
+                التقييمات
+            </h1>
 
-    align-items: center;
 
-    padding:
-        0
-        14px;
+            <p>
+                تقييم أداء الموظفين بعد تنفيذ المهام وتوثيق مستوى الإنجاز والنتائج للاستفادة منها مستقبلاً في الترشيح.
+            </p>
 
-    border-radius: 10px;
+        </header>
 
-    border-right:
-        3px solid transparent;
 
-    color:
-        rgba(
-            255,
-            255,
-            255,
-            0.78
-        );
+        <section class="evaluations-summary">
 
-    text-decoration: none;
 
-    font-size: 12px;
+            <div class="summary-item">
 
-    transition:
-        0.2s ease;
-}
+                <span>
+                    إجمالي التقييمات
+                </span>
 
+                <strong id="summaryTotal">
+                    0
+                </strong>
 
-.nav-link:hover {
-    background:
-        rgba(
-            255,
-            255,
-            255,
-            0.09
-        );
+            </div>
 
-    color: #ffffff;
-}
 
+            <div class="summary-item">
 
-.nav-link.active {
-    background:
-        rgba(
-            255,
-            255,
-            255,
-            0.14
-        );
+                <span>
+                    متوسط الأداء
+                </span>
 
-    color: #ffffff;
+                <strong id="summaryAverage">
+                    0
+                </strong>
 
-    font-weight: 700;
+            </div>
 
-    border-right-color:
-        #c69a5a;
-}
 
+            <div class="summary-item">
 
-.logout-btn {
-    width: 100%;
+                <span>
+                    تقييم ممتاز
+                </span>
 
-    min-height: 44px;
+                <strong id="summaryExcellent">
+                    0
+                </strong>
 
-    margin-top: auto;
+            </div>
 
-    border-radius: 10px;
 
-    border:
-        1px solid
-        rgba(
-            255,
-            255,
-            255,
-            0.24
-        );
+            <div class="summary-item">
 
-    background:
-        rgba(
-            255,
-            255,
-            255,
-            0.05
-        );
+                <span>
+                    يحتاج تحسين
+                </span>
 
-    color: white;
+                <strong id="summaryNeedsImprovement">
+                    0
+                </strong>
 
-    font-size: 11px;
+            </div>
 
-    cursor: pointer;
-}
 
+        </section>
 
-.logout-btn:hover {
-    background:
-        #b98a4d;
 
-    border-color:
-        #b98a4d;
-}
+        <section class="toolbar">
 
 
+            <div class="search-box">
 
-/* =====================================================
-   المحتوى
-===================================================== */
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="ابحث باسم الموظف أو المهمة..."
+                >
 
-.main-content {
-    width:
-        calc(
-            100% - 245px
-        );
+            </div>
 
-    min-height: 100vh;
 
-    margin-right: 245px;
+            <div class="filters">
 
-    padding:
-        35px
-        42px
-        50px;
+                <select id="ratingFilter">
 
-    background-color:
-        #f5f2ec;
+                    <option value="">
+                        جميع التقييمات
+                    </option>
 
-    background-image:
-        linear-gradient(
-            rgba(
-                249,
-                247,
-                242,
-                0.10
-            ),
-            rgba(
-                249,
-                247,
-                242,
-                0.10
-            )
-        ),
-        url("assets/background.jpeg");
+                    <option value="5">
+                        5 - ممتاز
+                    </option>
 
-    background-size:
-        cover;
+                    <option value="4">
+                        4 - جيد جداً
+                    </option>
 
-    background-position:
-        center;
+                    <option value="3">
+                        3 - جيد
+                    </option>
 
-    background-repeat:
-        no-repeat;
+                    <option value="2">
+                        2 - مقبول
+                    </option>
 
-    background-attachment:
-        fixed;
-}
+                    <option value="1">
+                        1 - يحتاج تحسين
+                    </option>
 
+                </select>
 
+            </div>
 
-/* =====================================================
-   رأس الصفحة
-===================================================== */
 
-.topbar {
-    margin-bottom: 24px;
-}
+            <button
+                class="add-btn"
+                id="addEvaluationBtn"
+                type="button"
+            >
+                + إضافة تقييم
+            </button>
 
 
-.page-badge {
-    display: inline-flex;
+        </section>
 
-    align-items: center;
 
-    min-height: 28px;
+        <section class="evaluations-container">
 
-    padding:
-        0
-        14px;
 
-    margin-bottom: 9px;
+            <div class="section-title">
 
-    border-radius: 30px;
+                <div>
 
-    border:
-        1px solid
-        rgba(
-            185,
-            138,
-            77,
-            0.30
-        );
+                    <h2>
+                        سجل التقييمات
+                    </h2>
 
-    background:
-        rgba(
-            196,
-            154,
-            92,
-            0.13
-        );
+                    <p>
+                        تقييمات الموظفين المرتبطة بالمهام المنفذة.
+                    </p>
 
-    color: #9f733c;
+                </div>
 
-    font-size: 9px;
-}
 
+                <span id="evaluationsCount">
+                    0 تقييم
+                </span>
 
-.topbar h1 {
-    margin-bottom: 6px;
+            </div>
 
-    color: #274d62;
 
-    font-size: 28px;
-}
+            <div
+                class="evaluations-grid"
+                id="evaluationsGrid"
+            >
 
+                <div class="empty-state">
+                    جارٍ تحميل التقييمات...
+                </div>
 
-.topbar p {
-    max-width: 800px;
+            </div>
 
-    color: #778a95;
 
-    font-size: 11px;
+        </section>
 
-    line-height: 1.8;
-}
 
+    </main>
 
 
-/* =====================================================
-   ملخص التقييمات
-===================================================== */
+</div>
 
-.evaluations-summary {
-    display: grid;
 
-    grid-template-columns:
-        repeat(
-            4,
-            minmax(
-                0,
-                1fr
-            )
-        );
+<div
+    class="modal"
+    id="evaluationModal"
+>
 
-    gap: 14px;
 
-    margin-bottom: 20px;
-}
+    <div
+        class="modal-overlay"
+        id="evaluationModalOverlay"
+    ></div>
 
 
-.summary-item {
-    min-height: 100px;
+    <div class="modal-box">
 
-    padding: 17px;
 
-    display: flex;
+        <div class="modal-header">
 
-    flex-direction: column;
 
-    justify-content: center;
+            <div>
 
-    gap: 8px;
+                <h2 id="modalTitle">
+                    إضافة تقييم
+                </h2>
 
-    border-radius: 15px;
+                <p>
+                    قيّم أداء الموظف بعد تنفيذ المهمة.
+                </p>
 
-    border:
-        1.5px solid
-        #c69a5a;
+            </div>
 
-    background:
-        rgba(
-            249,
-            247,
-            242,
-            0.80
-        );
 
-    backdrop-filter:
-        blur(5px);
+            <button
+                class="close-btn"
+                type="button"
+                id="closeEvaluationBtn"
+            >
+                ×
+            </button>
 
-    box-shadow:
-        0 7px 20px
-        rgba(
-            37,
-            59,
-            70,
-            0.04
-        );
-}
 
+        </div>
 
-.summary-item span {
-    color: #7d8c95;
 
-    font-size: 9px;
-}
+        <form id="evaluationForm">
 
 
-.summary-item strong {
-    color: #31586c;
+            <input
+                type="hidden"
+                id="editEvaluationId"
+            >
 
-    font-size: 24px;
-}
 
+            <div class="form-grid">
 
 
-/* =====================================================
-   الأدوات
-===================================================== */
+                <div class="form-group">
 
-.toolbar {
-    width: 100%;
+                    <label for="employeeSelect">
+                        الموظف
+                    </label>
 
-    display: grid;
 
-    grid-template-columns:
-        minmax(
-            280px,
-            1fr
-        )
-        180px
-        auto;
+                    <select
+                        id="employeeSelect"
+                        required
+                    >
 
-    align-items: center;
+                        <option value="">
+                            جارٍ تحميل الموظفين...
+                        </option>
 
-    gap: 10px;
+                    </select>
 
-    margin-bottom: 20px;
+                </div>
 
-    padding: 14px;
 
-    border-radius: 15px;
+                <div class="form-group">
 
-    border:
-        1px solid
-        rgba(
-            49,
-            88,
-            108,
-            0.12
-        );
+                    <label for="taskSelect">
+                        المهمة
+                    </label>
 
-    background:
-        rgba(
-            249,
-            247,
-            242,
-            0.80
-        );
 
-    backdrop-filter:
-        blur(5px);
-}
+                    <select
+                        id="taskSelect"
+                        required
+                    >
 
+                        <option value="">
+                            اختر الموظف أولاً
+                        </option>
 
-.search-box {
-    min-width: 0;
-}
+                    </select>
 
 
-.search-box input,
-.filters select {
-    width: 100%;
+                    <small>
+                        تظهر فقط المهام المسندة للموظف المختار.
+                    </small>
 
-    height: 43px;
+                </div>
 
-    padding:
-        0
-        13px;
 
-    border:
-        1px solid
-        rgba(
-            49,
-            88,
-            108,
-            0.15
-        );
+                <div class="form-group">
 
-    border-radius: 9px;
+                    <label for="achievementLevel">
+                        مستوى الإنجاز
+                    </label>
 
-    background:
-        rgba(
-            255,
-            255,
-            255,
-            0.80
-        );
 
-    color: #31586c;
+                    <select
+                        id="achievementLevel"
+                        required
+                    >
 
-    font-size: 9px;
+                        <option value="">
+                            اختر مستوى الإنجاز
+                        </option>
 
-    outline: none;
-}
+                        <option value="ممتاز">
+                            ممتاز
+                        </option>
 
+                        <option value="جيد جداً">
+                            جيد جداً
+                        </option>
 
-.search-box input:focus,
-.filters select:focus {
-    border-color:
-        #c49a5c;
+                        <option value="جيد">
+                            جيد
+                        </option>
 
-    box-shadow:
-        0 0 0 3px
-        rgba(
-            196,
-            154,
-            92,
-            0.08
-        );
-}
+                        <option value="مقبول">
+                            مقبول
+                        </option>
 
+                        <option value="يحتاج تحسين">
+                            يحتاج تحسين
+                        </option>
 
-.add-btn {
-    min-width: 125px;
+                    </select>
 
-    height: 43px;
+                </div>
 
-    padding:
-        0
-        16px;
 
-    border: none;
+                <div class="form-group">
 
-    border-radius: 9px;
+                    <label for="performanceRating">
+                        تقييم الأداء
+                    </label>
 
-    background:
-        #31586c;
 
-    color: white;
+                    <select
+                        id="performanceRating"
+                        required
+                    >
 
-    font-size: 9px;
+                        <option value="">
+                            اختر التقييم
+                        </option>
 
-    font-weight: 600;
+                        <option value="5">
+                            5 - ممتاز
+                        </option>
 
-    cursor: pointer;
-}
+                        <option value="4">
+                            4 - جيد جداً
+                        </option>
 
+                        <option value="3">
+                            3 - جيد
+                        </option>
 
-.add-btn:hover {
-    background:
-        #294e61;
-}
+                        <option value="2">
+                            2 - مقبول
+                        </option>
 
+                        <option value="1">
+                            1 - يحتاج تحسين
+                        </option>
 
+                    </select>
 
-/* =====================================================
-   حاوية التقييمات
-===================================================== */
+                </div>
 
-.evaluations-container {
-    width: 100%;
 
-    padding: 20px;
+                <div class="form-group">
 
-    border-radius: 17px;
+                    <label for="evaluationDate">
+                        تاريخ التقييم
+                    </label>
 
-    border:
-        1px solid
-        rgba(
-            49,
-            88,
-            108,
-            0.12
-        );
 
-    border-top:
-        3px solid
-        #c69a5a;
+                    <input
+                        type="date"
+                        id="evaluationDate"
+                        required
+                    >
 
-    background:
-        rgba(
-            249,
-            247,
-            242,
-            0.80
-        );
+                </div>
 
-    backdrop-filter:
-        blur(6px);
 
-    box-shadow:
-        0 8px 25px
-        rgba(
-            40,
-            61,
-            73,
-            0.05
-        );
-}
+                <div class="form-group full-width">
 
+                    <label for="evaluationNotes">
+                        ملاحظات المسؤول
+                    </label>
 
-.section-title {
-    display: flex;
 
-    align-items:
-        flex-end;
+                    <textarea
+                        id="evaluationNotes"
+                        placeholder="اكتب ملاحظات واضحة عن أداء الموظف في المهمة..."
+                    ></textarea>
 
-    justify-content:
-        space-between;
+                </div>
 
-    gap: 12px;
 
-    margin-bottom: 18px;
-}
+            </div>
 
 
-.section-title h2 {
-    margin-bottom: 4px;
+            <div class="evaluation-note">
 
-    color: #31576b;
+                <strong>
+                    ملاحظة
+                </strong>
 
-    font-size: 17px;
-}
+                <p>
+                    نتيجة التقييم تعتبر جزءاً من السجل السابق للموظف ويتم استخدام متوسط تقييماته مستقبلاً في المطابقة والترشيح.
+                </p>
 
+            </div>
 
-.section-title p,
-.section-title > span {
-    color: #87949a;
 
-    font-size: 8px;
-}
+            <div class="modal-actions">
 
 
+                <button
+                    type="button"
+                    class="cancel-btn"
+                    id="cancelEvaluationBtn"
+                >
+                    إلغاء
+                </button>
 
-/* =====================================================
-   شبكة التقييمات
-===================================================== */
 
-.evaluations-grid {
-    display: grid;
+                <button
+                    type="submit"
+                    class="save-btn"
+                    id="saveEvaluationBtn"
+                >
+                    حفظ التقييم
+                </button>
 
-    grid-template-columns:
-        repeat(
-            3,
-            minmax(
-                0,
-                1fr
-            )
-        );
 
-    gap: 15px;
-}
+            </div>
 
 
+        </form>
 
-/* =====================================================
-   بطاقة التقييم
-===================================================== */
 
-.evaluation-card {
-    min-width: 0;
+    </div>
 
-    padding: 18px;
 
-    border-radius: 14px;
+</div>
 
-    border:
-        1px solid
-        rgba(
-            60,
-            85,
-            98,
-            0.12
-        );
 
-    border-right:
-        3px solid
-        #c49a5c;
+<div
+    class="modal"
+    id="detailsModal"
+>
 
-    background:
-        rgba(
-            255,
-            255,
-            255,
-            0.52
-        );
 
-    box-shadow:
-        0 7px 20px
-        rgba(
-            37,
-            59,
-            70,
-            0.04
-        );
+    <div
+        class="modal-overlay"
+        id="detailsModalOverlay"
+    ></div>
 
-    transition:
-        0.2s ease;
-}
 
+    <div class="modal-box details-box">
 
-.evaluation-card:hover {
-    transform:
-        translateY(-2px);
 
-    box-shadow:
-        0 11px 24px
-        rgba(
-            37,
-            59,
-            70,
-            0.08
-        );
-}
+        <div class="modal-header">
 
 
-.card-top {
-    display: flex;
+            <div>
 
-    justify-content:
-        space-between;
+                <h2>
+                    تفاصيل التقييم
+                </h2>
 
-    align-items:
-        flex-start;
+                <p>
+                    عرض تقييم الموظف وبيانات المهمة والملاحظات.
+                </p>
 
-    gap: 12px;
+            </div>
 
-    margin-bottom: 15px;
-}
 
+            <button
+                class="close-btn"
+                type="button"
+                id="closeDetailsBtn"
+            >
+                ×
+            </button>
 
-.evaluation-label {
-    display: block;
 
-    margin-bottom: 4px;
+        </div>
 
-    color: #b18650;
 
-    font-size: 8px;
-}
+        <div
+            class="details-grid"
+            id="evaluationDetails"
+        ></div>
 
 
-.card-top h3 {
-    margin-bottom: 4px;
+    </div>
 
-    color: #2f5367;
 
-    font-size: 15px;
+</div>
 
-    line-height: 1.6;
-}
 
+<script>
 
-.task-name {
-    color: #839198;
 
-    font-size: 9px;
+const SUPABASE_URL =
+    "https://avooyglxacytrfhvotsl.supabase.co";
 
-    line-height: 1.6;
-}
 
+const SUPABASE_KEY =
+    "sb_publishable_NVlWEnA_w4KbSse_-70zdA_J9ut0Kyo";
 
 
-/* =====================================================
-   شارة التقييم
-===================================================== */
+const ADMIN_EMAIL =
+    "admin@gmail.com";
 
-.rating-badge {
-    min-width: 75px;
 
-    padding: 9px;
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
 
-    text-align: center;
 
-    border-radius: 10px;
-}
+let evaluations = [];
 
+let employees = [];
 
-.rating-badge span {
-    display: block;
+let tasks = [];
 
-    margin-bottom: 3px;
+let taskAssignments = [];
 
-    font-size: 7px;
-}
 
+const evaluationsGrid =
+    document.getElementById("evaluationsGrid");
 
-.rating-badge strong {
-    font-size: 15px;
-}
+const evaluationModal =
+    document.getElementById("evaluationModal");
 
+const detailsModal =
+    document.getElementById("detailsModal");
 
-.rating-badge.excellent {
-    background:
-        rgba(
-            70,
-            126,
-            97,
-            0.12
-        );
+const sidebar =
+    document.getElementById("sidebar");
 
-    color: #497e65;
-}
+const sidebarOverlay =
+    document.getElementById("sidebarOverlay");
 
+const mobileMenuBtn =
+    document.getElementById("mobileMenuBtn");
 
-.rating-badge.very-good {
-    background:
-        rgba(
-            84,
-            124,
-            142,
-            0.11
-        );
 
-    color: #4d7385;
-}
+async function protectPage() {
 
+    try {
 
-.rating-badge.good {
-    background:
-        rgba(
-            196,
-            154,
-            92,
-            0.13
-        );
+        const { data, error } =
+            await supabaseClient.auth.getSession();
 
-    color: #a57840;
-}
+        if (error || !data.session) {
+            window.location.href = "login.html";
+            return false;
+        }
 
+        const email = String(data.session.user.email || "")
+            .trim()
+            .toLowerCase();
 
-.rating-badge.acceptable {
-    background:
-        rgba(
-            190,
-            126,
-            79,
-            0.12
-        );
+        if (email !== ADMIN_EMAIL.toLowerCase()) {
+            await supabaseClient.auth.signOut();
+            clearLocalSession();
+            window.location.href = "login.html";
+            return false;
+        }
 
-    color: #a16b43;
-}
+        localStorage.setItem("miyarRole", "admin");
+        localStorage.setItem("miyarEmail", email);
 
+        return true;
 
-.rating-badge.poor {
-    background:
-        rgba(
-            151,
-            77,
-            77,
-            0.10
-        );
-
-    color: #985454;
-}
-
-
-
-/* =====================================================
-   معلومات التقييم
-===================================================== */
-
-.evaluation-info {
-    display: grid;
-
-    grid-template-columns:
-        repeat(
-            2,
-            minmax(
-                0,
-                1fr
-            )
-        );
-
-    gap: 9px;
-
-    margin-bottom: 12px;
-}
-
-
-.info-item {
-    min-width: 0;
-
-    padding: 9px;
-
-    border-radius: 9px;
-
-    background:
-        rgba(
-            239,
-            239,
-            234,
-            0.65
-        );
-}
-
-
-.info-item span {
-    display: block;
-
-    margin-bottom: 4px;
-
-    color: #8a979d;
-
-    font-size: 8px;
-}
-
-
-.info-item strong {
-    color: #516c79;
-
-    font-size: 9px;
-
-    line-height: 1.6;
-
-    word-break: break-word;
-}
-
-
-
-/* =====================================================
-   الملاحظات
-===================================================== */
-
-.notes-preview {
-    min-height: 72px;
-
-    padding: 10px;
-
-    margin-bottom: 13px;
-
-    border-radius: 9px;
-
-    border-right:
-        3px solid
-        #c49a5c;
-
-    background:
-        rgba(
-            196,
-            154,
-            92,
-            0.06
-        );
-}
-
-
-.notes-preview span {
-    display: block;
-
-    margin-bottom: 4px;
-
-    color: #a47b47;
-
-    font-size: 8px;
-}
-
-
-.notes-preview p {
-    color: #6c7f88;
-
-    font-size: 9px;
-
-    line-height: 1.7;
-}
-
-
-
-/* =====================================================
-   أزرار البطاقة
-===================================================== */
-
-.evaluation-actions {
-    display: flex;
-
-    gap: 7px;
-
-    padding-top: 12px;
-
-    border-top:
-        1px solid
-        rgba(
-            60,
-            85,
-            98,
-            0.09
-        );
-}
-
-
-.evaluation-actions button {
-    flex: 1;
-
-    height: 34px;
-
-    border: none;
-
-    border-radius: 8px;
-
-    font-size: 8px;
-
-    cursor: pointer;
-}
-
-
-.view-btn {
-    background:
-        rgba(
-            49,
-            88,
-            108,
-            0.10
-        );
-
-    color: #31586c;
-}
-
-
-.edit-btn {
-    background:
-        rgba(
-            190,
-            144,
-            79,
-            0.11
-        );
-
-    color: #a27640;
-}
-
-
-.delete-btn {
-    background:
-        rgba(
-            151,
-            77,
-            77,
-            0.09
-        );
-
-    color: #985454;
-}
-
-
-
-/* =====================================================
-   فارغ / خطأ
-===================================================== */
-
-.empty-state {
-    grid-column:
-        1 / -1;
-
-    min-height: 250px;
-
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-
-    justify-content: center;
-
-    gap: 7px;
-
-    text-align: center;
-
-    color: #87959c;
-
-    font-size: 10px;
-
-    line-height: 1.8;
-}
-
-
-.error-state strong {
-    color: #985454;
-}
-
-
-.error-state small {
-    color: #8d7171;
-
-    font-size: 8px;
-}
-
-
-
-/* =====================================================
-   النوافذ
-===================================================== */
-
-.modal {
-    display: none;
-
-    position: fixed;
-
-    inset: 0;
-
-    z-index: 7000;
-
-    align-items: center;
-
-    justify-content: center;
-
-    padding: 20px;
-}
-
-
-.modal.show {
-    display: flex;
-}
-
-
-.modal-overlay {
-    position: absolute;
-
-    inset: 0;
-
-    background:
-        rgba(
-            37,
-            56,
-            66,
-            0.40
-        );
-
-    backdrop-filter:
-        blur(5px);
-}
-
-
-.modal-box {
-    position: relative;
-
-    z-index: 2;
-
-    width:
-        min(
-            720px,
-            100%
-        );
-
-    max-height: 90vh;
-
-    overflow-y: auto;
-
-    padding: 24px;
-
-    border-radius: 18px;
-
-    border-top:
-        3px solid
-        #c49a5c;
-
-    background:
-        rgba(
-            248,
-            246,
-            241,
-            0.99
-        );
-
-    box-shadow:
-        0 22px 55px
-        rgba(
-            38,
-            57,
-            68,
-            0.18
-        );
-}
-
-
-.details-box {
-    width:
-        min(
-            680px,
-            100%
-        );
-}
-
-
-.modal-header {
-    display: flex;
-
-    justify-content:
-        space-between;
-
-    align-items:
-        flex-start;
-
-    gap: 15px;
-
-    margin-bottom: 22px;
-
-    padding-bottom: 13px;
-
-    border-bottom:
-        1px solid
-        rgba(
-            60,
-            85,
-            98,
-            0.08
-        );
-}
-
-
-.modal-header h2 {
-    margin-bottom: 4px;
-
-    color: #2f5367;
-
-    font-size: 19px;
-}
-
-
-.modal-header p {
-    color: #7c8c94;
-
-    font-size: 9px;
-}
-
-
-.close-btn {
-    width: 34px;
-
-    height: 34px;
-
-    flex-shrink: 0;
-
-    border: none;
-
-    border-radius: 50%;
-
-    background:
-        rgba(
-            49,
-            88,
-            108,
-            0.07
-        );
-
-    color: #3b5b6c;
-
-    font-size: 20px;
-
-    cursor: pointer;
-}
-
-
-
-/* =====================================================
-   النموذج
-===================================================== */
-
-.form-grid {
-    display: grid;
-
-    grid-template-columns:
-        repeat(
-            2,
-            minmax(
-                0,
-                1fr
-            )
-        );
-
-    gap: 15px;
-}
-
-
-.form-group {
-    min-width: 0;
-
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 7px;
-}
-
-
-.full-width {
-    grid-column:
-        1 / -1;
-}
-
-
-.form-group label {
-    color: #526c79;
-
-    font-size: 9px;
-
-    font-weight: 600;
-}
-
-
-.form-group small {
-    color: #87959c;
-
-    font-size: 7px;
-
-    line-height: 1.6;
-}
-
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-    width: 100%;
-
-    border:
-        1px solid
-        rgba(
-            60,
-            85,
-            98,
-            0.16
-        );
-
-    border-radius: 10px;
-
-    background:
-        rgba(
-            255,
-            255,
-            255,
-            0.75
-        );
-
-    color: #3d5968;
-
-    outline: none;
-}
-
-
-.form-group input,
-.form-group select {
-    height: 44px;
-
-    padding:
-        0
-        12px;
-}
-
-
-.form-group textarea {
-    min-height: 105px;
-
-    padding: 12px;
-
-    resize: vertical;
-
-    line-height: 1.7;
-}
-
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-    border-color:
-        #c49a5c;
-
-    box-shadow:
-        0 0 0 3px
-        rgba(
-            196,
-            154,
-            92,
-            0.08
-        );
-}
-
-
-
-/* =====================================================
-   ملاحظة التقييم
-===================================================== */
-
-.evaluation-note {
-    margin-top: 17px;
-
-    padding:
-        13px
-        15px;
-
-    border-radius: 10px;
-
-    border-right:
-        3px solid
-        #c49a5c;
-
-    background:
-        rgba(
-            196,
-            154,
-            92,
-            0.07
-        );
-}
-
-
-.evaluation-note strong {
-    display: block;
-
-    margin-bottom: 5px;
-
-    color: #956d3c;
-
-    font-size: 9px;
-}
-
-
-.evaluation-note p {
-    color: #75858d;
-
-    font-size: 8px;
-
-    line-height: 1.8;
-}
-
-
-
-/* =====================================================
-   أزرار النافذة
-===================================================== */
-
-.modal-actions {
-    display: flex;
-
-    justify-content:
-        flex-end;
-
-    gap: 9px;
-
-    margin-top: 22px;
-
-    padding-top: 14px;
-
-    border-top:
-        1px solid
-        rgba(
-            60,
-            85,
-            98,
-            0.08
-        );
-}
-
-
-.modal-actions button {
-    min-width: 110px;
-
-    height: 42px;
-
-    border-radius: 9px;
-
-    font-size: 9px;
-
-    cursor: pointer;
-}
-
-
-.cancel-btn {
-    border:
-        1px solid
-        rgba(
-            49,
-            88,
-            108,
-            0.18
-        );
-
-    background:
-        transparent;
-
-    color: #526d7b;
-}
-
-
-.save-btn {
-    border: none;
-
-    background:
-        #31586c;
-
-    color: white;
-}
-
-
-.save-btn:disabled {
-    opacity: 0.55;
-
-    cursor: not-allowed;
-}
-
-
-
-/* =====================================================
-   تفاصيل التقييم
-===================================================== */
-
-.details-grid {
-    display: grid;
-
-    grid-template-columns:
-        repeat(
-            2,
-            minmax(
-                0,
-                1fr
-            )
-        );
-
-    gap: 12px;
-}
-
-
-.detail-item {
-    min-width: 0;
-
-    padding: 15px;
-
-    border-radius: 11px;
-
-    background:
-        rgba(
-            255,
-            255,
-            255,
-            0.50
-        );
-
-    border:
-        1px solid
-        rgba(
-            60,
-            85,
-            98,
-            0.09
-        );
-}
-
-
-.detail-item span {
-    display: block;
-
-    margin-bottom: 6px;
-
-    color: #839098;
-
-    font-size: 8px;
-}
-
-
-.detail-item strong {
-    display: block;
-
-    color: #405e6e;
-
-    font-size: 10px;
-
-    line-height: 1.8;
-
-    word-break: break-word;
-}
-
-
-.detail-item.full-detail {
-    grid-column:
-        1 / -1;
-}
-
-
-
-/* =====================================================
-   التابلت
-===================================================== */
-
-@media
-(max-width: 1050px)
-and
-(min-width: 701px) {
-
-
-    .main-content {
-        padding:
-            30px
-            25px
-            45px;
-    }
-
-
-    .evaluations-summary {
-        grid-template-columns:
-            repeat(
-                2,
-                1fr
-            );
-    }
-
-
-    .toolbar {
-        grid-template-columns:
-            1fr;
-    }
-
-
-    .evaluations-grid {
-        grid-template-columns:
-            repeat(
-                2,
-                1fr
-            );
-    }
-
-
-    .add-btn {
-        width:
-            fit-content;
+    } catch (error) {
+        console.error("خطأ حماية الصفحة:", error);
+        return false;
     }
 
 }
 
 
+async function loadEmployees() {
 
-/* =====================================================
-   الجوال
-===================================================== */
+    const { data, error } = await supabaseClient
+        .from("employees")
+        .select(`id, name, employee_number`)
+        .order("name", { ascending: true });
 
-@media (max-width: 700px) {
-
-
-    .evaluations-page {
-        display: block;
+    if (error) {
+        console.error("خطأ تحميل الموظفين:", error);
+        employees = [];
+        return;
     }
 
+    employees = data || [];
+
+    const select = document.getElementById("employeeSelect");
+
+    select.innerHTML = `<option value="">اختر الموظف</option>`;
+
+    employees.forEach(employee => {
+        const option = document.createElement("option");
+        option.value = employee.id;
+        option.textContent =
+            employee.name +
+            (employee.employee_number ? ` - ${employee.employee_number}` : "");
+        select.appendChild(option);
+    });
+
+}
 
 
-    /* الهيدر */
+async function loadTasks() {
 
-    .mobile-header {
-        width: 100%;
+    const { data, error } = await supabaseClient
+        .from("tasks")
+        .select(`id, task_name, status, assigned_employee_id`)
+        .order("id", { ascending: false });
 
-        height: 76px;
-
-        position: fixed;
-
-        top: 0;
-        right: 0;
-        left: 0;
-
-        z-index: 3000;
-
-        display: flex;
-
-        align-items: center;
-
-        gap: 10px;
-
-        padding:
-            10px
-            14px;
-
-        background:
-            linear-gradient(
-                90deg,
-                #5f7c8b 0%,
-                #3c6276 48%,
-                #274f65 100%
-            );
-
-        box-shadow:
-            0 4px 17px
-            rgba(
-                40,
-                61,
-                73,
-                0.10
-            );
+    if (error) {
+        console.error("خطأ تحميل المهام:", error);
+        tasks = [];
+        return;
     }
 
+    tasks = data || [];
 
-    .mobile-menu-btn {
-        width: 46px;
+}
 
-        height: 46px;
 
-        flex:
-            0 0 46px;
+async function loadTaskAssignments() {
 
-        display: flex;
+    const { data, error } = await supabaseClient
+        .from("task_assignments")
+        .select(`id, task_id, employee_id, decision_id, assigned_at, created_at`);
 
-        align-items: center;
-
-        justify-content: center;
-
-        border:
-            1px solid
-            rgba(
-                255,
-                255,
-                255,
-                0.50
-            );
-
-        border-radius: 14px;
-
-        background:
-            rgba(
-                249,
-                247,
-                242,
-                0.97
-            );
-
-        color: #31586c;
-
-        font-size: 22px;
-
-        font-weight: 700;
-
-        cursor: pointer;
+    if (error) {
+        console.warn("تعذر تحميل إسنادات المهام:", error);
+        taskAssignments = [];
+        return;
     }
 
+    taskAssignments = data || [];
 
-    .mobile-header-title h2 {
-        margin:
-            0 0 2px;
+}
 
-        color: white;
 
-        font-size: 18px;
+function getEmployeeAssignedTaskIds(employeeId) {
 
-        white-space: nowrap;
+    const id = Number(employeeId);
+    const taskIds = new Set();
+
+    taskAssignments.forEach(assignment => {
+        if (Number(assignment.employee_id) === id) {
+            taskIds.add(Number(assignment.task_id));
+        }
+    });
+
+    tasks.forEach(task => {
+        if (Number(task.assigned_employee_id) === id) {
+            taskIds.add(Number(task.id));
+        }
+    });
+
+    return [...taskIds];
+
+}
+
+
+function isTaskAssignedToEmployee(taskId, employeeId) {
+    return getEmployeeAssignedTaskIds(employeeId).includes(Number(taskId));
+}
+
+
+function fillTaskSelect(employeeId = null, selectedTaskId = null) {
+
+    const select = document.getElementById("taskSelect");
+
+    select.innerHTML = `<option value="">اختر المهمة</option>`;
+
+    if (!employeeId) {
+        const option = document.createElement("option");
+        option.value = "";
+        option.disabled = true;
+        option.textContent = "اختر الموظف أولاً";
+        select.appendChild(option);
+        return;
     }
 
+    const assignedTaskIds = getEmployeeAssignedTaskIds(employeeId);
 
-    .mobile-header-title span {
-        display: block;
+    const employeeTasks = tasks.filter(task =>
+        assignedTaskIds.includes(Number(task.id))
+    );
 
-        color:
-            rgba(
-                255,
-                255,
-                255,
-                0.65
-            );
-
-        font-size: 9px;
+    if (employeeTasks.length === 0) {
+        const option = document.createElement("option");
+        option.value = "";
+        option.disabled = true;
+        option.textContent = "لا توجد مهام مسندة لهذا الموظف";
+        select.appendChild(option);
+        return;
     }
 
-
-    .mobile-logo {
-        width: 54px;
-
-        height: 54px;
-
-        object-fit: contain;
-
-        margin-right: auto;
-    }
-
-
-
-    /* Sidebar */
-
-    .sidebar {
-        width: 275px;
-
-        max-width: 83vw;
-
-        height: 100dvh;
-
-        right: -300px;
-
-        z-index: 5000;
-
-        padding:
-            23px
-            18px;
-
-        transition:
-            right
-            0.30s
-            ease;
-    }
-
-
-    .sidebar.show {
-        right: 0;
-    }
-
-
-    .sidebar-logo {
-        margin-bottom: 20px;
-    }
-
-
-    .sidebar-logo img {
-        width: 88px;
-    }
-
-
-    .nav-link {
-        min-height: 43px;
-
-        font-size: 11px;
-    }
-
-
-
-    /* الطبقة */
-
-    .sidebar-overlay {
-        display: block;
-
-        position: fixed;
-
-        inset: 0;
-
-        z-index: 4000;
-
-        background:
-            rgba(
-                22,
-                36,
-                44,
-                0.42
-            );
-
-        opacity: 0;
-
-        visibility: hidden;
-
-        pointer-events: none;
-
-        transition:
-            0.25s ease;
-    }
-
-
-    .sidebar-overlay.show {
-        opacity: 1;
-
-        visibility: visible;
-
-        pointer-events: auto;
-    }
-
-
-
-    /* المحتوى */
-
-    .main-content {
-        width: 100%;
-
-        min-height: 100vh;
-
-        margin-right: 0;
-
-        padding:
-            102px
-            14px
-            40px;
-
-        background-attachment:
-            scroll;
-    }
-
-
-    .topbar h1 {
-        font-size: 24px;
-    }
-
-
-    .topbar p {
-        font-size: 10px;
-    }
-
-
-
-    /* الملخص */
-
-    .evaluations-summary {
-        grid-template-columns:
-            1fr
-            1fr;
-
-        gap: 8px;
-    }
-
-
-    .summary-item {
-        min-height: 82px;
-
-        padding: 12px;
-    }
-
-
-    .summary-item strong {
-        font-size: 20px;
-    }
-
-
-
-    /* الأدوات */
-
-    .toolbar {
-        display: grid;
-
-        grid-template-columns:
-            1fr;
-
-        gap: 9px;
-    }
-
-
-    .search-box,
-    .filters {
-        width: 100%;
-    }
-
-
-    .filters select {
-        height: 47px;
-    }
-
-
-    .search-box input,
-    .add-btn {
-        width: 100%;
-
-        height: 47px;
-    }
-
-
-
-    /* البطاقات */
-
-    .evaluations-container {
-        padding: 16px;
-    }
-
-
-    .evaluations-grid {
-        grid-template-columns:
-            1fr;
-
-        gap: 13px;
-    }
-
-
-    .evaluation-card {
-        padding: 16px;
-    }
-
-
-
-    /* المودال */
-
-    .modal {
-        padding: 11px;
-    }
-
-
-    .modal-box {
-        width: 100%;
-
-        max-height: 89dvh;
-
-        padding: 17px;
-    }
-
-
-    .form-grid,
-    .details-grid {
-        grid-template-columns:
-            1fr;
-    }
-
-
-    .full-width,
-    .detail-item.full-detail {
-        grid-column: auto;
-    }
-
-
-    .modal-actions {
-        display: grid;
-
-        grid-template-columns:
-            1fr
-            1fr;
-    }
-
-
-    .modal-actions button {
-        width: 100%;
-
-        min-width: 0;
+    employeeTasks.forEach(task => {
+        const option = document.createElement("option");
+        option.value = task.id;
+        option.textContent =
+            task.task_name + (task.status ? ` - ${task.status}` : "");
+        select.appendChild(option);
+    });
+
+    if (selectedTaskId) {
+        select.value = String(selectedTaskId);
     }
 
 }
 
 
+async function loadEvaluations() {
 
-/* =====================================================
-   الجوال الصغير
-===================================================== */
+    evaluationsGrid.innerHTML = `<div class="empty-state">جارٍ تحميل التقييمات...</div>`;
 
-@media (max-width: 430px) {
+    const { data, error } = await supabaseClient
+        .from("evaluations")
+        .select(`
+            id, employee_id, task_id, achievement_level, performance_rating,
+            notes, evaluation_date,
+            employees ( name, employee_number ),
+            tasks ( task_name )
+        `)
+        .order("id", { ascending: false });
 
-
-    .mobile-header {
-        height: 70px;
-
-        padding:
-            8px
-            12px;
+    if (error) {
+        console.error("خطأ تحميل التقييمات:", error);
+        evaluationsGrid.innerHTML = `
+            <div class="empty-state error-state">
+                <strong>تعذر تحميل التقييمات</strong>
+                <small>${escapeHtml(error.message)}</small>
+            </div>
+        `;
+        return;
     }
 
+    evaluations = data || [];
 
-    .mobile-menu-btn {
-        width: 43px;
+    updateSummary();
+    filterEvaluations();
 
-        height: 43px;
+}
 
-        flex-basis: 43px;
 
-        font-size: 20px;
+function updateSummary() {
+
+    const total = evaluations.length;
+    let average = 0;
+
+    if (total > 0) {
+        const sum = evaluations.reduce(
+            (result, evaluation) =>
+                result + Number(evaluation.performance_rating || 0),
+            0
+        );
+        average = sum / total;
     }
 
+    const excellent = evaluations.filter(
+        evaluation => Number(evaluation.performance_rating) === 5
+    ).length;
 
-    .mobile-header-title h2 {
-        font-size: 16px;
+    const needsImprovement = evaluations.filter(evaluation => {
+        return (
+            Number(evaluation.performance_rating) <= 2 ||
+            evaluation.achievement_level === "يحتاج تحسين"
+        );
+    }).length;
+
+    document.getElementById("summaryTotal").textContent = total;
+    document.getElementById("summaryAverage").textContent =
+        total ? average.toFixed(1) + "/5" : "0";
+    document.getElementById("summaryExcellent").textContent = excellent;
+    document.getElementById("summaryNeedsImprovement").textContent = needsImprovement;
+
+}
+
+
+function openEvaluationModal() {
+
+    document.getElementById("evaluationForm").reset();
+    document.getElementById("editEvaluationId").value = "";
+    document.getElementById("modalTitle").textContent = "إضافة تقييم";
+    document.getElementById("saveEvaluationBtn").textContent = "حفظ التقييم";
+
+    const today = new Date().toISOString().split("T")[0];
+    document.getElementById("evaluationDate").value = today;
+
+    fillTaskSelect();
+
+    evaluationModal.classList.add("show");
+    document.body.classList.add("modal-open");
+
+}
+
+
+function editEvaluation(id) {
+
+    const evaluation = evaluations.find(
+        item => Number(item.id) === Number(id)
+    );
+
+    if (!evaluation) return;
+
+    document.getElementById("editEvaluationId").value = evaluation.id;
+    document.getElementById("employeeSelect").value = evaluation.employee_id;
+
+    fillTaskSelect(evaluation.employee_id, evaluation.task_id);
+
+    document.getElementById("achievementLevel").value = evaluation.achievement_level;
+    document.getElementById("performanceRating").value = evaluation.performance_rating;
+    document.getElementById("evaluationNotes").value = evaluation.notes || "";
+    document.getElementById("evaluationDate").value = evaluation.evaluation_date;
+    document.getElementById("modalTitle").textContent = "تعديل التقييم";
+    document.getElementById("saveEvaluationBtn").textContent = "حفظ التعديلات";
+
+    evaluationModal.classList.add("show");
+    document.body.classList.add("modal-open");
+
+}
+
+
+async function saveEvaluation(event) {
+
+    event.preventDefault();
+
+    const editId = document.getElementById("editEvaluationId").value;
+    const employeeId = Number(document.getElementById("employeeSelect").value);
+    const taskId = Number(document.getElementById("taskSelect").value);
+
+    if (!employeeId || !taskId) {
+        alert("اختر الموظف والمهمة.");
+        return;
     }
 
+    const selectedTask = tasks.find(task => Number(task.id) === taskId);
 
-    .mobile-logo {
-        width: 49px;
-
-        height: 49px;
+    if (!selectedTask) {
+        alert("تعذر العثور على المهمة.");
+        return;
     }
 
-
-    .main-content {
-        padding:
-            92px
-            11px
-            35px;
+    if (!isTaskAssignedToEmployee(taskId, employeeId)) {
+        alert("لا يمكن تسجيل التقييم. هذه المهمة غير مسندة لهذا الموظف.");
+        return;
     }
 
+    const achievementLevel = document.getElementById("achievementLevel").value;
+    const performanceRating = Number(document.getElementById("performanceRating").value);
+    const evaluationDate = document.getElementById("evaluationDate").value;
 
-    .evaluations-summary {
-        grid-template-columns:
-            1fr
-            1fr;
+    if (!achievementLevel || !performanceRating || !evaluationDate) {
+        alert("أكمل جميع البيانات المطلوبة.");
+        return;
     }
 
+    const button = document.getElementById("saveEvaluationBtn");
+    button.disabled = true;
+    button.textContent = "جارٍ الحفظ...";
 
-    .evaluation-info {
-        grid-template-columns:
-            1fr;
-    }
+    const evaluationData = {
+        employee_id: employeeId,
+        task_id: taskId,
+        achievement_level: achievementLevel,
+        performance_rating: performanceRating,
+        notes: document.getElementById("evaluationNotes").value.trim() || null,
+        evaluation_date: evaluationDate
+    };
 
+    try {
 
-    .evaluation-actions {
-        display: grid;
+        if (editId) {
 
-        grid-template-columns:
-            1fr
-            1fr
-            1fr;
-    }
+            const { error } = await supabaseClient
+                .from("evaluations")
+                .update(evaluationData)
+                .eq("id", Number(editId));
 
+            if (error) throw error;
 
-    .modal-actions {
-        grid-template-columns:
-            1fr;
+            alert("تم تعديل التقييم بنجاح.");
+
+        } else {
+
+            const { data: existingEvaluation, error: checkError } =
+                await supabaseClient
+                    .from("evaluations")
+                    .select("id")
+                    .eq("employee_id", employeeId)
+                    .eq("task_id", taskId)
+                    .maybeSingle();
+
+            if (checkError) throw checkError;
+
+            if (existingEvaluation) {
+                alert("يوجد تقييم مسجل مسبقاً لهذا الموظف في هذه المهمة. يمكنك تعديل التقييم الموجود.");
+                return;
+            }
+
+            const { error } = await supabaseClient
+                .from("evaluations")
+                .insert([evaluationData]);
+
+            if (error) throw error;
+
+            alert("تمت إضافة التقييم بنجاح.");
+
+        }
+
+        closeEvaluationModal();
+        await loadEvaluations();
+
+    } catch (error) {
+
+        console.error("خطأ حفظ التقييم:", error);
+        alert("تعذر حفظ التقييم.\n\n" + (error.message || ""));
+
+    } finally {
+
+        button.disabled = false;
+        button.textContent = editId ? "حفظ التعديلات" : "حفظ التقييم";
+
     }
 
 }
+
+
+function renderEvaluations(list) {
+
+    evaluationsGrid.innerHTML = "";
+    document.getElementById("evaluationsCount").textContent = list.length + " تقييم";
+
+    if (!list || list.length === 0) {
+        evaluationsGrid.innerHTML = `<div class="empty-state">لا توجد تقييمات حالياً</div>`;
+        return;
+    }
+
+    list.forEach(evaluation => {
+
+        const employeeName = evaluation.employees?.name || "-";
+        const taskName = evaluation.tasks?.task_name || "-";
+
+        const card = document.createElement("article");
+        card.className = "evaluation-card";
+
+        card.innerHTML = `
+            <div class="card-top">
+                <div>
+                    <span class="evaluation-label">تقييم موظف</span>
+                    <h3>${escapeHtml(employeeName)}</h3>
+                    <p class="task-name">${escapeHtml(taskName)}</p>
+                </div>
+                <div class="rating-badge ${getRatingClass(evaluation.performance_rating)}">
+                    <span>التقييم</span>
+                    <strong>${evaluation.performance_rating}/5</strong>
+                </div>
+            </div>
+
+            <div class="evaluation-info">
+                <div class="info-item">
+                    <span>مستوى الإنجاز</span>
+                    <strong>${escapeHtml(evaluation.achievement_level)}</strong>
+                </div>
+                <div class="info-item">
+                    <span>تاريخ التقييم</span>
+                    <strong>${formatDate(evaluation.evaluation_date)}</strong>
+                </div>
+            </div>
+
+            <div class="notes-preview">
+                <span>ملاحظات المسؤول</span>
+                <p>${escapeHtml(evaluation.notes || "لا توجد ملاحظات")}</p>
+            </div>
+
+            <div class="evaluation-actions">
+                <button type="button" class="view-btn" data-action="view" data-id="${evaluation.id}">عرض</button>
+                <button type="button" class="edit-btn" data-action="edit" data-id="${evaluation.id}">تعديل</button>
+                <button type="button" class="delete-btn" data-action="delete" data-id="${evaluation.id}">حذف</button>
+            </div>
+        `;
+
+        evaluationsGrid.appendChild(card);
+
+    });
+
+}
+
+
+function getRatingClass(rating) {
+    const value = Number(rating);
+    if (value >= 5) return "excellent";
+    if (value >= 4) return "very-good";
+    if (value >= 3) return "good";
+    if (value >= 2) return "acceptable";
+    return "poor";
+}
+
+
+function viewEvaluation(id) {
+
+    const evaluation = evaluations.find(item => Number(item.id) === Number(id));
+
+    if (!evaluation) return;
+
+    document.getElementById("evaluationDetails").innerHTML = `
+        <div class="detail-item">
+            <span>اسم الموظف</span>
+            <strong>${escapeHtml(evaluation.employees?.name || "-")}</strong>
+        </div>
+
+        <div class="detail-item">
+            <span>الرقم الوظيفي</span>
+            <strong>${escapeHtml(evaluation.employees?.employee_number || "-")}</strong>
+        </div>
+
+        <div class="detail-item">
+            <span>اسم المهمة</span>
+            <strong>${escapeHtml(evaluation.tasks?.task_name || "-")}</strong>
+        </div>
+
+        <div class="detail-item">
+            <span>مستوى الإنجاز</span>
+            <strong>${escapeHtml(evaluation.achievement_level)}</strong>
+        </div>
+
+        <div class="detail-item">
+            <span>تقييم الأداء</span>
+            <strong>${evaluation.performance_rating} من 5</strong>
+        </div>
+
+        <div class="detail-item">
+            <span>نسبة الأداء</span>
+            <strong>${Math.round(Number(evaluation.performance_rating) / 5 * 100)}%</strong>
+        </div>
+
+        <div class="detail-item">
+            <span>تاريخ التقييم</span>
+            <strong>${formatDate(evaluation.evaluation_date)}</strong>
+        </div>
+
+        <div class="detail-item full-detail">
+            <span>ملاحظات المسؤول</span>
+            <strong>${escapeHtml(evaluation.notes || "لا توجد ملاحظات")}</strong>
+        </div>
+    `;
+
+    detailsModal.classList.add("show");
+    document.body.classList.add("modal-open");
+
+}
+
+
+async function deleteEvaluation(id) {
+
+    const evaluation = evaluations.find(item => Number(item.id) === Number(id));
+
+    if (!evaluation) return;
+
+    const confirmed = confirm("هل تريد حذف هذا التقييم؟");
+
+    if (!confirmed) return;
+
+    const { error } = await supabaseClient
+        .from("evaluations")
+        .delete()
+        .eq("id", Number(id));
+
+    if (error) {
+        console.error(error);
+        alert("تعذر حذف التقييم.\n\n" + error.message);
+        return;
+    }
+
+    alert("تم حذف التقييم بنجاح.");
+    await loadEvaluations();
+
+}
+
+
+function filterEvaluations() {
+
+    const search = document.getElementById("searchInput").value.trim().toLowerCase();
+    const rating = document.getElementById("ratingFilter").value;
+
+    const filtered = evaluations.filter(evaluation => {
+
+        const employee = String(evaluation.employees?.name || "").toLowerCase();
+        const employeeNumber = String(evaluation.employees?.employee_number || "").toLowerCase();
+        const task = String(evaluation.tasks?.task_name || "").toLowerCase();
+
+        const matchSearch =
+            !search ||
+            employee.includes(search) ||
+            employeeNumber.includes(search) ||
+            task.includes(search);
+
+        const matchRating =
+            !rating || Number(evaluation.performance_rating) === Number(rating);
+
+        return matchSearch && matchRating;
+
+    });
+
+    renderEvaluations(filtered);
+
+}
+
+
+function closeEvaluationModal() {
+    evaluationModal.classList.remove("show");
+    document.body.classList.remove("modal-open");
+}
+
+function closeDetailsModal() {
+    detailsModal.classList.remove("show");
+    document.body.classList.remove("modal-open");
+}
+
+
+function formatDate(value) {
+
+    if (!value) return "-";
+
+    const date = new Date(value + "T00:00:00");
+
+    if (Number.isNaN(date.getTime())) return "-";
+
+    return date.toLocaleDateString("ar-SA-u-ca-gregory", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+    });
+
+}
+
+
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+
+function openSidebar() {
+    sidebar.classList.add("show");
+    sidebarOverlay.classList.add("show");
+    document.body.classList.add("menu-open");
+}
+
+function closeSidebar() {
+    sidebar.classList.remove("show");
+    sidebarOverlay.classList.remove("show");
+    document.body.classList.remove("menu-open");
+}
+
+
+function clearLocalSession() {
+    localStorage.removeItem("miyarRole");
+    localStorage.removeItem("miyarEmail");
+    localStorage.removeItem("pendingDecision");
+    localStorage.removeItem("selectedTaskId");
+}
+
+
+async function logout() {
+
+    try {
+        await supabaseClient.auth.signOut();
+    } catch (error) {
+        console.error(error);
+    }
+
+    clearLocalSession();
+    window.location.href = "login.html";
+
+}
+
+
+document.getElementById("addEvaluationBtn").addEventListener("click", openEvaluationModal);
+document.getElementById("evaluationForm").addEventListener("submit", saveEvaluation);
+document.getElementById("searchInput").addEventListener("input", filterEvaluations);
+document.getElementById("ratingFilter").addEventListener("change", filterEvaluations);
+
+document.getElementById("employeeSelect").addEventListener("change", function () {
+    fillTaskSelect(this.value ? Number(this.value) : null);
+});
+
+document.getElementById("cancelEvaluationBtn").addEventListener("click", closeEvaluationModal);
+document.getElementById("closeEvaluationBtn").addEventListener("click", closeEvaluationModal);
+document.getElementById("evaluationModalOverlay").addEventListener("click", closeEvaluationModal);
+document.getElementById("closeDetailsBtn").addEventListener("click", closeDetailsModal);
+document.getElementById("detailsModalOverlay").addEventListener("click", closeDetailsModal);
+
+mobileMenuBtn.addEventListener("click", openSidebar);
+sidebarOverlay.addEventListener("click", closeSidebar);
+
+document.querySelectorAll(".nav-link").forEach(link => {
+    link.addEventListener("click", closeSidebar);
+});
+
+document.getElementById("logoutBtn").addEventListener("click", logout);
+
+evaluationsGrid.addEventListener("click", event => {
+
+    const button = event.target.closest("button[data-action]");
+    if (!button) return;
+
+    const action = button.dataset.action;
+    const id = Number(button.dataset.id);
+
+    if (action === "view") viewEvaluation(id);
+    else if (action === "edit") editEvaluation(id);
+    else if (action === "delete") deleteEvaluation(id);
+
+});
+
+
+window.addEventListener("focus", async function () {
+
+    try {
+        await Promise.all([loadTasks(), loadTaskAssignments()]);
+    } catch (error) {
+        console.warn("تعذر تحديث بيانات المهام:", error);
+    }
+
+});
+
+
+async function startPage() {
+
+    const allowed = await protectPage();
+
+    if (!allowed) return;
+
+    try {
+
+        await Promise.all([
+            loadEmployees(),
+            loadTasks(),
+            loadTaskAssignments()
+        ]);
+
+        await loadEvaluations();
+
+    } catch (error) {
+
+        console.error("خطأ تشغيل صفحة التقييمات:", error);
+        evaluationsGrid.innerHTML = `<div class="empty-state">تعذر تحميل بيانات الصفحة</div>`;
+
+    }
+
+}
+
+startPage();
+
+</script>
+
+
+</body>
+
+</html>
