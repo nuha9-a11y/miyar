@@ -5933,141 +5933,148 @@ value,
 /* تحديث حالة المهمة بعد قرار الاعتماد */
 /* ========================================= */
 
-async function refreshTaskAfterAssignmentDecision(
-taskId
-){
+async function refreshTaskAfterAssignmentDecision(taskId) {
 
-const {
-data,
-error
-} =
-await supabaseClient
-.from("task_assignments")
-.select(
-"id,status"
-)
-.eq(
-"task_id",
-Number(taskId)
-);
+    try {
 
+        const {
+            data: assignments,
+            error
+        } = await supabaseClient
+            .from("task_assignments")
+            .select("id,status")
+            .eq("task_id", Number(taskId));
 
-if(error){
+        if (error) {
+            throw error;
+        }
 
-throw error;
+        const taskAssignmentsList = assignments || [];
 
+        if (!taskAssignmentsList.length) {
+            return false;
+        }
+
+        const allCompleted = taskAssignmentsList.every(assignment => {
+
+            const status = normalizeText(assignment.status);
+
+            return (
+                status === "completed" ||
+                status === normalizeText("مكتملة")
+            );
+
+        });
+
+        const newTaskStatus = allCompleted
+            ? "مكتملة"
+            : "قيد التنفيذ";
+
+        const {
+            error: updateTaskError
+        } = await supabaseClient
+            .from("tasks")
+            .update({
+                status: newTaskStatus
+            })
+            .eq("id", Number(taskId));
+
+        if (updateTaskError) {
+            throw updateTaskError;
+        }
+
+        return allCompleted;
+
+    } catch (error) {
+
+        console.error(
+            "خطأ أثناء تحديث حالة المهمة:",
+            error
+        );
+
+        throw error;
+    }
 }
 
 
-const assignments =
-data || [];
+/* ========================================= */
+/* اعتماد الإنجاز */
+/* ========================================= */
 
+async function approveTaskCompletion(
+    assignmentId,
+    taskId
+) {
 
-if(
-!assignments.length
-){
+    const confirmed = confirm(
+        "هل تريد اعتماد إنجاز الموظف لهذه المهمة؟"
+    );
 
-return;
+    if (!confirmed) {
+        return;
+    }
 
-}
+    try {
 
+        const now = new Date().toISOString();
 
-const allCompleted =
-assignments.every(
-assignment => {
+        const {
+            error: assignmentError
+        } = await supabaseClient
+            .from("task_assignments")
+            .update({
+                status: "completed",
+                completed_at: now,
+                reviewed_at: now,
+                review_note: null
+            })
+            .eq("id", Number(assignmentId));
 
-const status =
-normalizeText(
-assignment.status
-);
+        if (assignmentError) {
+            throw assignmentError;
+        }
 
+        const taskCompleted =
+            await refreshTaskAfterAssignmentDecision(
+                taskId
+            );
 
-return (
+        await loadTasks();
 
-status ===
-"completed"
+        await loadTaskAssignments();
 
-||
+        if (taskCompleted) {
 
-status ===
-normalizeText(
-"مكتملة"
-)
+            alert(
+                "تم اعتماد الإنجاز وأصبحت المهمة مكتملة."
+            );
 
-);
+        } else {
 
-}
-);
+            alert(
+                "تم اعتماد إنجاز الموظف، وما زالت المهمة قيد التنفيذ حتى يكتمل اعتماد جميع الموظفين المسندة لهم."
+            );
 
+        }
 
-if(
-allCompleted
-){
+    } catch (error) {
 
-const {
-error:updateError
-} =
-await supabaseClient
-.from("tasks")
-.update({
+        console.error(
+            "خطأ اعتماد الإنجاز:",
+            error
+        );
 
-status:
-"مكتملة"
+        alert(
+            "تعذر اعتماد الإنجاز.\n\n" +
+            (
+                error.message ||
+                "حدث خطأ غير متوقع."
+            )
+        );
 
-})
-.eq(
-"id",
-Number(taskId)
-);
-
-
-if(
-updateError
-){
-
-throw updateError;
-
-}
-
-}
-
-else{
-
-const {
-error:updateError
-} =
-await supabaseClient
-.from("tasks")
-.update({
-
-status:
-"قيد التنفيذ"
-
-})
-.eq(
-"id",
-Number(taskId)
-)
-.neq(
-"status",
-"مكتملة"
-);
-
-
-if(
-updateError
-){
-
-console.warn(
-updateError
-);
+    }
 
 }
-
-}
-
-}
-
 
 /* ========================================= */
 /* اعتماد الإنجاز */
