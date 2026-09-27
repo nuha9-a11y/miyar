@@ -2,35 +2,58 @@
 <html lang="ar" dir="rtl">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>معيار | المهام</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <link rel="stylesheet" href="tasks.css">
+    <title>معيار | مهامي</title>
+
+    <link
+        rel="stylesheet"
+        href="employee-tasks.css"
+    >
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 </head>
+
 
 <body>
 
-<div class="tasks-page">
+
+<div class="employee-page">
+
 
     <!-- هيدر الجوال -->
+
     <header class="mobile-header">
 
         <button
             class="mobile-menu-btn"
             id="mobileMenuBtn"
             type="button"
+            aria-label="فتح القائمة"
         >
             ☰
         </button>
 
+
         <div class="mobile-header-title">
-            <h2>المهام</h2>
-            <span>معيار</span>
+
+            <h2>
+                مهامي
+            </h2>
+
+            <span>
+                معيار
+            </span>
+
         </div>
+
 
         <img
             src="assets/logo.png"
@@ -48,6 +71,7 @@
 
 
     <!-- القائمة الجانبية -->
+
     <aside
         class="sidebar"
         id="sidebar"
@@ -63,42 +87,61 @@
         </div>
 
 
+        <div class="employee-sidebar-card">
+
+            <span>
+                بوابة الموظف
+            </span>
+
+            <strong id="sidebarEmployeeName">
+                الموظف
+            </strong>
+
+        </div>
+
+
         <nav class="sidebar-nav">
 
-            <a href="dashboard.html" class="nav-link">
-                لوحة التحكم
+            <a
+                href="employee-home.html"
+                class="nav-link"
+            >
+                الرئيسية
             </a>
 
-            <a href="employees.html" class="nav-link">
-                الموظفون
+            <a
+                href="employee-tasks.html"
+                class="nav-link active"
+            >
+                مهامي
             </a>
 
-            <a href="projects.html" class="nav-link">
-                المشاريع
+            <a
+                href="employee-projects.html"
+                class="nav-link"
+            >
+                مشاريعي
             </a>
 
-            <a href="tasks.html" class="nav-link active">
-                المهام
+            <a
+                href="employee-profile.html"
+                class="nav-link"
+            >
+                ملفي الوظيفي
             </a>
 
-            <a href="matching.html" class="nav-link">
-                المطابقة والترشيح
+            <a
+                href="employee-evaluations.html"
+                class="nav-link"
+            >
+                تقييماتي
             </a>
 
-            <a href="evaluations.html" class="nav-link">
-                التقييمات
-            </a>
-
-            <a href="decisions.html" class="nav-link">
-                القرارات
-            </a>
-
-            <a href="leaves.html" class="nav-link">
-                طلبات الإجازات
-            </a>
-
-            <a href="reports.html" class="nav-link">
-                التقارير
+            <a
+                href="employee-leaves.html"
+                class="nav-link"
+            >
+                إجازاتي
             </a>
 
         </nav>
@@ -115,112 +158,104 @@
     </aside>
 
 
-    <!-- المحتوى -->
+    <!-- المحتوى الرئيسي -->
+
     <main class="main-content">
+
 
         <header class="topbar">
 
             <span class="page-badge">
-                إدارة المهام
+                مهام الموظف
             </span>
 
             <h1>
-                المهام
+                مهامي
             </h1>
 
             <p>
-                إنشاء المهام وتحليل متطلباتها وتحديد معايير المطابقة
-                ومتابعة التنفيذ والمواعيد.
+                متابعة المهام المسندة لك وتحديث حالة التنفيذ
             </p>
 
         </header>
 
 
-        <!-- الملخص -->
-        <section class="tasks-summary">
+        <!-- ملخص المهام -->
 
-            <div class="summary-item">
-                <span>إجمالي المهام</span>
-                <strong id="summaryTotal">0</strong>
-            </div>
+        <section class="summary-grid">
 
-            <div class="summary-item">
-                <span>مهام جديدة</span>
-                <strong id="summaryNew">0</strong>
-            </div>
+            <article class="summary-card">
 
-            <div class="summary-item">
-                <span>قيد التنفيذ</span>
-                <strong id="summaryRunning">0</strong>
-            </div>
-
-            <div class="summary-item">
-                <span>مكتملة</span>
-                <strong id="summaryCompleted">0</strong>
-            </div>
-
-            <div class="summary-item late-summary">
-                <span>مهام متأخرة</span>
-                <strong id="summaryLate">0</strong>
-            </div>
-
-            <div class="summary-item">
-                <span>غير مسندة</span>
-                <strong id="summaryUnassigned">0</strong>
-            </div>
-
-        </section>
-
-
-        <!-- طلبات اعتماد إنجاز الموظفين -->
-        <section
-            id="completionApprovalsSection"
-            class="tasks-container"
-            style="margin-bottom:18px;display:none;"
-        >
-
-            <div class="section-title">
-
-                <div>
-                    <h2>
-                        طلبات اعتماد إنجاز المهام
-                    </h2>
-
-                    <p>
-                        المهام التي رفعها الموظفون وتنتظر مراجعة المسؤول.
-                    </p>
-                </div>
-
-                <span id="pendingApprovalsCount">
-                    0 طلب
+                <span>
+                    جميع المهام
                 </span>
 
-            </div>
+                <strong id="allTasksCount">
+                    0
+                </strong>
+
+            </article>
 
 
-            <div
-                class="tasks-grid"
-                id="completionApprovalsGrid"
-            ></div>
+            <article class="summary-card">
+
+                <span>
+                    قيد التنفيذ
+                </span>
+
+                <strong id="currentTasksCount">
+                    0
+                </strong>
+
+            </article>
+
+
+            <article class="summary-card">
+
+                <span>
+                    بانتظار الاعتماد
+                </span>
+
+                <strong id="pendingTasksCount">
+                    0
+                </strong>
+
+            </article>
+
+
+            <article class="summary-card">
+
+                <span>
+                    مهام مكتملة
+                </span>
+
+                <strong id="completedTasksCount">
+                    0
+                </strong>
+
+            </article>
 
         </section>
 
 
         <!-- البحث والفلاتر -->
+
         <section class="toolbar">
+
 
             <div class="search-box">
 
                 <input
                     type="text"
                     id="searchInput"
-                    placeholder="ابحث باسم المهمة أو المشروع أو الموظف..."
+                    placeholder="ابحث باسم المهمة أو المشروع..."
                 >
 
             </div>
 
 
             <div class="filters">
+
 
                 <select id="statusFilter">
 
@@ -236,16 +271,12 @@
                         قيد التنفيذ
                     </option>
 
+                    <option value="بانتظار الاعتماد">
+                        بانتظار الاعتماد
+                    </option>
+
                     <option value="مكتملة">
                         مكتملة
-                    </option>
-
-                    <option value="متوقفة">
-                        متوقفة
-                    </option>
-
-                    <option value="متأخرة">
-                        متأخرة
                     </option>
 
                 </select>
@@ -273,37 +304,35 @@
 
             </div>
 
-
-            <button
-                class="add-btn"
-                type="button"
-                id="addTaskBtn"
-            >
-                + إضافة مهمة
-            </button>
-
         </section>
 
 
         <!-- قائمة المهام -->
+
         <section class="tasks-container">
 
+
             <div class="section-title">
+
 
                 <div>
 
                     <h2>
-                        قائمة المهام
+                        قائمة مهامي
                     </h2>
 
                     <p>
-                        متابعة المهام والإسناد ومتطلبات المطابقة والمواعيد
+                        المهام المسندة لك وحالة تنفيذ كل مهمة
                     </p>
 
                 </div>
 
-                <span id="tasksCount">
-                    0 مهمة
+
+                <span
+                    class="tasks-count"
+                    id="tasksCount"
+                >
+                    0 مهام
                 </span>
 
             </div>
@@ -320,550 +349,17 @@
 
             </div>
 
+
         </section>
+
 
     </main>
 
-</div>
-
-
-
-<!-- =========================================================
-     نافذة إضافة / تعديل المهمة
-========================================================= -->
-
-<div
-    class="modal"
-    id="taskModal"
->
-
-    <div
-        class="modal-overlay"
-        id="taskModalOverlay"
-    ></div>
-
-
-    <div class="modal-box">
-
-        <div class="modal-header">
-
-            <div>
-
-                <h2 id="modalTitle">
-                    إضافة مهمة
-                </h2>
-
-                <p>
-                    بيانات المهمة وتحليل متطلبات المطابقة
-                </p>
-
-            </div>
-
-
-            <button
-                class="close-btn"
-                id="closeTaskModalBtn"
-                type="button"
-            >
-                ×
-            </button>
-
-        </div>
-
-
-        <form id="taskForm">
-
-            <input
-                type="hidden"
-                id="editTaskId"
-            >
-
-
-            <div class="form-grid">
-
-
-                <div class="form-group">
-
-                    <label for="taskName">
-                        اسم المهمة
-                    </label>
-
-                    <input
-                        type="text"
-                        id="taskName"
-                        placeholder="مثال: تطوير واجهة تسجيل الدخول"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="taskProject">
-                        المشروع المرتبط
-                    </label>
-
-                    <select
-                        id="taskProject"
-                        required
-                    >
-
-                        <option value="">
-                            اختر المشروع
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="taskPriority">
-                        الأولوية
-                    </label>
-
-                    <select id="taskPriority">
-
-                        <option value="متوسطة">
-                            متوسطة
-                        </option>
-
-                        <option value="عالية">
-                            عالية
-                        </option>
-
-                        <option value="منخفضة">
-                            منخفضة
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="taskStatus">
-                        حالة المهمة
-                    </label>
-
-                    <select id="taskStatus">
-
-                        <option value="جديدة">
-                            جديدة
-                        </option>
-
-                        <option value="قيد التنفيذ">
-                            قيد التنفيذ
-                        </option>
-
-                        <option value="مكتملة">
-                            مكتملة
-                        </option>
-
-                        <option value="متوقفة">
-                            متوقفة
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="taskDueDate">
-                        تاريخ الاستحقاق
-                    </label>
-
-                    <input
-                        type="date"
-                        id="taskDueDate"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="assignedEmployee">
-                        الموظف المسند إليه
-                    </label>
-
-                    <select id="assignedEmployee">
-
-                        <option value="">
-                            غير مسند
-                        </option>
-
-                    </select>
-
-                    <small>
-                        يمكن ترك المهمة غير مسندة ثم استخدام المطابقة والترشيح.
-                    </small>
-
-                </div>
-
-
-                <div class="form-group full-width">
-
-                    <label for="taskDescription">
-                        وصف المهمة
-                    </label>
-
-                    <textarea
-                        id="taskDescription"
-                        placeholder="اكتب وصفًا واضحًا ومفصلًا للمهمة"
-                        required
-                    ></textarea>
-
-                </div>
-
-
-                <!-- المتطلبات -->
-                <div class="requirements-section full-width">
-
-                    <div class="requirements-header">
-
-                        <div>
-
-                            <h3>
-                                تحليل ومتطلبات المهمة
-                            </h3>
-
-                            <p>
-                                يتم تحليل المهمة وتحديد متطلباتها ثم تستخدم
-                                هذه البيانات في المطابقة والترشيح.
-                            </p>
-
-                        </div>
-
-
-                        <button
-                            type="button"
-                            class="add-requirement-btn"
-                            id="addRequirementBtn"
-                        >
-                            + إضافة مهارة
-                        </button>
-
-                    </div>
-
-
-                    <!-- تحليل المهمة -->
-                    <div class="ai-analysis-box">
-
-                        <div class="ai-analysis-head">
-
-                            <div>
-
-                                <strong class="ai-analysis-title">
-                                    تحليل متطلبات المهمة
-                                </strong>
-
-                                <span
-                                    id="aiAnalysisStatus"
-                                    class="ai-analysis-status"
-                                >
-                                    اكتب اسم المهمة ووصفها ثم اضغط تحليل المتطلبات.
-                                </span>
-
-                            </div>
-
-
-                            <button
-                                type="button"
-                                id="analyzeTaskBtn"
-                                class="ai-analysis-btn"
-                            >
-                                تحليل متطلبات المهمة
-                            </button>
-
-                        </div>
-
-
-                        <div
-                            id="aiAnalysisResult"
-                            class="ai-analysis-result"
-                        ></div>
-
-                    </div>
-
-
-                    <div class="requirements-general">
-
-
-                        <div class="form-group">
-
-                            <label for="taskEmployeesRequired">
-                                عدد الموظفين المطلوب للمهمة
-                            </label>
-
-                            <input
-                                type="number"
-                                id="taskEmployeesRequired"
-                                min="1"
-                                max="5"
-                                value="1"
-                                required
-                            >
-
-                            <small>
-                                هذا العدد للمهمة كاملة، وليس لكل مهارة.
-                            </small>
-
-                        </div>
-
-
-                        <div class="form-group">
-
-                            <label for="requiredExperience">
-                                سنوات الخبرة المطلوبة
-                            </label>
-
-                            <input
-                                type="number"
-                                id="requiredExperience"
-                                min="0"
-                                value="1"
-                                required
-                            >
-
-                        </div>
-
-
-                        <div class="form-group">
-
-                            <label for="requiredJobLevel">
-                                المستوى الوظيفي المطلوب
-                            </label>
-
-                            <select
-                                id="requiredJobLevel"
-                                required
-                            >
-
-                                <option value="مبتدئ">
-                                    مبتدئ
-                                </option>
-
-                                <option
-                                    value="متوسط"
-                                    selected
-                                >
-                                    متوسط
-                                </option>
-
-                                <option value="متقدم">
-                                    متقدم
-                                </option>
-
-                                <option value="خبير">
-                                    خبير
-                                </option>
-
-                            </select>
-
-                        </div>
-
-
-                        <div class="form-group">
-
-                            <label for="requiredAvailability">
-                                الحد الأدنى للتفرغ %
-                            </label>
-
-                            <input
-                                type="number"
-                                id="requiredAvailability"
-                                min="0"
-                                max="100"
-                                value="50"
-                                required
-                            >
-
-                        </div>
-
-
-                        <div class="form-group">
-
-                            <label for="requiredPerformance">
-                                الحد الأدنى للأداء %
-                            </label>
-
-                            <input
-                                type="number"
-                                id="requiredPerformance"
-                                min="0"
-                                max="100"
-                                value="70"
-                                required
-                            >
-
-                        </div>
-
-                    </div>
-
-
-                    <div id="requirementsContainer"></div>
-
-
-                    <!-- الأوزان -->
-                    <div class="criteria-weights-box">
-
-                        <h4 class="criteria-weights-title">
-                            أوزان معايير المطابقة
-                        </h4>
-
-                        <p class="criteria-weights-note">
-                            يمكن للمسؤول مراجعة الأوزان وتعديلها قبل الحفظ.
-                            يجب أن يكون مجموع الأوزان 100%.
-                        </p>
-
-
-                        <div class="criteria-weights-grid">
-
-
-                            <div class="form-group">
-
-                                <label for="skillsWeight">
-                                    المهارات %
-                                </label>
-
-                                <input
-                                    type="number"
-                                    id="skillsWeight"
-                                    min="0"
-                                    max="100"
-                                    value="40"
-                                    required
-                                >
-
-                            </div>
-
-
-                            <div class="form-group">
-
-                                <label for="experienceWeight">
-                                    الخبرة %
-                                </label>
-
-                                <input
-                                    type="number"
-                                    id="experienceWeight"
-                                    min="0"
-                                    max="100"
-                                    value="20"
-                                    required
-                                >
-
-                            </div>
-
-
-                            <div class="form-group">
-
-                                <label for="jobLevelWeight">
-                                    المستوى الوظيفي %
-                                </label>
-
-                                <input
-                                    type="number"
-                                    id="jobLevelWeight"
-                                    min="0"
-                                    max="100"
-                                    value="15"
-                                    required
-                                >
-
-                            </div>
-
-
-                            <div class="form-group">
-
-                                <label for="availabilityWeight">
-                                    التفرغ %
-                                </label>
-
-                                <input
-                                    type="number"
-                                    id="availabilityWeight"
-                                    min="0"
-                                    max="100"
-                                    value="15"
-                                    required
-                                >
-
-                            </div>
-
-
-                            <div class="form-group">
-
-                                <label for="performanceWeight">
-                                    الأداء %
-                                </label>
-
-                                <input
-                                    type="number"
-                                    id="performanceWeight"
-                                    min="0"
-                                    max="100"
-                                    value="10"
-                                    required
-                                >
-
-                            </div>
-
-                        </div>
-
-
-                        <div
-                            id="criteriaTotalText"
-                            class="criteria-total-text"
-                        >
-                            المجموع الحالي: 100%
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="modal-actions">
-
-                <button
-                    type="button"
-                    class="cancel-btn"
-                    id="cancelTaskBtn"
-                >
-                    إلغاء
-                </button>
-
-                <button
-                    type="submit"
-                    class="save-btn"
-                    id="saveTaskBtn"
-                >
-                    حفظ المهمة
-                </button>
-
-            </div>
-
-        </form>
-
-    </div>
 
 </div>
 
 
-
-<!-- =========================================================
-     تفاصيل المهمة
-========================================================= -->
+<!-- نافذة تفاصيل المهمة -->
 
 <div
     class="modal"
@@ -876,9 +372,11 @@
     ></div>
 
 
-    <div class="modal-box details-box">
+    <div class="modal-box">
+
 
         <div class="modal-header">
+
 
             <div>
 
@@ -887,7 +385,7 @@
                 </h2>
 
                 <p>
-                    بيانات التنفيذ ومتطلبات المطابقة
+                    معلومات المهمة وحالة التنفيذ
                 </p>
 
             </div>
@@ -895,162 +393,236 @@
 
             <button
                 class="close-btn"
-                id="closeDetailsBtn"
                 type="button"
+                id="closeDetailsBtn"
             >
                 ×
             </button>
+
 
         </div>
 
 
         <div
-            id="taskDetails"
             class="details-grid"
+            id="taskDetails"
         ></div>
 
+
+        <div
+            class="modal-actions"
+            id="modalActions"
+        ></div>
+
+
     </div>
+
 
 </div>
 
 
-
-<!-- =========================================================
-     تمديد المهمة
-========================================================= -->
+<!-- نافذة التأكيد -->
 
 <div
-    class="modal"
-    id="extensionModal"
+    class="confirm-modal"
+    id="confirmModal"
 >
 
     <div
-        class="modal-overlay"
-        id="extensionModalOverlay"
+        class="confirm-overlay"
+        id="confirmOverlay"
     ></div>
 
 
-    <div class="modal-box small-modal">
+    <div class="confirm-box">
 
-        <div class="modal-header">
+
+        <h3 id="confirmTitle">
+            تأكيد
+        </h3>
+
+
+        <p id="confirmMessage"></p>
+
+
+        <div class="confirm-actions">
+
+
+            <button
+                class="cancel-action-btn"
+                type="button"
+                id="cancelConfirmBtn"
+            >
+                إلغاء
+            </button>
+
+
+            <button
+                class="confirm-action-btn"
+                type="button"
+                id="confirmActionBtn"
+            >
+                تأكيد
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+<!-- نافذة إرسال الإنجاز -->
+
+<div
+    class="completion-modal"
+    id="completionModal"
+>
+
+    <div
+        class="completion-overlay"
+        id="completionOverlay"
+    ></div>
+
+
+    <div class="completion-box">
+
+
+        <div class="completion-header">
+
 
             <div>
 
-                <h2>
-                    تمديد موعد المهمة
-                </h2>
+                <h3>
+                    إرسال الإنجاز
+                </h3>
 
                 <p>
-                    تعديل تاريخ استحقاق المهمة
+                    أضف ملخص العمل والمرفقات، ويمكن إضافة رابط العمل عند توفره.
                 </p>
 
             </div>
 
 
             <button
-                class="close-btn"
-                id="closeExtensionBtn"
                 type="button"
+                class="completion-close-btn"
+                id="closeCompletionBtn"
             >
                 ×
             </button>
 
+
         </div>
 
 
-        <form id="extensionForm">
-
-            <input
-                type="hidden"
-                id="extensionTaskId"
-            >
+        <div class="completion-form">
 
 
-            <div class="form-group">
+            <div class="completion-field">
 
-                <label>
-                    الموعد الحالي
-                </label>
-
-                <input
-                    type="date"
-                    id="oldDueDate"
-                    disabled
-                >
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label for="newDueDate">
-                    الموعد الجديد
-                </label>
-
-                <input
-                    type="date"
-                    id="newDueDate"
-                    required
-                >
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label for="extensionReason">
-                    سبب التمديد
+                <label for="completionNote">
+                    ملخص العمل
+                    <span>*</span>
                 </label>
 
                 <textarea
-                    id="extensionReason"
-                    required
+                    id="completionNote"
+                    placeholder="اكتب ما تم إنجازه في هذه المهمة..."
                 ></textarea>
 
             </div>
 
 
-            <div class="modal-actions">
+            <div class="completion-field">
+
+                <label for="completionAttachments">
+                    المرفقات
+                </label>
+
+                <input
+                    type="file"
+                    id="completionAttachments"
+                    multiple
+                >
+
+                <small>
+                    يمكنك رفع حتى 5 مرفقات، بحد أقصى 25MB لكل ملف.
+                </small>
+
+            </div>
+
+
+            <div class="completion-field">
+
+                <label for="completionUrl">
+                    رابط العمل
+                    <small>اختياري</small>
+                </label>
+
+                <input
+                    type="url"
+                    id="completionUrl"
+                    placeholder="https://example.com"
+                >
+
+            </div>
+
+
+            <div
+                class="completion-error"
+                id="completionError"
+            ></div>
+
+
+            <div class="completion-actions">
 
                 <button
                     type="button"
-                    class="cancel-btn"
-                    id="cancelExtensionBtn"
+                    class="cancel-action-btn"
+                    id="cancelCompletionBtn"
                 >
                     إلغاء
                 </button>
 
+
                 <button
-                    type="submit"
-                    class="save-btn"
+                    type="button"
+                    class="confirm-action-btn"
+                    id="sendCompletionBtn"
                 >
-                    حفظ التمديد
+                    إرسال للمراجعة
                 </button>
 
             </div>
 
-        </form>
+
+        </div>
+
 
     </div>
+
 
 </div>
 
 
-
 <script>
 
-/* =========================================================
-   SUPABASE
-========================================================= */
 
 const SUPABASE_URL =
     "https://avooyglxacytrfhvotsl.supabase.co";
 
+
 const SUPABASE_KEY =
     "sb_publishable_NVlWEnA_w4KbSse_-70zdA_J9ut0Kyo";
 
+
 const ADMIN_EMAIL =
     "admin@gmail.com";
+
 
 const supabaseClient =
     window.supabase.createClient(
@@ -1059,1470 +631,1250 @@ const supabaseClient =
     );
 
 
-/* =========================================================
-   البيانات
-========================================================= */
+
+let employeeId = null;
+
+let currentSession = null;
+
+let currentEmployee = null;
+
+let assignments = [];
 
 let tasks = [];
+
 let projects = [];
-let employees = [];
-let skills = [];
-let taskAssignments = [];
+
+let employeeLeaves = [];
+
+let taskItems = [];
+
+let selectedTask = null;
+
+let pendingAction = null;
+
+let completionAssignmentId = null;
 
 
-/* =========================================================
-   العناصر
-========================================================= */
 
 const tasksGrid =
-    document.getElementById("tasksGrid");
+    document.getElementById(
+        "tasksGrid"
+    );
+
+
+const tasksCount =
+    document.getElementById(
+        "tasksCount"
+    );
+
+
+const searchInput =
+    document.getElementById(
+        "searchInput"
+    );
+
+
+const statusFilter =
+    document.getElementById(
+        "statusFilter"
+    );
+
+
+const priorityFilter =
+    document.getElementById(
+        "priorityFilter"
+    );
+
+
+const mobileMenuBtn =
+    document.getElementById(
+        "mobileMenuBtn"
+    );
+
 
 const sidebar =
-    document.getElementById("sidebar");
+    document.getElementById(
+        "sidebar"
+    );
+
 
 const sidebarOverlay =
-    document.getElementById("sidebarOverlay");
+    document.getElementById(
+        "sidebarOverlay"
+    );
 
 
-/* =========================================================
-   حماية الصفحة
-========================================================= */
-
-async function protectPage(){
-
-    const {
-        data,
-        error
-    } =
-    await supabaseClient.auth.getSession();
+const detailsModal =
+    document.getElementById(
+        "detailsModal"
+    );
 
 
-    if(
-        error
-        ||
-        !data?.session
-    ){
-
-        window.location.href =
-            "login.html";
-
-        return false;
-
-    }
+const taskDetails =
+    document.getElementById(
+        "taskDetails"
+    );
 
 
-    const email =
-        String(
-            data.session.user.email || ""
-        )
-        .trim()
-        .toLowerCase();
+const modalActions =
+    document.getElementById(
+        "modalActions"
+    );
 
 
-    if(
-        email !==
-        ADMIN_EMAIL.toLowerCase()
-    ){
-
-        window.location.href =
-            "login.html";
-
-        return false;
-
-    }
+const confirmModal =
+    document.getElementById(
+        "confirmModal"
+    );
 
 
-    return true;
+const confirmTitle =
+    document.getElementById(
+        "confirmTitle"
+    );
+
+
+const confirmMessage =
+    document.getElementById(
+        "confirmMessage"
+    );
+
+
+const confirmActionBtn =
+    document.getElementById(
+        "confirmActionBtn"
+    );
+
+
+const sidebarEmployeeName =
+    document.getElementById(
+        "sidebarEmployeeName"
+    );
+
+
+const completionModal =
+    document.getElementById(
+        "completionModal"
+    );
+
+
+const completionNote =
+    document.getElementById(
+        "completionNote"
+    );
+
+
+const completionUrl =
+    document.getElementById(
+        "completionUrl"
+    );
+
+
+const completionAttachments =
+    document.getElementById(
+        "completionAttachments"
+    );
+
+
+const completionError =
+    document.getElementById(
+        "completionError"
+    );
+
+
+const sendCompletionBtn =
+    document.getElementById(
+        "sendCompletionBtn"
+    );
+
+
+
+/* تنظيف التخزين */
+
+function clearEmployeeStorage() {
+
+    localStorage.removeItem(
+        "miyarRole"
+    );
+
+    localStorage.removeItem(
+        "miyarEmail"
+    );
+
+    localStorage.removeItem(
+        "miyarEmployeeId"
+    );
+
+    localStorage.removeItem(
+        "miyarEmployeeName"
+    );
 
 }
 
 
-/* =========================================================
-   المشاريع
-========================================================= */
 
-async function loadProjects(){
+/* حماية صفحة الموظف */
+
+async function protectEmployeePage() {
+
+    try {
+
+
+        const {
+            data: sessionData,
+            error: sessionError
+        } =
+        await supabaseClient.auth.getSession();
+
+
+        if (
+            sessionError
+        ) {
+
+            console.error(
+                "خطأ في قراءة الجلسة:",
+                sessionError
+            );
+
+            return false;
+
+        }
+
+
+        currentSession =
+            sessionData?.session || null;
+
+
+        if (
+            !currentSession
+            ||
+            !currentSession.user
+        ) {
+
+            window.location.href =
+                "login.html";
+
+            return false;
+
+        }
+
+
+        const authUser =
+            currentSession.user;
+
+
+        /* منع المسؤول فقط من الدخول لبوابة الموظف */
+
+        if (
+            String(
+                authUser.email || ""
+            )
+            .trim()
+            .toLowerCase()
+            ===
+            ADMIN_EMAIL.toLowerCase()
+        ) {
+
+            window.location.href =
+                "dashboard.html";
+
+            return false;
+
+        }
+
+
+        /*
+            أول محاولة:
+            البحث بواسطة auth_user_id
+        */
+
+        let employee = null;
+
+
+        const {
+            data: employeeByAuth,
+            error: authLookupError
+        } =
+        await supabaseClient
+            .from(
+                "employees"
+            )
+            .select("*")
+            .eq(
+                "auth_user_id",
+                authUser.id
+            )
+            .maybeSingle();
+
+
+        if (
+            !authLookupError
+            &&
+            employeeByAuth
+        ) {
+
+            employee =
+                employeeByAuth;
+
+        }
+
+
+        /*
+            ثاني محاولة:
+            إذا لم نجد الموظف بـ auth_user_id
+            نبحث بالبريد.
+        */
+
+        if (
+            !employee
+            &&
+            authUser.email
+        ) {
+
+            const {
+                data: employeeByEmail,
+                error: emailLookupError
+            } =
+            await supabaseClient
+                .from(
+                    "employees"
+                )
+                .select("*")
+                .ilike(
+                    "email",
+                    String(
+                        authUser.email
+                    ).trim()
+                )
+                .maybeSingle();
+
+
+            if (
+                !emailLookupError
+                &&
+                employeeByEmail
+            ) {
+
+                employee =
+                    employeeByEmail;
+
+            }
+
+        }
+
+
+        /*
+            ثالث محاولة:
+            استخدام رقم الموظف المحفوظ من تسجيل الدخول.
+        */
+
+        if (
+            !employee
+        ) {
+
+            const storedEmployeeId =
+                Number(
+                    localStorage.getItem(
+                        "miyarEmployeeId"
+                    )
+                );
+
+
+            if (
+                storedEmployeeId
+            ) {
+
+                const {
+                    data: employeeById,
+                    error: idLookupError
+                } =
+                await supabaseClient
+                    .from(
+                        "employees"
+                    )
+                    .select("*")
+                    .eq(
+                        "id",
+                        storedEmployeeId
+                    )
+                    .maybeSingle();
+
+
+                if (
+                    !idLookupError
+                    &&
+                    employeeById
+                ) {
+
+                    employee =
+                        employeeById;
+
+                }
+
+            }
+
+        }
+
+
+        if (
+            !employee
+        ) {
+
+            console.error(
+                "لم يتم العثور على سجل الموظف.",
+                {
+                    authUserId:
+                        authUser.id,
+
+                    email:
+                        authUser.email
+                }
+            );
+
+
+            alert(
+                "تعذر العثور على ملف الموظف المرتبط بهذا الحساب."
+            );
+
+
+            /*
+                مهم:
+                لا نسجل خروج الموظف هنا.
+                حتى لا تنتهي جلسة Auth بسبب مشكلة في قراءة سجل الموظف.
+            */
+
+            return false;
+
+        }
+
+
+        /*
+            إذا كان auth_user_id فارغًا في سجل الموظف
+            نحاول ربطه بالحساب الحالي.
+        */
+
+        if (
+            !employee.auth_user_id
+        ) {
+
+            const {
+                error: linkError
+            } =
+            await supabaseClient
+                .from(
+                    "employees"
+                )
+                .update({
+                    auth_user_id:
+                        authUser.id
+                })
+                .eq(
+                    "id",
+                    employee.id
+                );
+
+
+            if (
+                linkError
+            ) {
+
+                console.warn(
+                    "تعذر تحديث auth_user_id:",
+                    linkError
+                );
+
+            }
+
+            else {
+
+                employee.auth_user_id =
+                    authUser.id;
+
+            }
+
+        }
+
+
+        currentEmployee =
+            employee;
+
+
+        employeeId =
+            Number(
+                employee.id
+            );
+
+
+        localStorage.setItem(
+            "miyarRole",
+            "employee"
+        );
+
+
+        localStorage.setItem(
+            "miyarEmail",
+            employee.email
+            ||
+            authUser.email
+            ||
+            ""
+        );
+
+
+        localStorage.setItem(
+            "miyarEmployeeId",
+            String(
+                employee.id
+            )
+        );
+
+
+        localStorage.setItem(
+            "miyarEmployeeName",
+            employee.name
+            ||
+            employee.full_name
+            ||
+            ""
+        );
+
+
+        if (
+            sidebarEmployeeName
+        ) {
+
+            sidebarEmployeeName.textContent =
+                employee.name
+                ||
+                employee.full_name
+                ||
+                "الموظف";
+
+        }
+
+
+        return true;
+
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "خطأ حماية صفحة الموظف:",
+            error
+        );
+
+
+        /*
+            لا نسوي signOut هنا.
+            الصفحة الرئيسية كانت تعمل،
+            لذلك أي خطأ داخلي في هذه الصفحة
+            لا يجب أن يلغي جلسة الموظف.
+        */
+
+        return false;
+
+    }
+
+}
+
+
+
+/* تحميل إسنادات الموظف */
+
+async function loadAssignments() {
 
     const {
         data,
         error
     } =
     await supabaseClient
-        .from("projects")
+        .from(
+            "task_assignments"
+        )
         .select("*")
+        .eq(
+            "employee_id",
+            employeeId
+        )
         .order(
             "id",
             {
-                ascending:false
+                ascending: false
             }
         );
 
 
-    if(error){
+    if (
+        error
+    ) {
+
         throw error;
+
+    }
+
+
+    assignments =
+        data || [];
+
+}
+
+
+
+/* تحميل المهام */
+
+async function loadTasks() {
+
+    if (
+        !assignments.length
+    ) {
+
+        tasks = [];
+
+        return;
+
+    }
+
+
+    const taskIds =
+        [
+            ...new Set(
+                assignments
+                    .map(
+                        assignment =>
+                            Number(
+                                assignment.task_id
+                            )
+                    )
+                    .filter(
+                        Boolean
+                    )
+            )
+        ];
+
+
+    if (
+        !taskIds.length
+    ) {
+
+        tasks = [];
+
+        return;
+
+    }
+
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from(
+            "tasks"
+        )
+        .select("*")
+        .in(
+            "id",
+            taskIds
+        );
+
+
+    if (
+        error
+    ) {
+
+        throw error;
+
+    }
+
+
+    tasks =
+        data || [];
+
+}
+
+
+
+/* تحميل المشاريع */
+
+async function loadProjects() {
+
+    const projectIds =
+        [
+            ...new Set(
+                tasks
+                    .map(
+                        task =>
+                            Number(
+                                task.project_id
+                            )
+                    )
+                    .filter(
+                        Boolean
+                    )
+            )
+        ];
+
+
+    if (
+        !projectIds.length
+    ) {
+
+        projects = [];
+
+        return;
+
+    }
+
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from(
+            "projects"
+        )
+        .select("*")
+        .in(
+            "id",
+            projectIds
+        );
+
+
+    if (
+        error
+    ) {
+
+        throw error;
+
     }
 
 
     projects =
         data || [];
 
-
-    const select =
-        document.getElementById(
-            "taskProject"
-        );
-
-
-    select.innerHTML =
-        `<option value="">اختر المشروع</option>`;
-
-
-    projects.forEach(
-        project => {
-
-            const option =
-                document.createElement(
-                    "option"
-                );
-
-
-            option.value =
-                project.id;
-
-
-            option.textContent =
-                project.project_name
-                ||
-                project.name
-                ||
-                `مشروع ${project.id}`;
-
-
-            select.appendChild(
-                option
-            );
-
-        }
-    );
-
 }
 
 
-/* =========================================================
-   الموظفون
-========================================================= */
 
-async function loadEmployees(){
+/* تحميل إجازات الموظف */
 
-    const {
-        data,
-        error
-    } =
-    await supabaseClient
-        .from("employees")
-        .select("*")
-        .order(
-            "id",
-            {
-                ascending:false
-            }
-        );
+async function loadEmployeeLeaves() {
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+        await supabaseClient
+            .from(
+                "employee_leaves"
+            )
+            .select("*")
+            .eq(
+                "employee_id",
+                employeeId
+            );
 
 
-    if(error){
-        throw error;
+        if (
+            error
+        ) {
+
+            console.warn(
+                "تعذر تحميل الإجازات:",
+                error
+            );
+
+            employeeLeaves = [];
+
+            return;
+
+        }
+
+
+        employeeLeaves =
+            data || [];
+
     }
 
-
-    employees =
-        (data || [])
-        .filter(
-            employee =>
-                !employee.employment_status
-                ||
-                employee.employment_status ===
-                "على رأس العمل"
-        );
-
-
-    const select =
-        document.getElementById(
-            "assignedEmployee"
-        );
-
-
-    select.innerHTML =
-        `<option value="">غير مسند</option>`;
-
-
-    employees.forEach(
-        employee => {
-
-            const option =
-                document.createElement(
-                    "option"
-                );
-
-
-            option.value =
-                employee.id;
-
-
-            option.textContent =
-                employee.name
-                ||
-                employee.full_name
-                ||
-                employee.email
-                ||
-                `موظف ${employee.id}`;
-
-
-            select.appendChild(
-                option
-            );
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   المهارات
-========================================================= */
-
-async function loadSkills(){
-
-    const {
-        data,
-        error
-    } =
-    await supabaseClient
-        .from("skills")
-        .select("*")
-        .order(
-            "skill_name",
-            {
-                ascending:true
-            }
-        );
-
-
-    if(error){
+    catch (error) {
 
         console.warn(
-            "تعذر تحميل المهارات:",
             error
         );
 
-        skills = [];
-
-        return;
+        employeeLeaves = [];
 
     }
 
-
-    skills =
-        data || [];
-
 }
 
 
-/* =========================================================
-   المهام
-========================================================= */
 
-async function loadTasks(){
+/* الحصول على المهمة */
 
-    const {
-        data,
-        error
-    } =
-    await supabaseClient
-        .from("tasks")
-        .select("*")
-        .order(
-            "id",
-            {
-                ascending:false
-            }
-        );
-
-
-    if(error){
-        throw error;
-    }
-
-
-    tasks =
-        (data || [])
-        .map(
-            task => {
-
-                const project =
-                    projects.find(
-                        item =>
-                            Number(item.id)
-                            ===
-                            Number(task.project_id)
-                    );
-
-
-                const employeeId =
-                    task.assigned_employee_id
-                    ??
-                    task.employee_id
-                    ??
-                    null;
-
-
-                const employee =
-                    employees.find(
-                        item =>
-                            Number(item.id)
-                            ===
-                            Number(employeeId)
-                    );
-
-
-                return {
-
-                    ...task,
-
-                    name:
-                        task.task_name
-                        ||
-                        task.name
-                        ||
-                        `مهمة ${task.id}`,
-
-                    projectId:
-                        task.project_id,
-
-                    projectName:
-                        project?.project_name
-                        ||
-                        project?.name
-                        ||
-                        "بدون مشروع",
-
-                    assignedEmployeeId:
-                        employeeId,
-
-                    employeeName:
-                        employee?.name
-                        ||
-                        employee?.full_name
-                        ||
-                        employee?.email
-                        ||
-                        "غير مسند",
-
-                    priority:
-                        task.priority
-                        ||
-                        "متوسطة",
-
-                    status:
-                        task.status
-                        ||
-                        "جديدة",
-
-                    dueDate:
-                        task.due_date
-                        ||
-                        null,
-
-                    description:
-                        task.description
-                        ||
-                        ""
-
-                };
-
-            }
-        );
-
-
-    updateSummary();
-
-    filterTasks();
-
-}
-
-
-/* =========================================================
-   تكليفات الموظفين
-========================================================= */
-
-async function loadTaskAssignments(){
-
-    const {
-        data,
-        error
-    } =
-    await supabaseClient
-        .from("task_assignments")
-        .select(`
-            id,
-            task_id,
-            employee_id,
-            status,
-            started_at,
-            submitted_at,
-            completed_at,
-            assigned_at,
-            created_at,
-            completion_note,
-            completion_url,
-            review_note,
-            reviewed_at
-        `)
-        .order(
-            "id",
-            {
-                ascending:false
-            }
-        );
-
-
-    if(error){
-        throw error;
-    }
-
-
-    taskAssignments =
-        data || [];
-
-
-    renderCompletionApprovals();
-
-}
-
-
-/* =========================================================
-   طلبات اعتماد الإنجاز
-========================================================= */
-
-function normalizeText(value){
-
-    return String(
-        value || ""
-    )
-    .trim()
-    .toLowerCase();
-
-}
-
-
-function isPendingApprovalStatus(status){
-
-    const value =
-        normalizeText(status);
-
-
-    return (
-        value === "pending_approval"
-        ||
-        value === "submitted"
-        ||
-        value === "بانتظار الاعتماد"
-        ||
-        value === "بانتظار اعتماد المسؤول"
-    );
-
-}
-
-
-function getTaskByAssignment(taskId){
+function getTask(
+    taskId
+) {
 
     return tasks.find(
         task =>
-            Number(task.id)
-            ===
-            Number(taskId)
-    )
-    ||
-    null;
-
-}
-
-
-function getEmployeeByAssignment(employeeId){
-
-    return employees.find(
-        employee =>
-            Number(employee.id)
-            ===
-            Number(employeeId)
-    )
-    ||
-    null;
-
-}
-
-
-function getSafeUrl(value){
-
-    try{
-
-        const url =
-            new URL(
-                String(value || "").trim()
-            );
-
-
-        if(
-            url.protocol !== "http:"
-            &&
-            url.protocol !== "https:"
-        ){
-            return "";
-        }
-
-
-        return url.href;
-
-    }
-    catch{
-
-        return "";
-
-    }
-
-}
-
-
-/* =========================================================
-   عرض طلبات الإنجاز
-========================================================= */
-
-function renderCompletionApprovals(){
-
-    const section =
-        document.getElementById(
-            "completionApprovalsSection"
-        );
-
-
-    const grid =
-        document.getElementById(
-            "completionApprovalsGrid"
-        );
-
-
-    const count =
-        document.getElementById(
-            "pendingApprovalsCount"
-        );
-
-
-    const pending =
-        taskAssignments.filter(
-            assignment =>
-                isPendingApprovalStatus(
-                    assignment.status
-                )
-        );
-
-
-    count.textContent =
-        `${pending.length} طلب`;
-
-
-    if(
-        pending.length === 0
-    ){
-
-        section.style.display =
-            "none";
-
-        grid.innerHTML =
-            "";
-
-        return;
-
-    }
-
-
-    section.style.display =
-        "block";
-
-
-    grid.innerHTML =
-        pending
-        .map(
-            assignment => {
-
-                const task =
-                    getTaskByAssignment(
-                        assignment.task_id
-                    );
-
-
-                const employee =
-                    getEmployeeByAssignment(
-                        assignment.employee_id
-                    );
-
-
-                const employeeName =
-                    employee?.name
-                    ||
-                    employee?.full_name
-                    ||
-                    employee?.email
-                    ||
-                    `موظف ${assignment.employee_id}`;
-
-
-                const taskName =
-                    task?.name
-                    ||
-                    `مهمة ${assignment.task_id}`;
-
-
-                const projectName =
-                    task?.projectName
-                    ||
-                    "-";
-
-
-                const submittedDate =
-                    assignment.submitted_at
-                    ?
-                    new Date(
-                        assignment.submitted_at
-                    )
-                    .toLocaleString(
-                        "ar-SA"
-                    )
-                    :
-                    "غير محدد";
-
-
-                const completionNote =
-                    assignment.completion_note
-                    ?
-                    escapeHtml(
-                        assignment.completion_note
-                    )
-                    :
-                    "لم يكتب الموظف ملخصًا للإنجاز";
-
-
-                const safeUrl =
-                    getSafeUrl(
-                        assignment.completion_url
-                    );
-
-
-                const linkHtml =
-                    safeUrl
-                    ?
-                    `
-                        <a
-                            href="${escapeHtml(safeUrl)}"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="view-btn"
-                            style="
-                                display:inline-block;
-                                text-decoration:none;
-                                text-align:center;
-                                margin-top:8px;
-                            "
-                        >
-                            فتح رابط الإنجاز
-                        </a>
-                    `
-                    :
-                    `
-                        <span>
-                            لم يرفق الموظف رابطًا
-                        </span>
-                    `;
-
-
-                return `
-
-                    <article class="task-card">
-
-
-                        <div class="task-card-top">
-
-                            <div>
-
-                                <span class="task-label">
-                                    ${escapeHtml(projectName)}
-                                </span>
-
-                                <h3>
-                                    ${escapeHtml(taskName)}
-                                </h3>
-
-                            </div>
-
-
-                            <div class="task-card-badges">
-
-                                <span class="priority-badge medium">
-                                    بانتظار الاعتماد
-                                </span>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="task-info">
-
-
-                            <div class="info-item">
-
-                                <span>
-                                    الموظف
-                                </span>
-
-                                <strong>
-                                    ${escapeHtml(employeeName)}
-                                </strong>
-
-                            </div>
-
-
-                            <div class="info-item">
-
-                                <span>
-                                    تاريخ رفع الإنجاز
-                                </span>
-
-                                <strong>
-                                    ${escapeHtml(submittedDate)}
-                                </strong>
-
-                            </div>
-
-
-                            <div class="info-item">
-
-                                <span>
-                                    ملخص الإنجاز
-                                </span>
-
-                                <strong>
-                                    ${completionNote}
-                                </strong>
-
-                            </div>
-
-
-                            <div class="info-item">
-
-                                <span>
-                                    رابط المشروع / الإنجاز
-                                </span>
-
-                                <strong>
-                                    ${linkHtml}
-                                </strong>
-
-                            </div>
-
-
-                        </div>
-
-
-                        <div
-                            style="
-                                display:grid;
-                                grid-template-columns:1fr 1fr;
-                                gap:8px;
-                                margin-top:14px;
-                                padding-top:14px;
-                                border-top:1px solid rgba(49,88,108,.07);
-                            "
-                        >
-
-                            <button
-                                type="button"
-                                class="view-btn"
-                                onclick="approveTaskCompletion(${assignment.id})"
-                            >
-                                اعتماد الإنجاز
-                            </button>
-
-
-                            <button
-                                type="button"
-                                class="delete-btn"
-                                onclick="rejectTaskCompletion(${assignment.id})"
-                            >
-                                رفض وإعادة للموظف
-                            </button>
-
-                        </div>
-
-
-                    </article>
-
-                `;
-
-            }
-        )
-        .join("");
-
-}
-
-
-/* =========================================================
-   تحديث حالة المهمة بعد قرار المسؤول
-========================================================= */
-
-async function refreshTaskAfterAssignmentDecision(taskId){
-
-    const {
-        data,
-        error
-    } =
-    await supabaseClient
-        .from("task_assignments")
-        .select(`
-            id,
-            status,
-            completed_at
-        `)
-        .eq(
-            "task_id",
-            Number(taskId)
-        );
-
-
-    if(error){
-        throw error;
-    }
-
-
-    const rows =
-        data || [];
-
-
-    if(
-        rows.length === 0
-    ){
-        return;
-    }
-
-
-    const allCompleted =
-        rows.every(
-            assignment =>
-                normalizeText(
-                    assignment.status
-                )
-                ===
-                "completed"
-                ||
-                Boolean(
-                    assignment.completed_at
-                )
-        );
-
-
-    const payload =
-        allCompleted
-        ?
-        {
-            status:
-                "مكتملة",
-
-            completed_at:
-                new Date().toISOString()
-        }
-        :
-        {
-            status:
-                "قيد التنفيذ",
-
-            completed_at:
-                null
-        };
-
-
-    const {
-        error:taskError
-    } =
-    await supabaseClient
-        .from("tasks")
-        .update(
-            payload
-        )
-        .eq(
-            "id",
-            Number(taskId)
-        );
-
-
-    if(taskError){
-        throw taskError;
-    }
-
-}
-
-
-/* =========================================================
-   اعتماد إنجاز الموظف
-========================================================= */
-
-async function approveTaskCompletion(assignmentId){
-
-    const assignment =
-        taskAssignments.find(
-            item =>
-                Number(item.id)
-                ===
-                Number(assignmentId)
-        );
-
-
-    if(!assignment){
-
-        alert(
-            "تعذر العثور على طلب الاعتماد."
-        );
-
-        return;
-
-    }
-
-
-    const task =
-        getTaskByAssignment(
-            assignment.task_id
-        );
-
-
-    const employee =
-        getEmployeeByAssignment(
-            assignment.employee_id
-        );
-
-
-    const confirmed =
-        confirm(
-            `هل تريد اعتماد إنجاز ${
-                employee?.name || "الموظف"
-            } للمهمة "${
-                task?.name || "المهمة"
-            }"؟`
-        );
-
-
-    if(!confirmed){
-        return;
-    }
-
-
-    try{
-
-        const now =
-            new Date()
-            .toISOString();
-
-
-        const {
-            error
-        } =
-        await supabaseClient
-            .from("task_assignments")
-            .update({
-
-                status:
-                    "completed",
-
-                completed_at:
-                    now,
-
-                reviewed_at:
-                    now,
-
-                review_note:
-                    null
-
-            })
-            .eq(
-                "id",
-                Number(assignmentId)
-            );
-
-
-        if(error){
-            throw error;
-        }
-
-
-        await refreshTaskAfterAssignmentDecision(
-            assignment.task_id
-        );
-
-
-        await loadTasks();
-
-        await loadTaskAssignments();
-
-
-        alert(
-            "تم اعتماد إنجاز الموظف بنجاح."
-        );
-
-    }
-    catch(error){
-
-        console.error(error);
-
-        alert(
-            "تعذر اعتماد الإنجاز.\n\n"
-            +
-            (
-                error.message || ""
+            Number(
+                task.id
             )
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   رفض وإعادة الإنجاز للموظف
-========================================================= */
-
-async function rejectTaskCompletion(assignmentId){
-
-    const assignment =
-        taskAssignments.find(
-            item =>
-                Number(item.id)
-                ===
-                Number(assignmentId)
-        );
-
-
-    if(!assignment){
-
-        alert(
-            "تعذر العثور على طلب الاعتماد."
-        );
-
-        return;
-
-    }
-
-
-    const reason =
-        prompt(
-            "اكتب سبب إعادة الإنجاز للموظف:"
-        );
-
-
-    if(
-        reason === null
-    ){
-        return;
-    }
-
-
-    if(
-        !String(reason).trim()
-    ){
-
-        alert(
-            "يجب كتابة سبب الإرجاع."
-        );
-
-        return;
-
-    }
-
-
-    try{
-
-        const now =
-            new Date()
-            .toISOString();
-
-
-        const {
-            error
-        } =
-        await supabaseClient
-            .from("task_assignments")
-            .update({
-
-                status:
-                    "in_progress",
-
-                review_note:
-                    String(reason).trim(),
-
-                reviewed_at:
-                    now,
-
-                completed_at:
-                    null
-
-            })
-            .eq(
-                "id",
-                Number(assignmentId)
-            );
-
-
-        if(error){
-            throw error;
-        }
-
-
-        await refreshTaskAfterAssignmentDecision(
-            assignment.task_id
-        );
-
-
-        await loadTasks();
-
-        await loadTaskAssignments();
-
-
-        alert(
-            "تم إعادة المهمة للموظف مع الملاحظة."
-        );
-
-    }
-    catch(error){
-
-        console.error(error);
-
-        alert(
-            "تعذر إعادة المهمة.\n\n"
-            +
-            (
-                error.message || ""
+            ===
+            Number(
+                taskId
             )
-        );
-
-    }
+    ) || null;
 
 }
 
 
-/* =========================================================
-   الملخص
-========================================================= */
 
-function isTaskLate(task){
+/* الحصول على المشروع */
 
-    if(
-        !task.dueDate
+function getProject(
+    projectId
+) {
+
+    return projects.find(
+        project =>
+            Number(
+                project.id
+            )
+            ===
+            Number(
+                projectId
+            )
+    ) || null;
+
+}
+
+
+
+/* اسم المشروع */
+
+function getProjectName(
+    projectId
+) {
+
+    const project =
+        getProject(
+            projectId
+        );
+
+
+    if (
+        !project
+    ) {
+
+        return "غير محدد";
+
+    }
+
+
+    return project.project_name
         ||
-        task.status === "مكتملة"
-    ){
-        return false;
-    }
-
-
-    const due =
-        new Date(
-            task.dueDate + "T23:59:59"
-        );
-
-
-    return (
-        !Number.isNaN(
-            due.getTime()
-        )
-        &&
-        due <
-        new Date()
-    );
+        project.name
+        ||
+        "غير محدد";
 
 }
 
 
-function updateSummary(){
 
-    document.getElementById(
-        "summaryTotal"
-    ).textContent =
-        tasks.length;
+/* توحيد حالة الإسناد */
 
+function normalizeAssignmentStatus(
+    value
+) {
 
-    document.getElementById(
-        "summaryNew"
-    ).textContent =
-        tasks.filter(
-            task =>
-                task.status ===
-                "جديدة"
-        ).length;
-
-
-    document.getElementById(
-        "summaryRunning"
-    ).textContent =
-        tasks.filter(
-            task =>
-                task.status ===
-                "قيد التنفيذ"
-        ).length;
-
-
-    document.getElementById(
-        "summaryCompleted"
-    ).textContent =
-        tasks.filter(
-            task =>
-                task.status ===
-                "مكتملة"
-        ).length;
-
-
-    document.getElementById(
-        "summaryLate"
-    ).textContent =
-        tasks.filter(
-            isTaskLate
-        ).length;
-
-
-    document.getElementById(
-        "summaryUnassigned"
-    ).textContent =
-        tasks.filter(
-            task =>
-                !task.assignedEmployeeId
-        ).length;
-
-}
-
-
-/* =========================================================
-   عرض المهام
-========================================================= */
-
-function renderTasks(list){
-
-    document.getElementById(
-        "tasksCount"
-    ).textContent =
-        `${list.length} مهمة`;
-
-
-    if(
-        list.length === 0
-    ){
-
-        tasksGrid.innerHTML = `
-
-            <div class="empty-state">
-                لا توجد مهام.
-            </div>
-
-        `;
-
-        return;
-
-    }
-
-
-    tasksGrid.innerHTML =
-        list
-        .map(
-            task => {
-
-                const late =
-                    isTaskLate(task);
-
-
-                return `
-
-                    <article class="task-card">
-
-
-                        <div class="task-card-top">
-
-                            <div>
-
-                                <span class="task-label">
-                                    ${escapeHtml(task.projectName)}
-                                </span>
-
-                                <h3>
-                                    ${escapeHtml(task.name)}
-                                </h3>
-
-                            </div>
-
-
-                            <div class="task-card-badges">
-
-                                <span class="priority-badge">
-                                    ${escapeHtml(task.priority)}
-                                </span>
-
-                                <span class="status-badge">
-                                    ${
-                                        late
-                                        ?
-                                        "متأخرة"
-                                        :
-                                        escapeHtml(task.status)
-                                    }
-                                </span>
-
-                            </div>
-
-                        </div>
-
-
-                        <p class="task-description">
-                            ${escapeHtml(
-                                task.description
-                                ||
-                                "لا يوجد وصف للمهمة."
-                            )}
-                        </p>
-
-
-                        <div class="task-info">
-
-
-                            <div class="info-item">
-
-                                <span>
-                                    الموظف
-                                </span>
-
-                                <strong>
-                                    ${escapeHtml(task.employeeName)}
-                                </strong>
-
-                            </div>
-
-
-                            <div class="info-item">
-
-                                <span>
-                                    تاريخ الاستحقاق
-                                </span>
-
-                                <strong>
-                                    ${formatDate(task.dueDate)}
-                                </strong>
-
-                            </div>
-
-
-                        </div>
-
-
-                        <div class="task-actions">
-
-                            <button
-                                type="button"
-                                class="view-btn"
-                                onclick="viewTask(${task.id})"
-                            >
-                                التفاصيل
-                            </button>
-
-
-                            <button
-                                type="button"
-                                class="edit-btn"
-                                onclick="editTask(${task.id})"
-                            >
-                                تعديل
-                            </button>
-
-
-                            <button
-                                type="button"
-                                class="matching-btn"
-                                onclick="goToMatching(${task.id})"
-                            >
-                                المطابقة
-                            </button>
-
-
-                            <button
-                                type="button"
-                                class="extend-btn"
-                                onclick="openExtensionModal(${task.id})"
-                            >
-                                تمديد
-                            </button>
-
-
-                            <button
-                                type="button"
-                                class="delete-btn"
-                                onclick="deleteTask(${task.id})"
-                            >
-                                حذف
-                            </button>
-
-                        </div>
-
-
-                    </article>
-
-                `;
-
-            }
-        )
-        .join("");
-
-}
-
-
-/* =========================================================
-   البحث والفلاتر
-========================================================= */
-
-function filterTasks(){
-
-    const search =
+    const status =
         String(
-            document.getElementById(
-                "searchInput"
-            ).value || ""
+            value || ""
         )
         .trim()
         .toLowerCase();
 
 
-    const status =
-        document.getElementById(
-            "statusFilter"
-        ).value;
+    if (
+        status === "completed"
+        ||
+        status === "مكتملة"
+        ||
+        status === "مكتمل"
+    ) {
+
+        return "مكتملة";
+
+    }
 
 
-    const priority =
-        document.getElementById(
-            "priorityFilter"
-        ).value;
+    if (
+        status === "pending_approval"
+        ||
+        status === "submitted"
+        ||
+        status.includes(
+            "بانتظار"
+        )
+    ) {
+
+        return "بانتظار الاعتماد";
+
+    }
+
+
+    if (
+        status === "in_progress"
+        ||
+        status === "قيد التنفيذ"
+    ) {
+
+        return "قيد التنفيذ";
+
+    }
+
+
+    return "جديدة";
+
+}
+
+
+
+/* بناء قائمة المهام */
+
+function buildAllTaskItems() {
+
+    taskItems =
+        assignments
+            .map(
+                assignment => {
+
+
+                    const task =
+                        getTask(
+                            assignment.task_id
+                        );
+
+
+                    if (
+                        !task
+                    ) {
+
+                        return null;
+
+                    }
+
+
+                    return {
+
+                        assignmentId:
+                            assignment.id,
+
+                        assignment:
+                            assignment,
+
+                        task:
+                            task,
+
+                        taskId:
+                            task.id,
+
+                        projectId:
+                            task.project_id,
+
+                        projectName:
+                            getProjectName(
+                                task.project_id
+                            ),
+
+                        name:
+                            task.task_name
+                            ||
+                            task.name
+                            ||
+                            "مهمة",
+
+                        description:
+                            task.description
+                            ||
+                            "",
+
+                        priority:
+                            task.priority
+                            ||
+                            "متوسطة",
+
+                        dueDate:
+                            task.due_date
+                            ||
+                            null,
+
+                        status:
+                            normalizeAssignmentStatus(
+                                assignment.status
+                            )
+
+                    };
+
+                }
+            )
+            .filter(
+                Boolean
+            );
+
+}
+
+
+
+/* الملخص */
+
+function updateSummary() {
+
+    const all =
+        taskItems.length;
+
+
+    const current =
+        taskItems.filter(
+            item =>
+                item.status ===
+                "قيد التنفيذ"
+        ).length;
+
+
+    const pending =
+        taskItems.filter(
+            item =>
+                item.status ===
+                "بانتظار الاعتماد"
+        ).length;
+
+
+    const completed =
+        taskItems.filter(
+            item =>
+                item.status ===
+                "مكتملة"
+        ).length;
+
+
+    document.getElementById(
+        "allTasksCount"
+    ).textContent =
+        all;
+
+
+    document.getElementById(
+        "currentTasksCount"
+    ).textContent =
+        current;
+
+
+    document.getElementById(
+        "pendingTasksCount"
+    ).textContent =
+        pending;
+
+
+    document.getElementById(
+        "completedTasksCount"
+    ).textContent =
+        completed;
+
+}
+
+
+
+/* تحويل التاريخ */
+
+function formatDate(
+    value
+) {
+
+    if (
+        !value
+    ) {
+
+        return "غير محدد";
+
+    }
+
+
+    const date =
+        new Date(
+            value
+        );
+
+
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return String(
+            value
+        );
+
+    }
+
+
+    return date.toLocaleDateString(
+        "ar-SA"
+    );
+
+}
+
+
+
+/* فحص التأخير */
+
+function isTaskLate(
+    item
+) {
+
+    if (
+        !item.dueDate
+        ||
+        item.status === "مكتملة"
+    ) {
+
+        return false;
+
+    }
+
+
+    const due =
+        new Date(
+            item.dueDate
+        );
+
+
+    const today =
+        new Date();
+
+
+    due.setHours(
+        23,
+        59,
+        59,
+        999
+    );
+
+
+    return due < today;
+
+}
+
+
+
+/* كلاس الأولوية */
+
+function priorityClass(
+    priority
+) {
+
+    if (
+        priority === "عالية"
+    ) {
+
+        return "high";
+
+    }
+
+
+    if (
+        priority === "منخفضة"
+    ) {
+
+        return "low";
+
+    }
+
+
+    return "medium";
+
+}
+
+
+
+/* كلاس الحالة */
+
+function statusClass(
+    status
+) {
+
+    if (
+        status === "مكتملة"
+    ) {
+
+        return "completed";
+
+    }
+
+
+    if (
+        status === "قيد التنفيذ"
+    ) {
+
+        return "running";
+
+    }
+
+
+    if (
+        status ===
+        "بانتظار الاعتماد"
+    ) {
+
+        return "pending";
+
+    }
+
+
+    return "new";
+
+}
+
+
+
+/* البحث والفلترة */
+
+function filterTasks() {
+
+    const search =
+        String(
+            searchInput.value || ""
+        )
+        .trim()
+        .toLowerCase();
+
+
+    const selectedStatus =
+        statusFilter.value;
+
+
+    const selectedPriority =
+        priorityFilter.value;
 
 
     const filtered =
-        tasks.filter(
-            task => {
+        taskItems.filter(
+            item => {
 
-                const text =
+
+                const searchable =
                     `
-                        ${task.name}
-                        ${task.projectName}
-                        ${task.employeeName}
+                        ${item.name}
+                        ${item.description}
+                        ${item.projectName}
                     `
                     .toLowerCase();
 
@@ -2530,39 +1882,23 @@ function filterTasks(){
                 const searchMatch =
                     !search
                     ||
-                    text.includes(search);
+                    searchable.includes(
+                        search
+                    );
 
 
-                let statusMatch =
-                    true;
-
-
-                if(status){
-
-                    if(
-                        status === "متأخرة"
-                    ){
-
-                        statusMatch =
-                            isTaskLate(task);
-
-                    }
-                    else{
-
-                        statusMatch =
-                            task.status ===
-                            status;
-
-                    }
-
-                }
+                const statusMatch =
+                    !selectedStatus
+                    ||
+                    item.status ===
+                    selectedStatus;
 
 
                 const priorityMatch =
-                    !priority
+                    !selectedPriority
                     ||
-                    task.priority ===
-                    priority;
+                    item.priority ===
+                    selectedPriority;
 
 
                 return (
@@ -2584,2034 +1920,1265 @@ function filterTasks(){
 }
 
 
-/* =========================================================
-   المهارات المطلوبة
-========================================================= */
 
-function addRequirementRow(
-    skillId = "",
-    level = 3
-){
+/* عرض المهام */
 
-    const container =
-        document.getElementById(
-            "requirementsContainer"
-        );
+function renderTasks(
+    items
+) {
+
+    tasksCount.textContent =
+        `${items.length} مهام`;
 
 
-    const row =
-        document.createElement(
-            "div"
-        );
+    if (
+        !items.length
+    ) {
+
+        tasksGrid.innerHTML =
+            `
+                <div class="empty-state">
+                    لا توجد مهام مطابقة.
+                </div>
+            `;
+
+        return;
+
+    }
 
 
-    row.className =
-        "requirement-row";
+    tasksGrid.innerHTML =
+        items.map(
+            item => {
 
 
-    row.innerHTML = `
+                const late =
+                    isTaskLate(
+                        item
+                    );
 
-        <div class="form-group">
 
-            <label>
-                المهارة
-            </label>
+                let actionButton =
+                    "";
 
-            <select class="requirement-skill">
 
-                <option value="">
-                    اختر المهارة
-                </option>
+                if (
+                    item.status ===
+                    "جديدة"
+                ) {
 
-                ${
-                    skills
-                    .map(
-                        skill => `
+                    actionButton = `
 
-                            <option
-                                value="${skill.id}"
+                        <button
+                            type="button"
+                            class="start-task-btn"
+                            data-assignment-id="${Number(item.assignmentId)}"
+                        >
+                            بدء المهمة
+                        </button>
+
+                    `;
+
+                }
+
+
+                else if (
+                    item.status ===
+                    "قيد التنفيذ"
+                ) {
+
+                    actionButton = `
+
+                        <button
+                            type="button"
+                            class="submit-task-btn"
+                            data-assignment-id="${Number(item.assignmentId)}"
+                        >
+                            إرسال الإنجاز
+                        </button>
+
+                    `;
+
+                }
+
+
+                return `
+
+                    <article
+                        class="task-card ${late ? "task-late" : ""}"
+                    >
+
+
+                        <div class="task-card-top">
+
+
+                            <div>
+
+                                <span class="task-label">
+
+                                    ${escapeHtml(
+                                        item.projectName
+                                    )}
+
+                                </span>
+
+
+                                <h3>
+
+                                    ${escapeHtml(
+                                        item.name
+                                    )}
+
+                                </h3>
+
+                            </div>
+
+
+                            <div class="task-card-badges">
+
+
+                                <span
+                                    class="priority-badge ${priorityClass(item.priority)}"
+                                >
+
+                                    ${escapeHtml(
+                                        item.priority
+                                    )}
+
+                                </span>
+
+
                                 ${
-                                    Number(skill.id)
-                                    ===
-                                    Number(skillId)
+                                    late
                                     ?
-                                    "selected"
+                                    `
+                                        <span class="late-badge">
+                                            متأخرة
+                                        </span>
+                                    `
                                     :
                                     ""
                                 }
+
+
+                            </div>
+
+
+                        </div>
+
+
+                        <p class="task-description">
+
+                            ${
+                                escapeHtml(
+                                    item.description
+                                    ||
+                                    "لا يوجد وصف للمهمة."
+                                )
+                            }
+
+                        </p>
+
+
+                        ${
+                            late
+                            ?
+                            `
+                                <div class="late-alert">
+                                    تجاوزت المهمة تاريخ الاستحقاق.
+                                </div>
+                            `
+                            :
+                            ""
+                        }
+
+
+                        <div class="task-info">
+
+
+                            <div class="info-item">
+
+                                <span>
+                                    الحالة
+                                </span>
+
+                                <strong
+                                    class="status-text ${statusClass(item.status)}"
+                                >
+                                    ${escapeHtml(item.status)}
+                                </strong>
+
+                            </div>
+
+
+                            <div class="info-item">
+
+                                <span>
+                                    تاريخ الاستحقاق
+                                </span>
+
+                                <strong>
+                                    ${escapeHtml(formatDate(item.dueDate))}
+                                </strong>
+
+                            </div>
+
+
+                        </div>
+
+
+                        <div class="task-actions">
+
+
+                            <button
+                                type="button"
+                                class="details-btn"
+                                data-assignment-id="${Number(item.assignmentId)}"
                             >
-                                ${escapeHtml(skill.skill_name)}
-                            </option>
+                                التفاصيل
+                            </button>
 
-                        `
-                    )
-                    .join("")
-                }
 
-            </select>
+                            ${actionButton}
 
-        </div>
 
+                        </div>
 
-        <div class="form-group">
 
-            <label>
-                المستوى المطلوب
-            </label>
+                    </article>
 
-            <input
-                type="number"
-                class="requirement-level"
-                min="1"
-                max="5"
-                value="${level}"
-            >
+                `;
 
-        </div>
-
-
-        <button
-            type="button"
-            class="remove-requirement-btn"
-        >
-            حذف
-        </button>
-
-    `;
-
-
-    row
-    .querySelector(
-        ".remove-requirement-btn"
-    )
-    .addEventListener(
-        "click",
-        () => {
-
-            row.remove();
-
-        }
-    );
-
-
-    container.appendChild(
-        row
-    );
-
-}
-
-
-/* =========================================================
-   تحليل المهمة وعدد الموظفين
-========================================================= */
-
-function analyzeTaskRequirements(){
-
-    const name =
-        document.getElementById(
-            "taskName"
-        ).value.trim();
-
-
-    const description =
-        document.getElementById(
-            "taskDescription"
-        ).value.trim();
-
-
-    if(
-        !name
-        ||
-        !description
-    ){
-
-        alert(
-            "اكتب اسم المهمة ووصفها أولًا."
-        );
-
-        return;
-
-    }
-
-
-    const text =
-        (
-            name
-            +
-            " "
-            +
-            description
-        )
-        .toLowerCase();
-
-
-    const areas = [
-
-        /واجهة|frontend|html|css|ui|ux/,
-
-        /javascript|جافا سكربت|برمجة/,
-
-        /قاعدة بيانات|database|sql|supabase/,
-
-        /api|تكامل|ربط/,
-
-        /اختبار|testing|qa/,
-
-        /تحليل|متطلبات/,
-
-        /تصميم|design/,
-
-        /تقارير|report|dashboard/,
-
-        /أمن|security|صلاحيات/
-
-    ]
-    .filter(
-        pattern =>
-            pattern.test(text)
-    )
-    .length;
-
-
-    let employeesRequired =
-        1;
-
-
-    if(
-        areas >= 2
-        ||
-        description.length > 180
-    ){
-
-        employeesRequired =
-            2;
-
-    }
-
-
-    if(
-        areas >= 4
-        ||
-        description.length > 450
-        ||
-        /نظام كامل|منصة كاملة|نظام متكامل|مشروع كامل/
-        .test(text)
-    ){
-
-        employeesRequired =
-            3;
-
-    }
-
-
-    if(
-        areas >= 6
-        ||
-        description.length > 800
-    ){
-
-        employeesRequired =
-            4;
-
-    }
-
-
-    employeesRequired =
-        Math.max(
-            1,
-            Math.min(
-                5,
-                employeesRequired
-            )
-        );
-
-
-    document.getElementById(
-        "taskEmployeesRequired"
-    ).value =
-        employeesRequired;
-
-
-    let experience =
-        1;
-
-
-    let jobLevel =
-        "مبتدئ";
-
-
-    if(
-        employeesRequired === 2
-    ){
-
-        experience =
-            2;
-
-        jobLevel =
-            "متوسط";
-
-    }
-
-
-    if(
-        employeesRequired === 3
-    ){
-
-        experience =
-            3;
-
-        jobLevel =
-            "متقدم";
-
-    }
-
-
-    if(
-        employeesRequired >= 4
-    ){
-
-        experience =
-            4;
-
-        jobLevel =
-            "خبير";
-
-    }
-
-
-    document.getElementById(
-        "requiredExperience"
-    ).value =
-        experience;
-
-
-    document.getElementById(
-        "requiredJobLevel"
-    ).value =
-        jobLevel;
-
-
-    document.getElementById(
-        "aiAnalysisStatus"
-    ).textContent =
-        "تم تحليل متطلبات المهمة.";
-
-
-    document.getElementById(
-        "aiAnalysisResult"
-    ).innerHTML = `
-
-        <strong>
-            نتيجة التحليل
-        </strong>
-
-        <p>
-            عدد الموظفين المقترح:
-            <strong>
-                ${employeesRequired}
-            </strong>
-        </p>
-
-        <p>
-            مستوى المهمة:
-            <strong>
-                ${escapeHtml(jobLevel)}
-            </strong>
-        </p>
-
-        <p>
-            الخبرة المقترحة:
-            <strong>
-                ${experience} سنوات
-            </strong>
-        </p>
-
-    `;
-
-}
-
-
-/* =========================================================
-   الأوزان
-========================================================= */
-
-function getWeights(){
-
-    return {
-
-        skills:
-            Number(
-                document.getElementById(
-                    "skillsWeight"
-                ).value
-                ||
-                0
-            ),
-
-        experience:
-            Number(
-                document.getElementById(
-                    "experienceWeight"
-                ).value
-                ||
-                0
-            ),
-
-        jobLevel:
-            Number(
-                document.getElementById(
-                    "jobLevelWeight"
-                ).value
-                ||
-                0
-            ),
-
-        availability:
-            Number(
-                document.getElementById(
-                    "availabilityWeight"
-                ).value
-                ||
-                0
-            ),
-
-        performance:
-            Number(
-                document.getElementById(
-                    "performanceWeight"
-                ).value
-                ||
-                0
-            )
-
-    };
-
-}
-
-
-function updateCriteriaTotal(){
-
-    const weights =
-        getWeights();
-
-
-    const total =
-        weights.skills
-        +
-        weights.experience
-        +
-        weights.jobLevel
-        +
-        weights.availability
-        +
-        weights.performance;
-
-
-    const element =
-        document.getElementById(
-            "criteriaTotalText"
-        );
-
-
-    element.textContent =
-        `المجموع الحالي: ${total}%`;
-
-
-    return total;
-
-}
-
-
-/* =========================================================
-   قراءة المتطلبات من النموذج
-========================================================= */
-
-function getRequirementsFromForm(){
-
-    return [
-        ...document.querySelectorAll(
-            ".requirement-row"
-        )
-    ]
-    .map(
-        row => {
-
-            const skillId =
-                row.querySelector(
-                    ".requirement-skill"
-                ).value;
-
-
-            const level =
-                row.querySelector(
-                    ".requirement-level"
-                ).value;
-
-
-            if(!skillId){
-                return null;
             }
-
-
-            return {
-
-                skill_id:
-                    Number(skillId),
-
-                required_level:
-                    Number(level || 1)
-
-            };
-
-        }
-    )
-    .filter(Boolean);
-
-}
-
-
-/* =========================================================
-   حفظ متطلبات المهمة
-========================================================= */
-
-async function saveTaskRequirements(
-    taskId,
-    requirements
-){
-
-    const {
-        error:deleteError
-    } =
-    await supabaseClient
-        .from("task_requirements")
-        .delete()
-        .eq(
-            "task_id",
-            Number(taskId)
-        );
-
-
-    if(deleteError){
-        throw deleteError;
-    }
-
-
-    if(
-        requirements.length === 0
-    ){
-        return;
-    }
-
-
-    const weights =
-        getWeights();
-
-
-    const employeesRequired =
-        Math.max(
-            1,
-            Number(
-                document.getElementById(
-                    "taskEmployeesRequired"
-                ).value
-                ||
-                1
-            )
-        );
-
-
-    const experience =
-        Number(
-            document.getElementById(
-                "requiredExperience"
-            ).value
-            ||
-            0
-        );
-
-
-    const jobLevel =
-        document.getElementById(
-            "requiredJobLevel"
-        ).value;
-
-
-    const availability =
-        Number(
-            document.getElementById(
-                "requiredAvailability"
-            ).value
-            ||
-            0
-        );
-
-
-    const performance =
-        Number(
-            document.getElementById(
-                "requiredPerformance"
-            ).value
-            ||
-            0
-        );
-
-
-    const rows =
-        requirements.map(
-            requirement => ({
-
-                task_id:
-                    Number(taskId),
-
-                skill_id:
-                    requirement.skill_id,
-
-                required_level:
-                    requirement.required_level,
-
-                employees_required:
-                    employeesRequired,
-
-                experience_required:
-                    experience,
-
-                job_level_required:
-                    jobLevel,
-
-                availability_required:
-                    availability,
-
-                performance_required:
-                    performance,
-
-                skills_weight:
-                    weights.skills,
-
-                experience_weight:
-                    weights.experience,
-
-                job_level_weight:
-                    weights.jobLevel,
-
-                availability_weight:
-                    weights.availability,
-
-                performance_weight:
-                    weights.performance
-
-            })
-        );
-
-
-    const {
-        error
-    } =
-    await supabaseClient
-        .from("task_requirements")
-        .insert(
-            rows
-        );
-
-
-    if(error){
-        throw error;
-    }
-
-}
-
-
-/* =========================================================
-   تحميل متطلبات المهمة
-========================================================= */
-
-async function loadTaskRequirements(taskId){
-
-    const {
-        data,
-        error
-    } =
-    await supabaseClient
-        .from("task_requirements")
-        .select("*")
-        .eq(
-            "task_id",
-            Number(taskId)
-        );
-
-
-    if(error){
-        throw error;
-    }
-
-
-    return data || [];
-
-}
-
-
-/* =========================================================
-   فتح إضافة مهمة
-========================================================= */
-
-function resetTaskForm(){
-
-    document.getElementById(
-        "taskForm"
-    ).reset();
-
-
-    document.getElementById(
-        "editTaskId"
-    ).value =
-        "";
-
-
-    document.getElementById(
-        "taskEmployeesRequired"
-    ).value =
-        1;
-
-
-    document.getElementById(
-        "requiredExperience"
-    ).value =
-        1;
-
-
-    document.getElementById(
-        "requiredJobLevel"
-    ).value =
-        "متوسط";
-
-
-    document.getElementById(
-        "requiredAvailability"
-    ).value =
-        50;
-
-
-    document.getElementById(
-        "requiredPerformance"
-    ).value =
-        70;
-
-
-    document.getElementById(
-        "skillsWeight"
-    ).value =
-        40;
-
-
-    document.getElementById(
-        "experienceWeight"
-    ).value =
-        20;
-
-
-    document.getElementById(
-        "jobLevelWeight"
-    ).value =
-        15;
-
-
-    document.getElementById(
-        "availabilityWeight"
-    ).value =
-        15;
-
-
-    document.getElementById(
-        "performanceWeight"
-    ).value =
-        10;
-
-
-    document.getElementById(
-        "requirementsContainer"
-    ).innerHTML =
-        "";
-
-
-    document.getElementById(
-        "aiAnalysisResult"
-    ).innerHTML =
-        "";
-
-
-    document.getElementById(
-        "aiAnalysisStatus"
-    ).textContent =
-        "اكتب اسم المهمة ووصفها ثم اضغط تحليل المتطلبات.";
-
-
-    updateCriteriaTotal();
-
-}
-
-
-function openTaskModal(){
-
-    resetTaskForm();
-
-
-    document.getElementById(
-        "modalTitle"
-    ).textContent =
-        "إضافة مهمة";
-
-
-    document.getElementById(
-        "saveTaskBtn"
-    ).textContent =
-        "حفظ المهمة";
-
-
-    addRequirementRow();
-
-
-    document.getElementById(
-        "taskModal"
-    )
-    .classList
-    .add(
-        "show"
-    );
-
-
-    document.body
-    .classList
-    .add(
-        "modal-open"
-    );
-
-}
-
-
-function closeTaskModal(){
-
-    document.getElementById(
-        "taskModal"
-    )
-    .classList
-    .remove(
-        "show"
-    );
-
-
-    document.body
-    .classList
-    .remove(
-        "modal-open"
-    );
-
-}
-
-
-/* =========================================================
-   تعديل المهمة
-========================================================= */
-
-async function editTask(id){
-
-    const task =
-        tasks.find(
-            item =>
-                Number(item.id)
-                ===
-                Number(id)
-        );
-
-
-    if(!task){
-        return;
-    }
-
-
-    resetTaskForm();
-
-
-    document.getElementById(
-        "modalTitle"
-    ).textContent =
-        "تعديل المهمة";
-
-
-    document.getElementById(
-        "saveTaskBtn"
-    ).textContent =
-        "حفظ التعديلات";
-
-
-    document.getElementById(
-        "editTaskId"
-    ).value =
-        task.id;
-
-
-    document.getElementById(
-        "taskName"
-    ).value =
-        task.name;
-
-
-    document.getElementById(
-        "taskProject"
-    ).value =
-        task.projectId || "";
-
-
-    document.getElementById(
-        "taskPriority"
-    ).value =
-        task.priority;
-
-
-    document.getElementById(
-        "taskStatus"
-    ).value =
-        task.status;
-
-
-    document.getElementById(
-        "taskDueDate"
-    ).value =
-        task.dueDate || "";
-
-
-    document.getElementById(
-        "assignedEmployee"
-    ).value =
-        task.assignedEmployeeId || "";
-
-
-    document.getElementById(
-        "taskDescription"
-    ).value =
-        task.description || "";
-
-
-    try{
-
-        const requirements =
-            await loadTaskRequirements(
-                task.id
-            );
-
-
-        document.getElementById(
-            "requirementsContainer"
-        ).innerHTML =
-            "";
-
-
-        if(
-            requirements.length
-        ){
-
-            const first =
-                requirements[0];
-
-
-            document.getElementById(
-                "taskEmployeesRequired"
-            ).value =
-                first.employees_required
-                ??
-                1;
-
-
-            document.getElementById(
-                "requiredExperience"
-            ).value =
-                first.experience_required
-                ??
-                0;
-
-
-            document.getElementById(
-                "requiredJobLevel"
-            ).value =
-                first.job_level_required
-                ||
-                "متوسط";
-
-
-            document.getElementById(
-                "requiredAvailability"
-            ).value =
-                first.availability_required
-                ??
-                50;
-
-
-            document.getElementById(
-                "requiredPerformance"
-            ).value =
-                first.performance_required
-                ??
-                70;
-
-
-            document.getElementById(
-                "skillsWeight"
-            ).value =
-                first.skills_weight
-                ??
-                40;
-
-
-            document.getElementById(
-                "experienceWeight"
-            ).value =
-                first.experience_weight
-                ??
-                20;
-
-
-            document.getElementById(
-                "jobLevelWeight"
-            ).value =
-                first.job_level_weight
-                ??
-                15;
-
-
-            document.getElementById(
-                "availabilityWeight"
-            ).value =
-                first.availability_weight
-                ??
-                15;
-
-
-            document.getElementById(
-                "performanceWeight"
-            ).value =
-                first.performance_weight
-                ??
-                10;
-
-
-            requirements.forEach(
-                requirement => {
-
-                    addRequirementRow(
-                        requirement.skill_id,
-                        requirement.required_level
-                    );
-
-                }
-            );
-
-        }
-        else{
-
-            addRequirementRow();
-
-        }
-
-
-        updateCriteriaTotal();
-
-
-        document.getElementById(
-            "taskModal"
         )
+        .join("");
+
+}
+
+
+
+/* البحث عن المهمة بواسطة رقم الإسناد */
+
+function getItemByAssignmentId(
+    assignmentId
+) {
+
+    return taskItems.find(
+        item =>
+            Number(
+                item.assignmentId
+            )
+            ===
+            Number(
+                assignmentId
+            )
+    ) || null;
+
+}
+
+
+
+/* عرض تفاصيل المهمة */
+
+function viewTask(
+    assignmentId
+) {
+
+    const item =
+        getItemByAssignmentId(
+            assignmentId
+        );
+
+
+    if (
+        !item
+    ) {
+
+        return;
+
+    }
+
+
+    selectedTask =
+        item;
+
+
+    const assignment =
+        item.assignment;
+
+
+    taskDetails.innerHTML = `
+
+
+        <div class="detail-item">
+
+            <span>
+                اسم المهمة
+            </span>
+
+            <strong>
+                ${escapeHtml(item.name)}
+            </strong>
+
+        </div>
+
+
+        <div class="detail-item">
+
+            <span>
+                المشروع
+            </span>
+
+            <strong>
+                ${escapeHtml(item.projectName)}
+            </strong>
+
+        </div>
+
+
+        <div class="detail-item">
+
+            <span>
+                الحالة
+            </span>
+
+            <strong>
+                ${escapeHtml(item.status)}
+            </strong>
+
+        </div>
+
+
+        <div class="detail-item">
+
+            <span>
+                الأولوية
+            </span>
+
+            <strong>
+                ${escapeHtml(item.priority)}
+            </strong>
+
+        </div>
+
+
+        <div class="detail-item">
+
+            <span>
+                تاريخ الاستحقاق
+            </span>
+
+            <strong>
+                ${escapeHtml(formatDate(item.dueDate))}
+            </strong>
+
+        </div>
+
+
+        <div class="detail-item full-width">
+
+            <span>
+                وصف المهمة
+            </span>
+
+            <strong>
+                ${
+                    escapeHtml(
+                        item.description
+                        ||
+                        "لا يوجد وصف"
+                    )
+                }
+            </strong>
+
+        </div>
+
+
+        ${
+            assignment.review_note
+            ?
+            `
+                <div class="detail-item full-width">
+
+                    <span>
+                        ملاحظة المسؤول
+                    </span>
+
+                    <strong>
+                        ${escapeHtml(assignment.review_note)}
+                    </strong>
+
+                </div>
+            `
+            :
+            ""
+        }
+
+    `;
+
+
+    modalActions.innerHTML =
+        "";
+
+
+    if (
+        item.status ===
+        "جديدة"
+    ) {
+
+        modalActions.innerHTML = `
+
+            <button
+                type="button"
+                class="start-task-btn"
+                data-assignment-id="${Number(item.assignmentId)}"
+            >
+                بدء المهمة
+            </button>
+
+        `;
+
+    }
+
+
+    else if (
+        item.status ===
+        "قيد التنفيذ"
+    ) {
+
+        modalActions.innerHTML = `
+
+            <button
+                type="button"
+                class="submit-task-btn"
+                data-assignment-id="${Number(item.assignmentId)}"
+            >
+                إرسال الإنجاز
+            </button>
+
+        `;
+
+    }
+
+
+    detailsModal
         .classList
         .add(
             "show"
         );
 
-
-        document.body
-        .classList
-        .add(
-            "modal-open"
-        );
-
-    }
-    catch(error){
-
-        console.error(error);
-
-        alert(
-            "تعذر تحميل بيانات المهمة."
-        );
-
-    }
-
 }
 
 
-/* =========================================================
-   حفظ المهمة
-========================================================= */
 
-async function saveTask(event){
+/* طلب بدء المهمة */
 
-    event.preventDefault();
+function askStartTask(
+    assignmentId
+) {
 
+    pendingAction = {
 
-    const editId =
-        document.getElementById(
-            "editTaskId"
-        ).value;
+        type:
+            "start",
 
-
-    const name =
-        document.getElementById(
-            "taskName"
-        ).value.trim();
-
-
-    const projectId =
-        Number(
-            document.getElementById(
-                "taskProject"
-            ).value
-        );
-
-
-    const priority =
-        document.getElementById(
-            "taskPriority"
-        ).value;
-
-
-    const status =
-        document.getElementById(
-            "taskStatus"
-        ).value;
-
-
-    const dueDate =
-        document.getElementById(
-            "taskDueDate"
-        ).value;
-
-
-    const employeeValue =
-        document.getElementById(
-            "assignedEmployee"
-        ).value;
-
-
-    const description =
-        document.getElementById(
-            "taskDescription"
-        ).value.trim();
-
-
-    const requirements =
-        getRequirementsFromForm();
-
-
-    if(
-        !name
-        ||
-        !projectId
-        ||
-        !dueDate
-        ||
-        !description
-    ){
-
-        alert(
-            "أكمل بيانات المهمة."
-        );
-
-        return;
-
-    }
-
-
-    if(
-        requirements.length === 0
-    ){
-
-        alert(
-            "أضف مهارة واحدة على الأقل للمهمة."
-        );
-
-        return;
-
-    }
-
-
-    if(
-        updateCriteriaTotal()
-        !==
-        100
-    ){
-
-        alert(
-            "يجب أن يكون مجموع أوزان المطابقة 100%."
-        );
-
-        return;
-
-    }
-
-
-    const payload = {
-
-        task_name:
-            name,
-
-        project_id:
-            projectId,
-
-        priority:
-            priority,
-
-        status:
-            status,
-
-        due_date:
-            dueDate,
-
-        assigned_employee_id:
-            employeeValue
-            ?
-            Number(employeeValue)
-            :
-            null,
-
-        description:
-            description
+        assignmentId:
+            Number(
+                assignmentId
+            )
 
     };
 
 
-    const button =
-        document.getElementById(
-            "saveTaskBtn"
+    confirmTitle.textContent =
+        "بدء المهمة";
+
+
+    confirmMessage.textContent =
+        "هل تريد بدء تنفيذ هذه المهمة الآن؟";
+
+
+    confirmActionBtn.textContent =
+        "بدء المهمة";
+
+
+    openConfirmModal();
+
+}
+
+
+
+/* بدء المهمة */
+
+async function startTask(
+    assignmentId
+) {
+
+    try {
+
+        setActionLoading(
+            true
         );
 
 
-    button.disabled =
-        true;
-
-
-    button.textContent =
-        "جارٍ الحفظ...";
-
-
-    try{
-
-        let taskId;
-
-
-        if(editId){
-
-            const {
-                error
-            } =
-            await supabaseClient
-                .from("tasks")
-                .update(
-                    payload
-                )
-                .eq(
-                    "id",
-                    Number(editId)
-                );
-
-
-            if(error){
-                throw error;
-            }
-
-
-            taskId =
-                Number(editId);
-
-        }
-        else{
-
-            const {
-                data,
-                error
-            } =
-            await supabaseClient
-                .from("tasks")
-                .insert([
-                    payload
-                ])
-                .select("id")
-                .single();
-
-
-            if(error){
-                throw error;
-            }
-
-
-            taskId =
-                data.id;
-
-        }
-
-
-        await saveTaskRequirements(
-            taskId,
-            requirements
-        );
-
-
-        closeTaskModal();
-
-
-        await loadTasks();
-
-
-        alert(
-            editId
-            ?
-            "تم تعديل المهمة بنجاح."
-            :
-            "تمت إضافة المهمة بنجاح."
-        );
-
-    }
-    catch(error){
-
-        console.error(error);
-
-
-        alert(
-            "تعذر حفظ المهمة.\n\n"
-            +
-            (
-                error.message || ""
+        const {
+            error
+        } =
+        await supabaseClient
+            .from(
+                "task_assignments"
             )
-        );
+            .update({
+
+                status:
+                    "in_progress",
+
+                started_at:
+                    new Date()
+                    .toISOString(),
+
+                review_note:
+                    null
+
+            })
+            .eq(
+                "id",
+                Number(
+                    assignmentId
+                )
+            )
+            .eq(
+                "employee_id",
+                employeeId
+            );
+
+
+        if (
+            error
+        ) {
+
+            throw error;
+
+        }
+
+
+        closeConfirmModal();
+
+
+        await refreshPageData();
+
 
     }
-    finally{
 
-        button.disabled =
-            false;
+    catch (error) {
+
+        console.error(
+            "خطأ بدء المهمة:",
+            error
+        );
 
 
-        button.textContent =
-            editId
-            ?
-            "حفظ التعديلات"
-            :
-            "حفظ المهمة";
+        alert(
+            "تعذر بدء المهمة."
+        );
+
+
+        setActionLoading(
+            false
+        );
 
     }
 
 }
 
 
-/* =========================================================
-   تفاصيل المهمة
-========================================================= */
 
-async function viewTask(id){
+/* فتح إرسال الإنجاز */
 
-    const task =
-        tasks.find(
-            item =>
-                Number(item.id)
-                ===
-                Number(id)
+function askSubmitTask(
+    assignmentId
+) {
+
+    const item =
+        getItemByAssignmentId(
+            assignmentId
         );
 
 
-    if(!task){
+    if (
+        !item
+    ) {
+
         return;
+
     }
 
 
-    try{
+    completionAssignmentId =
+        Number(
+            assignmentId
+        );
 
-        const requirements =
-            await loadTaskRequirements(
-                task.id
+
+    completionNote.value =
+        "";
+
+
+    completionUrl.value =
+        "";
+
+
+    if (
+        completionAttachments
+    ) {
+
+        completionAttachments.value =
+            "";
+
+    }
+
+
+    hideCompletionError();
+
+
+    completionModal
+        .classList
+        .add(
+            "show"
+        );
+
+}
+
+
+
+/* إظهار خطأ الإنجاز */
+
+function showCompletionError(
+    message
+) {
+
+    completionError.textContent =
+        message;
+
+
+    completionError.style.display =
+        "block";
+
+}
+
+
+
+/* إخفاء خطأ الإنجاز */
+
+function hideCompletionError() {
+
+    completionError.textContent =
+        "";
+
+
+    completionError.style.display =
+        "none";
+
+}
+
+
+
+/* اسم ملف آمن */
+
+function createSafeFileName(
+    name
+) {
+
+    return String(
+        name || "file"
+    )
+    .replace(
+        /[^a-zA-Z0-9\u0600-\u06FF._-]/g,
+        "_"
+    );
+
+}
+
+
+
+/* امتدادات ممنوعة */
+
+function isDangerousFile(
+    file
+) {
+
+    const extension =
+        String(
+            file.name || ""
+        )
+        .split(".")
+        .pop()
+        .toLowerCase();
+
+
+    const blocked = [
+        "exe",
+        "bat",
+        "cmd",
+        "com",
+        "msi",
+        "scr",
+        "ps1",
+        "vbs",
+        "js",
+        "jar"
+    ];
+
+
+    return blocked.includes(
+        extension
+    );
+
+}
+
+
+
+/* رفع المرفقات */
+
+async function uploadCompletionAttachments(
+    assignmentId
+) {
+
+    if (
+        !completionAttachments
+    ) {
+
+        return [];
+
+    }
+
+
+    const files =
+        Array.from(
+            completionAttachments.files
+            ||
+            []
+        );
+
+
+    if (
+        files.length > 5
+    ) {
+
+        throw new Error(
+            "يمكن رفع 5 مرفقات كحد أقصى."
+        );
+
+    }
+
+
+    const maxSize =
+        25
+        *
+        1024
+        *
+        1024;
+
+
+    const uploaded =
+        [];
+
+
+    for (
+        const file
+        of
+        files
+    ) {
+
+
+        if (
+            file.size > maxSize
+        ) {
+
+            throw new Error(
+                `الملف ${file.name} أكبر من 25MB.`
             );
-
-
-        let requirementsHtml =
-            `
-                <div class="requirements-empty">
-                    لا توجد متطلبات مسجلة.
-                </div>
-            `;
-
-
-        if(
-            requirements.length
-        ){
-
-            const first =
-                requirements[0];
-
-
-            const skillsHtml =
-                requirements
-                .map(
-                    requirement => {
-
-                        const skill =
-                            skills.find(
-                                item =>
-                                    Number(item.id)
-                                    ===
-                                    Number(
-                                        requirement.skill_id
-                                    )
-                            );
-
-
-                        return `
-
-                            <div class="requirement-detail-card">
-
-                                <strong>
-                                    ${
-                                        escapeHtml(
-                                            skill?.skill_name
-                                            ||
-                                            "مهارة"
-                                        )
-                                    }
-                                </strong>
-
-                                <span>
-                                    المستوى المطلوب:
-                                    ${
-                                        requirement.required_level
-                                        ??
-                                        "-"
-                                    }
-                                </span>
-
-                            </div>
-
-                        `;
-
-                    }
-                )
-                .join("");
-
-
-            requirementsHtml = `
-
-                <div class="requirements-details">
-
-                    <div class="requirement-summary-item">
-
-                        <span>
-                            عدد الموظفين المطلوب
-                        </span>
-
-                        <strong>
-                            ${
-                                first.employees_required
-                                ??
-                                1
-                            }
-                        </strong>
-
-                    </div>
-
-
-                    <div class="requirement-summary-item">
-
-                        <span>
-                            الخبرة المطلوبة
-                        </span>
-
-                        <strong>
-                            ${
-                                first.experience_required
-                                ??
-                                0
-                            }
-                            سنة
-                        </strong>
-
-                    </div>
-
-
-                    <div class="requirement-summary-item">
-
-                        <span>
-                            المستوى الوظيفي
-                        </span>
-
-                        <strong>
-                            ${
-                                escapeHtml(
-                                    first.job_level_required
-                                    ||
-                                    "-"
-                                )
-                            }
-                        </strong>
-
-                    </div>
-
-
-                    <div class="requirement-summary-item">
-
-                        <span>
-                            التفرغ المطلوب
-                        </span>
-
-                        <strong>
-                            ${
-                                first.availability_required
-                                ??
-                                0
-                            }%
-                        </strong>
-
-                    </div>
-
-
-                    <div class="required-skills-list">
-                        ${skillsHtml}
-                    </div>
-
-                </div>
-
-            `;
 
         }
 
 
-        document.getElementById(
-            "taskDetails"
-        ).innerHTML = `
+        if (
+            isDangerousFile(
+                file
+            )
+        ) {
 
-            <div class="detail-item">
+            throw new Error(
+                `نوع الملف ${file.name} غير مسموح.`
+            );
 
-                <span>
-                    اسم المهمة
-                </span>
-
-                <strong>
-                    ${escapeHtml(task.name)}
-                </strong>
-
-            </div>
+        }
 
 
-            <div class="detail-item">
-
-                <span>
-                    المشروع
-                </span>
-
-                <strong>
-                    ${escapeHtml(task.projectName)}
-                </strong>
-
-            </div>
+        const safeName =
+            createSafeFileName(
+                file.name
+            );
 
 
-            <div class="detail-item">
-
-                <span>
-                    الموظف
-                </span>
-
-                <strong>
-                    ${escapeHtml(task.employeeName)}
-                </strong>
-
-            </div>
+        const path =
+            `${employeeId}/${assignmentId}/${Date.now()}-${safeName}`;
 
 
-            <div class="detail-item">
-
-                <span>
-                    الحالة
-                </span>
-
-                <strong>
-                    ${escapeHtml(task.status)}
-                </strong>
-
-            </div>
-
-
-            <div class="detail-item">
-
-                <span>
-                    الأولوية
-                </span>
-
-                <strong>
-                    ${escapeHtml(task.priority)}
-                </strong>
-
-            </div>
+        const {
+            error
+        } =
+        await supabaseClient.storage
+            .from(
+                "task-attachments"
+            )
+            .upload(
+                path,
+                file,
+                {
+                    upsert:
+                        false
+                }
+            );
 
 
-            <div class="detail-item">
+        if (
+            error
+        ) {
 
-                <span>
-                    تاريخ الاستحقاق
-                </span>
+            throw error;
 
-                <strong>
-                    ${formatDate(task.dueDate)}
-                </strong>
-
-            </div>
+        }
 
 
-            <div class="detail-item detail-full">
+        uploaded.push({
 
-                <span>
-                    وصف المهمة
-                </span>
+            path:
+                path,
 
-                <strong>
-                    ${
-                        escapeHtml(
-                            task.description
-                            ||
-                            "-"
-                        )
-                    }
-                </strong>
+            name:
+                file.name,
 
-            </div>
+            size:
+                file.size,
+
+            type:
+                file.type || ""
+
+        });
+
+    }
 
 
-            <div class="detail-item detail-full">
+    return uploaded;
 
-                <span>
-                    متطلبات المطابقة
-                </span>
+}
 
-                ${requirementsHtml}
+
+
+/* إرسال الإنجاز */
+
+async function sendCompletion() {
+
+    hideCompletionError();
+
+
+    const note =
+        completionNote.value
+        .trim();
+
+
+    const url =
+        completionUrl.value
+        .trim();
+
+
+    if (
+        !completionAssignmentId
+    ) {
+
+        showCompletionError(
+            "تعذر تحديد المهمة."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        !note
+    ) {
+
+        showCompletionError(
+            "اكتب ملخص العمل أولاً."
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        sendCompletionBtn.disabled =
+            true;
+
+
+        sendCompletionBtn.textContent =
+            "جارٍ الإرسال...";
+
+
+        const attachments =
+            await uploadCompletionAttachments(
+                completionAssignmentId
+            );
+
+
+        const {
+            error
+        } =
+        await supabaseClient
+            .from(
+                "task_assignments"
+            )
+            .update({
+
+                status:
+                    "pending_approval",
+
+                submitted_at:
+                    new Date()
+                    .toISOString(),
+
+                completion_note:
+                    note,
+
+                completion_url:
+                    url || null,
+
+                completion_attachments:
+                    attachments,
+
+                review_note:
+                    null,
+
+                reviewed_at:
+                    null,
+
+                completed_at:
+                    null
+
+            })
+            .eq(
+                "id",
+                Number(
+                    completionAssignmentId
+                )
+            )
+            .eq(
+                "employee_id",
+                employeeId
+            );
+
+
+        if (
+            error
+        ) {
+
+            throw error;
+
+        }
+
+
+        closeCompletionModal();
+
+
+        await refreshPageData();
+
+
+        alert(
+            "تم إرسال الإنجاز للمراجعة."
+        );
+
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "خطأ إرسال الإنجاز:",
+            error
+        );
+
+
+        showCompletionError(
+            error.message
+            ||
+            "تعذر إرسال الإنجاز."
+        );
+
+
+        sendCompletionBtn.disabled =
+            false;
+
+
+        sendCompletionBtn.textContent =
+            "إرسال للمراجعة";
+
+    }
+
+}
+
+
+
+/* تنفيذ إجراء التأكيد */
+
+async function executePendingAction() {
+
+    if (
+        !pendingAction
+    ) {
+
+        return;
+
+    }
+
+
+    const action =
+        {
+            ...pendingAction
+        };
+
+
+    if (
+        action.type ===
+        "start"
+    ) {
+
+        await startTask(
+            action.assignmentId
+        );
+
+    }
+
+}
+
+
+
+/* تحميل زر التأكيد */
+
+function setActionLoading(
+    loading
+) {
+
+    confirmActionBtn.disabled =
+        loading;
+
+
+    if (
+        loading
+    ) {
+
+        confirmActionBtn.textContent =
+            "جارٍ الحفظ...";
+
+    }
+
+}
+
+
+
+/* فتح نافذة التأكيد */
+
+function openConfirmModal() {
+
+    confirmModal
+        .classList
+        .add(
+            "show"
+        );
+
+}
+
+
+
+/* إغلاق نافذة التأكيد */
+
+function closeConfirmModal() {
+
+    confirmModal
+        .classList
+        .remove(
+            "show"
+        );
+
+
+    pendingAction =
+        null;
+
+
+    confirmActionBtn.disabled =
+        false;
+
+
+    confirmActionBtn.textContent =
+        "تأكيد";
+
+}
+
+
+
+/* إغلاق نافذة الإنجاز */
+
+function closeCompletionModal() {
+
+    completionModal
+        .classList
+        .remove(
+            "show"
+        );
+
+
+    completionAssignmentId =
+        null;
+
+
+    completionNote.value =
+        "";
+
+
+    completionUrl.value =
+        "";
+
+
+    if (
+        completionAttachments
+    ) {
+
+        completionAttachments.value =
+            "";
+
+    }
+
+
+    hideCompletionError();
+
+
+    sendCompletionBtn.disabled =
+        false;
+
+
+    sendCompletionBtn.textContent =
+        "إرسال للمراجعة";
+
+}
+
+
+
+/* إغلاق تفاصيل المهمة */
+
+function closeDetailsModal() {
+
+    detailsModal
+        .classList
+        .remove(
+            "show"
+        );
+
+
+    selectedTask =
+        null;
+
+}
+
+
+
+/* تحديث بيانات الصفحة */
+
+async function refreshPageData() {
+
+    tasksGrid.innerHTML = `
+
+        <div class="empty-state">
+            جارٍ تحميل المهام...
+        </div>
+
+    `;
+
+
+    try {
+
+        await loadAssignments();
+
+        await loadTasks();
+
+        await loadProjects();
+
+        await loadEmployeeLeaves();
+
+        buildAllTaskItems();
+
+        updateSummary();
+
+        filterTasks();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "خطأ تحديث صفحة المهام:",
+            error
+        );
+
+
+        tasksGrid.innerHTML = `
+
+            <div class="empty-state">
+
+                تعذر تحميل المهام.
 
             </div>
 
         `;
 
-
-        document.getElementById(
-            "detailsModal"
-        )
-        .classList
-        .add(
-            "show"
-        );
-
-
-        document.body
-        .classList
-        .add(
-            "modal-open"
-        );
-
-    }
-    catch(error){
-
-        console.error(error);
-
-        alert(
-            "تعذر تحميل تفاصيل المهمة."
-        );
-
     }
 
 }
 
 
-function closeDetailsModal(){
 
-    document.getElementById(
-        "detailsModal"
-    )
-    .classList
-    .remove(
-        "show"
-    );
+/* حماية النصوص */
 
-
-    document.body
-    .classList
-    .remove(
-        "modal-open"
-    );
-
-}
-
-
-/* =========================================================
-   حذف المهمة
-========================================================= */
-
-async function deleteTask(id){
-
-    const task =
-        tasks.find(
-            item =>
-                Number(item.id)
-                ===
-                Number(id)
-        );
-
-
-    if(!task){
-        return;
-    }
-
-
-    const confirmed =
-        confirm(
-            `هل أنت متأكد من حذف مهمة "${task.name}"؟`
-        );
-
-
-    if(!confirmed){
-        return;
-    }
-
-
-    try{
-
-        await supabaseClient
-            .from("task_requirements")
-            .delete()
-            .eq(
-                "task_id",
-                Number(id)
-            );
-
-
-        const {
-            error
-        } =
-        await supabaseClient
-            .from("tasks")
-            .delete()
-            .eq(
-                "id",
-                Number(id)
-            );
-
-
-        if(error){
-            throw error;
-        }
-
-
-        await loadTasks();
-
-        await loadTaskAssignments();
-
-
-        alert(
-            "تم حذف المهمة."
-        );
-
-    }
-    catch(error){
-
-        console.error(error);
-
-        alert(
-            "تعذر حذف المهمة.\n\n"
-            +
-            (
-                error.message || ""
-            )
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   المطابقة
-========================================================= */
-
-function goToMatching(id){
-
-    window.location.href =
-        `matching.html?task=${id}`;
-
-}
-
-
-/* =========================================================
-   تمديد المهمة
-========================================================= */
-
-function openExtensionModal(id){
-
-    const task =
-        tasks.find(
-            item =>
-                Number(item.id)
-                ===
-                Number(id)
-        );
-
-
-    if(
-        !task
-        ||
-        !task.dueDate
-    ){
-
-        alert(
-            "لا يوجد تاريخ استحقاق لهذه المهمة."
-        );
-
-        return;
-
-    }
-
-
-    document.getElementById(
-        "extensionTaskId"
-    ).value =
-        task.id;
-
-
-    document.getElementById(
-        "oldDueDate"
-    ).value =
-        task.dueDate;
-
-
-    document.getElementById(
-        "newDueDate"
-    ).value =
-        "";
-
-
-    document.getElementById(
-        "extensionReason"
-    ).value =
-        "";
-
-
-    document.getElementById(
-        "extensionModal"
-    )
-    .classList
-    .add(
-        "show"
-    );
-
-
-    document.body
-    .classList
-    .add(
-        "modal-open"
-    );
-
-}
-
-
-function closeExtensionModal(){
-
-    document.getElementById(
-        "extensionModal"
-    )
-    .classList
-    .remove(
-        "show"
-    );
-
-
-    document.body
-    .classList
-    .remove(
-        "modal-open"
-    );
-
-}
-
-
-async function saveExtension(event){
-
-    event.preventDefault();
-
-
-    const taskId =
-        Number(
-            document.getElementById(
-                "extensionTaskId"
-            ).value
-        );
-
-
-    const oldDate =
-        document.getElementById(
-            "oldDueDate"
-        ).value;
-
-
-    const newDate =
-        document.getElementById(
-            "newDueDate"
-        ).value;
-
-
-    const reason =
-        document.getElementById(
-            "extensionReason"
-        ).value.trim();
-
-
-    if(
-        !newDate
-        ||
-        !reason
-    ){
-
-        alert(
-            "أكمل بيانات التمديد."
-        );
-
-        return;
-
-    }
-
-
-    if(
-        newDate <= oldDate
-    ){
-
-        alert(
-            "الموعد الجديد يجب أن يكون بعد الموعد الحالي."
-        );
-
-        return;
-
-    }
-
-
-    try{
-
-        const {
-            error
-        } =
-        await supabaseClient
-            .from("tasks")
-            .update({
-
-                due_date:
-                    newDate,
-
-                extended_at:
-                    new Date()
-                    .toISOString(),
-
-                extension_reason:
-                    reason
-
-            })
-            .eq(
-                "id",
-                taskId
-            );
-
-
-        if(error){
-            throw error;
-        }
-
-
-        closeExtensionModal();
-
-        await loadTasks();
-
-
-        alert(
-            "تم تمديد موعد المهمة."
-        );
-
-    }
-    catch(error){
-
-        console.error(error);
-
-        alert(
-            "تعذر تمديد الموعد.\n\n"
-            +
-            (
-                error.message || ""
-            )
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   أدوات
-========================================================= */
-
-function formatDate(value){
-
-    if(!value){
-        return "غير محدد";
-    }
-
-
-    const date =
-        new Date(value);
-
-
-    if(
-        Number.isNaN(
-            date.getTime()
-        )
-    ){
-        return "غير محدد";
-    }
-
-
-    return new Intl.DateTimeFormat(
-        "ar-SA-u-ca-gregory",
-        {
-            year:"numeric",
-            month:"2-digit",
-            day:"2-digit"
-        }
-    )
-    .format(date);
-
-}
-
-
-function escapeHtml(value){
+function escapeHtml(
+    value
+) {
 
     return String(
         value ?? ""
     )
+
     .replaceAll(
         "&",
         "&amp;"
     )
+
     .replaceAll(
         "<",
         "&lt;"
     )
+
     .replaceAll(
         ">",
         "&gt;"
     )
+
     .replaceAll(
         '"',
         "&quot;"
     )
+
     .replaceAll(
         "'",
         "&#039;"
@@ -4620,72 +3187,81 @@ function escapeHtml(value){
 }
 
 
-/* =========================================================
-   سايدبار
-========================================================= */
 
-function openSidebar(){
+/* السايدبار */
+
+function openSidebar() {
 
     sidebar
-    .classList
-    .add(
-        "show"
-    );
+        .classList
+        .add(
+            "show"
+        );
 
 
     sidebarOverlay
-    .classList
-    .add(
-        "show"
-    );
+        .classList
+        .add(
+            "show"
+        );
 
 
     document.body
-    .classList
-    .add(
-        "menu-open"
-    );
+        .classList
+        .add(
+            "menu-open"
+        );
 
 }
 
 
-function closeSidebar(){
+function closeSidebar() {
 
     sidebar
-    .classList
-    .remove(
-        "show"
-    );
+        .classList
+        .remove(
+            "show"
+        );
 
 
     sidebarOverlay
-    .classList
-    .remove(
-        "show"
-    );
+        .classList
+        .remove(
+            "show"
+        );
 
 
     document.body
-    .classList
-    .remove(
-        "menu-open"
-    );
+        .classList
+        .remove(
+            "menu-open"
+        );
 
 }
 
 
-/* =========================================================
-   تسجيل الخروج
-========================================================= */
 
-async function logout(){
+/* تسجيل الخروج */
 
-    await supabaseClient
-        .auth
-        .signOut();
+async function logout() {
+
+    try {
+
+        await supabaseClient.auth.signOut();
+
+    }
+
+    catch (error) {
+
+        console.warn(
+            "خطأ تسجيل الخروج:",
+            error
+        );
+
+    }
 
 
-    localStorage.clear();
+    clearEmployeeStorage();
 
 
     window.location.href =
@@ -4694,221 +3270,284 @@ async function logout(){
 }
 
 
-/* =========================================================
-   الأحداث
-========================================================= */
 
-document.getElementById(
-    "addTaskBtn"
-)
-.addEventListener(
-    "click",
-    openTaskModal
-);
+/* الأحداث */
 
-
-document.getElementById(
-    "closeTaskModalBtn"
-)
-.addEventListener(
-    "click",
-    closeTaskModal
-);
-
-
-document.getElementById(
-    "cancelTaskBtn"
-)
-.addEventListener(
-    "click",
-    closeTaskModal
-);
-
-
-document.getElementById(
-    "taskModalOverlay"
-)
-.addEventListener(
-    "click",
-    closeTaskModal
-);
-
-
-document.getElementById(
-    "taskForm"
-)
-.addEventListener(
-    "submit",
-    saveTask
-);
-
-
-document.getElementById(
-    "addRequirementBtn"
-)
-.addEventListener(
-    "click",
-    () => {
-
-        addRequirementRow();
-
-    }
-);
-
-
-document.getElementById(
-    "analyzeTaskBtn"
-)
-.addEventListener(
-    "click",
-    analyzeTaskRequirements
-);
-
-
-[
-    "skillsWeight",
-    "experienceWeight",
-    "jobLevelWeight",
-    "availabilityWeight",
-    "performanceWeight"
-]
-.forEach(
-    id => {
-
-        document.getElementById(
-            id
-        )
-        .addEventListener(
-            "input",
-            updateCriteriaTotal
-        );
-
-    }
-);
-
-
-document.getElementById(
-    "searchInput"
-)
-.addEventListener(
-    "input",
-    filterTasks
-);
-
-
-document.getElementById(
-    "statusFilter"
-)
-.addEventListener(
-    "change",
-    filterTasks
-);
-
-
-document.getElementById(
-    "priorityFilter"
-)
-.addEventListener(
-    "change",
-    filterTasks
-);
-
-
-document.getElementById(
-    "closeDetailsBtn"
-)
-.addEventListener(
-    "click",
-    closeDetailsModal
-);
-
-
-document.getElementById(
-    "detailsModalOverlay"
-)
-.addEventListener(
-    "click",
-    closeDetailsModal
-);
-
-
-document.getElementById(
-    "closeExtensionBtn"
-)
-.addEventListener(
-    "click",
-    closeExtensionModal
-);
-
-
-document.getElementById(
-    "cancelExtensionBtn"
-)
-.addEventListener(
-    "click",
-    closeExtensionModal
-);
-
-
-document.getElementById(
-    "extensionModalOverlay"
-)
-.addEventListener(
-    "click",
-    closeExtensionModal
-);
-
-
-document.getElementById(
-    "extensionForm"
-)
-.addEventListener(
-    "submit",
-    saveExtension
-);
-
-
-document.getElementById(
-    "mobileMenuBtn"
-)
-.addEventListener(
+mobileMenuBtn.addEventListener(
     "click",
     openSidebar
 );
 
 
-sidebarOverlay
-.addEventListener(
+sidebarOverlay.addEventListener(
     "click",
     closeSidebar
 );
 
 
-document.getElementById(
-    "logoutBtn"
-)
-.addEventListener(
-    "click",
-    logout
+document
+    .querySelectorAll(
+        ".nav-link"
+    )
+    .forEach(
+        link => {
+
+            link.addEventListener(
+                "click",
+                closeSidebar
+            );
+
+        }
+    );
+
+
+searchInput.addEventListener(
+    "input",
+    filterTasks
 );
 
 
-document.addEventListener(
-    "keydown",
-    event => {
+statusFilter.addEventListener(
+    "change",
+    filterTasks
+);
 
-        if(
-            event.key ===
-            "Escape"
-        ){
 
-            closeTaskModal();
+priorityFilter.addEventListener(
+    "change",
+    filterTasks
+);
+
+
+document
+    .getElementById(
+        "logoutBtn"
+    )
+    .addEventListener(
+        "click",
+        logout
+    );
+
+
+document
+    .getElementById(
+        "closeDetailsBtn"
+    )
+    .addEventListener(
+        "click",
+        closeDetailsModal
+    );
+
+
+document
+    .getElementById(
+        "detailsModalOverlay"
+    )
+    .addEventListener(
+        "click",
+        closeDetailsModal
+    );
+
+
+document
+    .getElementById(
+        "cancelConfirmBtn"
+    )
+    .addEventListener(
+        "click",
+        closeConfirmModal
+    );
+
+
+document
+    .getElementById(
+        "confirmOverlay"
+    )
+    .addEventListener(
+        "click",
+        closeConfirmModal
+    );
+
+
+confirmActionBtn.addEventListener(
+    "click",
+    executePendingAction
+);
+
+
+document
+    .getElementById(
+        "closeCompletionBtn"
+    )
+    .addEventListener(
+        "click",
+        closeCompletionModal
+    );
+
+
+document
+    .getElementById(
+        "cancelCompletionBtn"
+    )
+    .addEventListener(
+        "click",
+        closeCompletionModal
+    );
+
+
+document
+    .getElementById(
+        "completionOverlay"
+    )
+    .addEventListener(
+        "click",
+        closeCompletionModal
+    );
+
+
+sendCompletionBtn.addEventListener(
+    "click",
+    sendCompletion
+);
+
+
+completionNote.addEventListener(
+    "input",
+    hideCompletionError
+);
+
+
+completionUrl.addEventListener(
+    "input",
+    hideCompletionError
+);
+
+
+
+/* أزرار بطاقات المهام */
+
+tasksGrid.addEventListener(
+    "click",
+    function(
+        event
+    ) {
+
+
+        const detailsButton =
+            event.target.closest(
+                ".details-btn"
+            );
+
+
+        if (
+            detailsButton
+        ) {
+
+            viewTask(
+                detailsButton.dataset.assignmentId
+            );
+
+            return;
+
+        }
+
+
+        const startButton =
+            event.target.closest(
+                ".start-task-btn"
+            );
+
+
+        if (
+            startButton
+        ) {
+
+            askStartTask(
+                startButton.dataset.assignmentId
+            );
+
+            return;
+
+        }
+
+
+        const submitButton =
+            event.target.closest(
+                ".submit-task-btn"
+            );
+
+
+        if (
+            submitButton
+        ) {
+
+            askSubmitTask(
+                submitButton.dataset.assignmentId
+            );
+
+        }
+
+    }
+);
+
+
+
+/* أزرار نافذة التفاصيل */
+
+modalActions.addEventListener(
+    "click",
+    function(
+        event
+    ) {
+
+
+        const startButton =
+            event.target.closest(
+                ".start-task-btn"
+            );
+
+
+        if (
+            startButton
+        ) {
+
+            const assignmentId =
+                startButton.dataset.assignmentId;
+
 
             closeDetailsModal();
 
-            closeExtensionModal();
 
-            closeSidebar();
+            askStartTask(
+                assignmentId
+            );
+
+
+            return;
+
+        }
+
+
+        const submitButton =
+            event.target.closest(
+                ".submit-task-btn"
+            );
+
+
+        if (
+            submitButton
+        ) {
+
+            const assignmentId =
+                submitButton.dataset.assignmentId;
+
+
+            closeDetailsModal();
+
+
+            askSubmitTask(
+                assignmentId
+            );
 
         }
 
@@ -4916,73 +3555,90 @@ document.addEventListener(
 );
 
 
-/* =========================================================
-   تشغيل الصفحة
-========================================================= */
 
-async function initializePage(){
+/* زر ESC */
 
-    try{
+document.addEventListener(
+    "keydown",
+    function(
+        event
+    ) {
 
-        const allowed =
-            await protectPage();
+        if (
+            event.key !==
+            "Escape"
+        ) {
 
-
-        if(!allowed){
             return;
+
         }
 
 
-        await loadProjects();
+        closeSidebar();
 
-        await loadEmployees();
+        closeDetailsModal();
 
-        await loadSkills();
+        closeConfirmModal();
 
-        await loadTasks();
-
-        await loadTaskAssignments();
-
-
-        updateCriteriaTotal();
+        closeCompletionModal();
 
     }
-    catch(error){
-
-        console.error(
-            "خطأ تشغيل صفحة المهام:",
-            error
-        );
+);
 
 
-        tasksGrid.innerHTML = `
 
-            <div class="empty-state error-state">
+/*
+    نراقب فقط تسجيل الخروج الحقيقي.
+    لا نسجل خروج الموظف تلقائيًا بسبب خطأ في تحميل الصفحة.
+*/
 
-                تعذر تحميل بيانات صفحة المهام.
+supabaseClient.auth.onAuthStateChange(
+    function(
+        event
+    ) {
 
-                <small>
-                    ${
-                        escapeHtml(
-                            error.message
-                            ||
-                            ""
-                        )
-                    }
-                </small>
+        if (
+            event ===
+            "SIGNED_OUT"
+        ) {
 
-            </div>
+            clearEmployeeStorage();
 
-        `;
+        }
 
     }
+);
+
+
+
+/* تشغيل الصفحة */
+
+async function startPage() {
+
+    const allowed =
+        await protectEmployeePage();
+
+
+    if (
+        !allowed
+    ) {
+
+        return;
+
+    }
+
+
+    await refreshPageData();
 
 }
 
 
-initializePage();
+startPage();
+
 
 </script>
 
+
 </body>
+
 </html>
