@@ -52,7 +52,9 @@
             </div>
 
 
-            <!-- نوع المستخدم -->
+            <!-- =====================================
+                 نوع المستخدم
+            ====================================== -->
 
             <div class="role-title">
                 نوع المستخدم
@@ -109,8 +111,6 @@
                 </div>
 
 
-                <!-- إرسال الرمز -->
-
                 <button
                     type="button"
                     class="login-btn"
@@ -120,7 +120,7 @@
                 </button>
 
 
-                <!-- خانة الرمز -->
+                <!-- رمز تحقق الموظف -->
 
                 <div
                     class="otp-section"
@@ -183,9 +183,8 @@
             </form>
 
 
-
             <!-- =====================================
-                 المسؤول
+                 المسؤول / HR
             ====================================== -->
 
             <form
@@ -210,30 +209,68 @@
                 </div>
 
 
-                <div class="input-group">
+                <button
+                    type="button"
+                    class="login-btn"
+                    id="sendAdminCodeBtn"
+                >
+                    إرسال رمز التحقق
+                </button>
 
-                    <label for="adminPassword">
-                        كلمة المرور
-                    </label>
 
-                    <input
-                        type="password"
-                        id="adminPassword"
-                        placeholder="أدخل كلمة المرور"
-                        autocomplete="current-password"
-                        required
+                <!-- رمز تحقق المسؤول / HR -->
+
+                <div
+                    class="otp-section"
+                    id="adminOtpSection"
+                >
+
+                    <div class="otp-divider">
+
+                        <span>
+                            رمز التحقق
+                        </span>
+
+                    </div>
+
+
+                    <div class="input-group otp-group">
+
+                        <label for="adminOtpCode">
+                            أدخل الرمز المرسل إلى بريدك
+                        </label>
+
+                        <input
+                            type="text"
+                            id="adminOtpCode"
+                            class="otp-input"
+                            placeholder="000000"
+                            inputmode="numeric"
+                            autocomplete="one-time-code"
+                            maxlength="6"
+                        >
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="login-btn"
+                        id="verifyAdminCodeBtn"
                     >
+                        تحقق ودخول
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="resend-btn"
+                        id="resendAdminCodeBtn"
+                    >
+                        إعادة إرسال الرمز
+                    </button>
 
                 </div>
-
-
-                <button
-                    type="submit"
-                    class="login-btn"
-                    id="adminLoginBtn"
-                >
-                    تسجيل الدخول
-                </button>
 
 
                 <p
@@ -273,12 +310,27 @@ const supabaseClient =
 
 
 /* =========================================
-   إعدادات
+   حسابات المسؤول المصرح لها
 ========================================= */
 
-const ADMIN_EMAIL =
-    "admin@gmail.com";
+const ADMIN_ACCOUNTS = {
 
+    "miyar.admin@gmail.com": {
+        role: "admin",
+        name: "المسؤول"
+    },
+
+    "miyar.hr@gmail.com": {
+        role: "hr",
+        name: "الموارد البشرية"
+    }
+
+};
+
+
+/* =========================================
+   متغيرات
+========================================= */
 
 let selectedRole =
     "employee";
@@ -288,76 +340,134 @@ let otpEmail =
     "";
 
 
+let adminOtpEmail =
+    "";
+
+
 /* =========================================
    العناصر
 ========================================= */
 
 const employeeBtn =
-    document.getElementById("employeeBtn");
+    document.getElementById(
+        "employeeBtn"
+    );
 
 
 const adminBtn =
-    document.getElementById("adminBtn");
+    document.getElementById(
+        "adminBtn"
+    );
 
 
 const loginDescription =
-    document.getElementById("loginDescription");
+    document.getElementById(
+        "loginDescription"
+    );
 
+
+/* الموظف */
 
 const employeeForm =
-    document.getElementById("employeeForm");
-
-
-const adminForm =
-    document.getElementById("adminForm");
+    document.getElementById(
+        "employeeForm"
+    );
 
 
 const employeeEmail =
-    document.getElementById("employeeEmail");
+    document.getElementById(
+        "employeeEmail"
+    );
 
 
 const sendCodeBtn =
-    document.getElementById("sendCodeBtn");
+    document.getElementById(
+        "sendCodeBtn"
+    );
 
 
 const otpSection =
-    document.getElementById("otpSection");
+    document.getElementById(
+        "otpSection"
+    );
 
 
 const otpCode =
-    document.getElementById("otpCode");
+    document.getElementById(
+        "otpCode"
+    );
 
 
 const verifyCodeBtn =
-    document.getElementById("verifyCodeBtn");
+    document.getElementById(
+        "verifyCodeBtn"
+    );
 
 
 const resendCodeBtn =
-    document.getElementById("resendCodeBtn");
+    document.getElementById(
+        "resendCodeBtn"
+    );
 
 
 const employeeMessage =
-    document.getElementById("employeeMessage");
+    document.getElementById(
+        "employeeMessage"
+    );
+
+
+/* المسؤول */
+
+const adminForm =
+    document.getElementById(
+        "adminForm"
+    );
 
 
 const adminEmail =
-    document.getElementById("adminEmail");
+    document.getElementById(
+        "adminEmail"
+    );
 
 
-const adminPassword =
-    document.getElementById("adminPassword");
+const sendAdminCodeBtn =
+    document.getElementById(
+        "sendAdminCodeBtn"
+    );
 
 
-const adminLoginBtn =
-    document.getElementById("adminLoginBtn");
+const adminOtpSection =
+    document.getElementById(
+        "adminOtpSection"
+    );
+
+
+const adminOtpCode =
+    document.getElementById(
+        "adminOtpCode"
+    );
+
+
+const verifyAdminCodeBtn =
+    document.getElementById(
+        "verifyAdminCodeBtn"
+    );
+
+
+const resendAdminCodeBtn =
+    document.getElementById(
+        "resendAdminCodeBtn"
+    );
 
 
 const adminMessage =
-    document.getElementById("adminMessage");
+    document.getElementById(
+        "adminMessage"
+    );
 
 
 /* =========================================
-   رسائل
+   رسائل الموظف
 ========================================= */
 
 function showEmployeeMessage(
@@ -368,6 +478,7 @@ function showEmployeeMessage(
     employeeMessage.textContent =
         message;
 
+
     employeeMessage.classList.toggle(
         "success-message",
         success
@@ -376,6 +487,10 @@ function showEmployeeMessage(
 }
 
 
+/* =========================================
+   رسائل المسؤول
+========================================= */
+
 function showAdminMessage(
     message,
     success = false
@@ -383,6 +498,7 @@ function showAdminMessage(
 
     adminMessage.textContent =
         message;
+
 
     adminMessage.classList.toggle(
         "success-message",
@@ -412,6 +528,31 @@ function clearLocalData() {
 
     localStorage.removeItem(
         "miyarEmployeeName"
+    );
+
+    localStorage.removeItem(
+        "miyarAdminType"
+    );
+
+    localStorage.removeItem(
+        "miyarAdminName"
+    );
+
+}
+
+
+/* =========================================
+   التأكد هل البريد إداري
+========================================= */
+
+function isAdminEmail(email) {
+
+    return Boolean(
+        ADMIN_ACCOUNTS[
+            String(email || "")
+                .trim()
+                .toLowerCase()
+        ]
     );
 
 }
@@ -490,7 +631,7 @@ function selectAdmin() {
 
 
     loginDescription.textContent =
-        "أدخل بريد المسؤول وكلمة المرور";
+        "أدخل بريد المسؤول أو الموارد البشرية لإرسال رمز التحقق";
 
 
     showEmployeeMessage("");
@@ -502,7 +643,7 @@ function selectAdmin() {
 
 
 /* =========================================
-   التأكد أن البريد لموظف موجود
+   جلب الموظف بواسطة البريد
 ========================================= */
 
 async function getEmployeeByEmail(email) {
@@ -575,7 +716,12 @@ async function sendEmployeeCode() {
     }
 
 
-    if (email === ADMIN_EMAIL) {
+    /*
+        نمنع حسابات المسؤول و HR
+        من الدخول من بوابة الموظف.
+    */
+
+    if (isAdminEmail(email)) {
 
         showEmployeeMessage(
             "هذا البريد مخصص لحساب المسؤول"
@@ -597,8 +743,8 @@ async function sendEmployeeCode() {
     try {
 
         /*
-            أولاً نتأكد أن البريد مسجل
-            كموظف في نظام معيار.
+            نتأكد أولاً أن البريد
+            موجود في جدول employees.
         */
 
         const result =
@@ -630,11 +776,7 @@ async function sendEmployeeCode() {
 
 
         /*
-            Supabase Email OTP
-
-            shouldCreateUser = true
-            يسمح بإنشاء حساب Auth تلقائياً
-            لأول مرة عند إرسال OTP.
+            إرسال OTP للموظف
         */
 
         const {
@@ -728,7 +870,7 @@ async function sendEmployeeCode() {
 
 
 /* =========================================
-   إعادة إرسال الرمز
+   إعادة إرسال رمز الموظف
 ========================================= */
 
 async function resendEmployeeCode() {
@@ -822,7 +964,7 @@ async function resendEmployeeCode() {
 
 
 /* =========================================
-   التحقق من الرمز
+   التحقق من رمز الموظف
 ========================================= */
 
 async function verifyEmployeeCode() {
@@ -879,10 +1021,6 @@ async function verifyEmployeeCode() {
 
     try {
 
-        /*
-            التحقق من OTP
-        */
-
         const {
             data,
             error
@@ -920,7 +1058,8 @@ async function verifyEmployeeCode() {
 
 
         /*
-            نجيب ملف الموظف من employees
+            بعد نجاح OTP نتأكد مرة ثانية
+            أن المستخدم ما زال موظفاً مسجلاً.
         */
 
         const employeeResult =
@@ -953,8 +1092,8 @@ async function verifyEmployeeCode() {
 
 
         /*
-            إذا كان أول دخول للموظف
-            نربط Auth UID بملف الموظف.
+            أول دخول:
+            ربط auth_user_id ببيانات الموظف.
         */
 
         if (!employee.auth_user_id) {
@@ -981,6 +1120,7 @@ async function verifyEmployeeCode() {
                 console.error(
                     updateError
                 );
+
 
                 await supabaseClient
                     .auth
@@ -1017,7 +1157,7 @@ async function verifyEmployeeCode() {
 
 
         /*
-            حفظ بيانات الجلسة
+            حفظ جلسة الموظف
         */
 
         clearLocalData();
@@ -1083,10 +1223,10 @@ async function verifyEmployeeCode() {
 
 
 /* =========================================
-   دخول المسؤول
+   إرسال رمز المسؤول / HR
 ========================================= */
 
-async function loginAdmin() {
+async function sendAdminCode() {
 
     showAdminMessage("");
 
@@ -1098,17 +1238,10 @@ async function loginAdmin() {
             .toLowerCase();
 
 
-    const password =
-        adminPassword.value;
-
-
-    if (
-        !email ||
-        !password
-    ) {
+    if (!email) {
 
         showAdminMessage(
-            "أدخل البريد الإلكتروني وكلمة المرور"
+            "أدخل البريد الإلكتروني"
         );
 
         return;
@@ -1116,7 +1249,11 @@ async function loginAdmin() {
     }
 
 
-    if (email !== ADMIN_EMAIL) {
+    /*
+        لا يسمح إلا بالحسابين المحددين.
+    */
+
+    if (!isAdminEmail(email)) {
 
         showAdminMessage(
             "هذا الحساب غير مصرح له بالدخول كمسؤول"
@@ -1127,18 +1264,19 @@ async function loginAdmin() {
     }
 
 
-    adminLoginBtn.disabled =
+    sendAdminCodeBtn.disabled =
         true;
 
 
-    adminLoginBtn.textContent =
-        "جارٍ تسجيل الدخول...";
+    sendAdminCodeBtn.textContent =
+        "جارٍ إرسال الرمز...";
 
 
     try {
 
         /*
-            إنهاء أي جلسة موظف قديمة
+            إنهاء أي جلسة سابقة
+            قبل إرسال OTP للحساب الإداري.
         */
 
         await supabaseClient
@@ -1150,18 +1288,286 @@ async function loginAdmin() {
 
 
         const {
+            error
+        } =
+        await supabaseClient
+            .auth
+            .signInWithOtp({
+
+                email:
+                    email,
+
+                options: {
+
+                    shouldCreateUser:
+                        true
+
+                }
+
+            });
+
+
+        if (error) {
+
+            console.error(error);
+
+            showAdminMessage(
+                "تعذر إرسال رمز التحقق"
+            );
+
+            return;
+
+        }
+
+
+        adminOtpEmail =
+            email;
+
+
+        adminOtpSection.classList.add(
+            "show"
+        );
+
+
+        adminEmail.readOnly =
+            true;
+
+
+        sendAdminCodeBtn.style.display =
+            "none";
+
+
+        showAdminMessage(
+            "تم إرسال رمز التحقق إلى بريدك الإلكتروني",
+            true
+        );
+
+
+        setTimeout(
+            function() {
+
+                adminOtpCode.focus();
+
+            },
+            150
+        );
+
+    }
+
+    catch(error) {
+
+        console.error(error);
+
+        showAdminMessage(
+            "حدث خطأ أثناء إرسال رمز التحقق"
+        );
+
+    }
+
+    finally {
+
+        sendAdminCodeBtn.disabled =
+            false;
+
+
+        sendAdminCodeBtn.textContent =
+            "إرسال رمز التحقق";
+
+    }
+
+}
+
+
+/* =========================================
+   إعادة إرسال رمز المسؤول / HR
+========================================= */
+
+async function resendAdminCode() {
+
+    if (!adminOtpEmail) {
+
+        showAdminMessage(
+            "أدخل بريدك الإلكتروني أولاً"
+        );
+
+        return;
+
+    }
+
+
+    if (!isAdminEmail(adminOtpEmail)) {
+
+        showAdminMessage(
+            "هذا الحساب غير مصرح له بالدخول كمسؤول"
+        );
+
+        return;
+
+    }
+
+
+    resendAdminCodeBtn.disabled =
+        true;
+
+
+    resendAdminCodeBtn.textContent =
+        "جارٍ إعادة الإرسال...";
+
+
+    showAdminMessage("");
+
+
+    try {
+
+        const {
+            error
+        } =
+        await supabaseClient
+            .auth
+            .signInWithOtp({
+
+                email:
+                    adminOtpEmail,
+
+                options: {
+
+                    shouldCreateUser:
+                        true
+
+                }
+
+            });
+
+
+        if (error) {
+
+            console.error(error);
+
+            showAdminMessage(
+                "تعذر إعادة إرسال الرمز"
+            );
+
+            return;
+
+        }
+
+
+        showAdminMessage(
+            "تم إرسال رمز جديد إلى بريدك الإلكتروني",
+            true
+        );
+
+    }
+
+    catch(error) {
+
+        console.error(error);
+
+        showAdminMessage(
+            "حدث خطأ أثناء إعادة إرسال الرمز"
+        );
+
+    }
+
+    finally {
+
+        resendAdminCodeBtn.disabled =
+            false;
+
+
+        resendAdminCodeBtn.textContent =
+            "إعادة إرسال الرمز";
+
+    }
+
+}
+
+
+/* =========================================
+   التحقق من رمز المسؤول / HR
+========================================= */
+
+async function verifyAdminCode() {
+
+    showAdminMessage("");
+
+
+    const token =
+        adminOtpCode
+            .value
+            .trim();
+
+
+    if (!adminOtpEmail) {
+
+        showAdminMessage(
+            "أرسل رمز التحقق أولاً"
+        );
+
+        return;
+
+    }
+
+
+    if (!isAdminEmail(adminOtpEmail)) {
+
+        showAdminMessage(
+            "هذا الحساب غير مصرح له بالدخول كمسؤول"
+        );
+
+        return;
+
+    }
+
+
+    if (!token) {
+
+        showAdminMessage(
+            "أدخل رمز التحقق"
+        );
+
+        return;
+
+    }
+
+
+    if (!/^\d{6}$/.test(token)) {
+
+        showAdminMessage(
+            "رمز التحقق يجب أن يتكون من 6 أرقام"
+        );
+
+        return;
+
+    }
+
+
+    verifyAdminCodeBtn.disabled =
+        true;
+
+
+    verifyAdminCodeBtn.textContent =
+        "جارٍ التحقق...";
+
+
+    try {
+
+        const {
             data,
             error
         } =
         await supabaseClient
             .auth
-            .signInWithPassword({
+            .verifyOtp({
 
                 email:
-                    email,
+                    adminOtpEmail,
 
-                password:
-                    password
+                token:
+                    token,
+
+                type:
+                    "email"
 
             });
 
@@ -1174,13 +1580,19 @@ async function loginAdmin() {
             console.error(error);
 
             showAdminMessage(
-                "البريد الإلكتروني أو كلمة المرور غير صحيحة"
+                "رمز التحقق غير صحيح أو انتهت صلاحيته"
             );
 
             return;
 
         }
 
+
+        /*
+            حماية إضافية:
+            البريد الذي أعاده Supabase نفسه
+            يجب أن يكون من الحسابات الإدارية.
+        */
 
         const currentEmail =
             String(
@@ -1191,13 +1603,16 @@ async function loginAdmin() {
 
 
         if (
-            currentEmail !==
-            ADMIN_EMAIL
+            currentEmail !== adminOtpEmail ||
+            !isAdminEmail(currentEmail)
         ) {
 
             await supabaseClient
                 .auth
                 .signOut();
+
+
+            clearLocalData();
 
 
             showAdminMessage(
@@ -1207,6 +1622,26 @@ async function loginAdmin() {
             return;
 
         }
+
+
+        const account =
+            ADMIN_ACCOUNTS[
+                currentEmail
+            ];
+
+
+        /*
+            حفظ الجلسة.
+
+            نخزن miyarRole = admin للحسابين
+            حتى صفحات المسؤول الحالية
+            تستمر بالعمل بدون تغيير.
+
+            ونحفظ النوع الحقيقي بشكل منفصل
+            في miyarAdminType.
+        */
+
+        clearLocalData();
 
 
         localStorage.setItem(
@@ -1221,6 +1656,26 @@ async function loginAdmin() {
         );
 
 
+        localStorage.setItem(
+            "miyarAdminType",
+            account.role
+        );
+
+
+        localStorage.setItem(
+            "miyarAdminName",
+            account.name
+        );
+
+
+        showAdminMessage(
+            account.role === "hr"
+                ? "تم التحقق من حساب الموارد البشرية بنجاح"
+                : "تم التحقق من حساب المسؤول بنجاح",
+            true
+        );
+
+
         window.location.href =
             "dashboard.html";
 
@@ -1231,19 +1686,19 @@ async function loginAdmin() {
         console.error(error);
 
         showAdminMessage(
-            "حدث خطأ أثناء تسجيل الدخول"
+            "حدث خطأ أثناء التحقق من الرمز"
         );
 
     }
 
     finally {
 
-        adminLoginBtn.disabled =
+        verifyAdminCodeBtn.disabled =
             false;
 
 
-        adminLoginBtn.textContent =
-            "تسجيل الدخول";
+        verifyAdminCodeBtn.textContent =
+            "تحقق ودخول";
 
     }
 
@@ -1290,23 +1745,52 @@ employeeForm.addEventListener(
 );
 
 
+sendAdminCodeBtn.addEventListener(
+    "click",
+    sendAdminCode
+);
+
+
+resendAdminCodeBtn.addEventListener(
+    "click",
+    resendAdminCode
+);
+
+
 adminForm.addEventListener(
     "submit",
     async function(event) {
 
         event.preventDefault();
 
-        await loginAdmin();
+        await verifyAdminCode();
 
     }
 );
 
 
 /* =========================================
-   السماح بالأرقام فقط في OTP
+   السماح بالأرقام فقط في رمز الموظف
 ========================================= */
 
 otpCode.addEventListener(
+    "input",
+    function() {
+
+        this.value =
+            this.value
+                .replace(/\D/g, "")
+                .slice(0, 6);
+
+    }
+);
+
+
+/* =========================================
+   السماح بالأرقام فقط في رمز المسؤول
+========================================= */
+
+adminOtpCode.addEventListener(
     "input",
     function() {
 
