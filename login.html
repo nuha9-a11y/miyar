@@ -716,11 +716,6 @@ async function sendEmployeeCode() {
     }
 
 
-    /*
-        نمنع حسابات المسؤول و HR
-        من الدخول من بوابة الموظف.
-    */
-
     if (isAdminEmail(email)) {
 
         showEmployeeMessage(
@@ -741,11 +736,6 @@ async function sendEmployeeCode() {
 
 
     try {
-
-        /*
-            نتأكد أولاً أن البريد
-            موجود في جدول employees.
-        */
 
         const result =
             await getEmployeeByEmail(
@@ -774,10 +764,6 @@ async function sendEmployeeCode() {
 
         }
 
-
-        /*
-            إرسال OTP للموظف
-        */
 
         const {
             error
@@ -1057,11 +1043,6 @@ async function verifyEmployeeCode() {
         }
 
 
-        /*
-            بعد نجاح OTP نتأكد مرة ثانية
-            أن المستخدم ما زال موظفاً مسجلاً.
-        */
-
         const employeeResult =
             await getEmployeeByEmail(
                 otpEmail
@@ -1090,11 +1071,6 @@ async function verifyEmployeeCode() {
         const employee =
             employeeResult.employee;
 
-
-        /*
-            أول دخول:
-            ربط auth_user_id ببيانات الموظف.
-        */
 
         if (!employee.auth_user_id) {
 
@@ -1155,10 +1131,6 @@ async function verifyEmployeeCode() {
 
         }
 
-
-        /*
-            حفظ جلسة الموظف
-        */
 
         clearLocalData();
 
@@ -1249,10 +1221,6 @@ async function sendAdminCode() {
     }
 
 
-    /*
-        لا يسمح إلا بالحسابين المحددين.
-    */
-
     if (!isAdminEmail(email)) {
 
         showAdminMessage(
@@ -1273,11 +1241,6 @@ async function sendAdminCode() {
 
 
     try {
-
-        /*
-            إنهاء أي جلسة سابقة
-            قبل إرسال OTP للحساب الإداري.
-        */
 
         await supabaseClient
             .auth
@@ -1485,6 +1448,7 @@ async function resendAdminCode() {
 
 /* =========================================
    التحقق من رمز المسؤول / HR
+   + التأكد من وجود Session
 ========================================= */
 
 async function verifyAdminCode() {
@@ -1552,6 +1516,10 @@ async function verifyAdminCode() {
 
     try {
 
+        /* =========================================
+           التحقق من رمز OTP
+        ========================================= */
+
         const {
             data,
             error
@@ -1577,22 +1545,25 @@ async function verifyAdminCode() {
             !data.user
         ) {
 
-            console.error(error);
+            console.error(
+                "OTP Error:",
+                error
+            );
+
 
             showAdminMessage(
                 "رمز التحقق غير صحيح أو انتهت صلاحيته"
             );
+
 
             return;
 
         }
 
 
-        /*
-            حماية إضافية:
-            البريد الذي أعاده Supabase نفسه
-            يجب أن يكون من الحسابات الإدارية.
-        */
+        /* =========================================
+           التأكد من البريد الذي أعاده Supabase
+        ========================================= */
 
         const currentEmail =
             String(
@@ -1619,10 +1590,118 @@ async function verifyAdminCode() {
                 "هذا الحساب غير مصرح له بالدخول كمسؤول"
             );
 
+
             return;
 
         }
 
+
+        /* =========================================
+           التأكد من وجود Session
+        ========================================= */
+
+        let activeSession =
+            data.session || null;
+
+
+        /*
+            في الوضع الطبيعي verifyOtp
+            يعيد session مباشرة.
+
+            إذا لم تظهر في النتيجة،
+            نحاول جلبها من Supabase.
+        */
+
+        if (!activeSession) {
+
+            const {
+                data: sessionData,
+                error: sessionError
+            } =
+            await supabaseClient
+                .auth
+                .getSession();
+
+
+            if (sessionError) {
+
+                console.error(
+                    "Session Error:",
+                    sessionError
+                );
+
+            }
+
+
+            activeSession =
+                sessionData?.session || null;
+
+        }
+
+
+        /*
+            لا ننتقل إلى Dashboard
+            إذا لم يتم إنشاء جلسة.
+        */
+
+        if (!activeSession) {
+
+            console.error(
+                "لم يتم إنشاء جلسة Supabase بعد التحقق من OTP"
+            );
+
+
+            clearLocalData();
+
+
+            showAdminMessage(
+                "تم التحقق من الرمز ولكن تعذر إنشاء جلسة الدخول، أعد المحاولة"
+            );
+
+
+            return;
+
+        }
+
+
+        /* =========================================
+           التأكد من مستخدم الجلسة
+        ========================================= */
+
+        const sessionEmail =
+            String(
+                activeSession.user?.email || ""
+            )
+            .trim()
+            .toLowerCase();
+
+
+        if (
+            sessionEmail !== currentEmail ||
+            !isAdminEmail(sessionEmail)
+        ) {
+
+            await supabaseClient
+                .auth
+                .signOut();
+
+
+            clearLocalData();
+
+
+            showAdminMessage(
+                "جلسة الدخول لا تطابق حساب المسؤول"
+            );
+
+
+            return;
+
+        }
+
+
+        /* =========================================
+           جلب بيانات نوع الحساب
+        ========================================= */
 
         const account =
             ADMIN_ACCOUNTS[
@@ -1630,16 +1709,9 @@ async function verifyAdminCode() {
             ];
 
 
-        /*
-            حفظ الجلسة.
-
-            نخزن miyarRole = admin للحسابين
-            حتى صفحات المسؤول الحالية
-            تستمر بالعمل بدون تغيير.
-
-            ونحفظ النوع الحقيقي بشكل منفصل
-            في miyarAdminType.
-        */
+        /* =========================================
+           حفظ بيانات المستخدم محلياً
+        ========================================= */
 
         clearLocalData();
 
@@ -1668,6 +1740,77 @@ async function verifyAdminCode() {
         );
 
 
+        /* =========================================
+           فحص أخير للجلسة قبل الانتقال
+        ========================================= */
+
+        const {
+            data: finalSessionData,
+            error: finalSessionError
+        } =
+        await supabaseClient
+            .auth
+            .getSession();
+
+
+        if (
+            finalSessionError ||
+            !finalSessionData.session
+        ) {
+
+            console.error(
+                "Final Session Error:",
+                finalSessionError
+            );
+
+
+            clearLocalData();
+
+
+            showAdminMessage(
+                "تعذر تثبيت جلسة تسجيل الدخول، أعد المحاولة"
+            );
+
+
+            return;
+
+        }
+
+
+        const finalEmail =
+            String(
+                finalSessionData
+                    .session
+                    .user
+                    ?.email || ""
+            )
+            .trim()
+            .toLowerCase();
+
+
+        if (
+            finalEmail !== currentEmail ||
+            !isAdminEmail(finalEmail)
+        ) {
+
+            await supabaseClient
+                .auth
+                .signOut();
+
+
+            clearLocalData();
+
+
+            showAdminMessage(
+                "تعذر التحقق من جلسة المسؤول"
+            );
+
+
+            return;
+
+        }
+
+
         showAdminMessage(
             account.role === "hr"
                 ? "تم التحقق من حساب الموارد البشرية بنجاح"
@@ -1676,14 +1819,24 @@ async function verifyAdminCode() {
         );
 
 
-        window.location.href =
-            "dashboard.html";
+        /*
+            الآن فقط ننتقل للوحة التحكم
+            بعد التأكد أن Session موجودة.
+        */
+
+        window.location.replace(
+            "dashboard.html"
+        );
 
     }
 
     catch(error) {
 
-        console.error(error);
+        console.error(
+            "Admin Verify Error:",
+            error
+        );
+
 
         showAdminMessage(
             "حدث خطأ أثناء التحقق من الرمز"
