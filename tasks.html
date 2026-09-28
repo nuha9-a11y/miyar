@@ -937,8 +937,10 @@ const SUPABASE_KEY =
 "sb_publishable_NVlWEnA_w4KbSse_-70zdA_J9ut0Kyo";
 
 
-const ADMIN_EMAIL =
-"admin@gmail.com";
+const ADMIN_EMAILS = [
+    "miyar.admin@gmail.com",
+    "miyar.hr@gmail.com"
+];
 
 
 const supabaseClient =
@@ -1001,56 +1003,85 @@ document.getElementById(
 );
 
 
-/* ========================================= */
-/* حماية صفحة المسؤول */
-/* ========================================= */
+async function protectPage() {
 
-async function protectPage(){
+    try {
 
-const {
-data,
-error
-} =
-await supabaseClient.auth.getSession();
+        const { data, error } =
+            await supabaseClient.auth.getSession();
 
+        if (error || !data?.session) {
 
-if(
-error
-||
-!data?.session
-){
+            window.location.href = "login.html";
+            return false;
+        }
 
-window.location.href =
-"login.html";
+        const email = String(
+            data.session.user.email || ""
+        ).trim().toLowerCase();
 
-return false;
+        if (!ADMIN_EMAILS.includes(email)) {
 
-}
+            await supabaseClient.auth.signOut();
 
+            localStorage.removeItem("miyarRole");
+            localStorage.removeItem("miyarEmail");
+            localStorage.removeItem("miyarAdminType");
+            localStorage.removeItem("miyarAdminName");
 
-const email =
-String(
-data.session.user.email || ""
-)
-.trim()
-.toLowerCase();
+            window.location.href = "login.html";
 
+            return false;
+        }
 
-if(
-email !==
-ADMIN_EMAIL.toLowerCase()
-){
+        localStorage.setItem(
+            "miyarRole",
+            "admin"
+        );
 
-window.location.href =
-"login.html";
+        localStorage.setItem(
+            "miyarEmail",
+            email
+        );
 
-return false;
+        if (email === "miyar.hr@gmail.com") {
 
-}
+            localStorage.setItem(
+                "miyarAdminType",
+                "hr"
+            );
 
+            localStorage.setItem(
+                "miyarAdminName",
+                "الموارد البشرية"
+            );
 
-return true;
+        } else {
 
+            localStorage.setItem(
+                "miyarAdminType",
+                "admin"
+            );
+
+            localStorage.setItem(
+                "miyarAdminName",
+                "المسؤول"
+            );
+        }
+
+        return true;
+
+    } catch (error) {
+
+        console.error(
+            "خطأ حماية صفحة المهام:",
+            error
+        );
+
+        window.location.href = "login.html";
+
+        return false;
+    }
 }
 
 
