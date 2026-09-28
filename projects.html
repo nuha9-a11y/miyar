@@ -2,6 +2,7 @@
 <html lang="ar" dir="rtl">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -19,6 +20,7 @@
     <script
         src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
     ></script>
+
 </head>
 
 
@@ -688,8 +690,14 @@ const SUPABASE_KEY =
     "sb_publishable_NVlWEnA_w4KbSse_-70zdA_J9ut0Kyo";
 
 
-const ADMIN_EMAIL =
-    "admin@gmail.com";
+/* =====================================================
+   حسابات المسؤول المصرح لها
+===================================================== */
+
+const ADMIN_EMAILS = [
+    "miyar.admin@gmail.com",
+    "miyar.hr@gmail.com"
+];
 
 
 const supabaseClient =
@@ -876,9 +884,10 @@ async function protectPage() {
             .toLowerCase();
 
 
+        /* يسمح فقط للمسؤول و HR */
+
         if (
-            email !==
-            ADMIN_EMAIL.toLowerCase()
+            !ADMIN_EMAILS.includes(email)
         ) {
 
 
@@ -887,7 +896,21 @@ async function protectPage() {
                 .signOut();
 
 
-            localStorage.clear();
+            localStorage.removeItem(
+                "miyarRole"
+            );
+
+            localStorage.removeItem(
+                "miyarEmail"
+            );
+
+            localStorage.removeItem(
+                "miyarAdminType"
+            );
+
+            localStorage.removeItem(
+                "miyarAdminName"
+            );
 
 
             window.location.href =
@@ -909,6 +932,36 @@ async function protectPage() {
             "miyarEmail",
             email
         );
+
+
+        if (
+            email ===
+            "miyar.hr@gmail.com"
+        ) {
+
+            localStorage.setItem(
+                "miyarAdminType",
+                "hr"
+            );
+
+            localStorage.setItem(
+                "miyarAdminName",
+                "الموارد البشرية"
+            );
+
+        } else {
+
+            localStorage.setItem(
+                "miyarAdminType",
+                "admin"
+            );
+
+            localStorage.setItem(
+                "miyarAdminName",
+                "المسؤول"
+            );
+
+        }
 
 
         return true;
@@ -2822,7 +2875,21 @@ async function logout() {
     }
 
 
-    localStorage.clear();
+    localStorage.removeItem(
+        "miyarRole"
+    );
+
+    localStorage.removeItem(
+        "miyarEmail"
+    );
+
+    localStorage.removeItem(
+        "miyarAdminType"
+    );
+
+    localStorage.removeItem(
+        "miyarAdminName"
+    );
 
 
     window.location.href =
