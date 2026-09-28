@@ -676,6 +676,12 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
     "sb_publishable_NVlWEnA_w4KbSse_-70zdA_J9ut0Kyo";
 
+
+/* =====================================================
+   حسابات المسؤول المصرح لها
+   التعديل الجديد
+===================================================== */
+
 const ADMIN_EMAILS = [
     "miyar.admin@gmail.com",
     "miyar.hr@gmail.com"
@@ -778,6 +784,8 @@ function normalizeText(value) {
 
 /* =====================================================
    حماية صفحة المسؤول
+   التعديل الجديد:
+   يسمح للمسؤول و HR
 ===================================================== */
 
 async function protectPage() {
@@ -816,9 +824,15 @@ async function protectPage() {
             .toLowerCase();
 
 
-      if (
-    !ADMIN_EMAILS.includes(email)
-) {
+        /*
+            بدلاً من التحقق من admin@gmail.com فقط،
+            الآن نتحقق أن البريد موجود في قائمة
+            الحسابات الإدارية المسموح لها.
+        */
+
+        if (
+            !ADMIN_EMAILS.includes(email)
+        ) {
 
             await supabaseClient
                 .auth
@@ -829,6 +843,55 @@ async function protectPage() {
                 "login.html";
 
             return false;
+        }
+
+
+        /*
+            نخزن نفس role لجميع صفحات المسؤول
+            حتى تبقى الصفحات القديمة متوافقة.
+        */
+
+        localStorage.setItem(
+            "miyarRole",
+            "admin"
+        );
+
+
+        localStorage.setItem(
+            "miyarEmail",
+            email
+        );
+
+
+        if (
+            email ===
+            "miyar.hr@gmail.com"
+        ) {
+
+            localStorage.setItem(
+                "miyarAdminType",
+                "hr"
+            );
+
+            localStorage.setItem(
+                "miyarAdminName",
+                "الموارد البشرية"
+            );
+
+        }
+
+        else {
+
+            localStorage.setItem(
+                "miyarAdminType",
+                "admin"
+            );
+
+            localStorage.setItem(
+                "miyarAdminName",
+                "المسؤول"
+            );
+
         }
 
 
@@ -940,7 +1003,6 @@ async function loadTasks() {
 
 /* =====================================================
    تحميل إسنادات المهام
-   التعديل المهم
 ===================================================== */
 
 async function loadTaskAssignments() {
@@ -968,12 +1030,6 @@ async function loadTaskAssignments() {
             error
         );
 
-        /*
-            لا نوقف الصفحة كاملة.
-            سنبقي المصفوفة فارغة
-            ونستخدم assigned_employee_id
-            للبيانات القديمة.
-        */
         taskAssignments = [];
 
         return;
@@ -1209,7 +1265,7 @@ function isApprovedLeave(leave) {
 
 
 /* =====================================================
-   استخراج مهام الموظف من task_assignments
+   استخراج مهام الموظف
 ===================================================== */
 
 function getEmployeeAssignedTaskIds(employeeId) {
@@ -1221,12 +1277,6 @@ function getEmployeeAssignedTaskIds(employeeId) {
     const taskIds =
         new Set();
 
-
-    /*
-        أولاً:
-        الإسنادات الجديدة الصحيحة
-        والتي تدعم أكثر من موظف.
-    */
 
     taskAssignments.forEach(
         assignment => {
@@ -1250,15 +1300,6 @@ function getEmployeeAssignedTaskIds(employeeId) {
         }
     );
 
-
-    /*
-        ثانياً:
-        دعم البيانات القديمة الموجودة
-        في assigned_employee_id.
-
-        Set يمنع تكرار المهمة لو كانت
-        موجودة في الجدولين.
-    */
 
     tasks.forEach(
         task => {
@@ -1304,10 +1345,6 @@ function calculateEmployeeState(employee) {
         );
 
 
-    /*
-        نأخذ فقط المهام غير المكتملة.
-    */
-
     const activeTasks =
         tasks.filter(
             task =>
@@ -1321,11 +1358,6 @@ function calculateEmployeeState(employee) {
                 !isCompletedTask(task)
         );
 
-
-    /*
-        كل مهمة حالية = 20%
-        مثل النظام المعتمد عندك.
-    */
 
     let workload =
         activeTasks.length
@@ -1390,10 +1422,6 @@ function calculateEmployeeState(employee) {
 
     }
 
-
-    /* =========================
-       فحص الإجازة الحالية
-    ========================== */
 
     const today =
         new Date();
@@ -1478,11 +1506,6 @@ function calculateEmployeeState(employee) {
         "على رأس العمل";
 
 
-    /*
-        إذا الموظف ليس على رأس العمل
-        فهو غير متاح مهما كان عدد المهام.
-    */
-
     if (
         officialStatus !==
         "على رأس العمل"
@@ -1499,10 +1522,6 @@ function calculateEmployeeState(employee) {
 
     }
 
-
-    /*
-        الإجازة لها الأولوية.
-    */
 
     if (currentLeave) {
 
@@ -1548,12 +1567,6 @@ async function syncEmployeeOperationalData(
     const state =
         employee.operational;
 
-
-    /*
-        نحفظ القيم المشتقة في employees
-        حتى صفحات المطابقة التي تقرأ
-        availability / workload ترى نفس القيم.
-    */
 
     const oldWorkload =
         Number(
@@ -1665,11 +1678,6 @@ async function prepareEmployees() {
             })
         );
 
-
-    /*
-        تحديث القيم في employees
-        حتى باقي الصفحات تكون متوافقة.
-    */
 
     await Promise.all(
         employees.map(
@@ -2788,11 +2796,6 @@ async function createNewEmployee(
     payload
 ) {
 
-    /*
-        نجرب Edge Function أولاً
-        لأنها قد تنشئ حساب Auth للموظف.
-    */
-
     try {
 
         const {
@@ -2841,11 +2844,6 @@ async function createNewEmployee(
 
     }
 
-
-    /*
-        إذا لم تكن Edge Function موجودة
-        ننشئ سجل الموظف في employees.
-    */
 
     const {
         data,
@@ -3002,10 +3000,6 @@ async function handleEmployeeSubmit(
             null;
 
 
-        /* =========================
-           تعديل موظف
-        ========================== */
-
         if (editId) {
 
             const {
@@ -3065,10 +3059,6 @@ async function handleEmployeeSubmit(
 
         }
 
-
-        /* =========================
-           موظف جديد
-        ========================== */
 
         else {
 
@@ -3396,13 +3386,13 @@ async function viewEmployee(id) {
         </div>
 
 
-        <div class="employee-details-skills">
+        <div class="employee-details-tasks">
 
             <h3>
-                المهام المسندة الحالية
+                المهام الحالية
             </h3>
 
-            <div class="details-skills-list">
+            <div>
                 ${tasksHtml}
             </div>
 
@@ -3450,100 +3440,12 @@ function closeDetailsModal() {
 
 
 /* =====================================================
-   إجراءات الجدول
-===================================================== */
-
-async function handleTableAction(
-    event
-) {
-
-    const button =
-        event.target.closest(
-            "button[data-action]"
-        );
-
-
-    if (!button) {
-
-        return;
-
-    }
-
-
-    const id =
-        Number(
-            button.dataset.id
-        );
-
-
-    if (
-        button.dataset.action
-        ===
-        "view"
-    ) {
-
-        await viewEmployee(id);
-
-        return;
-
-    }
-
-
-    if (
-        button.dataset.action
-        ===
-        "edit"
-    ) {
-
-        const employee =
-            employees.find(
-                item =>
-                    Number(item.id)
-                    ===
-                    id
-            );
-
-
-        if (employee) {
-
-            await openEmployeeModal(
-                employee
-            );
-
-        }
-
-    }
-
-}
-
-
-/* =====================================================
-   تحميل الصفحة
+   تحميل بيانات الصفحة
 ===================================================== */
 
 async function loadPageData() {
 
     try {
-
-        employeesTable.innerHTML = `
-
-            <tr>
-                <td colspan="9">
-
-                    <div class="table-message">
-                        جارٍ تحميل بيانات الموظفين...
-                    </div>
-
-                </td>
-            </tr>
-
-        `;
-
-
-        /*
-            هنا التعديل المهم:
-            task_assignments يتم تحميله مع باقي البيانات.
-        */
 
         await Promise.all([
 
@@ -3560,17 +3462,14 @@ async function loadPageData() {
         ]);
 
 
-        /*
-            ننتظر حساب الموظفين وتحديث
-            workload / availability.
-        */
-
         await prepareEmployees();
 
 
         buildDepartmentFilter();
 
+
         updateSummary();
+
 
         filterEmployees();
 
@@ -3606,171 +3505,79 @@ async function loadPageData() {
 
 
 /* =====================================================
-   Sidebar
+   فتح إضافة موظف
 ===================================================== */
 
-function openSidebar() {
+document.getElementById(
+    "addEmployeeBtn"
+)
+.addEventListener(
+    "click",
+    function() {
 
-    sidebar
-        .classList
-        .add(
-            "show"
-        );
+        openEmployeeModal();
 
-
-    sidebarOverlay
-        .classList
-        .add(
-            "show"
-        );
-
-
-    document.body
-        .classList
-        .add(
-            "menu-open"
-        );
-
-}
-
-
-function closeSidebar() {
-
-    sidebar
-        .classList
-        .remove(
-            "show"
-        );
-
-
-    sidebarOverlay
-        .classList
-        .remove(
-            "show"
-        );
-
-
-    document.body
-        .classList
-        .remove(
-            "menu-open"
-        );
-
-}
+    }
+);
 
 
 /* =====================================================
-   تسجيل الخروج
+   إضافة مهارة
 ===================================================== */
 
-async function logout() {
-
-    await supabaseClient
-        .auth
-        .signOut();
-
-
-    localStorage.clear();
-
-
-    window.location.href =
-        "login.html";
-
-}
+document.getElementById(
+    "addSkillBtn"
+)
+.addEventListener(
+    "click",
+    addSelectedSkill
+);
 
 
 /* =====================================================
-   الأحداث
+   حذف مهارة مختارة
 ===================================================== */
 
-document
-    .getElementById(
-        "mobileMenuBtn"
-    )
+document.getElementById(
+    "selectedSkills"
+)
+.addEventListener(
+    "click",
+    function(event) {
+
+        const button =
+            event.target.closest(
+                "[data-skill-id]"
+            );
+
+
+        if (!button) {
+
+            return;
+
+        }
+
+
+        removeSelectedSkill(
+            button.dataset.skillId
+        );
+
+    }
+);
+
+
+/* =====================================================
+   إجراءات الجدول
+===================================================== */
+
+employeesTable
     .addEventListener(
         "click",
-        openSidebar
-    );
-
-
-sidebarOverlay
-    .addEventListener(
-        "click",
-        closeSidebar
-    );
-
-
-document
-    .getElementById(
-        "addEmployeeBtn"
-    )
-    .addEventListener(
-        "click",
-        () => openEmployeeModal()
-    );
-
-
-document
-    .getElementById(
-        "closeEmployeeModalBtn"
-    )
-    .addEventListener(
-        "click",
-        closeEmployeeModal
-    );
-
-
-document
-    .getElementById(
-        "employeeModalOverlay"
-    )
-    .addEventListener(
-        "click",
-        closeEmployeeModal
-    );
-
-
-document
-    .getElementById(
-        "cancelEmployeeBtn"
-    )
-    .addEventListener(
-        "click",
-        closeEmployeeModal
-    );
-
-
-document
-    .getElementById(
-        "employeeForm"
-    )
-    .addEventListener(
-        "submit",
-        handleEmployeeSubmit
-    );
-
-
-document
-    .getElementById(
-        "addSkillBtn"
-    )
-    .addEventListener(
-        "click",
-        addSelectedSkill
-    );
-
-
-document
-    .getElementById(
-        "selectedSkills"
-    )
-    .addEventListener(
-        "click",
-        event => {
+        function(event) {
 
             const button =
                 event.target.closest(
-                    ".remove-skill-btn"
+                    "[data-action]"
                 );
 
 
@@ -3781,116 +3588,263 @@ document
             }
 
 
-            removeSelectedSkill(
+            const id =
                 Number(
-                    button.dataset.skillId
-                )
-            );
+                    button.dataset.id
+                );
+
+
+            const action =
+                button.dataset.action;
+
+
+            if (
+                action ===
+                "view"
+            ) {
+
+                viewEmployee(id);
+
+                return;
+
+            }
+
+
+            if (
+                action ===
+                "edit"
+            ) {
+
+                const employee =
+                    employees.find(
+                        item =>
+                            Number(item.id)
+                            ===
+                            id
+                    );
+
+
+                if (employee) {
+
+                    openEmployeeModal(
+                        employee
+                    );
+
+                }
+
+            }
 
         }
-    );
-
-
-document
-    .getElementById(
-        "employeesTable"
-    )
-    .addEventListener(
-        "click",
-        handleTableAction
-    );
-
-
-document
-    .getElementById(
-        "closeDetailsBtn"
-    )
-    .addEventListener(
-        "click",
-        closeDetailsModal
-    );
-
-
-document
-    .getElementById(
-        "detailsModalOverlay"
-    )
-    .addEventListener(
-        "click",
-        closeDetailsModal
-    );
-
-
-document
-    .getElementById(
-        "searchInput"
-    )
-    .addEventListener(
-        "input",
-        filterEmployees
-    );
-
-
-document
-    .getElementById(
-        "departmentFilter"
-    )
-    .addEventListener(
-        "change",
-        filterEmployees
-    );
-
-
-document
-    .getElementById(
-        "statusFilter"
-    )
-    .addEventListener(
-        "change",
-        filterEmployees
-    );
-
-
-document
-    .getElementById(
-        "logoutBtn"
-    )
-    .addEventListener(
-        "click",
-        logout
     );
 
 
 /* =====================================================
-   تحديث الصفحة عند الرجوع لها
+   حفظ الموظف
 ===================================================== */
 
-window.addEventListener(
-    "focus",
-    async () => {
-
-        const {
-            data
-        } =
-        await supabaseClient
-            .auth
-            .getSession();
+document.getElementById(
+    "employeeForm"
+)
+.addEventListener(
+    "submit",
+    handleEmployeeSubmit
+);
 
 
-        if (
-            data?.session
-        ) {
+/* =====================================================
+   إغلاق نافذة الموظف
+===================================================== */
 
-            await loadPageData();
+document.getElementById(
+    "closeEmployeeModalBtn"
+)
+.addEventListener(
+    "click",
+    closeEmployeeModal
+);
+
+
+document.getElementById(
+    "cancelEmployeeBtn"
+)
+.addEventListener(
+    "click",
+    closeEmployeeModal
+);
+
+
+document.getElementById(
+    "employeeModalOverlay"
+)
+.addEventListener(
+    "click",
+    closeEmployeeModal
+);
+
+
+/* =====================================================
+   إغلاق التفاصيل
+===================================================== */
+
+document.getElementById(
+    "closeDetailsBtn"
+)
+.addEventListener(
+    "click",
+    closeDetailsModal
+);
+
+
+document.getElementById(
+    "detailsModalOverlay"
+)
+.addEventListener(
+    "click",
+    closeDetailsModal
+);
+
+
+/* =====================================================
+   البحث
+===================================================== */
+
+document.getElementById(
+    "searchInput"
+)
+.addEventListener(
+    "input",
+    filterEmployees
+);
+
+
+/* =====================================================
+   فلتر القسم
+===================================================== */
+
+document.getElementById(
+    "departmentFilter"
+)
+.addEventListener(
+    "change",
+    filterEmployees
+);
+
+
+/* =====================================================
+   فلتر الحالة
+===================================================== */
+
+document.getElementById(
+    "statusFilter"
+)
+.addEventListener(
+    "change",
+    filterEmployees
+);
+
+
+/* =====================================================
+   القائمة الجانبية للجوال
+===================================================== */
+
+document.getElementById(
+    "mobileMenuBtn"
+)
+.addEventListener(
+    "click",
+    function() {
+
+        sidebar
+            .classList
+            .add(
+                "show"
+            );
+
+
+        sidebarOverlay
+            .classList
+            .add(
+                "show"
+            );
+
+    }
+);
+
+
+sidebarOverlay
+    .addEventListener(
+        "click",
+        function() {
+
+            sidebar
+                .classList
+                .remove(
+                    "show"
+                );
+
+
+            sidebarOverlay
+                .classList
+                .remove(
+                    "show"
+                );
 
         }
+    );
+
+
+/* =====================================================
+   تسجيل الخروج
+===================================================== */
+
+document.getElementById(
+    "logoutBtn"
+)
+.addEventListener(
+    "click",
+    async function() {
+
+        try {
+
+            await supabaseClient
+                .auth
+                .signOut();
+
+        }
+
+        catch(error) {
+
+            console.error(error);
+
+        }
+
+
+        localStorage.removeItem(
+            "miyarRole"
+        );
+
+        localStorage.removeItem(
+            "miyarEmail"
+        );
+
+        localStorage.removeItem(
+            "miyarAdminType"
+        );
+
+        localStorage.removeItem(
+            "miyarAdminName"
+        );
+
+
+        window.location.href =
+            "login.html";
 
     }
 );
 
 
 /* =====================================================
-   بدء الصفحة
+   تشغيل الصفحة
 ===================================================== */
 
 document.addEventListener(
@@ -3916,5 +3870,4 @@ document.addEventListener(
 </script>
 
 </body>
-
 </html>
