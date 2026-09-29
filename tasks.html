@@ -4737,228 +4737,321 @@ error.message
 /* تفاصيل المهمة */
 /* ========================================= */
 
-async function openTaskDetails(
-taskId
-){
+async function openTaskDetails(taskId) {
 
-try{
+    try {
 
-const task =
-tasks.find(
-item =>
-Number(item.id) ===
-Number(taskId)
-);
+        const task = tasks.find(
+            item => Number(item.id) === Number(taskId)
+        );
+
+        if (!task) {
+            alert("تعذر العثور على المهمة.");
+            return;
+        }
+
+        let requirements = [];
+
+        try {
+
+            const { data, error } = await supabaseClient
+                .from("task_requirements")
+                .select(`
+                    *,
+                    skills (
+                        id,
+                        skill_name
+                    )
+                `)
+                .eq("task_id", Number(taskId));
+
+            if (error) {
+                console.error(
+                    "خطأ تحميل متطلبات المهمة:",
+                    error
+                );
+            } else {
+                requirements = data || [];
+            }
+
+        } catch (requirementsError) {
+
+            console.error(
+                "خطأ تحميل متطلبات المهمة:",
+                requirementsError
+            );
+
+            requirements = [];
+        }
 
 
-if(
-!task
-){
+        const first =
+            requirements.length > 0
+                ? requirements[0]
+                : {};
 
-return;
 
+        const requirementNames =
+            requirements.length > 0
+                ? requirements
+                    .map(requirement => {
+
+                        const name =
+                            requirement.skills?.skill_name ||
+                            "مهارة";
+
+                        const level =
+                            requirement.required_level ??
+                            "—";
+
+                        return `${escapeHtml(name)} (المستوى ${escapeHtml(level)})`;
+
+                    })
+                    .join("، ")
+                : "لا توجد مهارات محفوظة";
+
+
+        const taskName =
+            task.name ??
+            task.task_name ??
+            "—";
+
+        const projectId =
+            task.projectId ??
+            task.project_id ??
+            null;
+
+        const taskStatus =
+            task.status ??
+            "—";
+
+        const taskPriority =
+            task.priority ??
+            "—";
+
+        const dueDate =
+            task.dueDate ??
+            task.due_date ??
+            null;
+
+        const assignedEmployeeId =
+            task.assignedEmployeeId ??
+            task.assigned_employee_id ??
+            null;
+
+        const description =
+            task.description ??
+            task.task_description ??
+            "لا يوجد وصف";
+
+
+        const detailsContainer =
+            document.getElementById("taskDetails");
+
+        if (!detailsContainer) {
+            throw new Error(
+                "عنصر taskDetails غير موجود في الصفحة"
+            );
+        }
+
+
+        detailsContainer.innerHTML = `
+
+            <div class="detail-item">
+                <span>اسم المهمة</span>
+                <strong>
+                    ${escapeHtml(taskName)}
+                </strong>
+            </div>
+
+
+            <div class="detail-item">
+                <span>المشروع</span>
+                <strong>
+                    ${escapeHtml(
+                        projectId
+                            ? getProjectName(projectId)
+                            : "—"
+                    )}
+                </strong>
+            </div>
+
+
+            <div class="detail-item">
+                <span>الحالة</span>
+                <strong>
+                    ${escapeHtml(taskStatus)}
+                </strong>
+            </div>
+
+
+            <div class="detail-item">
+                <span>الأولوية</span>
+                <strong>
+                    ${escapeHtml(taskPriority)}
+                </strong>
+            </div>
+
+
+            <div class="detail-item">
+                <span>تاريخ الاستحقاق</span>
+                <strong>
+                    ${escapeHtml(
+                        dueDate
+                            ? formatDate(dueDate)
+                            : "—"
+                    )}
+                </strong>
+            </div>
+
+
+            <div class="detail-item">
+                <span>الموظف المسند</span>
+                <strong>
+                    ${
+                        assignedEmployeeId
+                            ? escapeHtml(
+                                getEmployeeName(
+                                    assignedEmployeeId
+                                )
+                            )
+                            : "غير مسند"
+                    }
+                </strong>
+            </div>
+
+
+            <div class="detail-item">
+                <span>عدد الموظفين المطلوب</span>
+                <strong>
+                    ${escapeHtml(
+                        first.employees_required ?? "—"
+                    )}
+                </strong>
+            </div>
+
+
+            <div class="detail-item">
+                <span>سنوات الخبرة المطلوبة</span>
+                <strong>
+                    ${escapeHtml(
+                        first.experience_required ?? "—"
+                    )}
+                </strong>
+            </div>
+
+
+            <div class="detail-item">
+                <span>المستوى الوظيفي</span>
+                <strong>
+                    ${escapeHtml(
+                        first.job_level_required ?? "—"
+                    )}
+                </strong>
+            </div>
+
+
+            <div class="detail-item">
+                <span>الحد الأدنى للتفرغ</span>
+                <strong>
+                    ${
+                        first.availability_required !== undefined &&
+                        first.availability_required !== null
+                            ? `${escapeHtml(
+                                first.availability_required
+                            )}%`
+                            : "—"
+                    }
+                </strong>
+            </div>
+
+
+            <div class="detail-item full-width">
+
+                <span>
+                    المهارات المطلوبة
+                </span>
+
+                <strong>
+                    ${requirementNames}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item full-width">
+
+                <span>
+                    أوزان المطابقة
+                </span>
+
+                <strong>
+
+                    المهارات
+                    ${escapeHtml(
+                        first.skills_weight ?? 50
+                    )}%
+
+                    -
+
+                    الخبرة
+                    ${escapeHtml(
+                        first.experience_weight ?? 20
+                    )}%
+
+                    -
+
+                    المستوى الوظيفي
+                    ${escapeHtml(
+                        first.job_level_weight ?? 15
+                    )}%
+
+                    -
+
+                    التفرغ
+                    ${escapeHtml(
+                        first.availability_weight ?? 15
+                    )}%
+
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item full-width">
+
+                <span>
+                    الوصف
+                </span>
+
+                <strong>
+                    ${escapeHtml(description)}
+                </strong>
+
+            </div>
+
+        `;
+
+
+        detailsModal.classList.add("show");
+
+        document.body.classList.add(
+            "modal-open"
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "خطأ فتح تفاصيل المهمة:",
+            error
+        );
+
+        alert(
+            "تعذر تحميل تفاصيل المهمة."
+        );
+    }
 }
-
-
-const {
-data:requirements,
-error
-} =
-await supabaseClient
-.from("task_requirements")
-.select(`
-*,
-skills(
-id,
-skill_name
-)
-`)
-.eq(
-"task_id",
-Number(taskId)
-);
-
-
-if(error){
-
-throw error;
-
-}
-
-
-const first =
-requirements?.[0]
-||
-{};
-
-
-const requirementNames =
-(
-requirements
-||
-[]
-)
-.map(
-requirement => {
-
-const name =
-requirement.skills?.skill_name
-||
-"مهارة";
-
-
-return `
-${escapeHtml(name)}
-(المستوى ${Number(requirement.required_level || 3)})
-`;
-
-}
-)
-.join("، ");
-
-
-document.getElementById(
-"taskDetails"
-).innerHTML =
-`
-
-<div class="detail-item">
-<span>اسم المهمة</span>
-<strong>${escapeHtml(task.name)}</strong>
-</div>
-
-<div class="detail-item">
-<span>المشروع</span>
-<strong>${escapeHtml(getProjectName(task.projectId))}</strong>
-</div>
-
-<div class="detail-item">
-<span>الحالة</span>
-<strong>${escapeHtml(task.status)}</strong>
-</div>
-
-<div class="detail-item">
-<span>الأولوية</span>
-<strong>${escapeHtml(task.priority)}</strong>
-</div>
-
-<div class="detail-item">
-<span>تاريخ الاستحقاق</span>
-<strong>${escapeHtml(formatDate(task.dueDate))}</strong>
-</div>
-
-<div class="detail-item">
-<span>الموظف المسند</span>
-<strong>${escapeHtml(getEmployeeName(task.assignedEmployeeId))}</strong>
-</div>
-
-<div class="detail-item">
-<span>عدد الموظفين المطلوب</span>
-<strong>${escapeHtml(first.employees_required ?? "—")}</strong>
-</div>
-
-<div class="detail-item">
-<span>سنوات الخبرة المطلوبة</span>
-<strong>${escapeHtml(first.experience_required ?? "—")}</strong>
-</div>
-
-<div class="detail-item">
-<span>المستوى الوظيفي</span>
-<strong>${escapeHtml(first.job_level_required ?? "—")}</strong>
-</div>
-
-<div class="detail-item">
-<span>الحد الأدنى للتفرغ</span>
-
-<strong>
-
-${
-first.availability_required !== undefined
-?
-`${escapeHtml(first.availability_required)}%`
-:
-"—"
-}
-
-</strong>
-
-</div>
-
-
-<div class="detail-item full-width">
-
-<span>
-المهارات المطلوبة
-</span>
-
-<strong>
-${requirementNames || "لا توجد مهارات محفوظة"}
-</strong>
-
-</div>
-
-
-<div class="detail-item full-width">
-
-<span>
-أوزان المطابقة
-</span>
-
-<strong>
-
-المهارات ${escapeHtml(first.skills_weight ?? 50)}% -
-
-الخبرة ${escapeHtml(first.experience_weight ?? 20)}% -
-
-المستوى الوظيفي ${escapeHtml(first.job_level_weight ?? 15)}% -
-
-التفرغ ${escapeHtml(first.availability_weight ?? 15)}%
-
-</strong>
-
-</div>
-
-
-<div class="detail-item full-width">
-
-<span>
-الوصف
-</span>
-
-<strong>
-${escapeHtml(task.description || "لا يوجد وصف")}
-</strong>
-
-</div>
-
-`;
-
-
-detailsModal.classList.add(
-"show"
-);
-
-
-document.body.classList.add(
-"modal-open"
-);
-
-
-}catch(error){
-
-console.error(
-error
-);
-
-
-alert(
-"تعذر تحميل تفاصيل المهمة."
-);
-
-}
-
-}
-
 
 function closeDetailsModal(){
 
