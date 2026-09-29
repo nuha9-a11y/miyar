@@ -560,8 +560,10 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
 "sb_publishable_NVlWEnA_w4KbSse_-70zdA_J9ut0Kyo";
 
-const ADMIN_EMAIL =
-"admin@gmail.com";
+const ADMIN_EMAILS = [
+    "miyar.admin@gmail.com",
+    "miyar.hr@gmail.com"
+];
 
 
 const supabaseClient =
@@ -695,99 +697,86 @@ function normalizeText(value) {
 }
 
 
-/* =====================================================
-   PROTECT PAGE
-===================================================== */
-
 async function protectPage() {
 
     try {
 
-        const {
-            data,
-            error
-        } =
-        await supabaseClient
-        .auth
-        .getSession();
+        const { data, error } =
+            await supabaseClient.auth.getSession();
 
+        if (error || !data?.session) {
 
-        if (
-            error
-            ||
-            !data.session
-        ) {
-
-            window.location.href =
-            "login.html";
-
+            window.location.href = "login.html";
             return false;
-
         }
 
+        const email = String(
+            data.session.user.email || ""
+        ).trim().toLowerCase();
 
-        const email =
-        String(
-            data.session.user.email
-            ||
-            ""
-        )
-        .trim()
-        .toLowerCase();
+        if (!ADMIN_EMAILS.includes(email)) {
 
+            await supabaseClient.auth.signOut();
 
-        if (
-            email !==
-            ADMIN_EMAIL.toLowerCase()
-        ) {
+            localStorage.removeItem("miyarRole");
+            localStorage.removeItem("miyarEmail");
+            localStorage.removeItem("miyarAdminType");
+            localStorage.removeItem("miyarAdminName");
 
-            await supabaseClient
-            .auth
-            .signOut();
-
-
-            clearLocalSession();
-
-
-            window.location.href =
-            "login.html";
-
+            window.location.href = "login.html";
 
             return false;
-
         }
-
 
         localStorage.setItem(
             "miyarRole",
             "admin"
         );
 
-
         localStorage.setItem(
             "miyarEmail",
             email
         );
 
+        if (email === "miyar.hr@gmail.com") {
+
+            localStorage.setItem(
+                "miyarAdminType",
+                "hr"
+            );
+
+            localStorage.setItem(
+                "miyarAdminName",
+                "الموارد البشرية"
+            );
+
+        } else {
+
+            localStorage.setItem(
+                "miyarAdminType",
+                "admin"
+            );
+
+            localStorage.setItem(
+                "miyarAdminName",
+                "المسؤول"
+            );
+        }
 
         return true;
 
-    }
-
-    catch(error) {
+    } catch (error) {
 
         console.error(
-            "خطأ حماية الصفحة:",
+            "خطأ حماية صفحة المطابقة والترشيح:",
             error
         );
 
+        window.location.href = "login.html";
 
         return false;
-
     }
-
 }
-
 
 /* =====================================================
    TASKS
