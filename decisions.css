@@ -625,21 +625,15 @@ button {
 
     white-space: nowrap;
 }
-
 /* =========================================================
    شبكة القرارات
    ========================================================= */
 
 .decisions-grid {
     width: 100%;
-
     display: grid !important;
-
-    grid-template-columns:
-        repeat(3, minmax(0, 1fr)) !important;
-
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
     gap: 14px !important;
-
     align-items: stretch;
 }
 
@@ -651,6 +645,7 @@ button {
 .decision-card {
     width: 100% !important;
     min-width: 0 !important;
+    min-height: 0 !important;
 
     padding: 15px !important;
 
@@ -682,6 +677,7 @@ button {
         border-color 0.2s ease;
 }
 
+
 .decision-card:hover {
     transform: translateY(-2px);
 
@@ -703,6 +699,8 @@ button {
 
     display: flex !important;
 
+    flex-direction: row !important;
+
     align-items: flex-start !important;
     justify-content: space-between !important;
 
@@ -711,10 +709,12 @@ button {
     margin-bottom: 12px !important;
 }
 
+
 .decision-card-header > div:first-child {
     flex: 1 !important;
     min-width: 0 !important;
 }
+
 
 .decision-label {
     display: block !important;
@@ -726,6 +726,7 @@ button {
     font-size: 7px !important;
     font-weight: 600 !important;
 }
+
 
 .decision-card-header h3 {
     margin: 0 !important;
@@ -746,6 +747,8 @@ button {
    ========================================================= */
 
 .decision-rate {
+    flex: 0 0 auto !important;
+
     width: 65px !important;
     min-width: 65px !important;
     height: 55px !important;
@@ -790,10 +793,10 @@ button {
     margin-bottom: 9px !important;
 }
 
+
 .decision-info-item {
     width: 100% !important;
     min-width: 0 !important;
-
     min-height: 58px !important;
 
     padding: 8px 9px !important;
@@ -820,6 +823,7 @@ button {
     overflow: hidden !important;
 }
 
+
 .decision-info-item span {
     width: 100% !important;
 
@@ -830,11 +834,13 @@ button {
     color: #87989f !important;
 
     font-size: 6px !important;
+    font-weight: 400 !important;
 
     line-height: 1.5 !important;
 
     text-align: right !important;
 }
+
 
 .decision-info-item strong {
     width: 100% !important;
@@ -853,17 +859,14 @@ button {
     text-align: right !important;
 
     overflow-wrap: anywhere !important;
+    word-break: normal !important;
 }
 
 
-/* =========================================================
-   تاريخ القرار
-   ========================================================= */
-
-/* آخر مربع يكون مرتب حتى لو كان عدد العناصر فردي */
+/* تاريخ القرار */
 
 .decision-info-item:last-child {
-    grid-column: auto;
+    grid-column: auto !important;
 }
 
 
@@ -899,6 +902,7 @@ button {
     text-align: right !important;
 }
 
+
 .decision-reason span {
     width: 100% !important;
 
@@ -913,6 +917,7 @@ button {
     text-align: right !important;
 }
 
+
 .decision-reason p {
     width: 100% !important;
 
@@ -926,6 +931,7 @@ button {
 
     text-align: right !important;
 
+    overflow-wrap: anywhere !important;
     word-break: break-word !important;
 }
 
@@ -952,6 +958,7 @@ button {
         1px solid
         rgba(62, 87, 101, 0.08) !important;
 }
+
 
 .decision-actions button {
     width: 100% !important;
@@ -981,6 +988,7 @@ button {
     color: #31586c !important;
 }
 
+
 .decision-actions .view-btn:hover {
     background:
         rgba(49, 88, 108, 0.17) !important;
@@ -998,6 +1006,7 @@ button {
     color: #9a6e39 !important;
 }
 
+
 .decision-actions .edit-btn:hover {
     background:
         rgba(185, 138, 77, 0.19) !important;
@@ -1007,24 +1016,32 @@ button {
 
 
 /* =========================================================
-   استجابة الشاشات
+   استجابة بطاقات القرارات
    ========================================================= */
 
 
-/* لابتوب وشاشات متوسطة */
+/* الشاشات الكبيرة والمتوسطة
+   نخليها 3 بطاقات */
 
-@media (max-width: 1250px) {
+@media (min-width: 1101px) {
 
     .decisions-grid {
         grid-template-columns:
-            repeat(2, minmax(0, 1fr)) !important;
+            repeat(3, minmax(0, 1fr)) !important;
+
+        gap: 14px !important;
     }
+
 }
 
 
-/* تابلت */
+/* التابلت واللابتوب الصغير
+   بطاقتان */
 
-@media (max-width: 900px) {
+@media
+(max-width: 1100px)
+and
+(min-width: 701px) {
 
     .decisions-grid {
         grid-template-columns:
@@ -1034,20 +1051,46 @@ button {
     }
 
     .decision-card {
+        min-height: 0 !important;
         padding: 13px !important;
+    }
+
+    .decision-card-header {
+        gap: 8px !important;
+    }
+
+    .decision-card-header h3 {
+        font-size: 12px !important;
     }
 
     .decision-rate {
         width: 60px !important;
         min-width: 60px !important;
         height: 52px !important;
+
+        padding: 0 !important;
+
+        font-size: 14px !important;
+    }
+
+    .decision-info {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+
+        gap: 7px !important;
+    }
+
+    .decision-info-item {
+        min-height: 55px !important;
+        padding: 8px !important;
     }
 }
 
 
-/* جوال */
+/* الجوال
+   بطاقة واحدة */
 
-@media (max-width: 650px) {
+@media (max-width: 700px) {
 
     .decisions-grid {
         grid-template-columns:
@@ -1058,6 +1101,8 @@ button {
 
     .decision-card {
         width: 100% !important;
+
+        min-height: 0 !important;
 
         padding: 13px !important;
 
@@ -1072,9 +1117,26 @@ button {
         font-size: 12px !important;
     }
 
+    .decision-rate {
+        width: 60px !important;
+        min-width: 60px !important;
+        height: 52px !important;
+
+        padding: 0 !important;
+
+        font-size: 14px !important;
+    }
+
     .decision-info {
         grid-template-columns:
             repeat(2, minmax(0, 1fr)) !important;
+
+        gap: 7px !important;
+    }
+
+    .decision-info-item {
+        min-height: 55px !important;
+        padding: 8px !important;
     }
 
     .decision-actions {
@@ -1084,9 +1146,9 @@ button {
 }
 
 
-/* جوال صغير */
+/* الجوال الصغير */
 
-@media (max-width: 400px) {
+@media (max-width: 430px) {
 
     .decision-card {
         padding: 11px !important;
@@ -1101,6 +1163,8 @@ button {
         min-width: 56px !important;
         height: 48px !important;
 
+        padding: 0 !important;
+
         font-size: 14px !important;
     }
 
@@ -1113,17 +1177,19 @@ button {
         min-height: 52px !important;
     }
 
+    .decision-reason {
+        min-height: 52px !important;
+    }
+
     .decision-actions {
         grid-template-columns:
-            1fr !important;
+            repeat(2, minmax(0, 1fr)) !important;
     }
 
     .decision-actions button {
         height: 34px !important;
     }
 }
-
-
 /* =====================================================
    الحالة الفارغة
 ===================================================== */
@@ -1834,16 +1900,17 @@ and
             );
     }
 
-    .decisions-grid {
-        grid-template-columns:
-            1fr !important;
-    }
+   .decisions-grid {
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr)) !important;
 
-    .decision-card {
-        min-height: auto;
-    }
+    gap: 12px !important;
 }
 
+.decision-card {
+    min-height: 0 !important;
+    padding: 13px !important;
+}
 
 /* =====================================================
    الجوال
