@@ -4754,16 +4754,11 @@ async function openTaskDetails(taskId) {
 
         try {
 
-            const { data, error } = await supabaseClient
-                .from("task_requirements")
-                .select(`
-                    *,
-                    skills (
-                        id,
-                        skill_name
-                    )
-                `)
-                .eq("task_id", Number(taskId));
+           const { data, error } = await supabaseClient
+    .from("task_requirements")
+    .select("*")
+    .eq("task_id", Number(taskId))
+    .order("id", { ascending: true });
 
             if (error) {
                 console.error(
@@ -4796,9 +4791,13 @@ async function openTaskDetails(taskId) {
                 ? requirements
                     .map(requirement => {
 
-                        const name =
-                            requirement.skills?.skill_name ||
-                            "مهارة";
+                      const skill = skills.find(
+    item => Number(item.id) === Number(requirement.skill_id)
+);
+
+const name =
+    skill?.skill_name ||
+    "مهارة";
 
                         const level =
                             requirement.required_level ??
