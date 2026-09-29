@@ -4786,29 +4786,44 @@ async function openTaskDetails(taskId) {
                 : {};
 
 
-        const requirementNames =
-            requirements.length > 0
-                ? requirements
-                    .map(requirement => {
+     const requirementNames =
+    requirements.length > 0
+        ? requirements
+            .map(requirement => {
 
-                      const skill = skills.find(
-    item => Number(item.id) === Number(requirement.skill_id)
-);
+                const skill = skills.find(
+                    item =>
+                        Number(item.id) ===
+                        Number(requirement.skill_id)
+                );
 
-const name =
-    skill?.skill_name ||
-    "مهارة";
+                const name =
+                    skill?.skill_name ||
+                    "مهارة";
 
-                        const level =
-                            requirement.required_level ??
-                            "—";
+                const level =
+                    requirement.required_level ??
+                    "—";
 
-                        return `${escapeHtml(name)} (المستوى ${escapeHtml(level)})`;
+                return `
+                    <span class="detail-skill-chip">
+                        <span class="detail-skill-name">
+                            ${escapeHtml(name)}
+                        </span>
 
-                    })
-                    .join("، ")
-                : "لا توجد مهارات محفوظة";
+                        <span class="detail-skill-level">
+                            المستوى ${escapeHtml(level)}
+                        </span>
+                    </span>
+                `;
 
+            })
+            .join("")
+        : `
+            <span class="detail-empty-text">
+                لا توجد مهارات محفوظة
+            </span>
+        `;
 
         const taskName =
             task.name ??
@@ -4853,183 +4868,195 @@ const name =
             );
         }
 
+detailsContainer.innerHTML = `
 
-        detailsContainer.innerHTML = `
-
-            <div class="detail-item">
-                <span>اسم المهمة</span>
-                <strong>
-                    ${escapeHtml(taskName)}
-                </strong>
-            </div>
-
-
-            <div class="detail-item">
-                <span>المشروع</span>
-                <strong>
-                    ${escapeHtml(
-                        projectId
-                            ? getProjectName(projectId)
-                            : "—"
-                    )}
-                </strong>
-            </div>
+    <div class="detail-item">
+        <span>اسم المهمة</span>
+        <strong>
+            ${escapeHtml(taskName)}
+        </strong>
+    </div>
 
 
-            <div class="detail-item">
-                <span>الحالة</span>
-                <strong>
-                    ${escapeHtml(taskStatus)}
-                </strong>
-            </div>
+    <div class="detail-item">
+        <span>المشروع</span>
+        <strong>
+            ${escapeHtml(
+                projectId
+                    ? getProjectName(projectId)
+                    : "—"
+            )}
+        </strong>
+    </div>
 
 
-            <div class="detail-item">
-                <span>الأولوية</span>
-                <strong>
-                    ${escapeHtml(taskPriority)}
-                </strong>
-            </div>
+    <div class="detail-item">
+        <span>الحالة</span>
+        <strong>
+            ${escapeHtml(taskStatus)}
+        </strong>
+    </div>
 
 
-            <div class="detail-item">
-                <span>تاريخ الاستحقاق</span>
-                <strong>
-                    ${escapeHtml(
-                        dueDate
-                            ? formatDate(dueDate)
-                            : "—"
-                    )}
-                </strong>
-            </div>
+    <div class="detail-item">
+        <span>الأولوية</span>
+        <strong>
+            ${escapeHtml(taskPriority)}
+        </strong>
+    </div>
 
 
-            <div class="detail-item">
-                <span>الموظف المسند</span>
-                <strong>
-                    ${
-                        assignedEmployeeId
-                            ? escapeHtml(
-                                getEmployeeName(
-                                    assignedEmployeeId
-                                )
-                            )
-                            : "غير مسند"
-                    }
-                </strong>
-            </div>
+    <div class="detail-item">
+        <span>تاريخ الاستحقاق</span>
+        <strong>
+            ${escapeHtml(
+                dueDate
+                    ? formatDate(dueDate)
+                    : "—"
+            )}
+        </strong>
+    </div>
 
 
-            <div class="detail-item">
-                <span>عدد الموظفين المطلوب</span>
-                <strong>
-                    ${escapeHtml(
-                        first.employees_required ?? "—"
-                    )}
-                </strong>
-            </div>
+    <div class="detail-item">
+        <span>الموظف المسند</span>
+        <strong>
+            ${
+                assignedEmployeeId
+                    ? escapeHtml(
+                        getEmployeeName(
+                            assignedEmployeeId
+                        )
+                    )
+                    : "غير مسند"
+            }
+        </strong>
+    </div>
 
 
-            <div class="detail-item">
-                <span>سنوات الخبرة المطلوبة</span>
-                <strong>
-                    ${escapeHtml(
-                        first.experience_required ?? "—"
-                    )}
-                </strong>
-            </div>
+    <div class="detail-item">
+        <span>عدد الموظفين المطلوب</span>
+        <strong>
+            ${escapeHtml(
+                first.employees_required ?? "—"
+            )}
+        </strong>
+    </div>
 
 
-            <div class="detail-item">
-                <span>المستوى الوظيفي</span>
-                <strong>
-                    ${escapeHtml(
-                        first.job_level_required ?? "—"
-                    )}
-                </strong>
-            </div>
+    <div class="detail-item">
+        <span>سنوات الخبرة المطلوبة</span>
+        <strong>
+            ${escapeHtml(
+                first.experience_required ?? "—"
+            )}
+        </strong>
+    </div>
 
 
-            <div class="detail-item">
-                <span>الحد الأدنى للتفرغ</span>
-                <strong>
-                    ${
-                        first.availability_required !== undefined &&
-                        first.availability_required !== null
-                            ? `${escapeHtml(
-                                first.availability_required
-                            )}%`
-                            : "—"
-                    }
-                </strong>
-            </div>
+    <div class="detail-item">
+        <span>المستوى الوظيفي</span>
+        <strong>
+            ${escapeHtml(
+                first.job_level_required ?? "—"
+            )}
+        </strong>
+    </div>
 
 
-            <div class="detail-item full-width">
+    <div class="detail-item">
+        <span>الحد الأدنى للتفرغ</span>
+        <strong dir="ltr">
+            ${
+                first.availability_required !== undefined &&
+                first.availability_required !== null
+                    ? `${escapeHtml(
+                        first.availability_required
+                    )}%`
+                    : "—"
+            }
+        </strong>
+    </div>
 
-                <span>
-                    المهارات المطلوبة
-                </span>
 
-                <strong>
-                    ${requirementNames}
-                </strong>
+    <div class="detail-section full-detail">
 
-            </div>
+        <div class="detail-section-title">
+            المهارات المطلوبة
+        </div>
+
+        <div class="detail-skills-list">
+            ${requirementNames}
+        </div>
+
+    </div>
 
 
-            <div class="detail-item full-width">
+    <div class="detail-section full-detail">
 
-                <span>
-                    أوزان المطابقة
-                </span>
+        <div class="detail-section-title">
+            أوزان المطابقة
+        </div>
 
-                <strong>
+        <div class="detail-weights-grid">
 
-                    المهارات
+            <div class="detail-weight-card">
+                <span>المهارات</span>
+                <strong dir="ltr">
                     ${escapeHtml(
                         first.skills_weight ?? 50
                     )}%
+                </strong>
+            </div>
 
-                    -
 
-                    الخبرة
+            <div class="detail-weight-card">
+                <span>الخبرة</span>
+                <strong dir="ltr">
                     ${escapeHtml(
                         first.experience_weight ?? 20
                     )}%
+                </strong>
+            </div>
 
-                    -
 
-                    المستوى الوظيفي
+            <div class="detail-weight-card">
+                <span>المستوى الوظيفي</span>
+                <strong dir="ltr">
                     ${escapeHtml(
                         first.job_level_weight ?? 15
                     )}%
+                </strong>
+            </div>
 
-                    -
 
-                    التفرغ
+            <div class="detail-weight-card">
+                <span>التفرغ</span>
+                <strong dir="ltr">
                     ${escapeHtml(
                         first.availability_weight ?? 15
                     )}%
-
                 </strong>
-
             </div>
 
+        </div>
 
-            <div class="detail-item full-width">
+    </div>
 
-                <span>
-                    الوصف
-                </span>
 
-                <strong>
-                    ${escapeHtml(description)}
-                </strong>
+    <div class="detail-section detail-description full-detail">
 
-            </div>
+        <div class="detail-section-title">
+            الوصف
+        </div>
 
-        `;
+        <p>
+            ${escapeHtml(description)}
+        </p>
+
+    </div>
+
+`;
 
 
         detailsModal.classList.add("show");
