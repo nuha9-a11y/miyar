@@ -621,8 +621,10 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
     "sb_publishable_NVlWEnA_w4KbSse_-70zdA_J9ut0Kyo";
 
-const ADMIN_EMAIL =
-    "admin@gmail.com";
+const ADMIN_EMAILS = [
+    "miyar.admin@gmail.com",
+    "miyar.hr@gmail.com"
+];
 
 const supabaseClient =
     window.supabase.createClient(
@@ -685,65 +687,47 @@ const mobileMenuBtn =
     );
 
 
-/* =====================================================
-   حماية الصفحة
-===================================================== */
-
 async function protectPage() {
 
     try {
 
-        const {
-            data,
-            error
-        } =
-        await supabaseClient
-            .auth
-            .getSession();
-
+        const { data, error } =
+            await supabaseClient.auth.getSession();
 
         if (
-            error
-            ||
-            !data.session
+            error ||
+            !data?.session ||
+            !data.session.user
         ) {
 
             clearLocalSession();
 
-            window.location.href =
-                "login.html";
+            window.location.href = "login.html";
 
             return false;
         }
 
-
-        const email =
-            String(
-                data.session.user.email
-                ||
-                ""
-            )
-            .trim()
-            .toLowerCase();
-
+        const email = String(
+            data.session.user.email || ""
+        )
+        .trim()
+        .toLowerCase();
 
         if (
-            email !==
-            ADMIN_EMAIL.toLowerCase()
+            !ADMIN_EMAILS.includes(email)
         ) {
 
-            await supabaseClient
-                .auth
-                .signOut();
+            await supabaseClient.auth.signOut();
 
             clearLocalSession();
 
-            window.location.href =
-                "login.html";
+            localStorage.removeItem("miyarAdminType");
+            localStorage.removeItem("miyarAdminName");
+
+            window.location.href = "login.html";
 
             return false;
         }
-
 
         localStorage.setItem(
             "miyarRole",
@@ -755,23 +739,47 @@ async function protectPage() {
             email
         );
 
+        if (
+            email === "miyar.hr@gmail.com"
+        ) {
+
+            localStorage.setItem(
+                "miyarAdminType",
+                "hr"
+            );
+
+            localStorage.setItem(
+                "miyarAdminName",
+                "الموارد البشرية"
+            );
+
+        } else {
+
+            localStorage.setItem(
+                "miyarAdminType",
+                "admin"
+            );
+
+            localStorage.setItem(
+                "miyarAdminName",
+                "المسؤول"
+            );
+        }
 
         return true;
 
-    }
-
-    catch(error) {
+    } catch(error) {
 
         console.error(
-            "خطأ حماية الصفحة:",
+            "خطأ حماية صفحة التقييمات:",
             error
         );
 
+        window.location.href = "login.html";
+
         return false;
     }
-
 }
-
 
 /* =====================================================
    تحميل الموظفين
