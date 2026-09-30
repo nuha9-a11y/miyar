@@ -629,7 +629,7 @@ input {
 
 
 /* =========================================================
-   شبكة المهام - تعديل
+   شبكة المهام
 ========================================================= */
 
 .tasks-grid {
@@ -637,10 +637,6 @@ input {
 
     display: grid;
 
-    /*
-       كل بطاقة لها عرض مناسب.
-       لو مهمة واحدة لن تتمدد على الشاشة كلها.
-    */
     grid-template-columns:
         repeat(2, minmax(0, 1fr));
 
@@ -651,7 +647,7 @@ input {
 
 
 /* =========================================================
-   بطاقة المهمة - الشكل الجديد
+   بطاقة المهمة
 ========================================================= */
 
 .task-card {
@@ -720,7 +716,6 @@ input {
 
 .task-card-header > div {
     flex: 1;
-
     min-width: 0;
 }
 
@@ -1026,25 +1021,21 @@ input {
 
 .start-task-btn {
     background: #52788d;
-
     color: #ffffff;
 }
 
 .start-task-btn:hover {
     background: #426a80;
-
     transform: translateY(-1px);
 }
 
 .submit-task-btn {
     background: #b7894f;
-
     color: #ffffff;
 }
 
 .submit-task-btn:hover {
     background: #a57942;
-
     transform: translateY(-1px);
 }
 
@@ -1076,7 +1067,6 @@ input {
 
 .task-action-btn:disabled {
     opacity: 1;
-
     transform: none;
 }
 
@@ -1089,10 +1079,7 @@ input {
     width: 100%;
     min-height: 150px;
 
-    grid-column:
-        1
-        /
-        -1;
+    grid-column: 1 / -1;
 
     display: flex;
     align-items: center;
@@ -1129,7 +1116,6 @@ input {
     z-index: 8000;
 
     display: none;
-
     align-items: center;
     justify-content: center;
 
@@ -1309,13 +1295,8 @@ input {
 }
 
 .detail-full {
-    grid-column:
-        1
-        /
-        -1;
-}
-
-.review-detail {
+    grid-column: 1 / -1;
+}.review-detail {
     border-color:
         rgba(185, 138, 77, 0.20);
 
@@ -1956,6 +1937,7 @@ input {
 
 /* =========================================================
    هيدر الجوال
+   تعديل: الاسم جنب مربع السايد بار
 ========================================================= */
 
 .mobile-header {
@@ -1970,7 +1952,11 @@ input {
     z-index: 900;
 
     align-items: center;
-    justify-content: space-between;
+
+    /* مربع السايد بار والاسم يبدأون من اليمين */
+    justify-content: flex-start;
+
+    gap: 8px;
 
     padding: 0 14px;
 
@@ -1990,8 +1976,15 @@ input {
     width: 36px;
     height: 36px;
 
+    flex:
+        0
+        0
+        36px;
+
     align-items: center;
     justify-content: center;
+
+    margin: 0;
 
     border:
         1px solid
@@ -2009,8 +2002,21 @@ input {
     cursor: pointer;
 }
 
+
+/* اسم مهامي جنب مربع السايد بار مباشرة */
+
 .mobile-header-title {
-    text-align: center;
+    flex:
+        0
+        0
+        auto;
+
+    width: auto;
+
+    margin: 0;
+    padding: 0;
+
+    text-align: right;
 }
 
 .mobile-header-title h2 {
@@ -2018,21 +2024,45 @@ input {
 
     font-size: 13px;
 
-    margin-bottom: 1px;
+    margin:
+        0
+        0
+        1px
+        0;
+
+    line-height: 1.25;
+
+    white-space: nowrap;
 }
 
 .mobile-header-title span {
+    display: block;
+
     color:
         rgba(255, 255, 255, 0.60);
 
     font-size: 7px;
+
+    margin: 0;
+
+    line-height: 1.25;
+
+    white-space: nowrap;
 }
+
+
+/* اللوقو بالطرف الثاني */
 
 .mobile-logo {
     width: 50px;
     height: auto;
 
+    flex-shrink: 0;
+
     object-fit: contain;
+
+    margin-right: auto;
+    margin-left: 0;
 }
 
 
@@ -2062,10 +2092,31 @@ input {
 
     .mobile-header {
         display: flex;
+
+        /* تثبيت الترتيب */
+        justify-content: flex-start;
+
+        gap: 8px;
     }
 
     .mobile-menu-btn {
         display: flex;
+    }
+
+    .mobile-header-title {
+        flex:
+            0
+            0
+            auto;
+
+        margin: 0;
+
+        text-align: right;
+    }
+
+    .mobile-logo {
+        margin-right: auto;
+        margin-left: 0;
     }
 
 
@@ -2230,6 +2281,37 @@ input {
             78px
             10px
             25px;
+    }
+
+
+    /* يبقى مهامي جنب مربع السايد بار */
+
+    .mobile-header {
+        justify-content: flex-start;
+
+        gap: 7px;
+
+        padding:
+            0
+            11px;
+    }
+
+    .mobile-header-title {
+        flex:
+            0
+            0
+            auto;
+
+        width: auto;
+
+        margin: 0;
+
+        text-align: right;
+    }
+
+    .mobile-logo {
+        margin-right: auto;
+        margin-left: 0;
     }
 
 
