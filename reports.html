@@ -1122,9 +1122,7 @@ async function loadTaskRequirements() {
         error
     } =
     await supabaseClient
-        .from(
-            "task_requirements"
-        )
+        .from("task_requirements")
         .select(`
             id,
             task_id,
@@ -1133,31 +1131,28 @@ async function loadTaskRequirements() {
             experience_required,
             availability_required,
             job_level_required,
-           
             skills_weight,
             experience_weight,
             job_level_weight,
             availability_weight,
-           
+            employees_required
         `);
 
-
     if (error) {
+        console.error(
+            "خطأ تحميل متطلبات المهام:",
+            error
+        );
 
         throw error;
-
     }
 
-
     taskRequirements =
-    Array.isArray(data)
-    ?
-    data
-    :
-    [];
+        Array.isArray(data)
+        ? data
+        : [];
 
 }
-
 
 
 /* =====================================================
